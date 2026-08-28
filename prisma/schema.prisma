@@ -1,0 +1,102 @@
+// Prisma Schema for eProfile System with Alpine OpenSSL support
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Personnel {
+  id            String   @id @default(cuid())
+  badgeNo       String   @unique
+  username      String   @unique
+  password      String
+  role          String   @default("USER")
+  prefix        String
+  firstName     String
+  lastName      String
+  position      String
+  department    String
+  subDepartment String
+  personnelType String   @default("นายทหารสัญญาบัตร") // Commissioned, NCO, Employee, Conscript, etc.
+  phone         String
+  mobile        String
+  email         String
+  status        String   @default("ปฏิบัติงานปกติ")
+  avatarColor   String   @default("#3b82f6")
+  skills        String   @default("[]")
+  education     String   @default("")
+  experience    String   @default("")
+  notes                  String?
+  citizenId              String   @default("")
+  dateOfBirth            String   @default("")
+  bloodType              String   @default("")
+  religion               String   @default("")
+  officialId             String   @default("")
+  militaryBranch         String   @default("")
+  commissionDate         String   @default("")
+  currentAddress         String   @default("")
+  emergencyContactName   String   @default("")
+  emergencyContactPhone  String   @default("")
+  emergencyContactRelation String @default("")
+  royalDecorations       String   @default("")
+  trainingHistory        String   @default("")
+  coverPhoto             String   @default("")
+  profileTheme           String   @default("indigo")
+  vehicles               Vehicle[]
+  leaves                 LeaveRecord[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Vehicle {
+  id            String    @id @default(cuid())
+  personnelId   String
+  personnel     Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  type          String    // e.g. รถยนต์, รถจักรยานยนต์
+  licensePlate  String
+  brand         String
+  model         String
+  color         String
+  photoFront    String?
+  photoBack     String?
+  photoSide     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model LeaveRecord {
+  id          String    @id @default(cuid())
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  leaveType   String    // ลากิจ, ลาป่วย, ลาไปบวช, ลาพักผ่อนประจำปี, อื่นๆ
+  startDate      DateTime
+  endDate        DateTime
+  reason         String?
+  writtenAt      String?   @default("ที่ว่าการอำเภอ/ค่าย/หน่วยงาน")
+  toPerson       String?   // เรียนใคร
+  contactAddress String?   // บ้านเลขที่, หมู่, ถนน
+  contactTambon  String?   // ตำบล/แขวง
+  contactAmphoe  String?   // อำเภอ/เขต
+  contactProvince String?  // จังหวัด
+  status         String    @default("รออนุมัติ") // รออนุมัติ, อนุมัติแล้ว, ไม่อนุมัติ, ยกเลิก
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+model Department {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}

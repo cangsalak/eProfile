@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  eprofile-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tactic_eprofile_app
+    restart: always
+    ports:
+      - "8085:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=file:/app/prisma/dev.db
+    volumes:
+      - eprofile_db:/app/prisma
+    mem_limit: 512m
+
+volumes:
+  eprofile_db:
