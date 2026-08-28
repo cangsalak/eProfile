@@ -60,12 +60,22 @@ pm2 start npm --name "eprofile" -- start
 ```
 เข้าใช้งานได้ที่: `http://localhost:3000` (หรือตามพอร์ตที่กำหนด)
 
-### 2. การรันระบบด้วย Docker (ทางเลือก)
+### 2. การติดตั้งบน Production Server ด้วยคำสั่งเดียว (Single Docker Command)
+
+ระบบมีการตั้งค่า GitHub Actions ไว้ เมื่อคุณอัปเดตโค้ด ระบบจะสร้าง Docker Image และฝากไว้ที่ GitHub Container Registry อัตโนมัติ
+
+คุณสามารถนำระบบไปติดตั้งบน Server ได้ทันทีด้วยคำสั่งเดียว:
 
 ```bash
-# สั่ง build และรัน Container ในโหมด Background
-docker compose up -d --build
+docker run -d \
+  --name eprofile \
+  --restart always \
+  -p 8085:3000 \
+  -v eprofile_data:/app/prisma \
+  ghcr.io/cangsalak/eprofile:main
 ```
+
+*(หมายเหตุ: หาก Docker ดึง Image ไม่ได้ แสดงว่า Image นั้นถูกตั้งเป็น Private บน GitHub คุณอาจจะต้องตั้งให้ Package บน GitHub ของคุณเป็น Public ก่อน)*
 
 ## 🔒 ข้อมูลการเข้าสู่ระบบเบื้องต้น (Default Login)
 เมื่อทำการ Setup ครั้งแรก ระบบจะสร้างผู้ดูแลระบบ (Admin)
