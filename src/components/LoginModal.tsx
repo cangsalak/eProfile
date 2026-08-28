@@ -119,26 +119,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             </div>
           </div>
 
-          {/* Quick Demo Login Help */}
-          <div className="p-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 space-y-1">
-            <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">💡 บัญชีทดสอบระบบ (Quick Demo):</span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('1111111111111', '1000000001')}
-                className="px-2 py-1 rounded bg-primary-500/20 text-primary-300 hover:bg-primary-500/30"
-              >
-                Admin (สมชาย)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('2222222222222', '1000000002')}
-                className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
-              >
-                Officer (นภาภรณ์)
-              </button>
-            </div>
-          </div>
+
 
           <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-800">
             <a href="/setup" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
