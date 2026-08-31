@@ -144,7 +144,7 @@ export default function ManagePersonnelPage() {
         const wb = XLSX.read(bstr, { type: 'binary' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        const data = XLSX.utils.sheet_to_json(ws);
+        const data = XLSX.utils.sheet_to_json(ws, { raw: false });
         
         let successCount = 0;
         setIsLoading(true);
