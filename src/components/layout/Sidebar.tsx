@@ -127,49 +127,8 @@ export default function Sidebar({ isSidebarOpen, systemSettings, menuItems, curr
         })}
       </nav>
 
-      {/* Compact Super Admin Tools at Bottom of Sidebar */}
-      {currentUser?.role === 'SUPER_ADMIN' && (
-        <div className="p-3 m-3 mt-auto rounded-2xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 shrink-0 space-y-1.5">
-          <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400">
-            <span>Dev & Admin Tools</span>
-            <span className="bg-purple-100 dark:bg-purple-950/80 px-1.5 py-0.5 rounded text-[9px]">SUPER</span>
-          </div>
 
-          <div className="grid grid-cols-2 gap-1.5 pt-0.5">
-            <Link
-              href="/manage/inspector"
-              onClick={() => {
-                if (window.innerWidth < 1024) setIsSidebarOpen(false);
-              }}
-              className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-center text-[11px] font-bold transition-all ${
-                pathname === '/manage/inspector'
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:text-purple-600'
-              }`}
-              title="ระบบตรวจสอบและวิเคราะห์คุณภาพระบบ"
-            >
-              <i className="fa-solid fa-microscope text-xs text-purple-500"></i>
-              <span>Inspector</span>
-            </Link>
 
-            <Link
-              href="/manage/api-docs"
-              onClick={() => {
-                if (window.innerWidth < 1024) setIsSidebarOpen(false);
-              }}
-              className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-center text-[11px] font-bold transition-all ${
-                pathname === '/manage/api-docs'
-                  ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600'
-              }`}
-              title="เอกสารและคู่มือระบบ API"
-            >
-              <i className="fa-solid fa-plug text-xs text-indigo-500"></i>
-              <span>API Docs</span>
-            </Link>
-          </div>
-        </div>
-      )}
     </aside>
   );
 }
