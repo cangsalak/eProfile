@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -11,11 +11,69 @@ interface BackupRestoreSettingsProps {
 
 export default function BackupRestoreSettings({ isRestoring, handleRestore, restoreFileInputRef }: BackupRestoreSettingsProps) {
   const router = useRouter();
+  
+  // Database Wipe Modal State
   const [showModal, setShowModal] = useState(false);
   const [resetMode, setResetMode] = useState<'wipe_data_keep_admin' | 'factory_reset'>('wipe_data_keep_admin');
   const [password, setPassword] = useState('');
   const [confirmPhrase, setConfirmPhrase] = useState('');
   const [isWiping, setIsWiping] = useState(false);
+
+  // Maintenance Mode State
+  const [isMaintenance, setIsMaintenance] = useState(false);
+  const [maintenanceMsg, setMaintenanceMsg] = useState('ระบบกำลังอยู่ระหว่างการปิดปรับปรุงเพื่อเพิ่มประสิทธิภาพการทำงาน ขออภัยในความไม่สะดวก');
+  const [maintenanceEndTime, setMaintenanceEndTime] = useState('');
+  const [isSavingMaintenance, setIsSavingMaintenance] = useState(false);
+  const [loadingMaintenance, setLoadingMaintenance] = useState(true);
+
+  // Fetch initial maintenance settings
+  useEffect(() => {
+    fetch('/api/settings/maintenance')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          setIsMaintenance(data.isMaintenance || false);
+          if (data.message) setMaintenanceMsg(data.message);
+          if (data.endTime) setMaintenanceEndTime(data.endTime);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoadingMaintenance(false));
+  }, []);
+
+  const handleSaveMaintenance = async (newStatus?: boolean) => {
+    setIsSavingMaintenance(true);
+    const targetStatus = typeof newStatus === 'boolean' ? newStatus : isMaintenance;
+    try {
+      const res = await fetch('/api/settings/maintenance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          isMaintenance: targetStatus,
+          message: maintenanceMsg,
+          endTime: maintenanceEndTime,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'เกิดข้อผิดพลาดในการบันทึกโหมดปรับปรุง');
+      }
+
+      setIsMaintenance(data.isMaintenance);
+      toast.success(data.notice || 'บันทึกการตั้งค่าโหมดปรับปรุงเว็บไซต์สำเร็จ');
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsSavingMaintenance(false);
+    }
+  };
+
+  const handleToggleMaintenance = () => {
+    const nextState = !isMaintenance;
+    setIsMaintenance(nextState);
+    handleSaveMaintenance(nextState);
+  };
 
   const handleOpenModal = () => {
     setPassword('');
@@ -63,13 +121,11 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
       setShowModal(false);
 
       if (data.redirectUrl) {
-        // Factory reset: redirect to /install
         localStorage.removeItem('currentUser');
         setTimeout(() => {
           router.push(data.redirectUrl);
         }, 1200);
       } else {
-        // Keep admin: reload current page
         setTimeout(() => {
           window.location.reload();
         }, 1200);
@@ -82,12 +138,119 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in font-prompt">
       <h3 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center">
         <i className="fa-solid fa-tools text-orange-500 mr-2 text-xl"></i> การบำรุงรักษาระบบ (Maintenance)
       </h3>
 
-      {/* Audit Logs Card */}
+      {/* 1. Maintenance Mode Card (โหมดปิดปรับปรุงเว็บไซต์) */}
+      <div className={`p-5 sm:p-6 border-2 rounded-2xl transition-all ${
+        isMaintenance
+          ? 'border-amber-500 bg-amber-500/10 dark:bg-amber-500/15 shadow-lg shadow-amber-500/10 ring-2 ring-amber-500/20'
+          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50'
+      }`}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200/60 dark:border-slate-800 pb-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
+              isMaintenance
+                ? 'bg-amber-500 text-white shadow-amber-500/30 animate-pulse'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+            }`}>
+              <i className="fa-solid fa-person-digging text-xl"></i>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-bold text-base text-slate-900 dark:text-white">
+                  โหมดปิดปรับปรุงเว็บไซต์ (Website Maintenance Mode)
+                </h4>
+                {isMaintenance ? (
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-sm flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                    กำลังเปิดใช้งาน
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    ปิดอยู่ (ปกติ)
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                เมื่อเปิดใช้งาน ผู้ใช้ทั่วไปและผู้เยี่ยมชมจะถูกนำไปยังหน้า <span className="font-mono text-primary-500 font-semibold">/maintenance</span> โดยแอดมินยังคงเข้าสู่ระบบได้ตามปกติ
+              </p>
+            </div>
+          </div>
+
+          {/* Toggle Switch */}
+          <button
+            type="button"
+            disabled={loadingMaintenance || isSavingMaintenance}
+            onClick={handleToggleMaintenance}
+            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none shrink-0 ${
+              isMaintenance ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'
+            }`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                isMaintenance ? 'translate-x-8' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Maintenance Message & End Time Inputs */}
+        <div className="mt-4 space-y-4 pt-1">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              ข้อความประกาศแจ้งผู้ใช้งาน (Announcement Message)
+            </label>
+            <textarea
+              rows={2}
+              value={maintenanceMsg}
+              onChange={(e) => setMaintenanceMsg(e.target.value)}
+              placeholder="ระบุข้อความแจ้งเหตุผลการปิดปรับปรุง..."
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                เวลาคาดว่าจะเปิดให้บริการ (Estimated Completion)
+              </label>
+              <input
+                type="text"
+                value={maintenanceEndTime}
+                onChange={(e) => setMaintenanceEndTime(e.target.value)}
+                placeholder="เช่น 02 ก.ย. 2569 เวลา 08:00 น."
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="button"
+                disabled={isSavingMaintenance}
+                onClick={() => handleSaveMaintenance()}
+                className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition shadow-md shadow-amber-600/20 flex items-center gap-2"
+              >
+                {isSavingMaintenance ? (
+                  <>
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                    กำลังบันทึก...
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-floppy-disk"></i>
+                    บันทึกข้อความประกาศ
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Audit Logs Card */}
       <div className="p-5 border border-indigo-100 dark:border-indigo-950/60 rounded-2xl bg-indigo-50/40 dark:bg-indigo-950/20 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <h4 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -107,7 +270,7 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
         </Link>
       </div>
 
-      {/* Backup Database */}
+      {/* 3. Backup Database */}
       <div className="p-5 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <h4 className="font-semibold text-slate-800 dark:text-white flex items-center gap-2">
@@ -125,7 +288,7 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
         </a>
       </div>
 
-      {/* Restore Database */}
+      {/* 4. Restore Database */}
       <div className="p-5 border border-amber-200 dark:border-amber-900/30 rounded-xl bg-amber-50/40 dark:bg-amber-950/10 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <h4 className="font-semibold text-amber-900 dark:text-amber-400 flex items-center gap-2">
@@ -159,7 +322,7 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
         </div>
       </div>
 
-      {/* Danger Zone: Wipe / Reset Database */}
+      {/* 5. Danger Zone: Wipe / Reset Database */}
       <div className="p-5 border-2 border-rose-200 dark:border-rose-900/40 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-rose-700 dark:text-rose-400 font-bold text-base">
@@ -184,7 +347,6 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-sm animate-fade-in font-prompt">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-scale-in">
-            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center">
@@ -206,7 +368,6 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
             </div>
 
             <form onSubmit={handleConfirmWipe} className="space-y-4">
-              {/* Reset Mode Selection */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
                   รูปแบบการล้างข้อมูล:
@@ -260,7 +421,6 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
                 </div>
               </div>
 
-              {/* Super Admin Password Verification */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   รหัสผ่าน Super Admin ปัจจุบัน <span className="text-rose-500">*</span>
@@ -275,7 +435,6 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
                 />
               </div>
 
-              {/* Confirmation Phrase */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   พิมพ์คำว่า <span className="font-mono text-rose-600 dark:text-rose-400 font-bold select-all">RESET-DATABASE</span> ในช่องด้านล่าง <span className="text-rose-500">*</span>
@@ -290,7 +449,6 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
                 />
               </div>
 
-              {/* Action Buttons */}
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"

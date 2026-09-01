@@ -18,6 +18,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [systemSettings, setSystemSettings] = useState<any>({ systemName: 'ระบบฐานข้อมูลบุคลากร', systemLogo: '' });
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isMaintenanceActive, setIsMaintenanceActive] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -79,6 +80,10 @@ export default function DashboardShell({ children }: DashboardShellProps) {
             systemName: data.systemName || 'ระบบฐานข้อมูลบุคลากร',
             systemLogo: data.systemLogo || ''
           });
+
+          if (data.maintenanceMode === 'true') {
+            setIsMaintenanceActive(true);
+          }
           
           if (data.isInstalled === 'false' && pathname !== '/install') {
             router.push('/install');
@@ -231,6 +236,19 @@ export default function DashboardShell({ children }: DashboardShellProps) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+        {/* Maintenance Mode Warning Banner for Admins */}
+        {isMaintenanceActive && (
+          <div className="bg-amber-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between shadow-md shrink-0 z-50">
+            <div className="flex items-center gap-2">
+              <i className="fa-solid fa-triangle-exclamation text-amber-200"></i>
+              <span>⚠️ คำเตือน: ระบบกำลังเปิดใช้งาน <strong>"โหมดปิดปรับปรุงเว็บไซต์"</strong> — ผู้ใช้ทั่วไปจะไม่สามารถเข้าใช้งานหรือดูข้อมูลได้</span>
+            </div>
+            <a href="/settings" className="underline hover:text-amber-100 font-bold ml-4">
+              ไปที่หน้าตั้งค่าเพื่อปิดโหมดปรับปรุง &rarr;
+            </a>
+          </div>
+        )}
+
         {/* Header */}
         <TopNavbar 
           isGuest={isGuest}
