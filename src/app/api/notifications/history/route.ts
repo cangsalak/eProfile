@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireRole } from '@/lib/auth-guards';
+import { Prisma } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,14 +15,15 @@ export async function GET(req: Request) {
     const limitParam = searchParams.get('limit');
     const search = searchParams.get('search')?.trim() || '';
 
-    const where: any = {};
-    if (search) {
-      where.OR = [
-        { title: { contains: search } },
-        { message: { contains: search } },
-        { personnelId: { contains: search } },
-      ];
-    }
+    const where: Prisma.NotificationWhereInput = search
+      ? {
+          OR: [
+            { title: { contains: search } },
+            { message: { contains: search } },
+            { personnelId: { contains: search } },
+          ],
+        }
+      : {};
 
     // Server-side pagination
     const page = pageParam ? Math.max(1, parseInt(pageParam, 10)) : 1;

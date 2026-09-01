@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requirePermission } from '@/lib/auth-guards';
+import { Prisma } from '@prisma/client';
 
 export async function GET(req: Request) {
   try {
@@ -13,7 +14,7 @@ export async function GET(req: Request) {
     const search = searchParams.get('search')?.trim() || '';
     const action = searchParams.get('action')?.trim() || '';
 
-    const where: any = {};
+    const where: Prisma.AuditLogWhereInput = {};
 
     if (action && action !== 'ALL') {
       where.action = action;

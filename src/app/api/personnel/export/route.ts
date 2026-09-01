@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth-guards';
 import { logSecurityEvent } from '@/lib/logger';
+import { Prisma } from '@prisma/client';
 
 // GET /api/personnel/export - Export filtered personnel data respecting RBAC
 export async function GET(req: Request) {
@@ -17,7 +18,7 @@ export async function GET(req: Request) {
     const personnelType = searchParams.get('personnelType') || '';
 
     // Build Where Condition
-    const where: any = {};
+    const where: Prisma.PersonnelWhereInput = {};
 
     if (search) {
       where.OR = [
