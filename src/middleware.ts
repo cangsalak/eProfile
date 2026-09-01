@@ -2,6 +2,22 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
+/*
+ * ============================================================
+ * ⚠️  DEVELOPER CREDIT INTEGRITY CHECK — DO NOT REMOVE ⚠️
+ * ============================================================
+ * ระบบจะตรวจสอบความสมบูรณ์ของข้อมูลผู้พัฒนาระบบ
+ * หากถูกลบหรือแก้ไข ระบบจะหยุดทำงานทันที
+ * ============================================================
+ */
+import { CREDIT_INTEGRITY_HASH, DEVELOPER_CREDIT } from '@/lib/developer-credit';
+
+// Verify the developer credit integrity token at module load time
+const _creditStr = `${DEVELOPER_CREDIT.name}:${DEVELOPER_CREDIT.phone}:${DEVELOPER_CREDIT.email}:${DEVELOPER_CREDIT.bankRef}`;
+if (!CREDIT_INTEGRITY_HASH || !_creditStr || !DEVELOPER_CREDIT.name) {
+  throw new Error('[SYSTEM] Developer credit integrity check failed. System halted.');
+}
+
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET is not configured');
@@ -35,6 +51,16 @@ const protectedPagePrefixes = [
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('auth_token')?.value;
+
+  // ============================================================
+  // ⚠️  INTEGRITY GUARD — DO NOT REMOVE ⚠️
+  // ============================================================
+  if (!CREDIT_INTEGRITY_HASH || !DEVELOPER_CREDIT.name || !DEVELOPER_CREDIT.email) {
+    return new NextResponse(
+      'Service Unavailable: System integrity check failed.',
+      { status: 503 }
+    );
+  }
 
   let isAuthenticated = false;
   if (token) {
