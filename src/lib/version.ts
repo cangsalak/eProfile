@@ -2,7 +2,7 @@
  * Central application version.
  * Keep this value synchronized with package.json.
  */
-export const APP_VERSION = '1.2.0';
+export const APP_VERSION = '1.3.0';
 export const APP_NAME = 'eProfile System';
 export const VERSION_LABEL = `v${APP_VERSION}`;
 

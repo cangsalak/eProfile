@@ -61,11 +61,33 @@ export default function SetupAdminPage() {
         <form onSubmit={handleSetup} className="space-y-4">
           <div>
             <label htmlFor="setup-citizenId" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขบัตรประชาชน (13 หลัก)</label>
-            <input id="setup-citizenId" aria-label="เลขบัตรประชาชน 13 หลัก" type="text" maxLength={13} required value={citizenId} onChange={e => setCitizenId(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+            <input 
+              id="setup-citizenId" 
+              aria-label="เลขบัตรประชาชน 13 หลัก" 
+              type="text" 
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={13} 
+              required 
+              value={citizenId} 
+              onChange={e => setCitizenId(e.target.value.replace(/\D/g, '').slice(0, 13))} 
+              className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 font-mono" 
+            />
           </div>
           <div>
             <label htmlFor="setup-badgeNo" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขประจำตัวทหาร (10 หลัก)</label>
-            <input id="setup-badgeNo" aria-label="เลขประจำตัวทหาร 10 หลัก" type="text" maxLength={10} required value={badgeNo} onChange={e => setBadgeNo(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+            <input 
+              id="setup-badgeNo" 
+              aria-label="เลขประจำตัวทหาร 10 หลัก" 
+              type="text" 
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={10} 
+              required 
+              value={badgeNo} 
+              onChange={e => setBadgeNo(e.target.value.replace(/\D/g, '').slice(0, 10))} 
+              className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 font-mono" 
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

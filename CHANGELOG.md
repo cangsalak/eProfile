@@ -2,6 +2,17 @@
 
 รูปแบบตาม Semantic Versioning (SemVer)
 
+## [1.3.0] — 2026-09-01
+
+### Added
+- **Multi-Database Provider Support**: รองรับระบบฐานข้อมูลหลัก 3 รูปแบบสำหรับระดับองค์กร ได้แก่ **SQLite** (Embedded/Zero-config), **PostgreSQL** (Enterprise/Cloud SQL/Supabase/Neon), และ **MySQL / MariaDB** (Web Hosting Standard)
+- **Modern 3-Step Installation Wizard (`/install`)**: หน้าจอติดตั้งระบบแบบ 3 ขั้นตอน พร้อมการเลือก Database Provider, กรอกค่า Host/Port/User/Password, และปุ่ม **"ทดสอบการเชื่อมต่อ (Test Connection)"** แบบ Real-Time พร้อมแสดง Latency
+- **Real-Time Database Test Endpoint (`POST /api/install/test-db`)**: ทดสอบ Socket TCP และความถูกต้องของ Database Parameters พร้อมจำกัด Rate Limit ป้องกัน Brute-force
+- **Strict Digits-Only Validation**: บังคับให้เลขประจำตัวประชาชน (13 หลัก) และหมายเลขประจำตัวทหาร/เจ้าหน้าที่ (10 หลัก) ต้องเป็นตัวเลขล้วนเท่านั้น ทั้งในหน้าบ้าน (`inputMode="numeric"`, `replace(/\D/g, '')`) และหลังบ้าน (`/^\d{13}$/`, `/^\d{10}$/`)
+- **Automated Test Suite (v1.3.0)**: เพิ่มชุดทดสอบ `tests/api/database-config.test.ts` ทดสอบ Connection String Builders, Local SQLite Permissions, API Endpoint, และ Strict Digits Validation (รวม 11 Suites ผ่าน 100%)
+
+---
+
 ## [1.2.0] — 2026-09-01
 
 ### Added

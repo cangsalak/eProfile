@@ -38,16 +38,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'กรุณากรอกข้อมูลให้ครบถ้วน' }, { status: 400 });
     }
 
-    // 4. Enforce Password Policy
+    // 4. Enforce strict digits-only for citizenId (13 digits) and badgeNo (10 digits)
+    const cleanCitizenId = String(citizenId).trim();
+    const cleanBadgeNo = String(badgeNo).trim();
+
+    if (!/^\d{13}$/.test(cleanCitizenId)) {
+      return NextResponse.json({ error: 'เลขประจำตัวประชาชน (13 หลัก) ต้องเป็นตัวเลขล้วน 13 หลักเท่านั้น' }, { status: 400 });
+    }
+
+    if (!/^\d{10}$/.test(cleanBadgeNo)) {
+      return NextResponse.json({ error: 'หมายเลขประจำตัวทหาร/เจ้าหน้าที่ (10 หลัก) ต้องเป็นตัวเลขล้วน 10 หลักเท่านั้น' }, { status: 400 });
+    }
+
+    // 5. Enforce Password Policy
     const pwCheck = passwordPolicySchema.safeParse(password);
     if (!pwCheck.success) {
       return NextResponse.json({ error: pwCheck.error.issues[0].message }, { status: 400 });
     }
 
-    // 5. Setup System Settings & Default Options
+    // 6. Setup System Settings & Default Options
+    const { dbProvider = 'sqlite', dbConnectionString = '' } = rawBody;
+
     const defaultSettings: Record<string, string> = {
       systemName: systemName || 'ระบบฐานข้อมูลบุคลากร',
       isInstalled: 'true',
+      dbProvider: String(dbProvider || 'sqlite'),
+      dbConnectionString: String(dbConnectionString || ''),
       personnelTypes: JSON.stringify(['นายทหารสัญญาบัตร', 'นายทหารประทวน', 'พนักงานราชการ', 'ลูกจ้าง', 'ทหารกองประจำการ']),
       statusList: JSON.stringify(['ปฏิบัติงานปกติ', 'ไปช่วยราชการ', 'ไปช่วยราชการภายนอกหน่วย', 'มาช่วยราชการ', 'ลาพักผ่อน', 'ลาป่วย/ลากิจ', 'ศึกษา/ดูงาน', 'ย้ายหน่วย/พ้นสภาพ']),
       prefixes: JSON.stringify(['นาย', 'นาง', 'นางสาว', 'ร.ต.', 'ร.ท.', 'ร.อ.', 'พ.ต.', 'พ.ท.', 'พ.อ.', 'พล.ต.', 'พล.ท.', 'พล.อ.', 'ส.ต.', 'ส.ท.', 'ส.อ.', 'จ.ส.ต.', 'จ.ส.ท.', 'จ.ส.อ.']),

@@ -13,6 +13,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'กรุณากรอกข้อมูลให้ครบถ้วน' }, { status: 400 });
     }
 
+    const cleanCitizenId = String(citizenId).trim();
+    const cleanBadgeNo = String(badgeNo).trim();
+
+    if (!/^\d{13}$/.test(cleanCitizenId)) {
+      return NextResponse.json({ error: 'เลขประจำตัวประชาชน (13 หลัก) ต้องเป็นตัวเลขล้วน 13 หลักเท่านั้น' }, { status: 400 });
+    }
+
+    if (!/^\d{10}$/.test(cleanBadgeNo)) {
+      return NextResponse.json({ error: 'หมายเลขประจำตัวทหาร/เจ้าหน้าที่ (10 หลัก) ต้องเป็นตัวเลขล้วน 10 หลักเท่านั้น' }, { status: 400 });
+    }
+
     if (secretCode !== ADMIN_SECRET_CODE) {
       return NextResponse.json({ error: 'รหัสลับไม่ถูกต้อง (Invalid Secret Code)' }, { status: 403 });
     }

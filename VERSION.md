@@ -2,12 +2,12 @@
 
 ## Current Version
 
-**v1.2.0**
+**v1.3.0**
 
 - Release channel: `stable`
 - Release date: 2026-09-01
-- Baseline: `v1.1.0`
-- Purpose: Personnel Management Enhancement (Server-side Pagination, Multi-field Search, Stats & Export)
+- Baseline: `v1.2.0`
+- Purpose: Multi-Database Support (SQLite, PostgreSQL, MySQL) & Modern 3-Step Installation Wizard with Connection Testing and Strict Digits Validation
 
 ## Versioning Policy
 

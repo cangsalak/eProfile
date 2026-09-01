@@ -1,13 +1,13 @@
-# 🛡️ eProfile System - Electronic Personnel Directory (v1.2.0)
+# 🛡️ eProfile System - Electronic Personnel Directory (v1.3.0)
 
-[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](VERSION.md)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](VERSION.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-10%2F10%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-11%2F11%20passed-brightgreen.svg)](tests/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black.svg)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-5.22-darkblue.svg)](https://www.prisma.io/)
 
-ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ส่วนกลาง พัฒนาด้วย **Next.js 14 (App Router)**, **TypeScript**, **Prisma ORM**, **TailwindCSS** และใช้ฐานข้อมูล **SQLite** ออกแบบตามมาตรฐานความมั่นคงปลอดภัยสารสนเทศและรองรับการใช้งานในระดับองค์กร
+ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ส่วนกลาง พัฒนาด้วย **Next.js 14 (App Router)**, **TypeScript**, **Prisma ORM**, **TailwindCSS** รองรับฐานข้อมูลหลากหลาย (**SQLite**, **PostgreSQL**, **MySQL/MariaDB**) ออกแบบตามมาตรฐานความมั่นคงปลอดภัยสารสนเทศและรองรับการใช้งานในระดับองค์กร
 
 ---
 

@@ -8,16 +8,17 @@ import { runAuthSessionPersistenceTests } from './api/auth-session-persistence.t
 import { runSystemInspectorTests } from './admin/system-inspector.test';
 import { runSecurityHeadersTests } from './security/security-headers.test';
 import { runApiDocumentationTests } from './admin/api-documentation.test';
+import { runDatabaseConfigTests } from './api/database-config.test';
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
   console.log('=====================================================');
-  console.log('       eProfile Automated Test Suite (v1.2.0)        ');
+  console.log('       eProfile Automated Test Suite (v1.3.0)        ');
   console.log('=====================================================');
 
   const startTime = Date.now();
   let passedSuites = 0;
-  let totalSuites = 10;
+  let totalSuites = 11;
 
   try {
     // 1. Unit Tests
@@ -58,6 +59,10 @@ async function main() {
 
     // 10. Super Admin API Documentation Tests
     await runApiDocumentationTests();
+    passedSuites++;
+
+    // 11. Multi-Database & Installer Tests
+    await runDatabaseConfigTests();
     passedSuites++;
 
     // Final Teardown: Clean up any test notifications, test posts, or test users
