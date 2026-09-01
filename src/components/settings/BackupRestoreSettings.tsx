@@ -270,34 +270,90 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
         </Link>
       </div>
 
-      {/* 3. Backup Database */}
-      <div className="p-5 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <h4 className="font-semibold text-slate-800 dark:text-white flex items-center gap-2">
-            <i className="fa-solid fa-file-arrow-down text-blue-500"></i>
-            สำรองข้อมูลฐานข้อมูล (Backup Database)
-          </h4>
-          <p className="text-sm text-slate-500 mt-1">ดาวน์โหลดไฟล์ฐานข้อมูล (.db) เพื่อเก็บรักษาเป็นตัวสำรอง</p>
+      {/* 3. Universal & Native Backup Database */}
+      <div className="p-5 sm:p-6 border border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900/50 space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+              <i className="fa-solid fa-database text-xl"></i>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-bold text-base text-slate-900 dark:text-white">
+                  สำรองข้อมูลฐานข้อมูล (Database Backup)
+                </h4>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                  Multi-DB Supported
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                รองรับการสำรองข้อมูลครอบคลุมทุกตาราง (กำลังพล, ใบลา, ยานพาหนะ, เอกสาร, ข่าวสาร, สิทธิ์, การตั้งค่า)
+              </p>
+            </div>
+          </div>
         </div>
-        <a
-          href="/api/backup"
-          target="_blank"
-          className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap flex items-center shadow-sm"
-        >
-          <i className="fa-solid fa-download mr-2"></i> ดาวน์โหลด Backup
-        </a>
+
+        {/* 2 Backup Download Options */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+          {/* Option 1: Universal JSON */}
+          <div className="p-4 rounded-xl border border-blue-200/80 dark:border-blue-900/40 bg-blue-50/30 dark:bg-blue-950/20 flex flex-col justify-between space-y-3">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400">
+                <i className="fa-solid fa-star text-amber-500"></i>
+                <span>สำรองข้อมูลแบบ Universal JSON (แนะนำ)</span>
+              </div>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
+                สร้างไฟล์ข้อมูล JSON ครบทุกตาราง สามารถนำไปกู้คืนข้ามระบบฐานข้อมูลได้ (SQLite, PostgreSQL, MySQL)
+              </p>
+            </div>
+            <a
+              href="/api/backup?format=json"
+              target="_blank"
+              className="w-full py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow-sm flex items-center justify-center gap-2"
+            >
+              <i className="fa-solid fa-file-code"></i>
+              <span>ดาวน์โหลด Universal JSON (.json)</span>
+            </a>
+          </div>
+
+          {/* Option 2: Native SQLite */}
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 flex flex-col justify-between space-y-3">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-200">
+                <i className="fa-solid fa-hard-drive text-slate-400"></i>
+                <span>ดาวน์โหลดไฟล์ฐานข้อมูล Native (.db)</span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                สำหรับผู้ใช้งานฐานข้อมูล SQLite ที่ต้องการสำรองไฟล์ Binary ทั้งหมดของเซิร์ฟเวอร์
+              </p>
+            </div>
+            <a
+              href="/api/backup?format=db"
+              target="_blank"
+              className="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold rounded-xl transition shadow-sm flex items-center justify-center gap-2"
+            >
+              <i className="fa-solid fa-download"></i>
+              <span>ดาวน์โหลดไฟล์ Binary (.db)</span>
+            </a>
+          </div>
+        </div>
       </div>
 
-      {/* 4. Restore Database */}
-      <div className="p-5 border border-amber-200 dark:border-amber-900/30 rounded-xl bg-amber-50/40 dark:bg-amber-950/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <h4 className="font-semibold text-amber-900 dark:text-amber-400 flex items-center gap-2">
-            <i className="fa-solid fa-file-arrow-up text-amber-500"></i>
-            กู้คืนฐานข้อมูล (Restore Database)
-          </h4>
-          <p className="text-sm text-amber-700 dark:text-amber-500/80 mt-1">
-            อัปโหลดไฟล์ฐานข้อมูล (.db) เพื่อนำข้อมูลเดิมกลับมา <br />
-            <span className="font-medium underline">คำเตือน</span>: ข้อมูลปัจจุบันจะถูกเขียนทับทั้งหมด
+      {/* 4. Restore Database (Universal + SQLite) */}
+      <div className="p-5 sm:p-6 border border-amber-200 dark:border-amber-900/40 rounded-2xl bg-amber-50/40 dark:bg-amber-950/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <h4 className="font-bold text-base text-amber-900 dark:text-amber-400 flex items-center gap-2">
+              <i className="fa-solid fa-file-arrow-up text-amber-500 text-lg"></i>
+              กู้คืนฐานข้อมูล (Restore Database)
+            </h4>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
+              .json / .db
+            </span>
+          </div>
+          <p className="text-xs text-amber-800/80 dark:text-amber-500/90 leading-relaxed max-w-xl">
+            อัปโหลดไฟล์สำรองข้อมูลแบบ <strong>.json (Universal)</strong> หรือ <strong>.db (SQLite)</strong> เพื่อนำข้อมูลกลับมา <br />
+            <span className="font-bold text-rose-600 dark:text-rose-400">⚠️ คำเตือน:</span> ข้อมูลเดิมในระบบจะถูกแทนที่ด้วยข้อมูลจากไฟล์สำรอง
           </p>
         </div>
         <div>
@@ -305,18 +361,27 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
             type="button"
             disabled={isRestoring}
             onClick={() => restoreFileInputRef.current?.click()}
-            className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white text-sm font-medium rounded-xl transition-colors whitespace-nowrap flex items-center shadow-sm"
+            className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-md shadow-amber-600/20 whitespace-nowrap flex items-center gap-2 shrink-0"
           >
-            {isRestoring ? <i className="fa-solid fa-circle-notch fa-spin mr-2"></i> : <i className="fa-solid fa-upload mr-2"></i>}
-            {isRestoring ? 'กำลังกู้คืน...' : 'อัปโหลดและกู้คืน'}
+            {isRestoring ? (
+              <>
+                <i className="fa-solid fa-circle-notch fa-spin"></i>
+                <span>กำลังกู้คืนข้อมูล...</span>
+              </>
+            ) : (
+              <>
+                <i className="fa-solid fa-upload"></i>
+                <span>เลือกไฟล์และกู้คืน</span>
+              </>
+            )}
           </button>
           <input
             id="restoreDatabaseFileInput"
             type="file"
             ref={restoreFileInputRef}
             onChange={handleRestore}
-            accept=".db"
-            aria-label="อัปโหลดไฟล์สำรองฐานข้อมูล (.db)"
+            accept=".json,.db"
+            aria-label="อัปโหลดไฟล์สำรองฐานข้อมูล (.json หรือ .db)"
             className="hidden"
           />
         </div>
