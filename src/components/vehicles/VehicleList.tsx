@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Vehicle } from '../../types/personnel';
+import { Vehicle } from '@/types/personnel';
 import VehicleCard from './VehicleCard';
 import VehicleFormModal from './VehicleFormModal';
+import toast from 'react-hot-toast';
 
 interface VehicleListProps {
   personnelId: string;
@@ -62,11 +63,14 @@ export default function VehicleList({ personnelId }: VehicleListProps) {
         method: 'DELETE',
       });
       if (res.ok) {
+        toast.success('ลบข้อมูลสำเร็จ');
         await fetchVehicles();
+      } else {
+        toast.error('เกิดข้อผิดพลาดในการลบข้อมูล');
       }
-    } catch (error) {
-      console.error(error);
-      alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+    } catch (err) {
+      console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
   };
 

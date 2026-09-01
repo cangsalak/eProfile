@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Personnel } from '../types/personnel';
+import { Personnel } from '@/types/personnel';
 import PersonnelCard from './PersonnelCard';
 
 interface ScannerModalProps {

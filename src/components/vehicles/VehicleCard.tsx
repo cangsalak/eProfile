@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Vehicle } from '../../types/personnel';
+import { Vehicle } from '@/types/personnel';
 
 interface VehicleCardProps {
   vehicle: Vehicle;

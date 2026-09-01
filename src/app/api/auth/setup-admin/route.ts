@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
-const ADMIN_SECRET_CODE = 'RTA-ADMIN-2026';
+const ADMIN_SECRET_CODE = process.env.ADMIN_SETUP_SECRET;
 
 export async function POST(req: Request) {
   try {

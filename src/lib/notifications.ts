@@ -51,8 +51,12 @@ export async function sendEmailNotification(subject: string, text: string) {
       }
     });
 
+    const settings = await prisma.systemSetting.findFirst();
+    const systemNameSetting = await prisma.systemSetting.findUnique({ where: { key: "systemName" } });
+    const sysName = systemNameSetting?.value || 'ระบบฐานข้อมูลบุคลากร';
+
     await transporter.sendMail({
-      from: `"eProfile System" <${user.value}>`,
+      from: `"${sysName}" <${user.value}>`,
       to: to.value,
       subject,
       text

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Personnel } from '../../types/personnel';
+import { Personnel } from '@/types/personnel';
 
 interface AccessBadgeProps {
   personnel: Personnel;

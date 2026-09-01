@@ -25,12 +25,22 @@ export interface Personnel {
   militaryBranch: string;
   commissionDate: string;
   currentAddress: string;
+  currentTambon: string;
+  currentAmphoe: string;
+  currentProvince: string;
+  currentZipcode: string;
   emergencyContactName: string;
   emergencyContactPhone: string;
   emergencyContactRelation: string;
   royalDecorations: string;
   trainingHistory: string;
   vehicles?: Vehicle[];
+  role?: string;
+  permissions?: string[];
+  coverPhoto?: string | null;
+  profileTheme?: string | null;
+  username?: string;
+  password?: string;
 }
 
 export interface Vehicle {

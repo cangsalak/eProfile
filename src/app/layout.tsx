@@ -1,10 +1,11 @@
 import './globals.css';
 import React from 'react';
-import DashboardShell from '../components/DashboardShell';
+import ToastProvider from '../components/ToastProvider';
+import { Metadata } from 'next';
 
-export const metadata = {
-  title: 'ระบบ eProfile บุคลากร - Electronic Personnel Profile System',
-  description: 'ระบบบริการจัดการโปรไฟล์บุคลากรและทำเนียบบุคลากรอิเล็กทรอนิกส์ส่วนกลาง',
+export const metadata: Metadata = {
+  title: 'ระบบฐานข้อมูลบุคลากร',
+  description: 'ระบบจัดการฐานข้อมูลและสารสนเทศบุคลากร',
 };
 
 export default function RootLayout({
@@ -21,7 +22,8 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <DashboardShell>{children}</DashboardShell>
+        <ToastProvider />
+        {children}
       </body>
     </html>
   );

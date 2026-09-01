@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Personnel } from '../types/personnel';
+import React, { useState, useEffect } from 'react';
+import { Personnel } from '@/types/personnel';
+import toast from 'react-hot-toast';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -13,14 +14,19 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [systemName, setSystemName] = useState('eProfile');
+
+  useEffect(() => {
+    fetch('/api/settings').then(res => res.json()).then(data => {
+      if (data.systemName) setSystemName(data.systemName);
+    }).catch(e => console.error(e));
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage('');
     setIsLoading(true);
 
     try {
@@ -40,8 +46,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
       onClose();
       setUsername('');
       setPassword('');
+      toast.success('เข้าสู่ระบบสำเร็จ');
     } catch (err: any) {
-      setErrorMessage(err.message);
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +68,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <i className="fa-solid fa-[#fa-right-to-bracket] fa-shield-halved"></i>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">เข้าสู่ระบบ eProfile</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">เข้าสู่ระบบ {systemName}</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">สำหรับบุคลากรและผู้ดูแลระบบ</p>
             </div>
           </div>
@@ -69,13 +76,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>
-
-        {errorMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
-            <i className="fa-solid fa-circle-exclamation"></i>
-            <span>{errorMessage}</span>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>

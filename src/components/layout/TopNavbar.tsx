@@ -1,6 +1,7 @@
 import React from 'react';
 import ProfileDropdown from './ProfileDropdown';
-import { Personnel } from '../../types/personnel';
+import NotificationDropdown from './NotificationDropdown';
+import { Personnel } from '@/types/personnel';
 
 interface TopNavbarProps {
   isGuest: boolean;
@@ -34,7 +35,7 @@ export default function TopNavbar({
             <img src={systemSettings.systemLogo} alt="Logo" className="h-8 object-contain drop-shadow-md mr-3" />
           )}
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">
-            {systemSettings?.systemName || 'eProfile System'}
+            {systemSettings?.systemName || 'ระบบฐานข้อมูลบุคลากร'}
           </h1>
         </div>
       ) : (
@@ -56,7 +57,10 @@ export default function TopNavbar({
         </button>
 
         {currentUser ? (
-          <ProfileDropdown currentUser={currentUser} handleLogout={handleLogout} />
+          <>
+            <NotificationDropdown currentUser={currentUser} />
+            <ProfileDropdown currentUser={currentUser} handleLogout={handleLogout} />
+          </>
         ) : (
           <button
             onClick={() => setIsLoginModalOpen(true)}

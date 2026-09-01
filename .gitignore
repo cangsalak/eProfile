@@ -36,3 +36,23 @@ next-env.d.ts
 @eaDir
 */@eaDir
 **/@eaDir
+
+# database & backups
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+prisma/backups/
+backups/
+
+# env
+.env
+.env*.local
+
+# patches and archives
+*.patch
+*.zip
+*.tar.gz
+
+

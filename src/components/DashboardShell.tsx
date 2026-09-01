@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Personnel } from '../types/personnel';
+import { Personnel } from '@/types/personnel';
 import LoginModal from './LoginModal';
 import Sidebar, { MenuItem } from './layout/Sidebar';
 import TopNavbar from './layout/TopNavbar';
@@ -15,7 +15,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const [currentUser, setCurrentUser] = useState<Personnel | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default to false for mobile first
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [systemSettings, setSystemSettings] = useState<any>({ systemName: 'eProfile System', systemLogo: '' });
+  const [systemSettings, setSystemSettings] = useState<any>({ systemName: 'ระบบฐานข้อมูลบุคลากร', systemLogo: '' });
   const [isDarkMode, setIsDarkMode] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
@@ -53,9 +53,14 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       .then(data => {
         if (!data.error) {
           setSystemSettings({
-            systemName: data.systemName || 'eProfile System',
+            systemName: data.systemName || 'ระบบฐานข้อมูลบุคลากร',
             systemLogo: data.systemLogo || ''
           });
+          
+          if (data.isInstalled === 'false' && pathname !== '/install') {
+            router.push('/install');
+            return;
+          }
           
           if (data.systemColor === 'custom' && data.customPrimaryColor) {
             document.documentElement.setAttribute('data-theme', 'custom');
@@ -140,14 +145,18 @@ export default function DashboardShell({ children }: DashboardShellProps) {
     localStorage.setItem('currentUser', JSON.stringify(user));
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {/* best effort */}
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
-    router.push('/');
+    router.push('/login');
   };
 
   const menuItems: MenuItem[] = [
-    { name: 'หน้าหลัก (Dashboard)', icon: 'fa-solid fa-chart-pie', path: '/' },
+    { name: 'หน้าหลัก (Dashboard)', icon: 'fa-solid fa-chart-pie', path: '/dashboard' },
+    { name: 'ปฏิทินปฏิบัติงาน', icon: 'fa-solid fa-calendar-days', path: '/calendar' },
     { name: 'ทำเนียบบุคลากร (Directory)', icon: 'fa-solid fa-address-book', path: '/directory' },
   ];
 
@@ -160,11 +169,15 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   }
 
   if (currentUser) {
-    if (currentUser.role === 'ADMIN') {
-      menuItems.push(
-        { name: 'จัดการบุคลากร', icon: 'fa-solid fa-users-gear', path: '/manage/personnel' },
-        { name: 'ตั้งค่าระบบ', icon: 'fa-solid fa-cogs', path: '/settings' }
-      );
+    const perms = currentUser.permissions || [];
+    const isAdmin = currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN';
+
+    if (isAdmin || perms.includes('MANAGE_PERSONNEL')) {
+      menuItems.push({ name: 'จัดการบุคลากร', icon: 'fa-solid fa-users-gear', path: '/manage/personnel' });
+    }
+    if (isAdmin || perms.includes('MANAGE_SYSTEM') || perms.includes('MANAGE_ROLES')) {
+      menuItems.push({ name: 'จัดการการแจ้งเตือน', icon: 'fa-solid fa-bullhorn', path: '/manage/notifications' });
+      menuItems.push({ name: 'ตั้งค่าระบบ', icon: 'fa-solid fa-cogs', path: '/settings' });
     }
   } else {
     menuItems.length = 0;
@@ -208,8 +221,10 @@ export default function DashboardShell({ children }: DashboardShellProps) {
         />
 
         {/* Page Content */}
-        <main className={`flex-1 overflow-y-auto print:overflow-visible p-6 scroll-smooth ${isGuest ? 'w-full max-w-7xl mx-auto border-x border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-900/20' : ''}`}>
-          {children}
+        <main className={`flex-1 overflow-y-auto print:overflow-visible p-4 sm:p-6 lg:p-8 scroll-smooth ${isGuest ? 'border-x border-slate-200 dark:border-slate-700/50 bg-white dark:bg-slate-900/20' : ''}`}>
+          <div className="max-w-7xl mx-auto w-full h-full">
+            {children}
+          </div>
         </main>
       </div>
 

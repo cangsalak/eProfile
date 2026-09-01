@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Personnel } from '../types/personnel';
+import { Personnel } from '@/types/personnel';
 import IDBadge from './badges/IDBadge';
 
 interface PrintBadgeViewProps {
@@ -37,7 +37,7 @@ export default function PrintBadgeView({ person }: PrintBadgeViewProps) {
           <IDBadge 
             personnel={person} 
             settings={settings}
-            template={settings?.badgeTemplate || 'classic'} 
+             
             qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
           />
         </div>
@@ -52,7 +52,7 @@ export default function PrintBadgeView({ person }: PrintBadgeViewProps) {
           <IDBadge 
             personnel={person} 
             settings={settings}
-            template={settings?.badgeTemplate || 'classic'} 
+             
             qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
             isBack={true}
           />

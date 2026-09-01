@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../../lib/prisma';
+import { requirePermission } from '@/lib/auth-guards';
 
 export async function GET() {
   try {
     const departments = await prisma.department.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: [
+        { sortOrder: 'asc' },
+        { name: 'asc' }
+      ],
     });
     return NextResponse.json(departments);
   } catch (error) {
@@ -15,9 +19,28 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const { error: authError } = await requirePermission(request, 'MANAGE_SYSTEM');
+    if (authError) return authError;
+
     const body = await request.json();
+    if (!body.name || typeof body.name !== 'string' || !body.name.trim()) {
+      return NextResponse.json({ error: 'กรุณาระบุชื่อหน่วยงาน' }, { status: 400 });
+    }
+
+    let subDepartmentsJson = '[]';
+    if (Array.isArray(body.subDepartments)) {
+      subDepartmentsJson = JSON.stringify(body.subDepartments);
+    } else if (typeof body.subDepartments === 'string') {
+      subDepartmentsJson = body.subDepartments;
+    }
+
     const department = await prisma.department.create({
-      data: { name: body.name },
+      data: {
+        name: body.name.trim(),
+        shortName: body.shortName ? body.shortName.trim() : '',
+        subDepartments: subDepartmentsJson,
+        sortOrder: typeof body.sortOrder === 'number' ? body.sortOrder : 0,
+      },
     });
     return NextResponse.json(department);
   } catch (error: any) {

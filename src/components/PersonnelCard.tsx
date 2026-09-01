@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Personnel } from '../types/personnel';
+import { Personnel } from '@/types/personnel';
 import IDBadge from './badges/IDBadge';
 
 interface PersonnelCardProps {
@@ -22,7 +22,7 @@ export default function PersonnelCard({ person, settings, isGuest, onViewProfile
           <div className="w-full h-full flex items-center justify-center">
             <IDBadge 
               personnel={person} 
-              template={settings?.badgeTemplate || 'classic'} 
+               
               settings={settings}
               qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
             />
@@ -43,7 +43,7 @@ export default function PersonnelCard({ person, settings, isGuest, onViewProfile
             ) : (
               <IDBadge 
                 personnel={person} 
-                template={settings?.badgeTemplate || 'classic'} 
+                 
                 settings={settings}
                 qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
                 isBack={true}

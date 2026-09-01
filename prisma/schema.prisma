@@ -39,6 +39,10 @@ model Personnel {
   militaryBranch         String   @default("")
   commissionDate         String   @default("")
   currentAddress         String   @default("")
+  currentTambon          String   @default("")
+  currentAmphoe          String   @default("")
+  currentProvince        String   @default("")
+  currentZipcode         String   @default("")
   emergencyContactName   String   @default("")
   emergencyContactPhone  String   @default("")
   emergencyContactRelation String @default("")
@@ -48,8 +52,24 @@ model Personnel {
   profileTheme           String   @default("indigo")
   vehicles               Vehicle[]
   leaves                 LeaveRecord[]
+  notifications          Notification[]
+  posts                  Post[]
+  auditLogs              AuditLog[]
+  mediaFiles             MediaFile[]
+  passwordResetTokens    PasswordResetToken[]
+  
+  // Security Fields
+  mustChangePassword     Boolean  @default(true)
+  failedLoginAttempts    Int      @default(0)
+  lockedUntil            DateTime?
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  // Performance indexes
+  @@index([department])
+  @@index([status])
+  @@index([role])
 }
 
 model Vehicle {
@@ -83,20 +103,148 @@ model LeaveRecord {
   contactAmphoe  String?   // อำเภอ/เขต
   contactProvince String?  // จังหวัด
   status         String    @default("รออนุมัติ") // รออนุมัติ, อนุมัติแล้ว, ไม่อนุมัติ, ยกเลิก
+  
+  // Fields specifically for Annual Leave (ลาพักผ่อน)
+  substitutePerson     String?   // ชื่อผู้รับมอบหน้าที่
+  accumulatedLeaveDays Float?    // วันลาพักผ่อนสะสม (ยกมา)
+  thisYearLeaveDays    Float?    // วันลาพักผ่อนประจำปี
+  totalLeaveDays       Float?    // รวมวันลา
+  
+  // Fields specifically for Ordination Leave (ลาอุปสมบท)
+  ordainedBefore       Boolean?  @default(false)
+  ordainTempleName     String?
+  ordainTempleLocation String?
+  ordainDate           DateTime?
+  stayTempleName       String?
+  stayTempleLocation   String?
+  
+  // Fields specifically for Maternity Leave (ลาคลอดบุตร)
+  maternityLeaveTimes  Int?
+  maternityLeaveDays   Int?
+  
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
 
 
 model Department {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  name            String   @unique
+  shortName       String?  @default("")
+  subDepartments  String   @default("[]") // JSON Array: [{ name: string, shortName?: string }]
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model SystemSetting {
   id    String @id @default(cuid())
   key   String @unique
   value String
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  type        String   @default("general") // 'general', 'operation', 'notification', 'meeting'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id          String     @id @default(cuid())
+  personnelId String     // Target user ID, or 'ADMIN' for all admins
+  personnel   Personnel? @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  type        String     @default("info") // 'info', 'success', 'warning', 'error'
+  isRead      Boolean    @default(false)
+  link        String?    
+  createdAt   DateTime   @default(now())
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  content     String
+  image       String?
+  published   Boolean    @default(true)
+  authorId    String
+  author      Personnel  @relation(fields: [authorId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model ContactMessage {
+  id          String     @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  message     String
+  status      String     @default("unread") // 'unread', 'read', 'replied'
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model AuditLog {
+  id          String     @id @default(cuid())
+  personnelId String?    // Who did the action
+  personnel   Personnel? @relation(fields: [personnelId], references: [id])
+  action      String     // 'CREATE', 'UPDATE', 'DELETE', 'LOGIN'
+  entity      String     // 'Personnel', 'LeaveRecord', 'Post', 'SystemSetting'
+  entityId    String?    // ID of the affected record
+  details     String?    // JSON string of changes
+  ipAddress   String?
+  createdAt   DateTime   @default(now())
+
+  @@index([action])
+  @@index([personnelId])
+  @@index([createdAt])
+}
+
+model MediaFile {
+  id          String     @id @default(cuid())
+  filename    String
+  url         String
+  size        Int
+  mimetype    String
+  uploadedById String?
+  uploadedBy  Personnel? @relation(fields: [uploadedById], references: [id])
+  createdAt   DateTime   @default(now())
+}
+
+model PasswordResetToken {
+  id          String     @id @default(cuid())
+  personnelId String
+  personnel   Personnel  @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  token       String     @unique
+  expiresAt   DateTime
+  createdAt   DateTime   @default(now())
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       String?
+  image       String?
+  icon        String?  @default("fa-layer-group")
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SystemRole {
+  id          String      @id @default(cuid())
+  name        String      @unique // e.g. ADMIN, USER, HR_MANAGER
+  displayName String      // e.g. ผู้ดูแลระบบ, ผู้ใช้งานทั่วไป, เจ้าหน้าที่บุคคล
+  description String?
+  permissions String      @default("[]") // JSON string of permissions like ["MANAGE_PERSONNEL", "APPROVE_LEAVE", "MANAGE_SYSTEM"]
+  isSystem    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }

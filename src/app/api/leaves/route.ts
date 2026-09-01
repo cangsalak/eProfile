@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAuth } from '@/lib/auth-guards';
 
 export async function GET(req: Request) {
   try {
@@ -31,6 +32,9 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const { error: authError } = await requireAuth(req);
+    if (authError) return authError;
+
     const body = await req.json();
 
     if (!body.personnelId || !body.leaveType || !body.startDate || !body.endDate) {
@@ -51,8 +55,39 @@ export async function POST(req: Request) {
         contactAmphoe: body.contactAmphoe || '',
         contactProvince: body.contactProvince || '',
         status: body.status || 'รออนุมัติ',
+        substitutePerson: body.substitutePerson || null,
+        accumulatedLeaveDays: body.accumulatedLeaveDays ? parseFloat(body.accumulatedLeaveDays) : null,
+        thisYearLeaveDays: body.thisYearLeaveDays ? parseFloat(body.thisYearLeaveDays) : null,
+        totalLeaveDays: (body.accumulatedLeaveDays ? parseFloat(body.accumulatedLeaveDays) : 0) + (body.thisYearLeaveDays ? parseFloat(body.thisYearLeaveDays) : 0) || null,
+        ordainedBefore: body.ordainedBefore ?? false,
+        ordainTempleName: body.ordainTempleName || null,
+        ordainTempleLocation: body.ordainTempleLocation || null,
+        ordainDate: body.ordainDate ? new Date(body.ordainDate) : null,
+        stayTempleName: body.stayTempleName || null,
+        stayTempleLocation: body.stayTempleLocation || null,
+        maternityLeaveTimes: body.maternityLeaveTimes ? parseInt(body.maternityLeaveTimes) : null,
+        maternityLeaveDays: body.maternityLeaveDays ? parseInt(body.maternityLeaveDays) : null,
       },
     });
+
+    // Fetch the personnel to get their name for the notification
+    const personnel = await prisma.personnel.findUnique({
+      where: { id: body.personnelId },
+      select: { firstName: true, lastName: true }
+    });
+
+    if (personnel) {
+      // Send notification to ADMIN
+      await prisma.notification.create({
+        data: {
+          personnelId: 'ADMIN',
+          title: `มีคำร้องขอ${body.leaveType}ใหม่`,
+          message: `${personnel.firstName} ${personnel.lastName} ได้ส่งคำร้องขอ${body.leaveType}`,
+          type: 'info',
+          link: '/leave'
+        }
+      });
+    }
 
     return NextResponse.json(leave, { status: 201 });
   } catch (error: any) {

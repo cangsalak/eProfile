@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Personnel } from '../../types/personnel';
+import { Personnel } from '@/types/personnel';
 
 interface ProfileDropdownProps {
   currentUser: Personnel;

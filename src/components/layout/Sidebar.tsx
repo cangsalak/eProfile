@@ -39,7 +39,7 @@ export default function Sidebar({ isSidebarOpen, systemSettings, menuItems, setI
           </div>
         )}
         <h1 className="text-lg font-bold bg-gradient-to-r from-primary-300 to-purple-300 bg-clip-text text-transparent tracking-wide text-center px-4 leading-tight truncate w-full">
-          {systemSettings?.systemName || 'eProfile System'}
+          {systemSettings?.systemName || 'ระบบฐานข้อมูลบุคลากร'}
         </h1>
       </div>
       <nav className="p-4 space-y-2 flex-1 overflow-y-auto">

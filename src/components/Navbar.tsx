@@ -1,7 +1,8 @@
 'use client';
+import Link from "next/link";
 
-import React from 'react';
-import { Personnel } from '../types/personnel';
+import React, { useState, useEffect } from 'react';
+import { Personnel } from '@/types/personnel';
 
 interface NavbarProps {
   currentUser: Personnel | null;
@@ -16,18 +17,29 @@ export default function Navbar({
   onOpenAddModal,
   onLogout,
 }: NavbarProps) {
+  const [systemName, setSystemName] = useState('eProfile บุคลากร');
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.systemName) setSystemName(data.systemName);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <header className="no-print sticky top-0 z-40 bg-slate-100 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 py-4">
       <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary-600/20 border border-primary-500/30 text-primary-400 flex items-center justify-center text-xl">
-            <i className="fa-solid fa-address-card"></i>
+        <Link href="/" className="flex items-center space-x-3 group">
+          <div className="w-10 h-10 bg-primary-600 dark:bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30 group-hover:scale-105 transition-transform">
+            <i className="fa-solid fa-users text-white text-lg"></i>
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-wide text-slate-900 dark:text-white">ระบบ eProfile บุคลากร</h1>
+            <h1 className="text-xl font-bold tracking-wide text-slate-900 dark:text-white">ระบบ {systemName}</h1>
             <p className="text-xs text-slate-500 dark:text-slate-400">Electronic Personnel Profile & Digital ID Directory</p>
           </div>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-3">
           <a

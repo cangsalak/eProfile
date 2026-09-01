@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Vehicle } from '../../types/personnel';
+import toast from 'react-hot-toast';
+import { Vehicle } from '@/types/personnel';
 import ImageUploadBox from '../common/ImageUploadBox';
 
 interface VehicleFormModalProps {
@@ -23,15 +24,35 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
     photoBack: null,
     photoSide: null,
   });
+  const [vehicleTypes, setVehicleTypes] = useState<string[]>([
+    'รถยนต์ส่วนบุคคล',
+    'รถจักรยานยนต์',
+    'รถยนต์ราชการ',
+    'รถจักรยานยนต์ราชการ',
+  ]);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
+      fetch('/api/settings')
+        .then(res => res.json())
+        .then(settings => {
+          if (settings.vehicleTypes) {
+            try {
+              const parsed = JSON.parse(settings.vehicleTypes);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                setVehicleTypes(parsed);
+              }
+            } catch (_) {}
+          }
+        })
+        .catch(console.error);
+
       if (initialData) {
         setFormData(initialData);
       } else {
         setFormData({
-          type: 'รถยนต์',
+          type: 'รถยนต์ส่วนบุคคล',
           licensePlate: '',
           brand: '',
           model: '',
@@ -53,10 +74,11 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
     setIsSaving(true);
     try {
       await onSave({ ...formData, personnelId });
+      toast.success(initialData ? 'อัปเดตข้อมูลรถยนต์สำเร็จ' : 'บันทึกข้อมูลรถยนต์สำเร็จ');
       onClose();
     } catch (err) {
       console.error(err);
-      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูลรถยนต์');
+      toast.error('เกิดข้อผิดพลาดในการบันทึกข้อมูลรถยนต์');
     } finally {
       setIsSaving(false);
     }
@@ -84,16 +106,14 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
               <div>
                 <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ประเภทรถ</label>
                 <select
-                  value={formData.type || 'รถยนต์'}
+                  value={formData.type || vehicleTypes[0] || 'รถยนต์ส่วนบุคคล'}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                   className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
                   required
                 >
-                  <option value="รถยนต์">รถยนต์</option>
-                  <option value="รถจักรยานยนต์">รถจักรยานยนต์</option>
-                  <option value="รถตู้">รถตู้</option>
-                  <option value="รถกระบะ">รถกระบะ</option>
-                  <option value="อื่นๆ">อื่นๆ</option>
+                  {vehicleTypes.map((v, idx) => (
+                    <option key={idx} value={v}>{v}</option>
+                  ))}
                 </select>
               </div>
               <div>

@@ -42,7 +42,7 @@ const DEFAULT_ELEMENTS: CanvasElement[] = [
 const MODERN_TEMPLATE: CanvasElement[] = [
   { id: 'm-bg', type: 'rect', field: 'static', x: 0, y: 0, width: 100, height: 100, backgroundColor: '#f8fafc', zIndex: 0 },
   { id: 'm-header', type: 'rect', field: 'static', x: 0, y: 0, width: 100, height: 35, backgroundColor: '#4f46e5', dynamicBg: true, zIndex: 1 },
-  { id: 'm-sysname', type: 'text', field: 'static', content: 'EPROFILE SYSTEM', x: 0, y: 4, width: 100, height: 5, fontSize: 10, color: '#ffffff', fontWeight: 'bold', textAlign: 'center', zIndex: 2 },
+  { id: 'm-sysname', type: 'text', field: 'static', content: 'SYSTEM', x: 0, y: 4, width: 100, height: 5, fontSize: 10, color: '#ffffff', fontWeight: 'bold', textAlign: 'center', zIndex: 2 },
   { id: 'm-avatar', type: 'image', field: 'avatar', x: 25, y: 15, width: 50, height: 32, backgroundColor: '#e2e8f0', borderRadius: 100, dynamicBorder: true, zIndex: 3 },
   { id: 'm-name', type: 'text', field: 'fullName', x: 0, y: 50, width: 100, height: 8, fontSize: 14, color: '#0f172a', fontWeight: 'bold', textAlign: 'center', zIndex: 2 },
   { id: 'm-pos', type: 'text', field: 'position', x: 0, y: 56, width: 100, height: 5, fontSize: 10, color: '#64748b', textAlign: 'center', zIndex: 2 },

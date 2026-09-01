@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Personnel } from '../../types/personnel';
+import { Personnel } from '@/types/personnel';
 import { QRCodeCanvas } from 'qrcode.react';
 import Barcode from 'react-barcode';
 
@@ -232,7 +232,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
           </div>
         )}
         <div className="absolute top-4 left-12 right-2 text-center z-10 flex flex-col items-center">
-          <h1 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-800">{settings?.systemName || 'eProfile System'}</h1>
+          <h1 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-800">{settings?.systemName || 'STAFF'}</h1>
           <div className="w-8 h-1 mt-1 rounded-full" style={{ backgroundColor: headerBgColor }}></div>
         </div>
 
@@ -281,7 +281,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
             {showBarcode && (
               <div className="w-10 h-10 flex-shrink-0 bg-white border border-slate-100 rounded">
                 <QRCodeCanvas 
-                  value={typeof window !== 'undefined' ? `${window.location.origin}/verify/${personnel.id}` : `https://eprofile/verify/${personnel.id}`} 
+                  value={typeof window !== 'undefined' ? `${window.location.origin}/verify/${personnel.id}` : `https://system/verify/${personnel.id}`} 
                   size={64} 
                   style={{ width: '100%', height: '100%' }} 
                 />
@@ -319,7 +319,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         style={{ backgroundColor: headerBgColor }}
       >
         <h1 className="text-[10px] font-bold uppercase tracking-wider text-white">บัตรประจำตัวเจ้าหน้าที่</h1>
-        <h2 className="text-[8px] font-medium opacity-90 text-white truncate w-11/12 text-center">{settings?.systemName || personnel.department || 'eProfile System'}</h2>
+        <h2 className="text-[8px] font-medium opacity-90 text-white truncate w-11/12 text-center">{settings?.systemName || personnel.department || 'STAFF'}</h2>
       </div>
 
       {/* Profile Image */}
@@ -368,7 +368,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         {showBarcode && (
           <div className="w-6 h-6 bg-white p-0.5 shadow-sm border border-slate-200 flex-shrink-0">
             <QRCodeCanvas 
-              value={typeof window !== 'undefined' ? `${window.location.origin}/verify/${personnel.id}` : `https://eprofile/verify/${personnel.id}`} 
+              value={typeof window !== 'undefined' ? `${window.location.origin}/verify/${personnel.id}` : `https://system/verify/${personnel.id}`} 
               size={64} 
               style={{ width: '100%', height: '100%' }} 
             />
