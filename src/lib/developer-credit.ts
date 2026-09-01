@@ -7,12 +7,12 @@
  * Email       : max_kai@hotmail.co.th
  * ค่ากาแฟ    : กรุงไทย 1130299147
  * ============================================================
- * การลบหรือแก้ไขส่วนนี้จะทำให้ระบบตรวจสอบความสมบูรณ์
- * ล้มเหลว และระบบจะหยุดทำงานทันที
+ * การลบหรือแก้ไขข้อมูลส่วนนี้จะทำให้ SHA-256 ไม่ตรงกับ
+ * CREDIT_INTEGRITY_HASH และระบบจะ return HTTP 503 ทันที
  * ============================================================
  */
 
-// Integrity token — derived from developer credit. DO NOT ALTER.
+// ⚠️ DO NOT MODIFY ANY FIELD — changing any value breaks the SHA-256 check
 export const DEVELOPER_CREDIT = {
   name:    'นายเยาวรัตน์ ช่างสลัก',
   phone:   '089-016-7912',
@@ -20,7 +20,15 @@ export const DEVELOPER_CREDIT = {
   bankRef: 'กรุงไทย 1130299147',
 } as const;
 
-// HMAC-style integrity seed — changing this will cause a 503 on all requests.
-// sha256("นายเยาวรัตน์ ช่างสลัก:089-016-7912:max_kai@hotmail.co.th:กรุงไทย 1130299147")
+/**
+ * Pre-computed SHA-256 of the canonical credit string:
+ * sha256("นายเยาวรัตน์ ช่างสลัก:089-016-7912:max_kai@hotmail.co.th:กรุงไทย 1130299147")
+ *
+ * This hash is verified at RUNTIME on every request via middleware.
+ * Changing DEVELOPER_CREDIT fields without updating this hash → 503.
+ * Changing this hash to match tampered data → still detectable via audit.
+ *
+ * ⚠️  DO NOT ALTER THIS VALUE ⚠️
+ */
 export const CREDIT_INTEGRITY_HASH =
-  'a3f8c2d91b4e7056f3a21c8d5e9b7040f6c3d18a2e954b7c1d06f3e8a2b5c9d1';
+  '87fddff40fa7b3b0c0c5f0f3394bf83830e4cedf53f93e1fc1133012aa2c51fd';

@@ -53,11 +53,27 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
 
   // ============================================================
-  // ⚠️  INTEGRITY GUARD — DO NOT REMOVE ⚠️
+  // ⚠️  SHA-256 INTEGRITY GUARD — DO NOT REMOVE ⚠️
+  // Computes SHA-256 of credit string at runtime and compares
+  // against the hardcoded expected hash. Any modification to
+  // DEVELOPER_CREDIT fields will cause a mismatch → 503.
   // ============================================================
-  if (!CREDIT_INTEGRITY_HASH || !DEVELOPER_CREDIT.name || !DEVELOPER_CREDIT.email) {
+  try {
+    const creditStr = `${DEVELOPER_CREDIT.name}:${DEVELOPER_CREDIT.phone}:${DEVELOPER_CREDIT.email}:${DEVELOPER_CREDIT.bankRef}`;
+    const encoded = new TextEncoder().encode(creditStr);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const computedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    if (computedHash !== CREDIT_INTEGRITY_HASH) {
+      return new NextResponse(
+        'Service Unavailable: System integrity verification failed. Contact the developer.',
+        { status: 503 }
+      );
+    }
+  } catch {
     return new NextResponse(
-      'Service Unavailable: System integrity check failed.',
+      'Service Unavailable: System integrity check could not be completed.',
       { status: 503 }
     );
   }
