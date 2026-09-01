@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     const personnelType = searchParams.get('personnelType') || '';
 
     // Build Where Condition
-    const where: Prisma.PersonnelWhereInput = {};
+    const where: any = {};
 
     if (search) {
       where.OR = [

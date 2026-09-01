@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requirePermission } from '@/lib/auth-guards';
-import { Prisma } from '@prisma/client';
 
 export async function GET(req: Request) {
   try {
@@ -14,29 +13,28 @@ export async function GET(req: Request) {
     const search = searchParams.get('search')?.trim() || '';
     const action = searchParams.get('action')?.trim() || '';
 
-    const where: Prisma.AuditLogWhereInput = {};
-
-    if (action && action !== 'ALL') {
-      where.action = action;
-    }
-
-    if (search) {
-      where.OR = [
-        { details: { contains: search } },
-        { entity: { contains: search } },
-        { action: { contains: search } },
-        { ipAddress: { contains: search } },
-        {
-          personnel: {
+    const where = {
+      ...(action && action !== 'ALL' ? { action } : {}),
+      ...(search
+        ? {
             OR: [
-              { firstName: { contains: search } },
-              { lastName: { contains: search } },
-              { username: { contains: search } },
+              { details: { contains: search } },
+              { entity: { contains: search } },
+              { action: { contains: search } },
+              { ipAddress: { contains: search } },
+              {
+                personnel: {
+                  OR: [
+                    { firstName: { contains: search } },
+                    { lastName: { contains: search } },
+                    { username: { contains: search } },
+                  ],
+                },
+              },
             ],
-          },
-        },
-      ];
-    }
+          }
+        : {}),
+    };
 
     // Distinct queries for pagination and stats
     const total = await prisma.auditLog.count({ where });

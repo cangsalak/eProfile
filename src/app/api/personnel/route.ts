@@ -56,7 +56,7 @@ export async function GET(req: Request) {
     }
 
     // Build Where Condition
-    const where: Prisma.PersonnelWhereInput = {};
+    const where: any = {};
 
     if (search) {
       where.OR = [
