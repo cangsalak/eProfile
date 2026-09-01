@@ -150,16 +150,14 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Invalid limit parameter. Must be an integer between 1 and 100' }, { status: 400 });
     }
 
-    const [total, list] = await Promise.all([
-      prisma.personnel.count({ where }),
-      prisma.personnel.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: { [sortBy]: sortOrder },
-        include: leaveInclude,
-      }),
-    ]);
+    const total = await prisma.personnel.count({ where });
+    const list = await prisma.personnel.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { [sortBy]: sortOrder },
+      include: leaveInclude,
+    });
 
     const totalPages = Math.ceil(total / limit) || 1;
 

@@ -8,31 +8,23 @@ export async function GET(req: Request) {
     const { error: authError } = await requireAuth(req);
     if (authError) return authError;
 
-    const [
-      total,
-      active,
-      byDepartmentRaw,
-      byPersonnelTypeRaw,
-      byStatusRaw,
-    ] = await Promise.all([
-      prisma.personnel.count(),
-      prisma.personnel.count({ where: { status: 'ปฏิบัติงานปกติ' } }),
-      prisma.personnel.groupBy({
-        by: ['department'],
-        _count: { id: true },
-        orderBy: { _count: { id: 'desc' } },
-      }),
-      prisma.personnel.groupBy({
-        by: ['personnelType'],
-        _count: { id: true },
-        orderBy: { _count: { id: 'desc' } },
-      }),
-      prisma.personnel.groupBy({
-        by: ['status'],
-        _count: { id: true },
-        orderBy: { _count: { id: 'desc' } },
-      }),
-    ]);
+    const total = await prisma.personnel.count();
+    const active = await prisma.personnel.count({ where: { status: 'ปฏิบัติงานปกติ' } });
+    const byDepartmentRaw = await prisma.personnel.groupBy({
+      by: ['department'],
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+    });
+    const byPersonnelTypeRaw = await prisma.personnel.groupBy({
+      by: ['personnelType'],
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+    });
+    const byStatusRaw = await prisma.personnel.groupBy({
+      by: ['status'],
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+    });
 
     const inactive = total - active;
 

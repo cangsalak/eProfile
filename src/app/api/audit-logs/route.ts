@@ -37,25 +37,23 @@ export async function GET(req: Request) {
       ];
     }
 
-    // Parallel queries for pagination and stats
-    const [total, logs, totalAll, loginCount, createCount, changeCount] = await Promise.all([
-      prisma.auditLog.count({ where }),
-      prisma.auditLog.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-        include: {
-          personnel: {
-            select: { firstName: true, lastName: true, username: true, prefix: true },
-          },
+    // Distinct queries for pagination and stats
+    const total = await prisma.auditLog.count({ where });
+    const logs = await prisma.auditLog.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        personnel: {
+          select: { firstName: true, lastName: true, username: true, prefix: true },
         },
-      }),
-      prisma.auditLog.count(),
-      prisma.auditLog.count({ where: { action: 'LOGIN' } }),
-      prisma.auditLog.count({ where: { action: 'CREATE' } }),
-      prisma.auditLog.count({ where: { OR: [{ action: 'UPDATE' }, { action: 'DELETE' }] } }),
-    ]);
+      },
+    });
+    const totalAll = await prisma.auditLog.count();
+    const loginCount = await prisma.auditLog.count({ where: { action: 'LOGIN' } });
+    const createCount = await prisma.auditLog.count({ where: { action: 'CREATE' } });
+    const changeCount = await prisma.auditLog.count({ where: { OR: [{ action: 'UPDATE' }, { action: 'DELETE' }] } });
 
     // If client requested flat array via legacy param, check if they need object
     // Return structured object with pagination

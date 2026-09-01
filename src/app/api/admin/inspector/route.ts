@@ -48,29 +48,27 @@ export async function GET(req: Request) {
     where.overallResult = resultFilter;
   }
 
-  const [total, inspections] = await Promise.all([
-    prisma.inspection.count({ where }),
-    prisma.inspection.findMany({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-      include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            username: true,
-            role: true,
-          },
-        },
-        _count: {
-          select: { findings: true },
+  const total = await prisma.inspection.count({ where });
+  const inspections = await prisma.inspection.findMany({
+    where,
+    skip: (page - 1) * limit,
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+    include: {
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          username: true,
+          role: true,
         },
       },
-    }),
-  ]);
+      _count: {
+        select: { findings: true },
+      },
+    },
+  });
 
   return NextResponse.json({
     data: inspections,

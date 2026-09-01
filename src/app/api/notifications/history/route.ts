@@ -27,15 +27,13 @@ export async function GET(req: Request) {
     const page = pageParam ? Math.max(1, parseInt(pageParam, 10)) : 1;
     const limit = limitParam ? Math.min(100, Math.max(1, parseInt(limitParam, 10))) : 10;
 
-    const [total, notifications] = await Promise.all([
-      prisma.notification.count({ where }),
-      prisma.notification.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
-    ]);
+    const total = await prisma.notification.count({ where });
+    const notifications = await prisma.notification.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
 
     const totalPages = Math.ceil(total / limit) || 1;
 

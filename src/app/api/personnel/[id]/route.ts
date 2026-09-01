@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { sendLineNotify } from '../../../../lib/notifications';
+import { sendLineNotify } from '@/lib/notifications';
 import { verifyAuth } from '@/lib/auth';
 import { requireAuth, requirePermission } from '@/lib/auth-guards';
 import { isValidId } from '@/lib/validate-utils';

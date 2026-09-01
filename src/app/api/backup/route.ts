@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     const formattedDate = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
     const filename = `eprofile_backup_${formattedDate}.db`;
 
-    return new NextResponse(fileBuffer, {
+    return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         'Content-Type': 'application/octet-stream',
         'Content-Disposition': `attachment; filename="${filename}"`,
