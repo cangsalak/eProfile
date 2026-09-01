@@ -9,6 +9,7 @@ import { runSystemInspectorTests } from './admin/system-inspector.test';
 import { runSecurityHeadersTests } from './security/security-headers.test';
 import { runApiDocumentationTests } from './admin/api-documentation.test';
 import { runDatabaseConfigTests } from './api/database-config.test';
+import { runDatabaseResetTests } from './api/database-reset.test';
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
@@ -18,7 +19,7 @@ async function main() {
 
   const startTime = Date.now();
   let passedSuites = 0;
-  let totalSuites = 11;
+  let totalSuites = 12;
 
   try {
     // 1. Unit Tests
@@ -63,6 +64,10 @@ async function main() {
 
     // 11. Multi-Database & Installer Tests
     await runDatabaseConfigTests();
+    passedSuites++;
+
+    // 12. Database Reset & Wipe Security Tests
+    await runDatabaseResetTests();
     passedSuites++;
 
     // Final Teardown: Clean up any test notifications, test posts, or test users
