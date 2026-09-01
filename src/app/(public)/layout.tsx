@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { verifyAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
 
 export default async function PublicLayout({
   children,
@@ -24,12 +23,8 @@ export default async function PublicLayout({
     // Fallback if database is not reachable
   }
 
-  // Get current path from headers
-  const headersList = headers();
-  const pathname = headersList.get('x-invoke-path') || '';
-
-  // If maintenance is on and user is not an admin, and not on /maintenance or /login, redirect
-  if (isMaintenance && !isAdmin && pathname !== '/maintenance' && pathname !== '/login') {
+  // /maintenance is outside (public) group, so we just redirect non-admins away from all public pages
+  if (isMaintenance && !isAdmin) {
     redirect('/maintenance');
   }
 
