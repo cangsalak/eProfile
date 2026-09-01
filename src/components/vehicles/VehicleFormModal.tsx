@@ -15,7 +15,7 @@ interface VehicleFormModalProps {
 
 export default function VehicleFormModal({ isOpen, onClose, onSave, initialData, personnelId }: VehicleFormModalProps) {
   const [formData, setFormData] = useState<Partial<Vehicle>>({
-    type: 'รถยนต์',
+    type: 'รถยนต์ส่วนบุคคล',
     licensePlate: '',
     brand: '',
     model: '',
@@ -31,6 +31,9 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
     'รถจักรยานยนต์ราชการ',
   ]);
   const [isSaving, setIsSaving] = useState(false);
+
+  const formControlClass = "w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all";
+  const labelClass = "block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5";
 
   useEffect(() => {
     if (isOpen) {
@@ -85,30 +88,43 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-100 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="glass-card max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl">
-        <div className="flex justify-between items-center mb-6 border-b border-slate-200 dark:border-slate-700/50 pb-4">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center">
-            <i className="fa-solid fa-car mr-3 text-primary-400"></i>
-            {initialData ? 'แก้ไขข้อมูลยานพาหนะ' : 'เพิ่มยานพาหนะใหม่'}
+    <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-900 max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl">
+        <div className="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+              <i className="fa-solid fa-car text-sm"></i>
+            </div>
+            <span>{initialData ? 'แก้ไขข้อมูลยานพาหนะ' : 'เพิ่มยานพาหนะใหม่'}</span>
           </h3>
-          <button onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800">
+          <button 
+            type="button"
+            onClick={onClose} 
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info */}
-          <div className="bg-white dark:bg-slate-900/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700/50">
-            <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">ข้อมูลพื้นฐานรถยนต์</h4>
+          <div className="bg-slate-50/50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/80">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i className="fa-solid fa-info-circle text-primary-500"></i>
+              ข้อมูลพื้นฐานยานพาหนะ
+            </h4>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ประเภทรถ</label>
+                <label htmlFor="vehicle-type-select" className={labelClass}>
+                  ประเภทรถ <span className="text-rose-500">*</span>
+                </label>
                 <select
+                  id="vehicle-type-select"
+                  aria-label="ประเภทรถ"
                   value={formData.type || vehicleTypes[0] || 'รถยนต์ส่วนบุคคล'}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+                  className={`${formControlClass} cursor-pointer`}
                   required
                 >
                   {vehicleTypes.map((v, idx) => (
@@ -117,13 +133,17 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
                 </select>
               </div>
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขทะเบียนรถ (พร้อมจังหวัด)</label>
+                <label htmlFor="vehicle-license-plate" className={labelClass}>
+                  เลขทะเบียนรถ (พร้อมจังหวัด) <span className="text-rose-500">*</span>
+                </label>
                 <input
+                  id="vehicle-license-plate"
+                  aria-label="เลขทะเบียนรถ"
                   type="text"
                   placeholder="เช่น กท 1234 กรุงเทพมหานคร"
                   value={formData.licensePlate || ''}
                   onChange={(e) => setFormData({ ...formData, licensePlate: e.target.value })}
-                  className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+                  className={formControlClass}
                   required
                 />
               </div>
@@ -131,34 +151,46 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ยี่ห้อ (Brand)</label>
+                <label htmlFor="vehicle-brand" className={labelClass}>
+                  ยี่ห้อ (Brand) <span className="text-rose-500">*</span>
+                </label>
                 <input
+                  id="vehicle-brand"
+                  aria-label="ยี่ห้อยานพาหนะ"
                   type="text"
                   placeholder="เช่น Toyota, Honda"
                   value={formData.brand || ''}
                   onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                  className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+                  className={formControlClass}
                   required
                 />
               </div>
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รุ่น (Model)</label>
+                <label htmlFor="vehicle-model" className={labelClass}>
+                  รุ่น (Model)
+                </label>
                 <input
+                  id="vehicle-model"
+                  aria-label="รุ่นยานพาหนะ"
                   type="text"
                   placeholder="เช่น Altis, Civic"
                   value={formData.model || ''}
                   onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                  className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+                  className={formControlClass}
                 />
               </div>
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">สี (Color)</label>
+                <label htmlFor="vehicle-color" className={labelClass}>
+                  สี (Color) <span className="text-rose-500">*</span>
+                </label>
                 <input
+                  id="vehicle-color"
+                  aria-label="สียานพาหนะ"
                   type="text"
                   placeholder="เช่น ขาว, ดำ, บรอนซ์เงิน"
                   value={formData.color || ''}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                  className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+                  className={formControlClass}
                   required
                 />
               </div>
@@ -166,8 +198,11 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
           </div>
 
           {/* Photo Uploads */}
-          <div className="bg-white dark:bg-slate-900/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700/50">
-            <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">รูปถ่ายรถยนต์ (3 มุม)</h4>
+          <div className="bg-slate-50/50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/80">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i className="fa-solid fa-camera text-primary-500"></i>
+              รูปถ่ายรถยนต์ (3 มุม)
+            </h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <ImageUploadBox 
                 label="ด้านหน้า (เห็นป้ายทะเบียน)" 
@@ -188,25 +223,27 @@ export default function VehicleFormModal({ isOpen, onClose, onSave, initialData,
                 onRemove={() => setFormData({ ...formData, photoBack: null })}
               />
             </div>
-            <p className="text-xs text-slate-500 mt-4 text-center"><i className="fa-solid fa-info-circle mr-1"></i>ระบบจะทำการลดขนาดภาพให้อัตโนมัติ เพื่อประหยัดพื้นที่จัดเก็บ</p>
+            <p className="text-xs text-slate-400 mt-4 text-center">
+              <i className="fa-solid fa-info-circle mr-1"></i>ระบบจะทำการบีบอัดภาพให้อัตโนมัติ เพื่อความเร็วในการโหลด
+            </p>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="px-6 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors font-medium disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-semibold transition-colors disabled:opacity-50"
             >
               ยกเลิก
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-6 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 shadow-[0_0_15px_rgba(99,102,241,0.3)] text-white font-medium transition-all disabled:opacity-50 flex items-center"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 shadow-md shadow-primary-500/25 text-white text-xs sm:text-sm font-bold transition-all disabled:opacity-50 flex items-center gap-2"
             >
-              {isSaving ? <i className="fa-solid fa-spinner fa-spin mr-2"></i> : <i className="fa-solid fa-save mr-2"></i>}
-              {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
+              {isSaving ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-save"></i>}
+              <span>{isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}</span>
             </button>
           </div>
         </form>

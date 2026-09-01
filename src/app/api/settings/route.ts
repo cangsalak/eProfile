@@ -17,9 +17,12 @@ export async function GET() {
       return acc;
     }, {});
     
-    // Add default isInstalled if not present
+    // Add default isInstalled and defaultPageSize if not present
     if (typeof settingsObj.isInstalled === 'undefined') {
       settingsObj.isInstalled = 'false';
+    }
+    if (!settingsObj.defaultPageSize) {
+      settingsObj.defaultPageSize = '20';
     }
 
     // Default dropdown options if not yet set in database
@@ -72,6 +75,7 @@ export async function PUT(request: Request) {
     
     // Audit log: SETTINGS_CHANGED
     const changedKeys = Object.keys(body).filter(k => typeof body[k] === 'string');
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
     await prisma.auditLog.create({
       data: {
         personnelId: authUser.id,
@@ -79,6 +83,7 @@ export async function PUT(request: Request) {
         entity: 'SystemSetting',
         entityId: 'settings',
         details: JSON.stringify({ changedKeys }),
+        ipAddress: clientIp,
       },
     }).catch(() => {/* non-blocking */});
 

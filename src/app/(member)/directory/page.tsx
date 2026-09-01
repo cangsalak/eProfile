@@ -35,10 +35,10 @@ export default function EProfilePage() {
   const fetchPersonnel = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/personnel');
+      const res = await fetch('/api/personnel?all=true');
       if (res.ok) {
         const data = await res.json();
-        setPersonnelList(data);
+        setPersonnelList(Array.isArray(data) ? data : data.data || []);
       }
     } catch (err) {
       console.error('Failed to load personnel from SQLite DB', err);
@@ -67,6 +67,9 @@ export default function EProfilePage() {
 
   // Infinite Scroll Observer
   useEffect(() => {
+    const target = observerTarget.current;
+    if (!target) return;
+
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting) {
@@ -75,15 +78,12 @@ export default function EProfilePage() {
       },
       { threshold: 1.0 }
     );
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
+    observer.observe(target);
+
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
-      }
+      observer.unobserve(target);
     };
-  }, [observerTarget.current, personnelList, searchQuery, selectedDept]);
+  }, [personnelList, searchQuery, selectedDept]);
 
   const departments = ['ทั้งหมด', ...Array.from(new Set(personnelList.map((p) => p.department)))];
 
@@ -127,7 +127,7 @@ export default function EProfilePage() {
   return (
     <div className="pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 no-print">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">ทำเนียบบุคลากร</h2>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">ทำเนียบบุคลากร</h1>
         <div className="flex gap-3">
           <button
             onClick={() => setIsScannerOpen(true)}

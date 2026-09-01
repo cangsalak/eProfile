@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const { user, error: authError } = await requirePermission(req, 'MANAGE_POSTS');
     if (authError || !user) return authError || NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { title, content, image, published } = await req.json();
+    const { title, content, category, image, published } = await req.json();
 
     if (!title || !content) {
       return NextResponse.json({ error: 'Title and content are required' }, { status: 400 });
@@ -38,11 +38,14 @@ export async function POST(req: Request) {
       data: {
         title,
         content,
+        category: category || 'ข่าวทั่วไป',
         image: image || null,
         published: published ?? true,
         authorId: user.id
       }
     });
+
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || req.headers.get('x-real-ip') || '127.0.0.1';
 
     // Audit log
     await prisma.auditLog.create({
@@ -51,7 +54,8 @@ export async function POST(req: Request) {
         action: 'CREATE',
         entity: 'Post',
         entityId: post.id,
-        details: JSON.stringify({ title: post.title })
+        details: JSON.stringify({ title: post.title }),
+        ipAddress: clientIp,
       }
     }).catch(() => {});
 

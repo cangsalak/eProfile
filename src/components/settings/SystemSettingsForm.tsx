@@ -29,30 +29,48 @@ export default function SystemSettingsForm({ settings, setSettings, handleChange
               <button type="button" onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-900 dark:text-white text-sm font-medium rounded-lg transition-colors flex items-center">
                 <i className="fa-solid fa-upload mr-2"></i> เลือกไฟล์รูปภาพ
               </button>
-              <input type="file" ref={fileInputRef} onChange={handleLogoUpload} accept="image/*" className="hidden" />
+              <input id="systemLogoFileInput" aria-label="อัปโหลดรูปภาพโลโก้ระบบ" type="file" ref={fileInputRef} onChange={handleLogoUpload} accept="image/*" className="hidden" />
             </div>
           </div>
         </div>
 
         <div>
-          <label className="block text-slate-500 dark:text-slate-400 text-sm mb-1">ชื่อระบบ (System Name)</label>
-          <input type="text" name="systemName" value={settings.systemName || ''} onChange={handleChange} className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white" />
+          <label htmlFor="systemName" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ชื่อระบบ (System Name)</label>
+          <input id="systemName" type="text" name="systemName" aria-label="ชื่อระบบ" value={settings.systemName || ''} onChange={handleChange} className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
         </div>
         <div>
-          <label className="block text-slate-500 dark:text-slate-400 text-sm mb-1">ชื่อองค์กร (Organization Name)</label>
-          <input type="text" name="organizationName" value={settings.organizationName || ''} onChange={handleChange} className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white" />
+          <label htmlFor="organizationName" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ชื่อองค์กร (Organization Name)</label>
+          <input id="organizationName" type="text" name="organizationName" aria-label="ชื่อองค์กร" value={settings.organizationName || ''} onChange={handleChange} className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
         </div>
         <div>
-          <label className="block text-slate-500 dark:text-slate-400 text-sm mb-1">ที่อยู่หน่วยงาน (Organization Address)</label>
-          <input type="text" name="organizationAddress" value={settings.organizationAddress || ''} onChange={handleChange} placeholder="กรอกที่อยู่หน่วยงาน..." className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white" />
+          <label htmlFor="organizationAddress" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ที่อยู่หน่วยงาน (Organization Address)</label>
+          <input id="organizationAddress" type="text" name="organizationAddress" aria-label="ที่อยู่หน่วยงาน" value={settings.organizationAddress || ''} onChange={handleChange} placeholder="กรอกที่อยู่หน่วยงาน..." className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
         </div>
         <div>
-          <label className="block text-slate-500 dark:text-slate-400 text-sm mb-1">เบอร์โทรศัพท์หน่วยงาน (Organization Phone)</label>
-          <input type="text" name="organizationPhone" value={settings.organizationPhone || ''} onChange={handleChange} placeholder="กรอกเบอร์โทรศัพท์หน่วยงาน..." className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white" />
+          <label htmlFor="organizationPhone" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">เบอร์โทรศัพท์หน่วยงาน (Organization Phone)</label>
+          <input id="organizationPhone" type="text" name="organizationPhone" aria-label="เบอร์โทรศัพท์หน่วยงาน" value={settings.organizationPhone || ''} onChange={handleChange} placeholder="กรอกเบอร์โทรศัพท์หน่วยงาน..." className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
         </div>
         <div>
-          <label className="block text-slate-500 dark:text-slate-400 text-sm mb-1">ข้อกำหนดหลังบัตร / หมายเหตุ (Terms and Conditions)</label>
-          <textarea name="cardTermsConditions" value={settings.cardTermsConditions || ''} onChange={handleChange} placeholder="เช่น หากเก็บได้กรุณาส่งคืน..." rows={2} className="w-full bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 text-slate-900 dark:text-white resize-none" />
+          <label htmlFor="cardTermsConditions" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ข้อกำหนดหลังบัตร / หมายเหตุ (Terms and Conditions)</label>
+          <textarea id="cardTermsConditions" name="cardTermsConditions" aria-label="ข้อกำหนดหลังบัตร" value={settings.cardTermsConditions || ''} onChange={handleChange} placeholder="เช่น หากเก็บได้กรุณาส่งคืน..." rows={2} className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all resize-none" />
+        </div>
+
+        <div>
+          <label htmlFor="defaultPageSize" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">จำนวนรายการเริ่มต้นต่อหน้าในตาราง (Default Items Per Page)</label>
+          <select
+            id="defaultPageSize"
+            name="defaultPageSize"
+            aria-label="จำนวนรายการเริ่มต้นต่อหน้าในตาราง"
+            value={settings.defaultPageSize || '20'}
+            onChange={handleChange}
+            className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
+          >
+            <option value="10">10 รายการ / หน้า</option>
+            <option value="20">20 รายการ / หน้า (แนะนำ)</option>
+            <option value="50">50 รายการ / หน้า</option>
+            <option value="100">100 รายการ / หน้า</option>
+          </select>
+          <p className="text-xs text-slate-500 mt-1">กำหนดค่าเริ่มต้นสำหรับตารางข้อมูลทั้งหมดในระบบ เช่น ทะเบียนบุคลากร และเอกสาร API</p>
         </div>
 
 
@@ -80,8 +98,11 @@ export default function SystemSettingsForm({ settings, setSettings, handleChange
               }
               return urls.map((cal: any, index: number) => (
                 <div key={index} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center bg-slate-50 dark:bg-slate-900/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <label htmlFor={`googleCalendarName_${index}`} className="sr-only">ชื่อปฏิทิน</label>
                   <input 
+                    id={`googleCalendarName_${index}`}
                     type="text" 
+                    aria-label={`ชื่อปฏิทินรายการที่ ${index + 1}`}
                     placeholder="ชื่อปฏิทิน (เช่น วันหยุดไทย)" 
                     value={cal.name}
                     onChange={(e) => {
@@ -89,10 +110,13 @@ export default function SystemSettingsForm({ settings, setSettings, handleChange
                       newUrls[index].name = e.target.value;
                       setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
                     }}
-                    className="w-full sm:w-1/3 bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-sm text-slate-900 dark:text-white"
+                    className="w-full sm:w-1/3 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
+                  <label htmlFor={`googleCalendarUrl_${index}`} className="sr-only">ลิงก์ iCal</label>
                   <input 
+                    id={`googleCalendarUrl_${index}`}
                     type="text" 
+                    aria-label={`ลิงก์ iCal รายการที่ ${index + 1}`}
                     placeholder="ลิงก์ iCal (https://.../basic.ics)" 
                     value={cal.url}
                     onChange={(e) => {
@@ -100,7 +124,7 @@ export default function SystemSettingsForm({ settings, setSettings, handleChange
                       newUrls[index].url = e.target.value;
                       setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
                     }}
-                    className="w-full flex-1 bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-sm text-slate-900 dark:text-white"
+                    className="w-full flex-1 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                   <button 
                     type="button"
@@ -178,10 +202,10 @@ export default function SystemSettingsForm({ settings, setSettings, handleChange
         {settings.systemColor === 'custom' && (
           <div className="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mt-2 flex items-center space-x-4 animate-fade-in">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">เลือกสีที่ต้องการ (Custom Hex)</label>
+              <label htmlFor="customPrimaryColorHex" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">เลือกสีที่ต้องการ (Custom Hex)</label>
               <div className="flex items-center space-x-3">
-                <input type="color" name="customPrimaryColor" value={settings.customPrimaryColor || '#6366f1'} onChange={handleChange} className="w-12 h-12 rounded cursor-pointer border-0 p-0" />
-                <input type="text" name="customPrimaryColor" value={settings.customPrimaryColor || '#6366f1'} onChange={handleChange} className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-slate-900 dark:text-white uppercase font-mono w-28" />
+                <input id="customPrimaryColorPicker" type="color" name="customPrimaryColor" aria-label="เลือกสีแต่งเอง" value={settings.customPrimaryColor || '#6366f1'} onChange={handleChange} className="w-12 h-12 rounded cursor-pointer border-0 p-0" />
+                <input id="customPrimaryColorHex" type="text" name="customPrimaryColor" aria-label="รหัสสี Hex แต่งเอง" value={settings.customPrimaryColor || '#6366f1'} onChange={handleChange} className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-slate-900 dark:text-white uppercase font-mono w-28" />
               </div>
             </div>
           </div>

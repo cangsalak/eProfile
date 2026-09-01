@@ -270,8 +270,10 @@ export default function PersonnelImportModal({ isOpen, onClose, onRefresh, setIs
             </button>
             <div className="w-full sm:w-auto">
               <input 
+                id="personnelImportExcelInput"
                 type="file" 
                 accept=".xlsx, .xls" 
+                aria-label="อัปโหลดไฟล์ Excel นำเข้าบุคลากร (.xlsx, .xls)"
                 className="hidden" 
                 ref={fileInputRef} 
                 onChange={handleImportExcel} 

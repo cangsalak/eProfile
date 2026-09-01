@@ -3,7 +3,6 @@ import { requireRole } from '@/lib/auth-guards';
 import { prisma } from '@/lib/prisma';
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +19,8 @@ export async function GET(req: Request) {
 
     const fileBuffer = fs.readFileSync(dbPath);
 
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || req.headers.get('x-real-ip') || '127.0.0.1';
+
     // Audit log: BACKUP_CREATED
     await prisma.auditLog.create({
       data: {
@@ -28,6 +29,7 @@ export async function GET(req: Request) {
         entity: 'Database',
         entityId: 'dev.db',
         details: `Backup created by ${user.role}`,
+        ipAddress: clientIp,
       },
     }).catch(() => {/* non-blocking */});
 

@@ -1,11 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
+import { verifyAuth } from '@/lib/auth';
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await verifyAuth();
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       {/* Public Navbar */}
@@ -32,18 +35,30 @@ export default function PublicLayout({
             </div>
 
             <div className="flex items-center gap-4">
-              <Link 
-                href="/login" 
-                className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400"
-              >
-                เข้าสู่ระบบ
-              </Link>
-              <Link 
-                href="/register" 
-                className="hidden md:flex text-sm font-medium bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl transition-colors"
-              >
-                สมัครสมาชิก
-              </Link>
+              {user ? (
+                <Link 
+                  href="/dashboard" 
+                  className="text-sm font-medium bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl transition-colors flex items-center gap-2 shadow-sm"
+                >
+                  <i className="fa-solid fa-gauge text-xs"></i>
+                  <span>ไปยังระบบจัดการ</span>
+                </Link>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400"
+                  >
+                    เข้าสู่ระบบ
+                  </Link>
+                  <Link 
+                    href="/register" 
+                    className="hidden md:flex text-sm font-medium bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl transition-colors"
+                  >
+                    สมัครสมาชิก
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -68,39 +83,52 @@ export default function PublicLayout({
                 </span>
               </Link>
               <p className="text-sm text-slate-500 max-w-sm">
-                ระบบจัดการฐานข้อมูลและสารสนเทศบุคลากรยุคใหม่ ที่ออกแบบมาเพื่อความง่ายและมีประสิทธิภาพสูงสุด
+                ระบบสารสนเทศเพื่อการบริหารจัดการบุคลากร ทันสมัย ปลอดภัย และมีประสิทธิภาพสูง
               </p>
+              <div className="mt-4 space-y-1.5 text-xs text-slate-400">
+                <div>
+                  <i className="fa-solid fa-phone w-4 text-slate-500"></i>
+                  <a href="tel:021234567" className="hover:text-white transition-colors">02-123-4567</a>
+                </div>
+                <div>
+                  <i className="fa-solid fa-envelope w-4 text-slate-500"></i>
+                  <a href="mailto:contact@eprofile.com" className="hover:text-white transition-colors">contact@eprofile.com</a>
+                </div>
+              </div>
             </div>
             
             <div>
-              <h4 className="text-white font-semibold mb-4">เมนูลัด</h4>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">ลิงก์ด่วน</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="hover:text-primary-400 transition-colors">เกี่ยวกับองค์กร</Link></li>
-                <li><Link href="/services" className="hover:text-primary-400 transition-colors">บริการของเรา</Link></li>
-                <li><Link href="/news" className="hover:text-primary-400 transition-colors">ข่าวสารและบทความ</Link></li>
+                <li><Link href="/about" className="hover:text-white transition-colors">เกี่ยวกับเรา</Link></li>
+                <li><Link href="/services" className="hover:text-white transition-colors">บริการ</Link></li>
+                <li><Link href="/news" className="hover:text-white transition-colors">ข่าวสารประชาสัมพันธ์</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">ติดต่อเรา</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-semibold mb-4">ติดต่อเรา</h4>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">สำหรับสมาชิก</h3>
               <ul className="space-y-2 text-sm">
-                <li className="flex items-start gap-2">
-                  <i className="fa-solid fa-location-dot mt-1 w-4 text-center"></i>
-                  <span>ศูนย์ราชการเฉลิมพระเกียรติฯ</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <i className="fa-solid fa-phone w-4 text-center"></i>
-                  <span>02-123-4567</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <i className="fa-solid fa-envelope w-4 text-center"></i>
-                  <span>contact@eprofile.com</span>
-                </li>
+                {user ? (
+                  <>
+                    <li><Link href="/dashboard" className="hover:text-white transition-colors">แดชบอร์ดหลัก</Link></li>
+                    <li><Link href="/directory" className="hover:text-white transition-colors">ทำเนียบบุคลากร</Link></li>
+                    <li><Link href="/profile" className="hover:text-white transition-colors">ข้อมูลส่วนตัว</Link></li>
+                  </>
+                ) : (
+                  <>
+                    <li><Link href="/login" className="hover:text-white transition-colors">เข้าสู่ระบบ</Link></li>
+                    <li><Link href="/register" className="hover:text-white transition-colors">ลงทะเบียน</Link></li>
+                    <li><Link href="/forgot-password" className="hover:text-white transition-colors">ลืมรหัสผ่าน</Link></li>
+                  </>
+                )}
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-800 mt-12 pt-8 text-sm text-center">
-            &copy; {new Date().getFullYear()} eProfile System. All rights reserved.
+          
+          <div className="mt-12 pt-8 border-t border-slate-800 text-xs text-slate-500 text-center">
+            &copy; {new Date().getFullYear()} eProfile System. สงวนลิขสิทธิ์ทุกประการ.
           </div>
         </div>
       </footer>

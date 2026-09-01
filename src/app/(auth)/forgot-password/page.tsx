@@ -34,9 +34,9 @@ export default function ForgotPasswordPage() {
             <i className="fa-solid fa-key text-3xl text-white"></i>
           </div>
         </Link>
-        <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
           ลืมรหัสผ่าน?
-        </h2>
+        </h1>
         <p className="text-center text-sm text-slate-600 dark:text-slate-400">
           กรอกรหัสประจำตัวของคุณ เพื่อส่งคำขอให้ผู้ดูแลระบบรีเซ็ตรหัสผ่าน
         </p>
@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i className="fa-solid fa-check text-2xl"></i>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">ส่งคำขอสำเร็จ</h3>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">ส่งคำขอสำเร็จ</h2>
               <p className="text-slate-500 dark:text-slate-400 mb-6">ผู้ดูแลระบบได้รับคำขอรีเซ็ตรหัสผ่านของคุณแล้ว กรุณารอการติดต่อกลับหรือแจ้งแอดมินโดยตรง</p>
               <Link 
                 href="/login"
@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="forgot-username" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   รหัสประจำตัว (Username) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -68,6 +68,8 @@ export default function ForgotPasswordPage() {
                     <i className="fa-solid fa-user text-slate-400"></i>
                   </div>
                   <input
+                    id="forgot-username"
+                    aria-label="รหัสประจำตัวสำหรับรีเซ็ตรหัสผ่าน"
                     type="text"
                     required
                     value={username}

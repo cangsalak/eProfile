@@ -232,7 +232,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
           </div>
         )}
         <div className="absolute top-4 left-12 right-2 text-center z-10 flex flex-col items-center">
-          <h1 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-800">{settings?.systemName || 'STAFF'}</h1>
+          <div className="text-[10px] font-extrabold uppercase tracking-widest text-slate-800">{settings?.systemName || 'STAFF'}</div>
           <div className="w-8 h-1 mt-1 rounded-full" style={{ backgroundColor: headerBgColor }}></div>
         </div>
 
@@ -318,8 +318,8 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         className="absolute top-0 left-0 right-0 h-16 flex flex-col items-center justify-start pt-2 text-white"
         style={{ backgroundColor: headerBgColor }}
       >
-        <h1 className="text-[10px] font-bold uppercase tracking-wider text-white">บัตรประจำตัวเจ้าหน้าที่</h1>
-        <h2 className="text-[8px] font-medium opacity-90 text-white truncate w-11/12 text-center">{settings?.systemName || personnel.department || 'STAFF'}</h2>
+        <div className="text-[10px] font-bold uppercase tracking-wider text-white">บัตรประจำตัวเจ้าหน้าที่</div>
+        <div className="text-[8px] font-medium opacity-90 text-white truncate w-11/12 text-center">{settings?.systemName || personnel.department || 'STAFF'}</div>
       </div>
 
       {/* Profile Image */}

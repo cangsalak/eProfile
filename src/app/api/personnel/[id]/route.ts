@@ -105,15 +105,16 @@ export async function PUT(
       data: safeData,
     });
     
-    await sendLineNotify(`✏️ มีการแก้ไขข้อมูลบุคลากร: ${updated.prefix}${updated.firstName} ${updated.lastName}`);
-    
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
+
     await prisma.auditLog.create({
       data: {
         personnelId: authUser.id,
         action: 'PERSONNEL_UPDATED',
         entity: 'Personnel',
         entityId: updated.id,
-        details: JSON.stringify({ name: `${updated.firstName} ${updated.lastName}` })
+        details: JSON.stringify({ name: `${updated.firstName} ${updated.lastName}` }),
+        ipAddress: clientIp,
       }
     });
 
@@ -124,7 +125,8 @@ export async function PUT(
           action: 'PASSWORD_CHANGED',
           entity: 'Personnel',
           entityId: updated.id,
-          details: 'User password was changed'
+          details: 'User password was changed',
+          ipAddress: clientIp,
         }
       });
     }
@@ -151,6 +153,7 @@ export async function DELETE(
 
     const person = await prisma.personnel.findUnique({ where: { id: params.id } });
     if (person) {
+      const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
       await prisma.personnel.delete({ where: { id: params.id } });
       await sendLineNotify(`🗑️ ข้อมูลบุคลากรถูกลบออกจากระบบ: ${person.prefix}${person.firstName} ${person.lastName}`);
       await prisma.auditLog.create({
@@ -159,7 +162,8 @@ export async function DELETE(
           action: 'PERSONNEL_DELETED',
           entity: 'Personnel',
           entityId: person.id,
-          details: JSON.stringify({ name: `${person.firstName} ${person.lastName}` })
+          details: JSON.stringify({ name: `${person.firstName} ${person.lastName}` }),
+          ipAddress: clientIp,
         }
       });
     }

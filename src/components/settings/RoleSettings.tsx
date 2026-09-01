@@ -153,8 +153,10 @@ export default function RoleSettings() {
           <form onSubmit={handleSave} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">รหัสอ้างอิง (Role Name) <span className="text-red-500">*</span></label>
+                <label htmlFor="roleNameInput" className="block text-sm font-medium mb-1">รหัสอ้างอิง (Role Name) <span className="text-red-500">*</span></label>
                 <input 
+                  id="roleNameInput"
+                  aria-label="รหัสอ้างอิง Role"
                   required
                   type="text" 
                   value={currentRole.name || ''}
@@ -166,8 +168,10 @@ export default function RoleSettings() {
                 {currentRole.isSystem && <p className="text-xs text-amber-500 mt-1"><i className="fa-solid fa-info-circle"></i> สิทธิ์พื้นฐานของระบบไม่สามารถเปลี่ยนรหัสอ้างอิงได้</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">ชื่อสิทธิ์ (Display Name) <span className="text-red-500">*</span></label>
+                <label htmlFor="roleDisplayNameInput" className="block text-sm font-medium mb-1">ชื่อสิทธิ์ (Display Name) <span className="text-red-500">*</span></label>
                 <input 
+                  id="roleDisplayNameInput"
+                  aria-label="ชื่อสิทธิ์ Display Name"
                   required
                   type="text" 
                   value={currentRole.displayName || ''}
@@ -177,8 +181,10 @@ export default function RoleSettings() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1">คำอธิบาย</label>
+                <label htmlFor="roleDescriptionInput" className="block text-sm font-medium mb-1">คำอธิบาย</label>
                 <input 
+                  id="roleDescriptionInput"
+                  aria-label="คำอธิบายสิทธิ์"
                   type="text" 
                   value={currentRole.description || ''}
                   onChange={(e) => setCurrentRole({...currentRole, description: e.target.value})}
@@ -196,6 +202,7 @@ export default function RoleSettings() {
                     <div className="pt-0.5">
                       <input 
                         type="checkbox" 
+                        aria-label={`สิทธิ์ ${perm.label}`}
                         checked={selectedPermissions.includes(perm.id)}
                         onChange={() => togglePermission(perm.id)}
                         className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600"

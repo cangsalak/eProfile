@@ -42,7 +42,7 @@ export default function SetupAdminPage() {
           <div className="w-16 h-16 bg-rose-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/30">
             <i className="fa-solid fa-user-shield text-2xl text-rose-400"></i>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">กู้คืนสิทธิ์ผู้ดูแลระบบ</h2>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">กู้คืนสิทธิ์ผู้ดูแลระบบ</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">กรอกรหัสลับเพื่อตั้งค่าบัญชีของคุณเป็น Admin</p>
         </div>
 
@@ -60,26 +60,26 @@ export default function SetupAdminPage() {
 
         <form onSubmit={handleSetup} className="space-y-4">
           <div>
-            <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขบัตรประชาชน (13 หลัก)</label>
-            <input type="text" maxLength={13} required value={citizenId} onChange={e => setCitizenId(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+            <label htmlFor="setup-citizenId" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขบัตรประชาชน (13 หลัก)</label>
+            <input id="setup-citizenId" aria-label="เลขบัตรประชาชน 13 หลัก" type="text" maxLength={13} required value={citizenId} onChange={e => setCitizenId(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
           </div>
           <div>
-            <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขประจำตัวทหาร (10 หลัก)</label>
-            <input type="text" maxLength={10} required value={badgeNo} onChange={e => setBadgeNo(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-primary-500" />
+            <label htmlFor="setup-badgeNo" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขประจำตัวทหาร (10 หลัก)</label>
+            <input id="setup-badgeNo" aria-label="เลขประจำตัวทหาร 10 หลัก" type="text" maxLength={10} required value={badgeNo} onChange={e => setBadgeNo(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ชื่อ</label>
-              <input type="text" required value={firstName} onChange={e => setFirstName(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+              <label htmlFor="setup-firstName" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ชื่อ</label>
+              <input id="setup-firstName" aria-label="ชื่อ" type="text" required value={firstName} onChange={e => setFirstName(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
             </div>
             <div>
-              <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">นามสกุล</label>
-              <input type="text" required value={lastName} onChange={e => setLastName(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+              <label htmlFor="setup-lastName" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">นามสกุล</label>
+              <input id="setup-lastName" aria-label="นามสกุล" type="text" required value={lastName} onChange={e => setLastName(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
             </div>
           </div>
           <div>
-            <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รหัสลับ (Secret Code)</label>
-            <input type="password" required value={secretCode} onChange={e => setSecretCode(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-rose-900/30 rounded-xl px-4 py-2.5 text-rose-400 focus:outline-none focus:border-rose-500" />
+            <label htmlFor="setup-secretCode" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รหัสลับ (Secret Code)</label>
+            <input id="setup-secretCode" aria-label="รหัสลับผู้ดูแลระบบ" type="password" required value={secretCode} onChange={e => setSecretCode(e.target.value)} className="w-full bg-slate-100 dark:bg-slate-950 border border-rose-900/30 rounded-xl px-4 py-2.5 text-rose-400 focus:outline-none focus:border-rose-500" />
           </div>
 
           <button type="submit" disabled={status.loading} className="w-full mt-6 px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-medium transition-all shadow-lg shadow-rose-600/20">

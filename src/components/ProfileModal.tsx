@@ -62,20 +62,55 @@ export default function ProfileModal({ person, onClose, onPrintCard }: ProfileMo
           <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
             <div>
               <span className="text-xs text-slate-500 dark:text-slate-400 block">เลขประจำตัวบุคลากร</span>
-              <span className="font-mono text-white font-semibold">{person.badgeNo}</span>
+              <span className="font-mono text-slate-900 dark:text-white font-semibold">{person.badgeNo}</span>
             </div>
             <div>
               <span className="text-xs text-slate-500 dark:text-slate-400 block">สถานะการทำงาน</span>
-              <span className="text-emerald-400 font-medium">{person.status}</span>
+              <span className="text-emerald-500 dark:text-emerald-400 font-medium">{person.status}</span>
             </div>
             <div>
               <span className="text-xs text-slate-500 dark:text-slate-400 block">เบอร์โทรภายใน</span>
-              <span className="text-slate-900 dark:text-white">{person.phone}</span>
+              {person.phone ? (
+                <a
+                  href={`tel:${person.phone.replace(/[^0-9+]/g, '')}`}
+                  className="text-primary-600 dark:text-primary-400 hover:underline font-medium inline-flex items-center gap-1.5"
+                  title="คลิกเพื่อโทรออก"
+                >
+                  <i className="fa-solid fa-phone text-xs"></i>
+                  <span>{person.phone}</span>
+                </a>
+              ) : (
+                <span className="text-slate-400">-</span>
+              )}
             </div>
             <div>
               <span className="text-xs text-slate-500 dark:text-slate-400 block">เบอร์มือถือ</span>
-              <span className="text-slate-900 dark:text-white">{person.mobile}</span>
+              {person.mobile ? (
+                <a
+                  href={`tel:${person.mobile.replace(/[^0-9+]/g, '')}`}
+                  className="text-primary-600 dark:text-primary-400 hover:underline font-medium inline-flex items-center gap-1.5"
+                  title="คลิกเพื่อโทรออก"
+                >
+                  <i className="fa-solid fa-mobile-screen text-xs"></i>
+                  <span>{person.mobile}</span>
+                </a>
+              ) : (
+                <span className="text-slate-400">-</span>
+              )}
             </div>
+            {person.email && (
+              <div className="col-span-2 border-t border-slate-100 dark:border-slate-800 pt-2 mt-1">
+                <span className="text-xs text-slate-500 dark:text-slate-400 block">อีเมลติดต่อ</span>
+                <a
+                  href={`mailto:${person.email}`}
+                  className="text-primary-600 dark:text-primary-400 hover:underline font-medium inline-flex items-center gap-1.5"
+                  title="คลิกเพื่อส่งอีเมล"
+                >
+                  <i className="fa-solid fa-envelope text-xs"></i>
+                  <span>{person.email}</span>
+                </a>
+              </div>
+            )}
           </div>
 
           <div>

@@ -96,10 +96,13 @@ export default function ScannerModal({ isOpen, onClose, personnelList, settings,
               เสียบเครื่องอ่านบาร์โค้ด และสแกนบัตรรหัส 10 หลัก หรือกรอกรหัสด้วยตนเอง
             </p>
             <div className="relative max-w-sm mx-auto">
+              <label htmlFor="scannerModalInput" className="sr-only">รหัสประจำตัวหรือบาร์โค้ด</label>
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i className="fa-solid fa-magnifying-glass text-slate-500"></i>
               </div>
               <input
+                id="scannerModalInput"
+                aria-label="กรอกรหัสประจำตัว หรือสแกนบาร์โค้ด"
                 ref={inputRef}
                 type="text"
                 value={scanValue}

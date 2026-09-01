@@ -7,6 +7,8 @@ interface PersonnelPaginationProps {
   indexOfLastItem: number;
   currentPage: number;
   totalPages: number;
+  pageSize?: number;
+  setPageSize?: (size: number) => void;
   setCurrentPage: (page: number | ((prev: number) => number)) => void;
 }
 
@@ -17,24 +19,54 @@ export default function PersonnelPagination({
   indexOfLastItem,
   currentPage,
   totalPages,
+  pageSize = 20,
+  setPageSize,
   setCurrentPage,
 }: PersonnelPaginationProps) {
   if (isLoading || totalItems === 0) return null;
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-300 dark:border-slate-600/50 bg-slate-100/50 dark:bg-slate-800/80">
-      <div className="text-sm text-slate-500 dark:text-slate-400">
-        แสดง <span className="font-medium text-slate-900 dark:text-white">{indexOfFirstItem + 1}</span> ถึง{' '}
-        <span className="font-medium text-slate-900 dark:text-white">
-          {Math.min(indexOfLastItem, totalItems)}
-        </span>{' '}
-        จากทั้งหมด <span className="font-medium text-slate-900 dark:text-white">{totalItems}</span> รายการ
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 text-xs text-slate-600 dark:text-slate-400">
+      {/* Left: Metadata & Page size selector */}
+      <div className="flex items-center gap-3">
+        <div>
+          แสดง <span className="font-semibold text-slate-900 dark:text-white">{indexOfFirstItem + 1}</span> ถึง{' '}
+          <span className="font-semibold text-slate-900 dark:text-white">
+            {Math.min(indexOfLastItem, totalItems)}
+          </span>{' '}
+          จากทั้งหมด <span className="font-bold text-primary-600 dark:text-primary-400">{totalItems.toLocaleString()}</span> นาย
+        </div>
+
+        {setPageSize && (
+          <div className="flex items-center gap-1.5 pl-3 border-l border-slate-300 dark:border-slate-700">
+            <label htmlFor="personnel-page-size-select" className="cursor-pointer text-xs text-slate-600 dark:text-slate-400">
+              แสดงหน้าละ:
+            </label>
+            <select
+              id="personnel-page-size-select"
+              aria-label="จำนวนรายการต่อหน้า"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+        )}
       </div>
-      <div className="flex space-x-2">
+
+      {/* Right: Page Navigation */}
+      <div className="flex items-center space-x-1.5">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="px-3 py-1 rounded-md bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition-colors shadow-xs"
         >
           ก่อนหน้า
         </button>
@@ -51,18 +83,19 @@ export default function PersonnelPagination({
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-md text-sm transition-colors ${
+                  className={`min-w-[32px] h-8 flex items-center justify-center rounded-lg text-xs transition-all ${
                     currentPage === page
-                      ? 'bg-primary-500 text-white font-medium shadow-sm'
-                      : 'bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'
+                      ? 'bg-primary-600 text-white font-bold shadow-sm shadow-primary-500/20'
+                      : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-medium'
                   }`}
                 >
                   {page}
                 </button>
               );
-            } else if (page === currentPage - 2 || page === currentPage + 2) {
+            }
+            if (page === currentPage - 2 || page === currentPage + 2) {
               return (
-                <span key={page} className="text-slate-500 px-1">
+                <span key={page} className="px-1 text-slate-400">
                   ...
                 </span>
               );
@@ -73,8 +106,8 @@ export default function PersonnelPagination({
 
         <button
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded-md bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+          disabled={currentPage === totalPages || totalPages === 0}
+          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition-colors shadow-xs"
         >
           ถัดไป
         </button>

@@ -2,6 +2,24 @@
 
 รูปแบบตาม Semantic Versioning (SemVer)
 
+## [1.2.0] — 2026-09-01
+
+### Added
+- **Server-side Personnel Pagination**: อัปเกรด `GET /api/personnel` รองรับ `page`, `limit` (1–100), `search`, `department`, `subDepartment`, `status`, `personnelType`, `sortBy`, `sortOrder`
+- **Multi-field Personnel Search**: ค้นหาครอบคลุมชื่อ, สกุล, หมายเลขประจำตัว/BadgeNo, ตำแหน่ง, สังกัด ที่ระดับ Database
+- **Safe Sorting Allowlist**: รองรับการเรียงลำดับคอลัมน์ผ่าน allowlist ป้องกัน Parameter Injection
+- **Personnel Dashboard Metrics**: เพิ่ม `GET /api/personnel/stats` คำนวณสรุปยอดกำลังพล (ทั้งหมด, ปฏิบัติงานปกติ, ไม่ปกติ, จำแนกตามกอง/ฝ่ายและประเภท) ด้วย Database Aggregations
+- **Secure Personnel Export**: เพิ่ม `GET /api/personnel/export` ส่งออกข้อมูล Excel/CSV ผูกกับตัวกรองปัจจุบัน พร้อมสิทธิ์ RBAC และบันทึก Audit Log (`EXPORT_PERSONNEL`)
+- **Super Admin System Inspector**: ระบบตรวจสอบและวิเคราะห์คุณภาพหน้าเว็บแบบ Live ใน Browser (ตรวจจับคำผิดภาษาไทยตาม Dictionary, ลิงก์เสีย, รูปภาพเสีย, โครงสร้าง UI/Accessibility, Responsive Overflow และ Security Headers) พร้อม AI Fix Prompt Generator
+- **Super Admin API Documentation / API Reference**: หน้าระบบเอกสารคู่มือ API (`/manage/api-docs` และ `GET /api/admin/api-docs`) สแกนและวิเคราะห์โครงสร้าง Route Handlers, Role Matrix, Parameters, Validation และ Audit Log จาก Source Code จริง พร้อมฟังก์ชัน Export Markdown/JSON
+- **Automated Test Suite (v1.2.0)**: เพิ่มชุดทดสอบ `tests/api/personnel-pagination.test.ts`, `tests/api/auth-session-persistence.test.ts`, `tests/admin/system-inspector.test.ts`, `tests/security/security-headers.test.ts`, และ `tests/admin/api-documentation.test.ts` (รวม 10 Suites)
+
+### Performance
+- เพิ่ม Database Indexes: `@@index([personnelType])`, `@@index([createdAt])`, `@@index([firstName, lastName])`
+- ปรับปรุงการโหลดข้อมูลหน้าจัดการกำลังพลด้วย Debounced Search (300ms) และ Server-side skip/take
+
+---
+
 ## [1.1.0] — 2026-09-01
 
 ### Security

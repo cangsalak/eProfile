@@ -32,14 +32,15 @@ export default function BulkBadgePrintPage() {
     // Fetch settings and personnel
     Promise.all([
       fetch('/api/settings', { cache: 'no-store' }).then(res => res.json()),
-      fetch('/api/personnel', { cache: 'no-store' }).then(res => res.json())
+      fetch('/api/personnel?all=true', { cache: 'no-store' }).then(res => res.json())
     ])
     .then(([settingsData, personnelData]) => {
       if (!settingsData.error) setSettings(settingsData);
       
-      if (Array.isArray(personnelData)) {
+      const pList = Array.isArray(personnelData) ? personnelData : personnelData.data || [];
+      if (Array.isArray(pList)) {
         // Filter only the selected IDs
-        const filtered = personnelData.filter(p => idsToPrint.includes(p.id));
+        const filtered = pList.filter((p: any) => idsToPrint.includes(p.id));
         setPersonnelList(filtered);
       }
     })

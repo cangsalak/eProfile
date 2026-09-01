@@ -11,12 +11,33 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
   const [notifications, setNotifications] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch('/api/notifications');
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch notifications', err);
+    }
+  };
+
   useEffect(() => {
     if (currentUser) {
       fetchNotifications();
-      // Polling every 1 minute
-      const interval = setInterval(fetchNotifications, 60000);
-      return () => clearInterval(interval);
+      // Listen to cross-component notification sync
+      const handleSync = () => fetchNotifications();
+      window.addEventListener('notifications-updated', handleSync);
+      window.addEventListener('focus', handleSync);
+
+      // Polling every 30 seconds
+      const interval = setInterval(fetchNotifications, 30000);
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('notifications-updated', handleSync);
+        window.removeEventListener('focus', handleSync);
+      };
     }
   }, [currentUser]);
 
@@ -30,15 +51,12 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const fetchNotifications = async () => {
-    try {
-      const res = await fetch('/api/notifications');
-      if (res.ok) {
-        const data = await res.json();
-        setNotifications(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch notifications', err);
+  const handleToggle = () => {
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+    if (nextState) {
+      // Re-fetch immediately when dropdown is opened to guarantee accurate unread state
+      fetchNotifications();
     }
   };
 
@@ -46,6 +64,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
     try {
       await fetch('/api/notifications', { method: 'PUT' });
       setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+      window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {
       console.error('Failed to mark as read', err);
     }
@@ -55,6 +74,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
     try {
       await fetch(`/api/notifications/${id}`, { method: 'PUT' });
       setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+      window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {
       console.error('Failed to mark as read', err);
     }
@@ -74,7 +94,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
   return (
     <div className="relative" ref={dropdownRef}>
       <button 
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className="relative w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
         title="การแจ้งเตือน"
       >

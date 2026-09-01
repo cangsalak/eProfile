@@ -79,13 +79,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
+            <label htmlFor="modalUsername" className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
               เลขบัตรประจำตัวประชาชน (13 หลัก)
             </label>
             <div className="relative">
               <i className="fa-solid fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400"></i>
               <input
+                id="modalUsername"
                 type="text"
+                aria-label="เลขบัตรประจำตัวประชาชน (13 หลัก)"
                 maxLength={13}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -97,11 +99,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           </div>
 
           <div>
-            <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">รหัสผ่าน / เลขประจำตัวทหาร (10 หลัก)</label>
+            <label htmlFor="modalPassword" className="block text-slate-700 dark:text-slate-300 font-medium mb-1">รหัสผ่าน / เลขประจำตัวทหาร (10 หลัก)</label>
             <div className="relative">
               <i className="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400"></i>
               <input
+                id="modalPassword"
                 type={showPassword ? 'text' : 'password'}
+                aria-label="รหัสผ่านหรือเลขประจำตัวทหาร (10 หลัก)"
                 maxLength={10}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

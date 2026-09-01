@@ -71,7 +71,7 @@ export default function InstallPage() {
           <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-primary-500/30">
             <i className="fa-solid fa-server text-2xl text-primary-500"></i>
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">ติดตั้งระบบ (Installation)</h2>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">ติดตั้งระบบ (Installation)</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">
             ตั้งค่าเริ่มต้นสำหรับระบบ
           </p>
@@ -93,10 +93,12 @@ export default function InstallPage() {
           
           {step === 1 && (
             <div className="space-y-4 animate-fade-in">
-              <h3 className="font-semibold text-lg border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">ข้อมูลระบบ</h3>
+              <h2 className="font-semibold text-lg border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">ข้อมูลระบบ</h2>
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ชื่อระบบ (System Name)</label>
+                <label htmlFor="install-systemName" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ชื่อระบบ (System Name)</label>
                 <input 
+                  id="install-systemName"
+                  aria-label="ชื่อระบบ"
                   type="text" 
                   name="systemName"
                   required 
@@ -107,8 +109,10 @@ export default function InstallPage() {
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รหัสลับการติดตั้ง (Setup Secret - ถ้ามี)</label>
+                <label htmlFor="install-setupSecret" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รหัสลับการติดตั้ง (Setup Secret - ถ้ามี)</label>
                 <input 
+                  id="install-setupSecret"
+                  aria-label="รหัสลับการติดตั้ง"
                   type="password" 
                   name="setupSecret"
                   placeholder="ระบุรหัส ADMIN_SETUP_SECRET หากมีกำหนดใน .env"
@@ -128,37 +132,37 @@ export default function InstallPage() {
 
           {step === 2 && (
             <div className="space-y-4 animate-fade-in">
-              <h3 className="font-semibold text-lg border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">บัญชีผู้ดูแลระบบสูงสุด (Super Admin)</h3>
+              <h2 className="font-semibold text-lg border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">บัญชีผู้ดูแลระบบสูงสุด (Super Admin)</h2>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ชื่อ</label>
-                  <input type="text" name="firstName" required value={formData.firstName} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+                  <label htmlFor="install-firstName" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ชื่อ</label>
+                  <input id="install-firstName" aria-label="ชื่อผู้ดูแลระบบ" type="text" name="firstName" required value={formData.firstName} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
                 </div>
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">นามสกุล</label>
-                  <input type="text" name="lastName" required value={formData.lastName} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+                  <label htmlFor="install-lastName" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">นามสกุล</label>
+                  <input id="install-lastName" aria-label="นามสกุลผู้ดูแลระบบ" type="text" name="lastName" required value={formData.lastName} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขบัตรประชาชน (13 หลัก - ใช้ล็อกอิน)</label>
-                <input type="text" name="citizenId" maxLength={13} required value={formData.citizenId} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+                <label htmlFor="install-citizenId" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขบัตรประชาชน (13 หลัก - ใช้ล็อกอิน)</label>
+                <input id="install-citizenId" aria-label="เลขบัตรประชาชน 13 หลัก" type="text" name="citizenId" maxLength={13} required value={formData.citizenId} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
               </div>
               
               <div>
-                <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขประจำตัว (10 หลัก)</label>
-                <input type="text" name="badgeNo" maxLength={10} required value={formData.badgeNo} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+                <label htmlFor="install-badgeNo" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">เลขประจำตัว (10 หลัก)</label>
+                <input id="install-badgeNo" aria-label="เลขประจำตัว 10 หลัก" type="text" name="badgeNo" maxLength={10} required value={formData.badgeNo} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รหัสผ่าน</label>
-                  <input type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+                  <label htmlFor="install-password" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">รหัสผ่าน</label>
+                  <input id="install-password" aria-label="รหัสผ่าน" type="password" name="password" required value={formData.password} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
                 </div>
                 <div>
-                  <label className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ยืนยันรหัสผ่าน</label>
-                  <input type="password" name="confirmPassword" required value={formData.confirmPassword} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
+                  <label htmlFor="install-confirmPassword" className="block text-slate-500 dark:text-slate-400 text-xs mb-1">ยืนยันรหัสผ่าน</label>
+                  <input id="install-confirmPassword" aria-label="ยืนยันรหัสผ่าน" type="password" name="confirmPassword" required value={formData.confirmPassword} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500" />
                 </div>
               </div>
 

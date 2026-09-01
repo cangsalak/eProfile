@@ -12,25 +12,168 @@ const limiter = rateLimit({
   uniqueTokenPerInterval: 500, 
 });
 
-// GET /api/personnel - Fetch all personnel from SQLite
+const ALLOWED_SORT_FIELDS = [
+  'firstName',
+  'lastName',
+  'badgeNo',
+  'createdAt',
+  'updatedAt',
+  'status',
+  'department',
+  'position',
+  'personnelType'
+];
+
+// GET /api/personnel - Fetch personnel with Server-side Pagination, Search, Filtering & Sorting
 export async function GET(req: Request) {
   try {
     const { error: authError } = await requireAuth(req);
     if (authError) return authError;
 
-    const list = await prisma.personnel.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+    const { searchParams } = new URL(req.url);
 
-    const parsed = list.map((item) => {
-      const { password, ...rest } = item;
+    // Legacy bypass for full list if requested explicitly
+    const isAll = searchParams.get('all') === 'true';
+
+    const pageParam = searchParams.get('page');
+    const limitParam = searchParams.get('limit');
+    const search = searchParams.get('search')?.trim() || '';
+    const department = searchParams.get('department') || '';
+    const subDepartment = searchParams.get('subDepartment') || '';
+    const status = searchParams.get('status') || '';
+    const personnelType = searchParams.get('personnelType') || '';
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder')?.toLowerCase() || 'desc';
+
+    // Validate Sorting
+    if (sortBy && !ALLOWED_SORT_FIELDS.includes(sortBy)) {
+      return NextResponse.json({ error: `Invalid sortBy field. Allowed: ${ALLOWED_SORT_FIELDS.join(', ')}` }, { status: 400 });
+    }
+
+    if (sortOrder !== 'asc' && sortOrder !== 'desc') {
+      return NextResponse.json({ error: 'Invalid sortOrder. Allowed: asc, desc' }, { status: 400 });
+    }
+
+    // Build Where Condition
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { firstName: { contains: search } },
+        { lastName: { contains: search } },
+        { badgeNo: { contains: search } },
+        { position: { contains: search } },
+        { department: { contains: search } },
+        { subDepartment: { contains: search } },
+        { officialId: { contains: search } },
+      ];
+    }
+
+    if (department && department !== 'all') {
+      where.department = department;
+    }
+
+    if (subDepartment && subDepartment !== 'all') {
+      where.subDepartment = subDepartment;
+    }
+
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+
+    if (personnelType && personnelType !== 'all') {
+      where.personnelType = personnelType;
+    }
+
+    const now = new Date();
+    const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const nowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+    const leaveInclude = {
+      leaves: {
+        where: {
+          status: { in: ['อนุมัติแล้ว', 'รออนุมัติ'] },
+          startDate: { lte: nowEnd },
+          endDate: { gte: nowStart },
+        },
+        orderBy: { createdAt: 'desc' as const },
+        take: 1,
+        select: {
+          id: true,
+          leaveType: true,
+          startDate: true,
+          endDate: true,
+          status: true,
+        },
+      },
+    };
+
+    const mapPersonnel = (item: any) => {
+      const { password, leaves, ...rest } = item;
+      const activeLeave = leaves && leaves.length > 0 ? leaves[0] : null;
       return {
         ...rest,
         skills: JSON.parse(item.skills || '[]'),
+        currentLeave: activeLeave
+          ? {
+              id: activeLeave.id,
+              leaveType: activeLeave.leaveType,
+              startDate: activeLeave.startDate,
+              endDate: activeLeave.endDate,
+              status: activeLeave.status,
+            }
+          : null,
       };
-    });
+    };
 
-    return NextResponse.json(parsed);
+    if (isAll) {
+      const list = await prisma.personnel.findMany({
+        where,
+        orderBy: { [sortBy]: sortOrder },
+        include: leaveInclude,
+      });
+
+      const parsed = list.map(mapPersonnel);
+
+      return NextResponse.json(parsed);
+    }
+
+    // Pagination Validation
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 20;
+
+    if (isNaN(page) || page < 1) {
+      return NextResponse.json({ error: 'Invalid page parameter. Must be an integer >= 1' }, { status: 400 });
+    }
+
+    if (isNaN(limit) || limit < 1 || limit > 100) {
+      return NextResponse.json({ error: 'Invalid limit parameter. Must be an integer between 1 and 100' }, { status: 400 });
+    }
+
+    const [total, list] = await Promise.all([
+      prisma.personnel.count({ where }),
+      prisma.personnel.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        include: leaveInclude,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit) || 1;
+
+    const parsed = list.map(mapPersonnel);
+
+    return NextResponse.json({
+      data: parsed,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+      },
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Failed to fetch personnel' }, { status: 500 });
   }
@@ -126,6 +269,7 @@ export async function POST(req: Request) {
         entity: 'Personnel',
         entityId: created.id,
         details: JSON.stringify({ name: `${created.firstName} ${created.lastName}`, position: created.position }),
+        ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0].trim() || req.headers.get('x-real-ip') || '127.0.0.1',
       },
     }).catch(() => {/* non-blocking */});
 

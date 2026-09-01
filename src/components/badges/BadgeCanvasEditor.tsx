@@ -233,8 +233,10 @@ export default function BadgeCanvasEditor({ initialElements, onChange }: BadgeCa
 
             {selectedElement.field === 'static' && selectedElement.type === 'text' && (
               <div>
-                <label className="text-xs text-slate-500 block mb-1">ข้อความ</label>
+                <label htmlFor="badgeElContent" className="text-xs text-slate-500 block mb-1">ข้อความ</label>
                 <input 
+                  id="badgeElContent"
+                  aria-label="ข้อความ"
                   type="text" 
                   value={selectedElement.content || ''} 
                   onChange={(e) => updateSelected({ content: e.target.value })}
@@ -245,24 +247,24 @@ export default function BadgeCanvasEditor({ initialElements, onChange }: BadgeCa
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500 block mb-1">กว้าง (%)</label>
-                <input type="number" value={selectedElement.width} onChange={(e) => updateSelected({ width: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
+                <label htmlFor="badgeElWidth" className="text-xs text-slate-500 block mb-1">กว้าง (%)</label>
+                <input id="badgeElWidth" aria-label="กว้าง (%)" type="number" value={selectedElement.width} onChange={(e) => updateSelected({ width: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
               </div>
               <div>
-                <label className="text-xs text-slate-500 block mb-1">สูง (%)</label>
-                <input type="number" value={selectedElement.height} onChange={(e) => updateSelected({ height: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
+                <label htmlFor="badgeElHeight" className="text-xs text-slate-500 block mb-1">สูง (%)</label>
+                <input id="badgeElHeight" aria-label="สูง (%)" type="number" value={selectedElement.height} onChange={(e) => updateSelected({ height: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
               </div>
             </div>
 
             {selectedElement.type === 'text' && (
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs text-slate-500 block mb-1">ขนาดฟอนต์ (px)</label>
-                  <input type="number" value={selectedElement.fontSize || 12} onChange={(e) => updateSelected({ fontSize: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
+                  <label htmlFor="badgeElFontSize" className="text-xs text-slate-500 block mb-1">ขนาดฟอนต์ (px)</label>
+                  <input id="badgeElFontSize" aria-label="ขนาดฟอนต์ (px)" type="number" value={selectedElement.fontSize || 12} onChange={(e) => updateSelected({ fontSize: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-500 block mb-1">ตัวหนา</label>
-                  <select value={selectedElement.fontWeight || 'normal'} onChange={(e) => updateSelected({ fontWeight: e.target.value })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white">
+                  <label htmlFor="badgeElFontWeight" className="text-xs text-slate-500 block mb-1">ตัวหนา</label>
+                  <select id="badgeElFontWeight" aria-label="ตัวหนา" value={selectedElement.fontWeight || 'normal'} onChange={(e) => updateSelected({ fontWeight: e.target.value })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white">
                     <option value="normal">ปกติ</option>
                     <option value="bold">ตัวหนา</option>
                   </select>
@@ -272,23 +274,23 @@ export default function BadgeCanvasEditor({ initialElements, onChange }: BadgeCa
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500 block mb-1">สีตัวอักษร</label>
-                <input type="color" value={selectedElement.color || '#000000'} onChange={(e) => updateSelected({ color: e.target.value })} className="w-full h-8 p-0 border-0 rounded cursor-pointer" />
+                <label htmlFor="badgeElColor" className="text-xs text-slate-500 block mb-1">สีตัวอักษร</label>
+                <input id="badgeElColor" aria-label="สีตัวอักษร" type="color" value={selectedElement.color || '#000000'} onChange={(e) => updateSelected({ color: e.target.value })} className="w-full h-8 p-0 border-0 rounded cursor-pointer" />
               </div>
               <div>
-                <label className="text-xs text-slate-500 block mb-1">สีพื้นหลัง</label>
-                <input type="color" value={selectedElement.backgroundColor || '#ffffff'} onChange={(e) => updateSelected({ backgroundColor: e.target.value })} className="w-full h-8 p-0 border-0 rounded cursor-pointer" />
+                <label htmlFor="badgeElBgColor" className="text-xs text-slate-500 block mb-1">สีพื้นหลัง</label>
+                <input id="badgeElBgColor" aria-label="สีพื้นหลัง" type="color" value={selectedElement.backgroundColor || '#ffffff'} onChange={(e) => updateSelected({ backgroundColor: e.target.value })} className="w-full h-8 p-0 border-0 rounded cursor-pointer" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-xs text-slate-500 block mb-1">ขอบมน (px)</label>
-                <input type="number" value={selectedElement.borderRadius || 0} onChange={(e) => updateSelected({ borderRadius: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
+                <label htmlFor="badgeElBorderRadius" className="text-xs text-slate-500 block mb-1">ขอบมน (px)</label>
+                <input id="badgeElBorderRadius" aria-label="ขอบมน (px)" type="number" value={selectedElement.borderRadius || 0} onChange={(e) => updateSelected({ borderRadius: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
               </div>
               <div>
-                <label className="text-xs text-slate-500 block mb-1">ลำดับชั้น (Z-Index)</label>
-                <input type="number" value={selectedElement.zIndex} onChange={(e) => updateSelected({ zIndex: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
+                <label htmlFor="badgeElZIndex" className="text-xs text-slate-500 block mb-1">ลำดับชั้น (Z-Index)</label>
+                <input id="badgeElZIndex" aria-label="ลำดับชั้น (Z-Index)" type="number" value={selectedElement.zIndex} onChange={(e) => updateSelected({ zIndex: Number(e.target.value) })} className="w-full p-2 text-sm border border-slate-300 rounded dark:bg-slate-800 dark:border-slate-600 dark:text-white" />
               </div>
             </div>
 
@@ -296,18 +298,18 @@ export default function BadgeCanvasEditor({ initialElements, onChange }: BadgeCa
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">สีอัตโนมัติ (ตามประเภทกำลังพล)</label>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
-                  <input type="checkbox" checked={selectedElement.dynamicBg || false} onChange={(e) => updateSelected({ dynamicBg: e.target.checked })} className="rounded text-primary-500" />
+                  <input type="checkbox" aria-label="ใช้เป็นสีพื้นหลัง" checked={selectedElement.dynamicBg || false} onChange={(e) => updateSelected({ dynamicBg: e.target.checked })} className="rounded text-primary-500" />
                   ใช้เป็นสีพื้นหลัง (Background)
                 </label>
                 {selectedElement.type === 'text' && (
                   <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
-                    <input type="checkbox" checked={selectedElement.dynamicText || false} onChange={(e) => updateSelected({ dynamicText: e.target.checked })} className="rounded text-primary-500" />
+                    <input type="checkbox" aria-label="ใช้เป็นสีตัวอักษร" checked={selectedElement.dynamicText || false} onChange={(e) => updateSelected({ dynamicText: e.target.checked })} className="rounded text-primary-500" />
                     ใช้เป็นสีตัวอักษร (Text)
                   </label>
                 )}
                 {(selectedElement.type === 'image' || selectedElement.field === 'avatar') && (
                   <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
-                    <input type="checkbox" checked={selectedElement.dynamicBorder || false} onChange={(e) => updateSelected({ dynamicBorder: e.target.checked })} className="rounded text-primary-500" />
+                    <input type="checkbox" aria-label="ใช้เป็นสีเส้นขอบ" checked={selectedElement.dynamicBorder || false} onChange={(e) => updateSelected({ dynamicBorder: e.target.checked })} className="rounded text-primary-500" />
                     ใช้เป็นสีเส้นขอบ (Border)
                   </label>
                 )}

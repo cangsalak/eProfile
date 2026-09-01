@@ -6,6 +6,7 @@ import { Personnel } from '@/types/personnel';
 import LoginModal from './LoginModal';
 import Sidebar, { MenuItem } from './layout/Sidebar';
 import TopNavbar from './layout/TopNavbar';
+import InspectorFloatingButton from './inspector/InspectorFloatingButton';
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -21,13 +22,35 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check auth
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    } else {
-      setIsLoginModalOpen(true);
-    }
+    // Check auth with server session
+    fetch('/api/auth/me')
+      .then(res => {
+        if (res.ok) return res.json();
+        throw new Error('Unauthenticated');
+      })
+      .then(data => {
+        if (data?.user) {
+          setCurrentUser(data.user);
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
+        } else {
+          setCurrentUser(null);
+          localStorage.removeItem('currentUser');
+          router.push('/login');
+        }
+      })
+      .catch(() => {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+          try {
+            setCurrentUser(JSON.parse(savedUser));
+          } catch {
+            setCurrentUser(null);
+            router.push('/login');
+          }
+        } else {
+          router.push('/login');
+        }
+      });
     
     // Auto-open sidebar on desktop
     if (window.innerWidth >= 1024) {
@@ -124,7 +147,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
         }
       })
       .catch(console.error);
-  }, [router]);
+  }, [router, pathname]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -175,8 +198,8 @@ export default function DashboardShell({ children }: DashboardShellProps) {
     if (isAdmin || perms.includes('MANAGE_PERSONNEL')) {
       menuItems.push({ name: 'จัดการบุคลากร', icon: 'fa-solid fa-users-gear', path: '/manage/personnel' });
     }
-    if (isAdmin || perms.includes('MANAGE_SYSTEM') || perms.includes('MANAGE_ROLES')) {
-      menuItems.push({ name: 'จัดการการแจ้งเตือน', icon: 'fa-solid fa-bullhorn', path: '/manage/notifications' });
+    if (isAdmin || perms.includes('MANAGE_SYSTEM') || perms.includes('MANAGE_ROLES') || perms.includes('MANAGE_POSTS')) {
+      menuItems.push({ name: 'จัดการข่าวสารและการแจ้งเตือน', icon: 'fa-solid fa-bullhorn', path: '/manage/notifications' });
       menuItems.push({ name: 'ตั้งค่าระบบ', icon: 'fa-solid fa-cogs', path: '/settings' });
     }
   } else {
@@ -201,7 +224,8 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           isSidebarOpen={isSidebarOpen} 
           setIsSidebarOpen={setIsSidebarOpen}
           systemSettings={systemSettings} 
-          menuItems={menuItems} 
+          menuItems={menuItems}
+          currentUser={currentUser}
         />
       )}
 
@@ -233,6 +257,8 @@ export default function DashboardShell({ children }: DashboardShellProps) {
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
+
+      <InspectorFloatingButton currentUser={currentUser} />
     </div>
   );
 }

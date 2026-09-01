@@ -415,56 +415,66 @@ export function CalendarView() {
             
             <form onSubmit={handleAddEvent} className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">หัวข้อกิจกรรม</label>
+                <label htmlFor="calendarAddTitle" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">หัวข้อกิจกรรม <span className="text-rose-500">*</span></label>
                 <input
+                  id="calendarAddTitle"
+                  aria-label="หัวข้อกิจกรรม"
                   required
                   type="text"
                   value={formData.title}
                   onChange={e => setFormData({...formData, title: e.target.value})}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   placeholder="เช่น ประชุมประจำเดือน, วันหยุดพิเศษ"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">รายละเอียด (ไม่บังคับ)</label>
+                <label htmlFor="calendarAddDesc" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">รายละเอียด (ไม่บังคับ)</label>
                 <textarea
+                  id="calendarAddDesc"
+                  aria-label="รายละเอียดกิจกรรม"
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all resize-none"
                   rows={3}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">วันที่เริ่ม</label>
+                  <label htmlFor="calendarAddStartDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่เริ่ม <span className="text-rose-500">*</span></label>
                   <input
+                    id="calendarAddStartDate"
+                    aria-label="วันที่เริ่ม"
                     required
                     type="date"
                     value={formData.startDate}
                     onChange={e => setFormData({...formData, startDate: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">วันที่สิ้นสุด</label>
+                  <label htmlFor="calendarAddEndDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่สิ้นสุด <span className="text-rose-500">*</span></label>
                   <input
+                    id="calendarAddEndDate"
+                    aria-label="วันที่สิ้นสุด"
                     required
                     type="date"
                     value={formData.endDate}
                     onChange={e => setFormData({...formData, endDate: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">ประเภท</label>
+                <label htmlFor="calendarAddTypeSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ประเภท</label>
                 <select
+                  id="calendarAddTypeSelect"
+                  aria-label="ประเภทกิจกรรม"
                   value={formData.type}
                   onChange={e => setFormData({...formData, type: e.target.value})}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
                 >
                   <option value="operation">การปฏิบัติงาน</option>
                   <option value="meeting">การประชุม</option>
@@ -516,45 +526,53 @@ export function CalendarView() {
               )}
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">รายละเอียด / เหตุผล</label>
+                <label htmlFor="calendarEditDesc" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">รายละเอียด / เหตุผล</label>
                 <textarea
+                  id="calendarEditDesc"
+                  aria-label="รายละเอียด หรือเหตุผล"
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all resize-none"
                   rows={3}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">วันที่เริ่ม</label>
+                  <label htmlFor="calendarEditStartDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่เริ่ม <span className="text-rose-500">*</span></label>
                   <input
+                    id="calendarEditStartDate"
+                    aria-label="วันที่เริ่ม"
                     required
                     type="date"
                     value={formData.startDate}
                     onChange={e => setFormData({...formData, startDate: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">วันที่สิ้นสุด</label>
+                  <label htmlFor="calendarEditEndDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่สิ้นสุด <span className="text-rose-500">*</span></label>
                   <input
+                    id="calendarEditEndDate"
+                    aria-label="วันที่สิ้นสุด"
                     required
                     type="date"
                     value={formData.endDate}
                     onChange={e => setFormData({...formData, endDate: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                 </div>
               </div>
               
               {!editingEventId?.startsWith('leave-') ? (
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">ประเภท</label>
+                  <label htmlFor="calendarEditTypeSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ประเภท</label>
                   <select
+                    id="calendarEditTypeSelect"
+                    aria-label="ประเภทกิจกรรม"
                     value={formData.type}
                     onChange={e => setFormData({...formData, type: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
                   >
                     <option value="operation">การปฏิบัติงาน</option>
                     <option value="meeting">การประชุม</option>
@@ -564,11 +582,13 @@ export function CalendarView() {
                 </div>
               ) : (
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">สถานะ</label>
+                  <label htmlFor="calendarEditStatusSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">สถานะ</label>
                   <select
+                    id="calendarEditStatusSelect"
+                    aria-label="สถานะการลา"
                     value={formData.status}
                     onChange={e => setFormData({...formData, status: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
                   >
                     <option value="รออนุมัติ">รออนุมัติ</option>
                     <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>

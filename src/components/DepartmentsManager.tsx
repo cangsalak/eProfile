@@ -46,9 +46,10 @@ export default function DepartmentsManager() {
       }
       
       // Also fetch personnel to calculate counts
-      const pRes = await fetch('/api/personnel');
+      const pRes = await fetch('/api/personnel?all=true');
       if (pRes.ok) {
-        const pList = await pRes.json();
+        const rawData = await pRes.json();
+        const pList = Array.isArray(rawData) ? rawData : rawData.data || [];
         if (Array.isArray(pList)) {
           const counts: { [deptName: string]: number } = {};
           pList.forEach((p: any) => {
@@ -258,10 +259,12 @@ export default function DepartmentsManager() {
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
             <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="newDeptNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 ชื่อเต็ม (Full Name) <span className="text-red-500">*</span>
               </label>
               <input
+                id="newDeptNameInput"
+                aria-label="ชื่อเต็มหน่วยงาน"
                 type="text"
                 value={newDeptName}
                 onChange={(e) => setNewDeptName(e.target.value)}
@@ -271,10 +274,12 @@ export default function DepartmentsManager() {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label htmlFor="newDeptShortNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 คำย่อ (Short Name / Abbr)
               </label>
               <input
+                id="newDeptShortNameInput"
+                aria-label="คำย่อหน่วยงาน"
                 type="text"
                 value={newDeptShortName}
                 onChange={(e) => setNewDeptShortName(e.target.value)}
@@ -329,14 +334,20 @@ export default function DepartmentsManager() {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
                   {isEditing ? (
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2 w-full">
+                      <label htmlFor={`editDeptName_${dept.id}`} className="sr-only">ชื่อเต็มหน่วยงาน</label>
                       <input
+                        id={`editDeptName_${dept.id}`}
+                        aria-label="ชื่อเต็มหน่วยงาน"
                         type="text"
                         value={editDeptName}
                         onChange={(e) => setEditDeptName(e.target.value)}
                         placeholder="ชื่อเต็มหน่วยงาน"
                         className="sm:col-span-2 h-9 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-xs text-slate-900 dark:text-white"
                       />
+                      <label htmlFor={`editDeptShortName_${dept.id}`} className="sr-only">คำย่อหน่วยงาน</label>
                       <input
+                        id={`editDeptShortName_${dept.id}`}
+                        aria-label="คำย่อหน่วยงาน"
                         type="text"
                         value={editDeptShortName}
                         onChange={(e) => setEditDeptShortName(e.target.value)}
@@ -494,10 +505,12 @@ export default function DepartmentsManager() {
 
             <form onSubmit={handleAddSubDepartment} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="newSubNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   ชื่อเต็มแผนก / หมวด / ตอน <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="newSubNameInput"
+                  aria-label="ชื่อเต็มแผนกหรือหมวด"
                   type="text"
                   placeholder="เช่น แผนกวิชาทหาร, หมวดฝึกที่ 1, ตอนส่งกำลัง"
                   value={newSubName}
@@ -509,10 +522,12 @@ export default function DepartmentsManager() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="newSubShortNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   คำย่อแผนก / หมวด (ถ้ามี)
                 </label>
                 <input
+                  id="newSubShortNameInput"
+                  aria-label="คำย่อแผนกหรือหมวด"
                   type="text"
                   placeholder="เช่น ผบท., มว.1, ตอน กบ."
                   value={newSubShortName}

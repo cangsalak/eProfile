@@ -20,6 +20,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       data: {
         ...(body.title !== undefined && { title: body.title }),
         ...(body.content !== undefined && { content: body.content }),
+        ...(body.category !== undefined && { category: body.category }),
         ...(body.image !== undefined && { image: body.image }),
         ...(body.published !== undefined && { published: body.published })
       }

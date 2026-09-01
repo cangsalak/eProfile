@@ -21,9 +21,12 @@ export default function SearchFilter({
     <div className="glass-card p-4 mb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
         <div className="relative">
+          <label htmlFor="directorySearchInput" className="sr-only">ค้นหาบุคลากร</label>
           <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400"></i>
           <input
+            id="directorySearchInput"
             type="text"
+            aria-label="ค้นหาชื่อ, ยศ, ตำแหน่ง, เลขประจำตัว"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="ค้นหาชื่อ, ยศ, ตำแหน่ง, เลขประจำตัว..."

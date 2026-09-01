@@ -66,10 +66,14 @@ export default function ContactPage() {
               </div>
               <div className="ml-6">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">เบอร์โทรศัพท์</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  02-123-4567<br />
-                  02-123-4568 (ฝ่ายขาย)
-                </p>
+                <div className="text-slate-600 dark:text-slate-400 leading-relaxed flex flex-col gap-1">
+                  <a href="tel:021234567" className="hover:text-primary-600 dark:hover:text-primary-400 hover:underline transition-colors inline-flex items-center gap-1.5">
+                    <span>02-123-4567</span>
+                  </a>
+                  <a href="tel:021234568" className="hover:text-primary-600 dark:hover:text-primary-400 hover:underline transition-colors inline-flex items-center gap-1.5">
+                    <span>02-123-4568</span> <span className="text-xs text-slate-400">(ฝ่ายขาย)</span>
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -79,10 +83,14 @@ export default function ContactPage() {
               </div>
               <div className="ml-6">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">อีเมล</h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                  contact@eprofile.com<br />
-                  support@eprofile.com
-                </p>
+                <div className="text-slate-600 dark:text-slate-400 leading-relaxed flex flex-col gap-1">
+                  <a href="mailto:contact@eprofile.com" className="hover:text-primary-600 dark:hover:text-primary-400 hover:underline transition-colors">
+                    contact@eprofile.com
+                  </a>
+                  <a href="mailto:support@eprofile.com" className="hover:text-primary-600 dark:hover:text-primary-400 hover:underline transition-colors">
+                    support@eprofile.com
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -107,10 +115,12 @@ export default function ContactPage() {
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label htmlFor="contact-name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 ชื่อ-นามสกุล <span className="text-red-500">*</span>
               </label>
               <input
+                id="contact-name"
+                aria-label="ชื่อ-นามสกุลผู้ติดต่อ"
                 type="text"
                 required
                 value={formData.name}
@@ -122,10 +132,12 @@ export default function ContactPage() {
             
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                <label htmlFor="contact-email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   อีเมล <span className="text-red-500">*</span>
                 </label>
                 <input
+                  id="contact-email"
+                  aria-label="อีเมลสำหรับติดต่อกลับ"
                   type="email"
                   required
                   value={formData.email}
@@ -136,10 +148,12 @@ export default function ContactPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                <label htmlFor="contact-phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   เบอร์โทรศัพท์
                 </label>
                 <input
+                  id="contact-phone"
+                  aria-label="เบอร์โทรศัพท์สำหรับติดต่อ"
                   type="tel"
                   value={formData.phone}
                   onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -150,10 +164,12 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label htmlFor="contact-message" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 ข้อความ <span className="text-red-500">*</span>
               </label>
               <textarea
+                id="contact-message"
+                aria-label="รายละเอียดข้อความหรือเรื่องที่ต้องการติดต่อ"
                 required
                 rows={5}
                 value={formData.message}

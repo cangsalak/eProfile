@@ -164,15 +164,14 @@ export default function SettingsPage() {
               { id: 'roles', name: 'สิทธิ์การใช้งาน (Roles)', icon: 'fa-user-shield' },
               { id: 'dropdowns', name: 'จัดการตัวเลือก', icon: 'fa-list' },
               { id: 'departments', name: 'หน่วยงาน', icon: 'fa-sitemap' },
-              { id: 'line', name: 'LINE Bot (Messaging API)', icon: 'fa-comment-dots' },
-              { id: 'mail', name: 'Email แจ้งเตือน', icon: 'fa-envelope' },
+              { id: 'notifications', name: 'การแจ้งเตือน (LINE & Email)', icon: 'fa-bell' },
               { id: 'maintenance', name: 'บำรุงรักษาระบบ', icon: 'fa-tools' },
             ].map(tab => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => handleTabChange(tab.id)}
-                className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center ${activeTab === tab.id ? 'bg-primary-500/20 text-primary-400 border border-primary-500/50' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}
+                className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center ${activeTab === tab.id || ((activeTab === 'line' || activeTab === 'mail') && tab.id === 'notifications') ? 'bg-primary-500/20 text-primary-400 border border-primary-500/50 font-bold' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}
               >
                 <i className={`fa-solid ${tab.icon} w-6`}></i>
                 <span className="font-medium">{tab.name}</span>
@@ -209,21 +208,11 @@ export default function SettingsPage() {
                   />
                 )}
 
-                {activeTab === 'line' && (
+                {(activeTab === 'notifications' || activeTab === 'line' || activeTab === 'mail') && (
                   <NotificationSettings 
                     settings={settings}
                     handleChange={handleChange}
                     testLineNotify={testLineNotify}
-                    tab="line"
-                  />
-                )}
-
-                {activeTab === 'mail' && (
-                  <NotificationSettings 
-                    settings={settings}
-                    handleChange={handleChange}
-                    testLineNotify={testLineNotify}
-                    tab="mail"
                   />
                 )}
 

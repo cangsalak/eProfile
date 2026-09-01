@@ -219,15 +219,27 @@ export async function runApiCrudTests() {
     console.log('✔ Invalid inputs properly rejected across major endpoints');
   }
 
-  // Clean up created test personnel
+  // Clean up created test personnel & test notifications
   if (createdPersonnelId) {
     const delRes = await fetch(`${BASE_URL}/api/personnel/${createdPersonnelId}`, {
       method: 'DELETE',
       headers: { 'Cookie': `auth_token=${adminToken}` },
     });
     assert.strictEqual(delRes.status, 200, 'Personnel DELETE should return 200');
-    console.log('✔ Test personnel cleaned up successfully');
   }
+
+  // Clean up test notifications created during tests
+  await prisma.notification.deleteMany({
+    where: {
+      OR: [
+        { message: { contains: 'ทดสอบ' } },
+        { message: { contains: 'ซีอาร์ยูดี' } },
+        { title: { contains: 'ทดสอบ' } },
+      ],
+    },
+  });
+
+  console.log('✔ Test personnel and test notifications cleaned up successfully');
 }
 
 if (require.main === module) {

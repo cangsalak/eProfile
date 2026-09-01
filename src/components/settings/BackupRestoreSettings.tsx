@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 interface BackupRestoreSettingsProps {
   isRestoring: boolean;
@@ -12,6 +13,26 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
       <h3 className="text-lg font-semibold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center">
         <i className="fa-solid fa-tools text-orange-500 mr-2 text-xl"></i> การบำรุงรักษาระบบ (Maintenance)
       </h3>
+
+      {/* Audit Logs Card */}
+      <div className="p-5 border border-indigo-100 dark:border-indigo-950/60 rounded-2xl bg-indigo-50/40 dark:bg-indigo-950/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+            <i className="fa-solid fa-clipboard-list text-indigo-500"></i>
+            บันทึกกิจกรรมระบบ (Audit Logs)
+          </h4>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            ตรวจสอบประวัติการเข้าสู่ระบบ การสร้าง แก้ไข หรือลบข้อมูลต่างๆ ย้อนหลัง เพื่อความปลอดภัยและการตรวจสอบ
+          </p>
+        </div>
+        <Link
+          href="/manage/audit-logs"
+          className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap flex items-center gap-2 shadow-md shadow-indigo-500/20 shrink-0"
+        >
+          <i className="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>เปิดดู Audit Logs</span>
+        </Link>
+      </div>
 
       <div className="p-5 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
@@ -43,10 +64,12 @@ export default function BackupRestoreSettings({ isRestoring, handleRestore, rest
             {isRestoring ? 'กำลังกู้คืน...' : 'อัปโหลดและกู้คืน'}
           </button>
           <input 
+            id="restoreDatabaseFileInput"
             type="file" 
             ref={restoreFileInputRef} 
             onChange={handleRestore} 
             accept=".db" 
+            aria-label="อัปโหลดไฟล์สำรองฐานข้อมูล (.db)"
             className="hidden" 
           />
         </div>

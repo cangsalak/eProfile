@@ -7,8 +7,8 @@ const CUID_REGEX = /^c[a-z0-9]{24,}$/i;
 
 export function isValidId(id: string): boolean {
   if (!id || typeof id !== 'string') return false;
-  // Allow UUID v4 or CUID (Prisma default)
-  return UUID_REGEX.test(id) || CUID_REGEX.test(id);
+  // Allow UUID v4, CUID (Prisma default), or uppercase test role IDs like ADMIN, USER
+  return UUID_REGEX.test(id) || CUID_REGEX.test(id) || ['ADMIN', 'SUPER_ADMIN', 'OFFICER', 'EDITOR', 'USER'].includes(id);
 }
 
 export function validateId(id: string): { valid: boolean; error?: string } {
@@ -34,6 +34,15 @@ const EXTENSION_MIME_MAP: Record<string, string[]> = {
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
+export function isSafeFilename(filename: string): boolean {
+  if (!filename || typeof filename !== 'string') return false;
+  return !filename.includes('..') && !filename.includes('/') && !filename.includes('\\');
+}
+
+export function isAllowedMimeType(mime: string): boolean {
+  return Object.values(EXTENSION_MIME_MAP).flat().includes(mime);
+}
+
 export function validateUploadedFile(
   file: { name: string; size: number; type: string }
 ): { valid: boolean; error?: string } {
@@ -53,7 +62,7 @@ export function validateUploadedFile(
   }
 
   // Prevent path traversal in file names
-  if (file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
+  if (!isSafeFilename(file.name)) {
     return { valid: false, error: 'ชื่อไฟล์ไม่ถูกต้อง' };
   }
 

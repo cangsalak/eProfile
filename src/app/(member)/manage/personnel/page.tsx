@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Personnel } from '@/types/personnel';
 import { useRouter } from 'next/navigation';
 import AddPersonnelModal from '@/components/AddPersonnelModal';
@@ -9,6 +9,7 @@ import LeaveList from '@/components/leaves/LeaveList';
 import PersonnelTable from '@/components/personnel/PersonnelTable';
 import PersonnelPagination from '@/components/personnel/PersonnelPagination';
 import PersonnelImportModal from '@/components/personnel/PersonnelImportModal';
+import PersonnelDashboard from '@/components/personnel/PersonnelDashboard';
 import { downloadPersonnelTemplate, exportPersonnelToExcel } from '@/lib/excelUtils';
 import toast from 'react-hot-toast';
 
@@ -47,27 +48,62 @@ export default function ManagePersonnelPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   
-  // Pagination & Search
+  // Server-side Pagination & Search & Sorting
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const [pageSize, setPageSize] = useState(20);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   
   const zipInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const fetchPersonnel = async () => {
+  // Debounce search input (300ms)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  const fetchPersonnel = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/personnel');
+      const params = new URLSearchParams({
+        page: String(currentPage),
+        limit: String(pageSize),
+        search: debouncedSearch,
+        department: deptFilter,
+        subDepartment: subDeptFilter,
+        status: statusFilter,
+        personnelType: typeFilter,
+        sortBy,
+        sortOrder,
+      });
+
+      const res = await fetch(`/api/personnel?${params.toString()}`);
       if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data)) setPersonnelList(data);
+        const result = await res.json();
+        if (result.data && result.pagination) {
+          setPersonnelList(result.data);
+          setTotalItems(result.pagination.total);
+          setTotalPages(result.pagination.totalPages);
+        } else if (Array.isArray(result)) {
+          setPersonnelList(result);
+          setTotalItems(result.length);
+          setTotalPages(Math.ceil(result.length / pageSize) || 1);
+        }
       }
     } catch (err) {
       console.error('Failed to fetch personnel:', err);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  };
+  }, [currentPage, pageSize, debouncedSearch, deptFilter, subDeptFilter, statusFilter, typeFilter, sortBy, sortOrder]);
 
   const fetchFiltersData = async () => {
     try {
@@ -82,6 +118,12 @@ export default function ManagePersonnelPage() {
       const settingsRes = await fetch('/api/settings');
       if (settingsRes.ok) {
         const settings = await settingsRes.json();
+        if (settings.defaultPageSize) {
+          const size = parseInt(settings.defaultPageSize, 10);
+          if (!isNaN(size) && size > 0) {
+            setPageSize(size);
+          }
+        }
         if (settings.personnelTypes) {
           try { setPersonnelTypes(JSON.parse(settings.personnelTypes)); } catch (_) {}
         }
@@ -95,9 +137,22 @@ export default function ManagePersonnelPage() {
   };
 
   useEffect(() => {
-    fetchPersonnel();
     fetchFiltersData();
   }, []);
+
+  useEffect(() => {
+    fetchPersonnel();
+  }, [fetchPersonnel]);
+
+  const handleSortChange = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy(field);
+      setSortOrder('asc');
+    }
+    setCurrentPage(1);
+  };
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`คุณแน่ใจหรือไม่ที่จะลบข้อมูลของ ${name}?`)) return;
@@ -117,6 +172,32 @@ export default function ManagePersonnelPage() {
     if (selectedIds.length === 0) return;
     sessionStorage.setItem('bulkPrintIds', JSON.stringify(selectedIds));
     router.push('/manage/personnel/print-badges');
+  };
+
+  const handleServerExport = async () => {
+    try {
+      const params = new URLSearchParams({
+        search: debouncedSearch,
+        department: deptFilter,
+        subDepartment: subDeptFilter,
+        status: statusFilter,
+        personnelType: typeFilter,
+      });
+
+      const res = await fetch(`/api/personnel/export?${params.toString()}`);
+      if (res.ok) {
+        const result = await res.json();
+        if (result.data) {
+          exportPersonnelToExcel(result.data);
+          toast.success(`ส่งออกข้อมูลสำเร็จ ${result.data.length} รายการ`);
+        }
+      } else {
+        toast.error('เกิดข้อผิดพลาดในการส่งออกข้อมูล');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('ไม่สามารถส่งออกข้อมูลได้');
+    }
   };
 
   const handleImportZip = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,41 +273,11 @@ export default function ManagePersonnelPage() {
     return [];
   };
 
-  // Filter & Search Logic
-  const filteredPersonnel = personnelList.filter(p => {
-    const matchDept = deptFilter === 'all' || p.department === deptFilter;
-    const matchSubDept = subDeptFilter === 'all' || p.subDepartment === subDeptFilter;
-    const matchType = typeFilter === 'all' || p.personnelType === typeFilter;
-    const matchStatus = statusFilter === 'all' || p.status === statusFilter;
-    
-    const searchLower = searchQuery.toLowerCase();
-    const matchSearch = 
-      !searchQuery ||
-      (p.firstName && p.firstName.toLowerCase().includes(searchLower)) ||
-      (p.lastName && p.lastName.toLowerCase().includes(searchLower)) ||
-      (p.badgeNo && p.badgeNo.toLowerCase().includes(searchLower)) ||
-      (p.citizenId && p.citizenId.toLowerCase().includes(searchLower)) ||
-      (p.position && p.position.toLowerCase().includes(searchLower)) ||
-      (p.department && p.department.toLowerCase().includes(searchLower)) ||
-      (p.subDepartment && p.subDepartment.toLowerCase().includes(searchLower));
-
-    return matchDept && matchSubDept && matchType && matchStatus && matchSearch;
-  });
-
-  // Pagination
-  const totalPages = Math.ceil(filteredPersonnel.length / itemsPerPage) || 1;
-  if (currentPage > totalPages && totalPages > 0) {
-    setCurrentPage(totalPages);
-  }
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredPersonnel.slice(indexOfFirstItem, indexOfLastItem);
-
   const toggleSelectAll = () => {
-    if (selectedIds.length === currentItems.length && currentItems.length > 0) {
+    if (selectedIds.length === personnelList.length && personnelList.length > 0) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(currentItems.map(p => p.id));
+      setSelectedIds(personnelList.map(p => p.id));
     }
   };
 
@@ -236,18 +287,9 @@ export default function ManagePersonnelPage() {
     );
   };
 
-  // Calculate counts
-  const getDeptCount = (deptName: string) => {
-    if (deptName === 'all') return personnelList.length;
-    return personnelList.filter(p => p.department === deptName).length;
-  };
-
-  const getSubDeptCount = (deptName: string, subName: string) => {
-    if (subName === 'all') return personnelList.filter(p => p.department === deptName).length;
-    return personnelList.filter(p => p.department === deptName && p.subDepartment === subName).length;
-  };
-
   const currentSubDepts = deptFilter !== 'all' ? getSubDeptsForDept(deptFilter) : [];
+  const indexOfFirstItem = (currentPage - 1) * pageSize;
+  const indexOfLastItem = Math.min(currentPage * pageSize, totalItems);
 
   return (
     <div className="pb-12 max-w-7xl mx-auto space-y-6">
@@ -258,7 +300,7 @@ export default function ManagePersonnelPage() {
             <i className="fa-solid fa-users-gear text-primary-500"></i> จัดการข้อมูลบุคลากร (Personnel)
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            กำลังพลทั้งหมด {personnelList.length} นาย • แสดงผล {filteredPersonnel.length} นาย
+            กำลังพลในระบบทั้งหมด {totalItems.toLocaleString()} นาย • ระบบแบ่งหน้าประมวลผลผ่าน Server-side
           </p>
         </div>
         
@@ -285,235 +327,192 @@ export default function ManagePersonnelPage() {
             <i className="fa-solid fa-file-image mr-2 text-purple-600 text-sm"></i> นำเข้ารูป (ZIP)
           </button>
           <input 
+            id="personnelZipUploadInput"
             type="file" 
             accept=".zip" 
+            aria-label="อัปโหลดไฟล์ ZIP รูปภาพบุคลากร (.zip)"
             className="hidden" 
             ref={zipInputRef} 
             onChange={handleImportZip} 
           />
 
           <button
-            onClick={() => exportPersonnelToExcel(filteredPersonnel)}
+            onClick={handleServerExport}
             className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700"
           >
             <i className="fa-solid fa-file-export mr-2 text-green-600 text-sm"></i> ส่งออก Excel
           </button>
-
-          {selectedIds.length > 0 && (
-            <button
-              onClick={handleBulkPrint}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-500/20 transition-all font-medium text-xs flex items-center"
-            >
-              <i className="fa-solid fa-print mr-2"></i>
-              พิมพ์บัตร ({selectedIds.length})
-            </button>
-          )}
 
           <button
             onClick={() => {
               setEditingPerson(null);
               setIsAddModalOpen(true);
             }}
-            className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl shadow-lg shadow-primary-500/30 transition-all font-medium text-xs flex items-center"
+            className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl shadow-sm hover:shadow transition-all font-medium text-xs flex items-center gap-1.5"
           >
-            <i className="fa-solid fa-user-plus mr-2"></i>
-            เพิ่มบุคลากร
+            <i className="fa-solid fa-user-plus text-sm"></i> เพิ่มกำลังพลใหม่
           </button>
         </div>
       </div>
 
-      {/* 2-Tier Military Unit Filter Tabs */}
-      <div className="bg-white dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-        {/* Tier 1: กอง / ฝ่าย / กองร้อย */}
-        <div>
-          <div className="flex items-center gap-2 mb-2 px-1">
-            <i className="fa-solid fa-sitemap text-primary-500 text-xs"></i>
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              กอง / ฝ่าย / กองร้อย (Main Unit):
-            </span>
+      {/* Personnel Intelligence Dashboard Component */}
+      <PersonnelDashboard />
+
+      {/* Main Filter & Table Card */}
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+        
+        {/* Tier 1: Major Department Selection */}
+        <div className="px-5 pt-4 pb-3 border-b border-slate-200/70 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
+          <div className="flex items-center gap-2 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <i className="fa-solid fa-sitemap text-primary-500"></i> สังกัดหลัก (กอง / ฝ่าย / กองร้อย)
           </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
             <button
-              type="button"
-              onClick={() => { 
-                setDeptFilter('all'); 
+              onClick={() => {
+                setDeptFilter('all');
                 setSubDeptFilter('all');
-                setCurrentPage(1); 
+                setCurrentPage(1);
               }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all shrink-0 flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                 deptFilter === 'all'
-                  ? 'bg-primary-500 text-white shadow-md shadow-primary-500/20'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  ? 'bg-primary-600 text-white shadow-sm shadow-primary-500/20'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
               }`}
             >
               <span>ทั้งหมด</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                deptFilter === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-              }`}>
-                {getDeptCount('all')}
-              </span>
             </button>
-
-            {departments.map((dept) => {
-              const count = getDeptCount(dept.name);
-              const isSelected = deptFilter === dept.name;
-              return (
-                <button
-                  key={dept.id}
-                  type="button"
-                  onClick={() => { 
-                    setDeptFilter(dept.name); 
-                    setSubDeptFilter('all');
-                    setCurrentPage(1); 
-                  }}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all shrink-0 flex items-center gap-1.5 ${
-                    isSelected
-                      ? 'bg-primary-500 text-white shadow-md shadow-primary-500/20'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-                  }`}
-                >
-                  <span>{dept.name}</span>
-                  {dept.shortName && (
-                    <span className={`text-[10px] font-mono ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
-                      ({dept.shortName})
-                    </span>
-                  )}
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                    isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Tier 2: แผนก / หมวด / ตอน / ชุด (แสดงเมื่อเลือกกอง/ฝ่าย) */}
-        {deptFilter !== 'all' && currentSubDepts.length > 0 && (
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 animate-fade-in">
-            <div className="flex items-center gap-2 mb-2 px-1">
-              <i className="fa-solid fa-turn-down-right text-indigo-500 text-xs"></i>
-              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                แผนก / หมวด / ตอน / ชุด ใน {deptFilter}:
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin pl-3">
+            {departments.map((dept) => (
               <button
-                type="button"
-                onClick={() => { setSubDeptFilter('all'); setCurrentPage(1); }}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all shrink-0 flex items-center gap-1.5 ${
-                  subDeptFilter === 'all'
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                key={dept.id}
+                onClick={() => {
+                  setDeptFilter(dept.name);
+                  setSubDeptFilter('all');
+                  setCurrentPage(1);
+                }}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                  deptFilter === dept.name
+                    ? 'bg-primary-600 text-white shadow-sm shadow-primary-500/20'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                 }`}
               >
-                <span>ทั้งหมดในกอง</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                  subDeptFilter === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                }`}>
-                  {getSubDeptCount(deptFilter, 'all')}
-                </span>
+                <span>{dept.shortName ? dept.shortName : dept.name}</span>
               </button>
+            ))}
+          </div>
+        </div>
 
-              {currentSubDepts.map((sub, idx) => {
-                const count = getSubDeptCount(deptFilter, sub.name);
-                const isSelected = subDeptFilter === sub.name;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => { setSubDeptFilter(sub.name); setCurrentPage(1); }}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all shrink-0 flex items-center gap-1.5 ${
-                      isSelected
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    <span>{sub.name}</span>
-                    {sub.shortName && (
-                      <span className={`text-[10px] font-mono ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
-                        ({sub.shortName})
-                      </span>
-                    )}
-                    <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                      isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}>
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+        {/* Tier 2: Sub-Department (แผนก / หมวด / ตอน / ชุด) */}
+        {deptFilter !== 'all' && currentSubDepts.length > 0 && (
+          <div className="px-5 py-2.5 bg-blue-50/40 dark:bg-blue-950/20 border-b border-blue-100 dark:border-blue-900/30 flex items-center gap-2 overflow-x-auto scrollbar-none">
+            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 shrink-0 mr-1 flex items-center gap-1">
+              <i className="fa-solid fa-code-branch text-[10px]"></i> แผนก/หมวด:
+            </span>
+            <button
+              onClick={() => {
+                setSubDeptFilter('all');
+                setCurrentPage(1);
+              }}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                subDeptFilter === 'all'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 border border-blue-200 dark:border-blue-800/40'
+              }`}
+            >
+              ทั้งหมดใน{deptFilter}
+            </button>
+            {currentSubDepts.map((sub, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setSubDeptFilter(sub.name);
+                  setCurrentPage(1);
+                }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                  subDeptFilter === sub.name
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 border border-blue-200 dark:border-blue-800/40'
+                }`}
+              >
+                {sub.shortName ? `${sub.shortName} (${sub.name})` : sub.name}
+              </button>
+            ))}
           </div>
         )}
-      </div>
 
-      {/* Search & Dynamic Dropdown Filters Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {/* Search Bar */}
-        <div className="relative lg:col-span-2">
-          <i className="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-          <input 
-            type="text" 
-            placeholder="ค้นหาชื่อ, สกุล, รหัสบัตร, ตำแหน่ง, แผนก..." 
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setCurrentPage(1); 
-            }}
-            className="w-full h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl pl-10 pr-4 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+        {/* Filters & Search Toolbar */}
+        <div className="p-4 border-b border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row gap-3 justify-between items-center bg-white dark:bg-slate-900/50">
+          <div className="relative w-full md:w-80">
+            <i className="fa-solid fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input
+              id="personnelSearchInput"
+              aria-label="ค้นหาบุคลากรด้วยชื่อ สกุล หมายเลข หรือตำแหน่ง"
+              type="text"
+              placeholder="ค้นหาชื่อ, สกุล, หมายเลขประจำตัว, ตำแหน่ง..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+            {/* Personnel Type Filter */}
+            <select
+              id="personnelTypeFilter"
+              aria-label="กรองตามประเภทบุคลากร"
+              value={typeFilter}
+              onChange={(e) => {
+                setTypeFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer font-medium"
             >
-              <i className="fa-solid fa-xmark text-xs"></i>
-            </button>
-          )}
+              <option value="all">ประเภท: ทั้งหมด</option>
+              {personnelTypes.map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+
+            {/* Status Filter */}
+            <select
+              id="personnelStatusFilter"
+              aria-label="กรองตามสถานะบุคลากร"
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer font-medium"
+            >
+              <option value="all">สถานะ: ทั้งหมด</option>
+              {statusList.map((st) => (
+                <option key={st} value={st}>{st}</option>
+              ))}
+            </select>
+
+            {/* Bulk Print Badges button */}
+            {selectedIds.length > 0 && (
+              <button
+                onClick={handleBulkPrint}
+                className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all animate-fade-in"
+              >
+                <i className="fa-solid fa-id-card"></i> พิมพ์บัตร ({selectedIds.length})
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Personnel Type Filter */}
-        <div>
-          <select 
-            value={typeFilter} 
-            onChange={(e) => {
-              setTypeFilter(e.target.value);
-              setCurrentPage(1); 
-            }}
-            className="w-full h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
-          >
-            <option value="all">ประเภท: ทั้งหมด</option>
-            {personnelTypes.map((type, idx) => (
-              <option key={idx} value={type}>{type}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Status Filter */}
-        <div>
-          <select 
-            value={statusFilter} 
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setCurrentPage(1); 
-            }}
-            className="w-full h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
-          >
-            <option value="all">สถานะ: ทั้งหมด</option>
-            {statusList.map((st, idx) => (
-              <option key={idx} value={st}>{st}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Personnel Table & Pagination Container */}
-      <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+        {/* Personnel Table */}
         <PersonnelTable
           isLoading={isLoading}
-          currentItems={currentItems}
+          currentItems={personnelList}
           selectedIds={selectedIds}
           toggleSelectAll={toggleSelectAll}
           toggleSelectPerson={toggleSelectPerson}
@@ -521,73 +520,74 @@ export default function ManagePersonnelPage() {
           setEditingPerson={setEditingPerson}
           setIsAddModalOpen={setIsAddModalOpen}
           handleDelete={handleDelete}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
         />
-        
+
+        {/* Server-Side Pagination Bar */}
         <PersonnelPagination
           isLoading={isLoading}
-          totalItems={filteredPersonnel.length}
+          totalItems={totalItems}
           indexOfFirstItem={indexOfFirstItem}
           indexOfLastItem={indexOfLastItem}
           currentPage={currentPage}
           totalPages={totalPages}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
           setCurrentPage={setCurrentPage}
         />
       </div>
 
       {/* Modals */}
-      <AddPersonnelModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={async (data) => {
-          const url = editingPerson ? `/api/personnel/${editingPerson.id}` : '/api/personnel';
-          const method = editingPerson ? 'PUT' : 'POST';
+      {isAddModalOpen && (
+        <AddPersonnelModal
+          isOpen={isAddModalOpen}
+          onClose={() => {
+            setIsAddModalOpen(false);
+            setEditingPerson(null);
+          }}
+          onAdd={() => {
+            fetchPersonnel();
+            setIsAddModalOpen(false);
+            setEditingPerson(null);
+          }}
+          initialData={editingPerson}
+        />
+      )}
 
-          try {
-            const res = await fetch(url, {
-              method,
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data),
-            });
-
-            if (res.ok) {
-              toast.success(editingPerson ? 'อัปเดตข้อมูลสำเร็จ' : 'เพิ่มบุคลากรสำเร็จ');
-              setIsAddModalOpen(false);
-              setEditingPerson(null);
-              fetchPersonnel();
-            } else {
-              const errData = await res.json();
-              toast.error(errData.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-            }
-          } catch (err) {
-            console.error(err);
-            toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
-          }
-        }}
-        initialData={editingPerson}
-      />
-
-      <PersonnelImportModal
-        isOpen={isImportModalOpen}
-        onClose={() => setIsImportModalOpen(false)}
-        onRefresh={fetchPersonnel}
-        setIsLoading={setIsLoading}
-      />
+      {isImportModalOpen && (
+        <PersonnelImportModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          onRefresh={() => {
+            fetchPersonnel();
+            setIsImportModalOpen(false);
+          }}
+          setIsLoading={setIsLoading}
+        />
+      )}
 
       {leaveModalPerson && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
-            <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i className="fa-solid fa-calendar-check text-primary-500"></i>
-                ประวัติการลา - {leaveModalPerson.prefix} {leaveModalPerson.firstName} {leaveModalPerson.lastName}
-              </h3>
-              <button 
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-4xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i className="fa-solid fa-calendar-days text-primary-500"></i> ประวัติและจัดการการลา
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  {leaveModalPerson.prefix}{leaveModalPerson.firstName} {leaveModalPerson.lastName} ({leaveModalPerson.badgeNo}) - {leaveModalPerson.department}
+                </p>
+              </div>
+              <button
                 onClick={() => setLeaveModalPerson(null)}
-                className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 transition-colors"
               >
-                <i className="fa-solid fa-xmark"></i>
+                ✕
               </button>
             </div>
+            
             <LeaveList personnelId={leaveModalPerson.id} />
           </div>
         </div>

@@ -173,6 +173,22 @@ export async function runRoleMatrixTests() {
     console.log(`| ${item.name} | ${rowResults.join(' | ')} |`);
   }
 
+  // Cleanup all matrix test users and created test posts
+  await prisma.post.deleteMany({
+    where: {
+      OR: [
+        { title: { contains: 'Test' } },
+        { title: { contains: 'ทดสอบ' } },
+      ],
+    },
+  });
+
+  await prisma.personnel.deleteMany({
+    where: {
+      username: { startsWith: 'matrix_test_' },
+    },
+  });
+
   console.log('✔ Complete Security Role Matrix verified successfully');
 }
 

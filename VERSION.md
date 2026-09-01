@@ -2,12 +2,12 @@
 
 ## Current Version
 
-**v1.1.0**
+**v1.2.0**
 
 - Release channel: `stable`
 - Release date: 2026-09-01
-- Baseline: `v1.0.0`
-- Purpose: Security Hardening & Production Readiness
+- Baseline: `v1.1.0`
+- Purpose: Personnel Management Enhancement (Server-side Pagination, Multi-field Search, Stats & Export)
 
 ## Versioning Policy
 
@@ -24,14 +24,14 @@
 3. เพิ่มรายการใน `CHANGELOG.md`
 4. รัน TypeScript และ Production Build
 5. ทดสอบ Security/Authorization ที่เกี่ยวข้อง
-6. บันทึก Git commit และ tag เช่น `v1.1.0`
-7. อัปเดต Release Record ใน `DEV_CHECKLIST.md`
+6. บันทึก Git commit และ tag เช่น `v1.2.0`
+7. อัปเดต Release Record ใน `DEV.md`
 
-## Current Release Gate Status
+## Current Release Gate Status (v1.2.0)
 
 - TypeScript: 🟢 PASS
 - ESLint: 🟢 PASS
 - Production Build: 🟢 PASS
-- Authorization Hardening: 🟢 PASS (Full Role Matrix Verified)
-- Full Automated Security Tests: 🟢 PASS (5/5 Test Suites)
-- Production Release Status: 🟢 **FROZEN & RELEASED (v1.1.0)**
+- Server-side Pagination & Search: 🟢 PASS
+- Automated Test Suite (6 Suites): 🟢 PASS
+- Production Release Status: 🟢 **VERIFIED (v1.2.0)**

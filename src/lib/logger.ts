@@ -1,3 +1,5 @@
+import { prisma } from './prisma';
+
 /**
  * Production-safe logger utility.
  * In production, errors are still logged (they go to PM2/system logs).
@@ -25,3 +27,25 @@ export const logger = {
     }
   },
 };
+
+export async function logSecurityEvent(data: {
+  action: string;
+  userId?: string;
+  endpoint?: string;
+  details?: Record<string, any>;
+  ipAddress?: string;
+}) {
+  try {
+    await prisma.auditLog.create({
+      data: {
+        action: data.action,
+        personnelId: data.userId || null,
+        entity: 'SecurityAudit',
+        details: data.details ? JSON.stringify(data.details) : null,
+        ipAddress: data.ipAddress || null,
+      },
+    });
+  } catch (err) {
+    logger.error('Failed to write security audit log', err);
+  }
+}

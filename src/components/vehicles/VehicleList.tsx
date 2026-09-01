@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Vehicle } from '@/types/personnel';
 import VehicleCard from './VehicleCard';
 import VehicleFormModal from './VehicleFormModal';
@@ -16,7 +16,7 @@ export default function VehicleList({ personnelId }: VehicleListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
 
-  const fetchVehicles = async () => {
+  const fetchVehicles = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`/api/vehicles?personnelId=${personnelId}`);
@@ -29,13 +29,13 @@ export default function VehicleList({ personnelId }: VehicleListProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [personnelId]);
 
   useEffect(() => {
     if (personnelId) {
       fetchVehicles();
     }
-  }, [personnelId]);
+  }, [personnelId, fetchVehicles]);
 
   const handleSaveVehicle = async (vehicleData: Partial<Vehicle>) => {
     try {

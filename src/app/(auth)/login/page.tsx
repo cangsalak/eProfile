@@ -13,13 +13,27 @@ export default function LoginPage() {
   const [systemName, setSystemName] = useState('eProfile');
 
   useEffect(() => {
+    // If already authenticated via HttpOnly cookie, redirect to dashboard
+    fetch('/api/auth/me')
+      .then(res => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then(data => {
+        if (data?.user) {
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
+          router.replace('/dashboard');
+        }
+      })
+      .catch(() => {});
+
     fetch('/api/settings').then(res => res.json()).then(data => {
       if (data.systemName) setSystemName(data.systemName);
       if (data.isInstalled === 'false') {
         router.push('/install');
       }
     }).catch(e => console.error(e));
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

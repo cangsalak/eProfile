@@ -235,7 +235,7 @@ export default function DataCategorySettings({ settings, setSettings }: DataCate
                   {/* Edit Textarea */}
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+                      <label htmlFor={`cat_${cat.key}`} className="block text-xs font-medium text-slate-700 dark:text-slate-300">
                         แก้ไขรายการตัวเลือก (คั่นด้วยเครื่องหมายคอมมา <code>,</code>):
                       </label>
                       <button
@@ -247,6 +247,8 @@ export default function DataCategorySettings({ settings, setSettings }: DataCate
                       </button>
                     </div>
                     <textarea
+                      id={`cat_${cat.key}`}
+                      aria-label={`แก้ไขรายการตัวเลือก ${cat.title}`}
                       value={getArrayValue(cat.key)}
                       onChange={(e) => handleListChange(cat.key, e.target.value)}
                       rows={3}
