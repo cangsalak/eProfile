@@ -273,25 +273,28 @@ export default function CommandDashboardPage() {
 
   return (
     <div className="space-y-6 pb-12 animate-fade-in font-prompt">
-      {/* ── Top Executive Header ─────────────────────────────────────────── */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-slate-800 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+      {/* ── Top Header - Harmonized with eProfile Emerald Theme ─────────── */}
+      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8">
+        <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-gradient-to-bl from-primary-100/70 via-emerald-50/40 to-teal-50/20 dark:from-primary-950/40 dark:via-emerald-950/20 dark:to-teal-950/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-80 pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/20 border border-primary-500/30 text-primary-300 text-xs font-semibold mb-3">
-              <i className="fa-solid fa-chess-king"></i>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-950/50 border border-primary-200 dark:border-primary-800/80 text-primary-700 dark:text-primary-300 text-xs font-semibold mb-3 shadow-sm">
+              <i className="fa-solid fa-chess-king text-primary-600 dark:text-primary-400"></i>
               <span>ศูนย์บัญชาการกำลังพล (Command Dashboard)</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
               <span>รายงานความพร้อมรบและสถานะกำลังพล</span>
             </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1.5 flex items-center gap-2">
-              <i className="fa-regular fa-calendar-check text-primary-400"></i>
-              <span>ข้อมูลประจำ {formattedThaiDate}</span>
+            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1.5 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+                <i className="fa-regular fa-calendar-check text-primary-600 dark:text-primary-400"></i>
+                <span>ข้อมูลประจำ {formattedThaiDate}</span>
+              </span>
               {data?.scope && (
-                <span className="text-slate-400 font-mono text-xs">
-                  (ขอบเขต: {data.scope.effectiveDepartment === 'ALL' ? 'ทุกหน่วยงาน' : data.scope.effectiveDepartment})
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-mono text-xs">
+                  ขอบเขต: {data.scope.effectiveDepartment === 'ALL' ? 'ทุกหน่วยงาน' : data.scope.effectiveDepartment}
+                  {data.scope.effectiveSubDepartment && data.scope.effectiveSubDepartment !== 'ALL' ? ` (${data.scope.effectiveSubDepartment})` : ''}
                 </span>
               )}
             </p>
@@ -301,14 +304,14 @@ export default function CommandDashboardPage() {
             <button
               onClick={() => fetchDashboardData()}
               disabled={isLoading}
-              className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition flex items-center gap-2 border border-white/10"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-sm"
             >
               <i className={`fa-solid fa-rotate-right ${isLoading ? 'fa-spin' : ''}`}></i>
               <span>รีเฟรชข้อมูล</span>
             </button>
             <Link
               href="/leave"
-              className="px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-lg shadow-primary-500/25"
+              className="px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-md shadow-primary-500/20"
             >
               <i className="fa-solid fa-file-signature"></i>
               <span>ระบบอนุมัติการลา</span>
