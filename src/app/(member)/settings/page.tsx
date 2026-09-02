@@ -146,8 +146,7 @@ export default function SettingsPage() {
   };
 
   const tabsList = [
-    { id: 'system', name: 'ข้อมูลทั่วไป', icon: 'fa-building-columns' },
-    { id: 'theme', name: 'ธีมและการแสดงผล', icon: 'fa-palette' },
+    { id: 'system', name: 'ระบบทั่วไป และ ธีม', icon: 'fa-desktop' },
     { id: 'badge', name: 'ออกแบบบัตร (Badge)', icon: 'fa-id-badge' },
     { id: 'roles', name: 'สิทธิ์การใช้งาน (Roles)', icon: 'fa-user-shield' },
     { id: 'dropdowns', name: 'จัดการตัวเลือก', icon: 'fa-list' },
@@ -241,18 +240,6 @@ export default function SettingsPage() {
                   handleChange={handleChange}
                   handleLogoUpload={handleLogoUpload}
                   fileInputRef={fileInputRef}
-                  mode="general"
-                />
-              )}
-
-              {activeTab === 'theme' && (
-                <SystemSettingsForm 
-                  settings={settings}
-                  setSettings={setSettings}
-                  handleChange={handleChange}
-                  handleLogoUpload={handleLogoUpload}
-                  fileInputRef={fileInputRef}
-                  mode="theme"
                 />
               )}
 

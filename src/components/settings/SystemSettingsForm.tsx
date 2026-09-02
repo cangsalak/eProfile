@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 
 interface SystemSettingsFormProps {
@@ -6,7 +8,6 @@ interface SystemSettingsFormProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   handleLogoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
-  mode?: 'all' | 'general' | 'theme';
 }
 
 export default function SystemSettingsForm({ 
@@ -14,53 +15,62 @@ export default function SystemSettingsForm({
   setSettings, 
   handleChange, 
   handleLogoUpload, 
-  fileInputRef,
-  mode = 'all'
+  fileInputRef 
 }: SystemSettingsFormProps) {
-  const [internalTab, setInternalTab] = useState<'general' | 'theme'>('general');
+  const [subTab, setSubTab] = useState<'general' | 'calendar' | 'theme' | 'typography' | 'toast'>('general');
 
-  const showGeneral = mode === 'general' || (mode === 'all' && internalTab === 'general');
-  const showTheme = mode === 'theme' || (mode === 'all' && internalTab === 'theme');
+  const subTabs = [
+    { id: 'general', name: 'ข้อมูลระบบและองค์กร', icon: 'fa-building-columns' },
+    { id: 'calendar', name: 'ปฏิทิน Google Calendar', icon: 'fa-calendar-days' },
+    { id: 'theme', name: 'ธีมและสีประจำระบบ', icon: 'fa-palette' },
+    { id: 'typography', name: 'แบบอักษรและสไตล์', icon: 'fa-font' },
+    { id: 'toast', name: 'การแจ้งเตือนป๊อปอัป', icon: 'fa-bell' },
+  ];
 
   return (
     <div className="space-y-6 animate-fade-in font-prompt">
-      {/* Sub-tab switcher when in 'all' mode */}
-      {mode === 'all' && (
-        <div className="flex items-center gap-2 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl w-fit border border-slate-200 dark:border-slate-700">
-          <button
-            type="button"
-            onClick={() => setInternalTab('general')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
-              internalTab === 'general'
-                ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <i className="fa-solid fa-building-columns text-xs"></i>
-            <span>ข้อมูลทั่วไปของระบบ</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setInternalTab('theme')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
-              internalTab === 'theme'
-                ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <i className="fa-solid fa-palette text-xs"></i>
-            <span>ธีมและการแสดงผล</span>
-          </button>
-        </div>
-      )}
+      {/* ─── Secondary Sub-Tabs Navigation (เมนูย่อยแบบแท็บ) ────────────────── */}
+      <div 
+        role="tablist" 
+        aria-label="หมวดย่อยการตั้งค่าระบบและธีม"
+        className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl w-full overflow-x-auto border border-slate-200 dark:border-slate-700/80"
+      >
+        {subTabs.map(st => {
+          const isSelected = subTab === st.id;
+          return (
+            <button
+              key={st.id}
+              role="tab"
+              id={`subtab-${st.id}`}
+              aria-controls={`subtabpanel-${st.id}`}
+              aria-selected={isSelected}
+              type="button"
+              onClick={() => setSubTab(st.id as any)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 shrink-0 ${
+                isSelected
+                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-sm border border-slate-200 dark:border-slate-700/70'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+              }`}
+            >
+              <i className={`fa-solid ${st.icon} text-xs ${isSelected ? 'text-primary-500' : 'text-slate-400'}`}></i>
+              <span>{st.name}</span>
+            </button>
+          );
+        })}
+      </div>
 
-      {/* ─── GENERAL SYSTEM SETTINGS ────────────────────────────────────────── */}
-      {showGeneral && (
-        <div className="space-y-5 animate-fade-in">
+      {/* ─── 1. GENERAL & ORGANIZATION INFO ──────────────────────────────────── */}
+      {subTab === 'general' && (
+        <div 
+          role="tabpanel"
+          id="subtabpanel-general"
+          aria-labelledby="subtab-general"
+          className="space-y-5 animate-fade-in"
+        >
           <div>
             <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
-              <i className="fa-solid fa-sliders text-primary-500 text-sm"></i>
-              <span>ข้อมูลพื้นฐานของระบบและองค์กร</span>
+              <i className="fa-solid fa-building-columns text-primary-500 text-sm"></i>
+              <span>ข้อมูลพื้นฐานของระบบและองค์กร (Organization & Basic Info)</span>
             </h3>
           </div>
 
@@ -204,104 +214,118 @@ export default function SystemSettingsForm({
               กำหนดค่าเริ่มต้นสำหรับตารางข้อมูลทั้งหมดในระบบ เช่น ทะเบียนบุคลากร และเอกสาร API
             </p>
           </div>
+        </div>
+      )}
 
-          {/* Google Calendar */}
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-            <div className="flex justify-between items-center">
-              <div>
-                <h4 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                  <i className="fa-regular fa-calendar text-primary-500"></i>
-                  <span>เชื่อมต่อ Google Calendar (iCal)</span>
-                </h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  ดึงข้อมูลกิจกรรมจาก Google Calendar มาแสดงในปฏิทินส่วนกลางของระบบ (รองรับหลายปฏิทิน)
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  const urls = settings.googleCalendarUrls ? JSON.parse(settings.googleCalendarUrls) : [];
-                  setSettings({ ...settings, googleCalendarUrls: JSON.stringify([...urls, { name: '', url: '' }]) });
-                }}
-                className="text-xs bg-primary-600 hover:bg-primary-500 text-white px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 font-semibold shadow-sm"
-              >
-                <i className="fa-solid fa-plus text-[10px]"></i>
-                <span>เพิ่มปฏิทิน</span>
-              </button>
-            </div>
-            
-            <div className="space-y-2.5">
-              {(() => {
+      {/* ─── 2. GOOGLE CALENDAR INTEGRATION ──────────────────────────────────── */}
+      {subTab === 'calendar' && (
+        <div 
+          role="tabpanel"
+          id="subtabpanel-calendar"
+          aria-labelledby="subtab-calendar"
+          className="space-y-5 animate-fade-in"
+        >
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
+              <i className="fa-solid fa-calendar-days text-primary-500 text-sm"></i>
+              <span>การเชื่อมต่อปฏิทินส่วนกลาง (Google Calendar iCal Integration)</span>
+            </h3>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              ดึงข้อมูลกิจกรรมและวันสำคัญจาก Google Calendar มาแสดงผลในหน้าปฏิทินส่วนกลางของระบบ (รองรับหลายปฏิทิน)
+            </p>
+            <button
+              type="button"
+              onClick={() => {
                 const urls = settings.googleCalendarUrls ? JSON.parse(settings.googleCalendarUrls) : [];
-                if (urls.length === 0) {
-                  return (
-                    <div className="text-xs text-slate-500 text-center py-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
-                      ยังไม่ได้เพิ่มปฏิทิน Google Calendar
-                    </div>
-                  );
-                }
-                return urls.map((cal: any, index: number) => (
-                  <div key={index} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <label htmlFor={`googleCalendarName_${index}`} className="sr-only">ชื่อปฏิทิน</label>
-                    <input 
-                      id={`googleCalendarName_${index}`}
-                      type="text" 
-                      aria-label={`ชื่อปฏิทินรายการที่ ${index + 1}`}
-                      placeholder="ชื่อปฏิทิน (เช่น วันหยุดราชการ)" 
-                      value={cal.name}
-                      onChange={(e) => {
-                        const newUrls = [...urls];
-                        newUrls[index].name = e.target.value;
-                        setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
-                      }}
-                      className="w-full sm:w-1/3 form-control py-1.5 text-xs"
-                    />
-                    <label htmlFor={`googleCalendarUrl_${index}`} className="sr-only">ลิงก์ iCal</label>
-                    <input 
-                      id={`googleCalendarUrl_${index}`}
-                      type="text" 
-                      aria-label={`ลิงก์ iCal รายการที่ ${index + 1}`}
-                      placeholder="ลิงก์ iCal (https://.../basic.ics)" 
-                      value={cal.url}
-                      onChange={(e) => {
-                        const newUrls = [...urls];
-                        newUrls[index].url = e.target.value;
-                        setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
-                      }}
-                      className="w-full flex-1 form-control py-1.5 text-xs font-mono"
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => {
-                        const newUrls = urls.filter((_: any, i: number) => i !== index);
-                        setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
-                      }}
-                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors shrink-0"
-                      title="ลบปฏิทินนี้"
-                    >
-                      <i className="fa-solid fa-trash text-xs"></i>
-                    </button>
+                setSettings({ ...settings, googleCalendarUrls: JSON.stringify([...urls, { name: '', url: '' }]) });
+              }}
+              className="text-xs bg-primary-600 hover:bg-primary-500 text-white px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 font-semibold shadow-sm shrink-0"
+            >
+              <i className="fa-solid fa-plus text-[10px]"></i>
+              <span>เพิ่มปฏิทิน</span>
+            </button>
+          </div>
+          
+          <div className="space-y-3">
+            {(() => {
+              const urls = settings.googleCalendarUrls ? JSON.parse(settings.googleCalendarUrls) : [];
+              if (urls.length === 0) {
+                return (
+                  <div className="text-xs text-slate-500 text-center py-8 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                    <i className="fa-regular fa-calendar-xmark text-2xl mb-2 text-slate-400 block"></i>
+                    <span>ยังไม่ได้เพิ่มปฏิทิน Google Calendar คลิกปุ่ม "เพิ่มปฏิทิน" ด้านบนเพื่อเริ่มต้น</span>
                   </div>
-                ));
-              })()}
-            </div>
+                );
+              }
+              return urls.map((cal: any, index: number) => (
+                <div key={index} className="flex flex-col sm:flex-row gap-2.5 items-start sm:items-center bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
+                  <label htmlFor={`googleCalendarName_${index}`} className="sr-only">ชื่อปฏิทิน</label>
+                  <input 
+                    id={`googleCalendarName_${index}`}
+                    type="text" 
+                    aria-label={`ชื่อปฏิทินรายการที่ ${index + 1}`}
+                    placeholder="ชื่อปฏิทิน (เช่น วันหยุดราชการ, กิจกรรมประจำปี)" 
+                    value={cal.name}
+                    onChange={(e) => {
+                      const newUrls = [...urls];
+                      newUrls[index].name = e.target.value;
+                      setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
+                    }}
+                    className="w-full sm:w-1/3 form-control py-2 text-xs"
+                  />
+                  <label htmlFor={`googleCalendarUrl_${index}`} className="sr-only">ลิงก์ iCal</label>
+                  <input 
+                    id={`googleCalendarUrl_${index}`}
+                    type="text" 
+                    aria-label={`ลิงก์ iCal รายการที่ ${index + 1}`}
+                    placeholder="ลิงก์ iCal (https://calendar.google.com/calendar/ical/.../basic.ics)" 
+                    value={cal.url}
+                    onChange={(e) => {
+                      const newUrls = [...urls];
+                      newUrls[index].url = e.target.value;
+                      setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
+                    }}
+                    className="w-full flex-1 form-control py-2 text-xs font-mono"
+                  />
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      const newUrls = urls.filter((_: any, i: number) => i !== index);
+                      setSettings({ ...settings, googleCalendarUrls: JSON.stringify(newUrls) });
+                    }}
+                    className="p-2.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition-colors shrink-0"
+                    title="ลบปฏิทินนี้"
+                  >
+                    <i className="fa-solid fa-trash text-xs"></i>
+                  </button>
+                </div>
+              ));
+            })()}
           </div>
         </div>
       )}
 
-      {/* ─── THEME & APPEARANCE SETTINGS ────────────────────────────────────── */}
-      {showTheme && (
-        <div className="space-y-6 animate-fade-in">
+      {/* ─── 3. THEME & PRIMARY COLOR ────────────────────────────────────────── */}
+      {subTab === 'theme' && (
+        <div 
+          role="tabpanel"
+          id="subtabpanel-theme"
+          aria-labelledby="subtab-theme"
+          className="space-y-6 animate-fade-in"
+        >
           <div>
             <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
               <i className="fa-solid fa-palette text-primary-500 text-sm"></i>
-              <span>ธีม การจัดวาง และการแสดงผล (Theme & Display)</span>
+              <span>โหมดหน้าจอและชุดสีประจำระบบ (Theme Mode & Primary Colors)</span>
             </h3>
           </div>
           
           {/* Dark / Light Mode */}
           <div>
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">1. โหมดหน้าจอ (Dark / Light Mode)</h4>
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">1. โหมดหน้าจอ (Dark / Light Mode)</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <label className={`cursor-pointer border rounded-2xl p-4 flex flex-col items-center justify-center gap-3 transition-all ${settings.theme === 'dark' ? 'border-primary-500 bg-primary-500/10 shadow-sm' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
                 <input type="radio" name="theme" value="dark" checked={settings.theme === 'dark'} onChange={handleChange} className="sr-only" />
@@ -320,28 +344,9 @@ export default function SystemSettingsForm({
             </div>
           </div>
 
-          {/* Typography */}
-          <div>
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">2. แบบตัวอักษร (Typography)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {[
-                { id: 'prompt', name: 'Prompt', desc: 'ทันสมัย อ่านง่าย' },
-                { id: 'sarabun', name: 'Sarabun', desc: 'มาตรฐานราชการ' },
-                { id: 'kanit', name: 'Kanit', desc: 'ทรงเหลี่ยม เป็นทางการ' },
-                { id: 'niramit', name: 'Niramit', desc: 'สวยงาม คลาสสิก' },
-              ].map(font => (
-                <label key={font.id} className={`cursor-pointer border rounded-2xl p-3.5 flex flex-col items-center justify-center gap-1.5 transition-all ${settings.systemFont === font.id ? 'border-primary-500 bg-primary-500/10 shadow-sm' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
-                  <input type="radio" name="systemFont" value={font.id} checked={settings.systemFont === font.id} onChange={handleChange} className="sr-only" />
-                  <span className="text-slate-900 dark:text-white font-bold text-base" style={{ fontFamily: `var(--font-${font.id})` }}>{font.name}</span>
-                  <span className="text-[11px] text-slate-500">{font.desc}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
           {/* Primary Color Palette */}
           <div>
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">3. สีประจำระบบ (Primary Color Theme)</h4>
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">2. สีประจำระบบ (Primary Color Theme)</h4>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               {[
                 { id: 'indigo', name: 'Indigo (คราม)', color: 'bg-indigo-500' },
@@ -372,10 +377,46 @@ export default function SystemSettingsForm({
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ─── 4. TYPOGRAPHY, BORDER RADIUS & SURFACE STYLE ─────────────────────── */}
+      {subTab === 'typography' && (
+        <div 
+          role="tabpanel"
+          id="subtabpanel-typography"
+          aria-labelledby="subtab-typography"
+          className="space-y-6 animate-fade-in"
+        >
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
+              <i className="fa-solid fa-font text-primary-500 text-sm"></i>
+              <span>แบบอักษรและความโค้งมนพื้นผิว (Typography & Surface Style)</span>
+            </h3>
+          </div>
+
+          {/* Typography */}
+          <div>
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">1. แบบตัวอักษร (Typography)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { id: 'prompt', name: 'Prompt', desc: 'ทันสมัย อ่านง่าย' },
+                { id: 'sarabun', name: 'Sarabun', desc: 'มาตรฐานราชการ' },
+                { id: 'kanit', name: 'Kanit', desc: 'ทรงเหลี่ยม เป็นทางการ' },
+                { id: 'niramit', name: 'Niramit', desc: 'สวยงาม คลาสสิก' },
+              ].map(font => (
+                <label key={font.id} className={`cursor-pointer border rounded-2xl p-3.5 flex flex-col items-center justify-center gap-1.5 transition-all ${settings.systemFont === font.id ? 'border-primary-500 bg-primary-500/10 shadow-sm' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
+                  <input type="radio" name="systemFont" value={font.id} checked={settings.systemFont === font.id} onChange={handleChange} className="sr-only" />
+                  <span className="text-slate-900 dark:text-white font-bold text-base" style={{ fontFamily: `var(--font-${font.id})` }}>{font.name}</span>
+                  <span className="text-[11px] text-slate-500">{font.desc}</span>
+                </label>
+              ))}
+            </div>
+          </div>
 
           {/* Border Radius */}
           <div>
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">4. ความโค้งมนของขอบ (Border Radius)</h4>
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">2. ความโค้งมนของขอบ (Border Radius)</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { id: 'sharp', name: 'เหลี่ยม (Sharp)', shapeClass: 'rounded-none' },
@@ -393,7 +434,7 @@ export default function SystemSettingsForm({
 
           {/* Surface Style */}
           <div>
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">5. สไตล์พื้นผิว (Surface Style)</h4>
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">3. สไตล์พื้นผิว (Surface Style)</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { id: 'flat', name: 'เรียบแบน (Flat)' },
@@ -407,49 +448,61 @@ export default function SystemSettingsForm({
               ))}
             </div>
           </div>
+        </div>
+      )}
 
-          {/* Toast Notification Position & Theme */}
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-4">
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300">6. ตั้งค่าการแจ้งเตือนป๊อปอัป (Toast Notifications)</h4>
-            
-            <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  ตำแหน่งป๊อปอัปแจ้งเตือน (Toast Position)
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  {[
-                    { id: 'top-right', name: 'มุมบนขวา' },
-                    { id: 'top-center', name: 'ตรงกลางด้านบน' },
-                    { id: 'top-left', name: 'มุมบนซ้าย' },
-                    { id: 'bottom-right', name: 'มุมล่างขวา' },
-                    { id: 'bottom-center', name: 'ตรงกลางด้านล่าง' },
-                    { id: 'bottom-left', name: 'มุมล่างซ้าย' },
-                  ].map(pos => (
-                    <label key={pos.id} className={`cursor-pointer border rounded-xl p-2.5 flex items-center justify-center gap-2 transition-all text-xs ${settings.toastPosition === pos.id || (!settings.toastPosition && pos.id === 'top-right') ? 'border-primary-500 bg-primary-500/10 text-primary-600 dark:text-primary-400 font-bold shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
-                      <input type="radio" name="toastPosition" value={pos.id} checked={settings.toastPosition === pos.id || (!settings.toastPosition && pos.id === 'top-right')} onChange={handleChange} className="sr-only" />
-                      <span>{pos.name}</span>
-                    </label>
-                  ))}
-                </div>
+      {/* ─── 5. TOAST NOTIFICATIONS ──────────────────────────────────────────── */}
+      {subTab === 'toast' && (
+        <div 
+          role="tabpanel"
+          id="subtabpanel-toast"
+          aria-labelledby="subtab-toast"
+          className="space-y-6 animate-fade-in"
+        >
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
+              <i className="fa-solid fa-bell text-primary-500 text-sm"></i>
+              <span>การตั้งค่าป๊อปอัปแจ้งเตือน (Toast Notifications Settings)</span>
+            </h3>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 space-y-5">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">
+                ตำแหน่งป๊อปอัปแจ้งเตือน (Toast Position)
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {[
+                  { id: 'top-right', name: 'มุมบนขวา' },
+                  { id: 'top-center', name: 'ตรงกลางด้านบน' },
+                  { id: 'top-left', name: 'มุมบนซ้าย' },
+                  { id: 'bottom-right', name: 'มุมล่างขวา' },
+                  { id: 'bottom-center', name: 'ตรงกลางด้านล่าง' },
+                  { id: 'bottom-left', name: 'มุมล่างซ้าย' },
+                ].map(pos => (
+                  <label key={pos.id} className={`cursor-pointer border rounded-xl p-3 flex items-center justify-center gap-2 transition-all text-xs ${settings.toastPosition === pos.id || (!settings.toastPosition && pos.id === 'top-right') ? 'border-primary-500 bg-primary-500/10 text-primary-600 dark:text-primary-400 font-bold shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                    <input type="radio" name="toastPosition" value={pos.id} checked={settings.toastPosition === pos.id || (!settings.toastPosition && pos.id === 'top-right')} onChange={handleChange} className="sr-only" />
+                    <span>{pos.name}</span>
+                  </label>
+                ))}
               </div>
+            </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  รูปแบบป๊อปอัป (Toast Theme)
-                </label>
-                <div className="grid grid-cols-2 gap-2.5">
-                  {[
-                    { id: 'light', name: 'สว่าง (Light)', icon: 'fa-sun' },
-                    { id: 'dark', name: 'มืด (Dark)', icon: 'fa-moon' },
-                  ].map(theme => (
-                    <label key={theme.id} className={`cursor-pointer border rounded-xl p-2.5 flex items-center justify-center gap-2 transition-all text-xs ${settings.toastTheme === theme.id || (!settings.toastTheme && theme.id === 'light') ? 'border-primary-500 bg-primary-500/10 text-primary-600 dark:text-primary-400 font-bold shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
-                      <input type="radio" name="toastTheme" value={theme.id} checked={settings.toastTheme === theme.id || (!settings.toastTheme && theme.id === 'light')} onChange={handleChange} className="sr-only" />
-                      <i className={`fa-solid ${theme.icon}`}></i>
-                      <span>{theme.name}</span>
-                    </label>
-                  ))}
-                </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">
+                รูปแบบป๊อปอัป (Toast Theme)
+              </label>
+              <div className="grid grid-cols-2 gap-2.5">
+                {[
+                  { id: 'light', name: 'สว่าง (Light)', icon: 'fa-sun' },
+                  { id: 'dark', name: 'มืด (Dark)', icon: 'fa-moon' },
+                ].map(theme => (
+                  <label key={theme.id} className={`cursor-pointer border rounded-xl p-3 flex items-center justify-center gap-2 transition-all text-xs ${settings.toastTheme === theme.id || (!settings.toastTheme && theme.id === 'light') ? 'border-primary-500 bg-primary-500/10 text-primary-600 dark:text-primary-400 font-bold shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                    <input type="radio" name="toastTheme" value={theme.id} checked={settings.toastTheme === theme.id || (!settings.toastTheme && theme.id === 'light')} onChange={handleChange} className="sr-only" />
+                    <i className={`fa-solid ${theme.icon}`}></i>
+                    <span>{theme.name}</span>
+                  </label>
+                ))}
               </div>
             </div>
           </div>
