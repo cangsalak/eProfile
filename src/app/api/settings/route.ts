@@ -4,48 +4,66 @@ import { requirePermission } from '@/lib/auth-guards';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * Keys returned to unauthenticated (public) callers.
+ * NEVER add sensitive keys here (db connection strings, SMTP, tokens, etc.).
+ *
+ * Security: using an allowlist (not denylist) ensures future keys added to
+ * the DB are NOT exposed by default.
+ */
+const PUBLIC_SETTINGS_ALLOWLIST = new Set([
+  'isInstalled',
+  'systemName',
+  'systemLogo',
+  'systemDescription',
+  'defaultPageSize',
+  'theme',
+  // Dropdown options needed by public-facing pages
+  'personnelTypes',
+  'statusList',
+  'prefixes',
+  'leaveTypes',
+  'vehicleTypes',
+  'bloodGroups',
+  'educationLevels',
+]);
+
+/** Default values for public settings not yet stored in DB */
+const PUBLIC_DEFAULTS: Record<string, string> = {
+  isInstalled:     'false',
+  defaultPageSize: '20',
+  personnelTypes:  JSON.stringify(['นายทหารสัญญาบัตร', 'นายทหารประทวน', 'พนักงานราชการ', 'ลูกจ้าง', 'ทหารกองประจำการ']),
+  statusList:      JSON.stringify(['ปฏิบัติงานปกติ', 'ไปช่วยราชการ', 'ไปช่วยราชการภายนอกหน่วย', 'มาช่วยราชการ', 'ลาพักผ่อน', 'ลาป่วย/ลากิจ', 'ศึกษา/ดูงาน', 'ย้ายหน่วย/พ้นสภาพ']),
+  prefixes:        JSON.stringify(['นาย', 'นาง', 'นางสาว', 'ร.ต.', 'ร.ท.', 'ร.อ.', 'พ.ต.', 'พ.ท.', 'พ.อ.', 'พล.ต.', 'พล.ท.', 'พล.อ.', 'ส.ต.', 'ส.ท.', 'ส.อ.', 'จ.ส.ต.', 'จ.ส.ท.', 'จ.ส.อ.']),
+  leaveTypes:      JSON.stringify(['ลาพักผ่อน', 'ลากิจ', 'ลาป่วย', 'ลาคลอดบุตร', 'ลาอุปสมบท', 'ไปช่วยราชการ']),
+  vehicleTypes:    JSON.stringify(['รถยนต์ส่วนบุคคล', 'รถจักรยานยนต์', 'รถยนต์ราชการ', 'รถจักรยานยนต์ราชการ']),
+  bloodGroups:     JSON.stringify(['A', 'B', 'AB', 'O']),
+  educationLevels: JSON.stringify(['มัธยมศึกษาตอนต้น', 'มัธยมศึกษาตอนปลาย / ปวช.', 'อนุปริญญา / ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก']),
+};
+
+/**
+ * GET /api/settings — public endpoint, allowlist-filtered.
+ *
+ * Only keys in PUBLIC_SETTINGS_ALLOWLIST are returned.
+ * Sensitive values (dbConnectionString, SMTP, tokens, etc.) are never exposed.
+ */
 export async function GET() {
   try {
-    const settings = await prisma.systemSetting.findMany();
-    // Convert array to key-value object
-    const settingsObj = settings.reduce((acc: any, curr) => {
-      // Do not return sensitive information that might still be in DB
-      if (['smtpPass', 'lineNotifyToken', 'smtpUser', 'smtpHost', 'smtpPort'].includes(curr.key)) {
-        return acc;
+    const allSettings = await prisma.systemSetting.findMany();
+
+    // Build output from allowlist only
+    const settingsObj: Record<string, string> = {};
+    for (const { key, value } of allSettings) {
+      if (PUBLIC_SETTINGS_ALLOWLIST.has(key)) {
+        settingsObj[key] = value;
       }
-      acc[curr.key] = curr.value;
-      return acc;
-    }, {});
-    
-    // Add default isInstalled and defaultPageSize if not present
-    if (typeof settingsObj.isInstalled === 'undefined') {
-      settingsObj.isInstalled = 'false';
-    }
-    if (!settingsObj.defaultPageSize) {
-      settingsObj.defaultPageSize = '20';
     }
 
-    // Default dropdown options if not yet set in database
-    if (!settingsObj.personnelTypes) {
-      settingsObj.personnelTypes = JSON.stringify(['นายทหารสัญญาบัตร', 'นายทหารประทวน', 'พนักงานราชการ', 'ลูกจ้าง', 'ทหารกองประจำการ']);
-    }
-    if (!settingsObj.statusList) {
-      settingsObj.statusList = JSON.stringify(['ปฏิบัติงานปกติ', 'ไปช่วยราชการ', 'ไปช่วยราชการภายนอกหน่วย', 'มาช่วยราชการ', 'ลาพักผ่อน', 'ลาป่วย/ลากิจ', 'ศึกษา/ดูงาน', 'ย้ายหน่วย/พ้นสภาพ']);
-    }
-    if (!settingsObj.prefixes) {
-      settingsObj.prefixes = JSON.stringify(['นาย', 'นาง', 'นางสาว', 'ร.ต.', 'ร.ท.', 'ร.อ.', 'พ.ต.', 'พ.ท.', 'พ.อ.', 'พล.ต.', 'พล.ท.', 'พล.อ.', 'ส.ต.', 'ส.ท.', 'ส.อ.', 'จ.ส.ต.', 'จ.ส.ท.', 'จ.ส.อ.']);
-    }
-    if (!settingsObj.leaveTypes) {
-      settingsObj.leaveTypes = JSON.stringify(['ลาพักผ่อน', 'ลากิจ', 'ลาป่วย', 'ลาคลอดบุตร', 'ลาอุปสมบท', 'ไปช่วยราชการ']);
-    }
-    if (!settingsObj.vehicleTypes) {
-      settingsObj.vehicleTypes = JSON.stringify(['รถยนต์ส่วนบุคคล', 'รถจักรยานยนต์', 'รถยนต์ราชการ', 'รถจักรยานยนต์ราชการ']);
-    }
-    if (!settingsObj.bloodGroups) {
-      settingsObj.bloodGroups = JSON.stringify(['A', 'B', 'AB', 'O']);
-    }
-    if (!settingsObj.educationLevels) {
-      settingsObj.educationLevels = JSON.stringify(['มัธยมศึกษาตอนต้น', 'มัธยมศึกษาตอนปลาย / ปวช.', 'อนุปริญญา / ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก']);
+    // Fill in missing defaults
+    for (const [key, defaultValue] of Object.entries(PUBLIC_DEFAULTS)) {
+      if (!(key in settingsObj)) {
+        settingsObj[key] = defaultValue;
+      }
     }
 
     return NextResponse.json(settingsObj);
@@ -55,37 +73,41 @@ export async function GET() {
   }
 }
 
+/**
+ * PUT /api/settings — requires MANAGE_SYSTEM permission.
+ */
 export async function PUT(request: Request) {
   try {
     const { error: authError, user: authUser } = await requirePermission(request, 'MANAGE_SYSTEM');
-    if (authError || !authUser) return authError || NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authError || !authUser) return authError ?? NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json();
-    
-    // Save each setting to the DB using upsert
+
     for (const [key, value] of Object.entries(body)) {
       if (typeof value === 'string') {
         await prisma.systemSetting.upsert({
-          where: { key },
+          where:  { key },
           update: { value },
           create: { key, value },
         });
       }
     }
-    
-    // Audit log: SETTINGS_CHANGED
+
     const changedKeys = Object.keys(body).filter(k => typeof body[k] === 'string');
-    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim()
+      ?? request.headers.get('x-real-ip')
+      ?? '127.0.0.1';
+
     await prisma.auditLog.create({
       data: {
         personnelId: authUser.id,
-        action: 'SETTINGS_CHANGED',
-        entity: 'SystemSetting',
-        entityId: 'settings',
-        details: JSON.stringify({ changedKeys }),
-        ipAddress: clientIp,
+        action:      'SETTINGS_CHANGED',
+        entity:      'SystemSetting',
+        entityId:    'settings',
+        details:     JSON.stringify({ changedKeys }),
+        ipAddress:   clientIp,
       },
-    }).catch(() => {/* non-blocking */});
+    }).catch(() => { /* non-blocking */ });
 
     return NextResponse.json({ success: true });
   } catch (error) {

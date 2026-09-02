@@ -53,6 +53,7 @@ model Personnel {
   vehicles               Vehicle[]
   leaves                 LeaveRecord[]
   notifications          Notification[]
+  notificationReads      NotificationRead[]
   posts                  Post[]
   auditLogs              AuditLog[]
   mediaFiles             MediaFile[]
@@ -162,14 +163,34 @@ model CalendarEvent {
 
 model Notification {
   id          String     @id @default(cuid())
-  personnelId String     // Target user ID, or 'ADMIN' for all admins
+  personnelId String     // Target user ID, or 'ALL' for all users, or 'ADMIN' for all admins
   personnel   Personnel? @relation(fields: [personnelId], references: [id], onDelete: Cascade)
   title       String
   message     String
   type        String     @default("info") // 'info', 'success', 'warning', 'error'
+  // NOTE: isRead is DEPRECATED for global notifications (personnelId='ALL'/'ADMIN').
+  // Use the NotificationRead join table for per-user read state instead.
   isRead      Boolean    @default(false)
-  link        String?    
+  link        String?
   createdAt   DateTime   @default(now())
+  reads       NotificationRead[]
+
+  @@index([personnelId])
+  @@index([createdAt])
+}
+
+/// Per-user read-state for global (ALL/ADMIN) notifications.
+/// Personal notifications (personnelId = real user ID) still use Notification.isRead directly.
+model NotificationRead {
+  id             String       @id @default(cuid())
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  personnelId    String
+  personnel      Personnel    @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  readAt         DateTime     @default(now())
+
+  @@unique([notificationId, personnelId])
+  @@index([personnelId])
 }
 
 model Post {
