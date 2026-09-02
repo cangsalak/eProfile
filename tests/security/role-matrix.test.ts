@@ -173,12 +173,22 @@ export async function runRoleMatrixTests() {
     console.log(`| ${item.name} | ${rowResults.join(' | ')} |`);
   }
 
-  // Cleanup all matrix test users and created test posts
+  // Cleanup all matrix test users, created test posts, and created test roles
   await prisma.post.deleteMany({
     where: {
       OR: [
         { title: { contains: 'Test' } },
         { title: { contains: 'ทดสอบ' } },
+      ],
+    },
+  });
+
+  await prisma.systemRole.deleteMany({
+    where: {
+      OR: [
+        { name: { startsWith: 'CUSTOM_' } },
+        { displayName: 'Test Role' },
+        { name: { startsWith: 'test_' } },
       ],
     },
   });
