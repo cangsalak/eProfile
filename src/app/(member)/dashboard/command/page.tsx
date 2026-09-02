@@ -310,11 +310,11 @@ export default function CommandDashboardPage() {
               <span>รีเฟรชข้อมูล</span>
             </button>
             <Link
-              href="/leave"
+              href="/manage/leave-approvals"
               className="px-4 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold transition flex items-center gap-2 shadow-md shadow-primary-500/20"
             >
-              <i className="fa-solid fa-file-signature"></i>
-              <span>ระบบอนุมัติการลา</span>
+              <i className="fa-solid fa-clipboard-check"></i>
+              <span>ศูนย์อนุมัติการลา</span>
             </Link>
           </div>
         </div>

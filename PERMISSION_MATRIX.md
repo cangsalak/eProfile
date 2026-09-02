@@ -48,7 +48,9 @@
 | `/api/calendar` | POST | `MANAGE_SYSTEM` |
 | `/api/calendar/[id]` | PUT, DELETE | `MANAGE_SYSTEM` |
 | `/api/settings` | PUT | `MANAGE_SYSTEM` |
-| `/api/leaves/approve` | POST | `APPROVE_LEAVE` |
+| `/api/leaves/approvals` | GET | `APPROVE_LEAVE` (Scoped by department/subDepartment) |
+| `/api/leaves/[id]/approve` | POST | `APPROVE_LEAVE` (Atomic concurrency, scoped, self-approval blocked) |
+| `/api/leaves/[id]/reject` | POST | `APPROVE_LEAVE` (Atomic concurrency, scoped, self-approval blocked) |
 | `/api/media` | GET, POST | `MANAGE_POSTS` |
 | `/api/media/[id]` | DELETE | `MANAGE_POSTS` |
 | `/api/audit-logs` | GET | `VIEW_AUDIT_LOGS` |

@@ -211,6 +211,9 @@ export default function DashboardShell({ children }: DashboardShellProps) {
     if (isAdmin || perms.includes('MANAGE_PERSONNEL')) {
       menuItems.push({ name: 'จัดการบุคลากร', icon: 'fa-solid fa-users-gear', path: '/manage/personnel' });
     }
+    if (isAdmin || currentUser.role === 'HR_MANAGER' || currentUser.role === 'DEPARTMENT_COMMANDER' || currentUser.role === 'COMMANDER' || perms.includes('APPROVE_LEAVE')) {
+      menuItems.push({ name: 'อนุมัติการลา', icon: 'fa-solid fa-clipboard-check', path: '/manage/leave-approvals' });
+    }
     if (isAdmin || perms.includes('MANAGE_SYSTEM') || perms.includes('MANAGE_ROLES') || perms.includes('MANAGE_POSTS')) {
       menuItems.push({ name: 'จัดการข่าวสารและการแจ้งเตือน', icon: 'fa-solid fa-bullhorn', path: '/manage/notifications' });
       menuItems.push({ name: 'ตั้งค่าระบบ', icon: 'fa-solid fa-cogs', path: '/settings' });

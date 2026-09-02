@@ -52,6 +52,7 @@ model Personnel {
   profileTheme           String   @default("indigo")
   vehicles               Vehicle[]
   leaves                 LeaveRecord[]
+  approvedLeaves         LeaveRecord[]        @relation("LeaveApprover")
   notifications          Notification[]
   notificationReads      NotificationRead[]
   posts                  Post[]
@@ -111,6 +112,13 @@ model LeaveRecord {
   contactProvince String?  // จังหวัด
   status         String    @default("รออนุมัติ") // รออนุมัติ, อนุมัติแล้ว, ไม่อนุมัติ, ยกเลิก
   
+  // Approval / Review Tracking Fields
+  approvedById    String?
+  approvedBy      Personnel? @relation("LeaveApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  approvedAt      DateTime?
+  rejectionReason String?
+  approvalNote    String?
+  
   // Fields specifically for Annual Leave (ลาพักผ่อน)
   substitutePerson     String?   // ชื่อผู้รับมอบหน้าที่
   accumulatedLeaveDays Float?    // วันลาพักผ่อนสะสม (ยกมา)
@@ -131,6 +139,11 @@ model LeaveRecord {
   
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([personnelId])
+  @@index([status])
+  @@index([approvedById])
+  @@index([startDate, endDate])
 }
 
 
