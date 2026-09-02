@@ -49,7 +49,10 @@ export default function Sidebar({ isSidebarOpen, systemSettings, menuItems, curr
       {/* Main Navigation Menu */}
       <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
         {menuItems.map((item) => {
-          const isActive = pathname === item.path || pathname?.startsWith(item.path + '/');
+          const hasMoreSpecificMatch = menuItems.some(
+            other => other.path !== item.path && other.path.startsWith(item.path + '/') && (pathname === other.path || pathname?.startsWith(other.path + '/'))
+          );
+          const isActive = pathname === item.path || (pathname?.startsWith(item.path + '/') && !hasMoreSpecificMatch);
           const hasSubItems = item.subItems && item.subItems.length > 0;
           const isSubMenuOpen = openSubMenus[item.path];
           const isAnyChildActive = hasSubItems && item.subItems!.some(sub => pathname === sub.path || pathname?.startsWith(sub.path + '?'));
