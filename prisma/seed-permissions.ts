@@ -55,7 +55,26 @@ async function main() {
     }
   }
 
-  console.log('\n✅ Permission seed complete.\n');
+  // Ensure default leavePolicy exists in SystemSetting table in Database
+  const defaultLeavePolicy = JSON.stringify({
+    'ลาพักผ่อน': 10,
+    'ลากิจ': 45,
+    'ลาป่วย': 60,
+    'ลาคลอดบุตร': 90,
+    'ลาอุปสมบท': 120,
+  });
+
+  const existingPolicy = await prisma.systemSetting.findUnique({ where: { key: 'leavePolicy' } });
+  if (!existingPolicy) {
+    await prisma.systemSetting.create({
+      data: { key: 'leavePolicy', value: defaultLeavePolicy }
+    });
+    console.log('  ➕  Created SystemSetting: leavePolicy');
+  } else {
+    console.log('  ✅  OK       SystemSetting: leavePolicy already exists');
+  }
+
+  console.log('\n✅ Permission & Settings seed complete.\n');
 }
 
 main()

@@ -200,6 +200,14 @@ export default function DashboardShell({ children }: DashboardShellProps) {
     const perms = currentUser.permissions || [];
     const isAdmin = currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN';
 
+    if (isAdmin || currentUser.role === 'HR_MANAGER' || currentUser.role === 'COMMANDER' || perms.includes('VIEW_COMMAND_DASHBOARD')) {
+      menuItems.splice(1, 0, {
+        name: 'แดชบอร์ดผู้บังคับบัญชา',
+        icon: 'fa-solid fa-chess-king',
+        path: '/dashboard/command',
+      });
+    }
+
     if (isAdmin || perms.includes('MANAGE_PERSONNEL')) {
       menuItems.push({ name: 'จัดการบุคลากร', icon: 'fa-solid fa-users-gear', path: '/manage/personnel' });
     }

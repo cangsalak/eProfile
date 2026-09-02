@@ -13,6 +13,7 @@ import { runDatabaseResetTests } from './api/database-reset.test';
 import { runMaintenanceModeTests } from './api/maintenance-mode.test';
 import { runUniversalBackupRestoreTests } from './api/universal-backup-restore.test';
 import { runVulnerabilityFixesTests } from './security/vulnerability-fixes.test';
+import { runCommandDashboardTests } from './api/command-dashboard.test';
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
@@ -22,7 +23,7 @@ async function main() {
 
   const startTime = Date.now();
   let passedSuites = 0;
-  let totalSuites = 15;
+  let totalSuites = 16;
 
   try {
     // 1. Unit Tests
@@ -83,6 +84,10 @@ async function main() {
 
     // 15. Vulnerability Fixes & Security Hardening Tests (SSRF, Settings Allowlist, Leaves RBAC, 410 Lock, NotificationRead)
     await runVulnerabilityFixesTests();
+    passedSuites++;
+
+    // 16. Command Dashboard & Force Readiness Tests (v1.3.0)
+    await runCommandDashboardTests();
     passedSuites++;
 
     // Final Teardown: Clean up any test notifications, test posts, or test users

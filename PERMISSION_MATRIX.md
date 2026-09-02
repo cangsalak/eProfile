@@ -12,18 +12,21 @@
 | `MANAGE_POSTS` | สร้าง / แก้ไข / ลบบทความ / ไฟล์มีเดีย |
 | `APPROVE_LEAVE` | อนุมัติ / ปฏิเสธใบลา |
 | `VIEW_AUDIT_LOGS` | ดูประวัติการทำงาน (Audit Log) |
+| `VIEW_COMMAND_DASHBOARD` | ดูแดชบอร์ดผู้บังคับบัญชาและรายงานความพร้อมกำลังพล |
 
 ---
 
 ## Role Matrix (เริ่มต้น)
 
-| Role | MANAGE_PERSONNEL | MANAGE_SYSTEM | MANAGE_POSTS | APPROVE_LEAVE | VIEW_AUDIT_LOGS |
-|---|:---:|:---:|:---:|:---:|:---:|
-| `SUPER_ADMIN` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `ADMIN` | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `HR_MANAGER` | ✅ | ❌ | ❌ | ✅ | ✅ |
-| `EDITOR` | ❌ | ❌ | ✅ | ❌ | ❌ |
-| `OFFICER` | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Role | MANAGE_PERSONNEL | MANAGE_SYSTEM | MANAGE_POSTS | APPROVE_LEAVE | VIEW_AUDIT_LOGS | VIEW_COMMAND_DASHBOARD |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `SUPER_ADMIN` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `ADMIN` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `HR_MANAGER` | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| `COMMANDER` | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| `EDITOR` | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| `OFFICER` | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| `USER` | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
@@ -31,6 +34,7 @@
 
 | API Route | Method | Permission Required |
 |---|---|---|
+| `/api/dashboard/command` | GET | `VIEW_COMMAND_DASHBOARD` (Scoped by department/subDepartment) |
 | `/api/personnel` | POST | `MANAGE_PERSONNEL` |
 | `/api/personnel/[id]` | PUT | `MANAGE_PERSONNEL` (หรือเจ้าของ Profile) |
 | `/api/personnel/[id]` | DELETE | `MANAGE_PERSONNEL` |
