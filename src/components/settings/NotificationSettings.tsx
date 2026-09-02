@@ -9,65 +9,70 @@ interface NotificationSettingsProps {
 }
 
 export default function NotificationSettings({ settings, handleChange, testLineNotify }: NotificationSettingsProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'all' | 'line' | 'mail'>('all');
+  const [activeSubTab, setActiveSubTab] = useState<'line' | 'mail' | 'all'>('line');
+
+  const subTabs = [
+    { id: 'line', name: 'LINE Bot (Messaging API)', icon: 'fa-brands fa-line' },
+    { id: 'mail', name: 'อีเมลแจ้งเตือน (Email SMTP)', icon: 'fa-solid fa-envelope' },
+    { id: 'all', name: 'แสดงทั้งหมด', icon: 'fa-solid fa-layer-group' },
+  ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in font-prompt">
       {/* Header */}
-      <div className="border-b border-slate-200 dark:border-slate-700/60 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <i className="fa-solid fa-bell text-primary-500"></i> การแจ้งเตือน (LINE Bot & Email)
+            <i className="fa-solid fa-bell text-primary-500"></i>
+            <span>การแจ้งเตือนอัตโนมัติ (LINE Bot & Email)</span>
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             ตั้งค่าช่องทางการแจ้งเตือนอัตโนมัติของระบบผ่าน LINE Messaging API และ Email SMTP
           </p>
         </div>
+      </div>
 
-        {/* Sub-tab Filter */}
-        <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-medium self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => setActiveSubTab('all')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              activeSubTab === 'all'
-                ? 'bg-white dark:bg-slate-800 text-primary-600 dark:text-primary-400 shadow-xs font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            ทั้งหมด
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveSubTab('line')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              activeSubTab === 'line'
-                ? 'bg-white dark:bg-slate-800 text-green-600 dark:text-green-400 shadow-xs font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <i className="fa-brands fa-line text-green-500"></i> LINE Bot
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveSubTab('mail')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              activeSubTab === 'mail'
-                ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <i className="fa-solid fa-envelope text-blue-500"></i> Email
-          </button>
-        </div>
+      {/* Sub-tab Filter Pills */}
+      <div 
+        role="tablist" 
+        aria-label="ช่องทางการแจ้งเตือน"
+        className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl w-full sm:w-fit overflow-x-auto border border-slate-200 dark:border-slate-700/80"
+      >
+        {subTabs.map(st => {
+          const isSelected = activeSubTab === st.id;
+          return (
+            <button
+              key={st.id}
+              role="tab"
+              id={`subtab-notif-${st.id}`}
+              aria-controls={`subtabpanel-notif-${st.id}`}
+              aria-selected={isSelected}
+              type="button"
+              onClick={() => setActiveSubTab(st.id as any)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 shrink-0 ${
+                isSelected
+                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-sm border border-slate-200 dark:border-slate-700/70'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+              }`}
+            >
+              <i className={`${st.icon} text-xs ${isSelected ? 'text-primary-500' : 'text-slate-400'}`}></i>
+              <span>{st.name}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* 1. LINE Bot Section */}
       {(activeSubTab === 'all' || activeSubTab === 'line') && (
-        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/60 shadow-xs space-y-4">
+        <div 
+          role="tabpanel"
+          id="subtabpanel-notif-line"
+          aria-labelledby="subtab-notif-line"
+          className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/60 shadow-xs space-y-4 animate-fade-in"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-green-500/10 border border-green-500/20 text-green-500 flex items-center justify-center text-lg">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center text-lg shrink-0">
                 <i className="fa-brands fa-line"></i>
               </div>
               <div>
@@ -86,14 +91,14 @@ export default function NotificationSettings({ settings, handleChange, testLineN
                 onChange={handleChange}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-green-500"></div>
+              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-500"></div>
               <span className="ml-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hidden sm:inline">
                 {settings.enableLineNotify === 'true' ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
               </span>
             </label>
           </div>
 
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/80 dark:border-slate-700/50 space-y-2">
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-700/50 space-y-2">
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed flex items-start gap-2">
               <i className="fa-solid fa-circle-info text-primary-500 mt-0.5 shrink-0"></i>
               <span>
@@ -114,8 +119,8 @@ export default function NotificationSettings({ settings, handleChange, testLineN
               onClick={testLineNotify}
               className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 transition-all flex items-center gap-1.5"
             >
-              <i className="fa-brands fa-line text-green-500 text-sm"></i>
-              ทดสอบส่งข้อความ LINE
+              <i className="fa-brands fa-line text-emerald-500 text-sm"></i>
+              <span>ทดสอบส่งข้อความ LINE</span>
             </button>
           </div>
         </div>
@@ -123,10 +128,15 @@ export default function NotificationSettings({ settings, handleChange, testLineN
 
       {/* 2. Email SMTP Section */}
       {(activeSubTab === 'all' || activeSubTab === 'mail') && (
-        <div className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/60 shadow-xs space-y-4">
+        <div 
+          role="tabpanel"
+          id="subtabpanel-notif-mail"
+          aria-labelledby="subtab-notif-mail"
+          className="bg-white dark:bg-slate-900/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/60 shadow-xs space-y-4 animate-fade-in"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center text-lg">
+              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center text-lg shrink-0">
                 <i className="fa-solid fa-envelope"></i>
               </div>
               <div>
@@ -152,7 +162,7 @@ export default function NotificationSettings({ settings, handleChange, testLineN
             </label>
           </div>
 
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/80 dark:border-slate-700/50 space-y-2">
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-700/50 space-y-2">
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed flex items-start gap-2">
               <i className="fa-solid fa-shield-halved text-blue-500 mt-0.5 shrink-0"></i>
               <span>
@@ -162,7 +172,7 @@ export default function NotificationSettings({ settings, handleChange, testLineN
           </div>
 
           <div>
-            <label htmlFor="notifyEmailTo" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">
+            <label htmlFor="notifyEmailTo" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
               อีเมลผู้รับการแจ้งเตือนเริ่มต้น (To:)
             </label>
             <div className="relative">
@@ -175,7 +185,7 @@ export default function NotificationSettings({ settings, handleChange, testLineN
                 value={settings.notifyEmailTo || ''}
                 onChange={handleChange}
                 placeholder="admin@yourdomain.com"
-                className="w-full h-11 bg-slate-50/50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl pl-9 pr-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                className="form-control pl-9"
               />
             </div>
           </div>
