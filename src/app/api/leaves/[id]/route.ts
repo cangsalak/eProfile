@@ -21,8 +21,6 @@ async function isPrivilegedLeaveUser(
 
 // ── Update schema ─────────────────────────────────────────────────────────────
 
-const VALID_STATUSES = ['รออนุมัติ', 'อนุมัติแล้ว', 'ไม่อนุมัติ', 'ยกเลิก'] as const;
-
 const UpdateLeaveSchema = z.object({
   leaveType:            z.string().max(100).optional(),
   startDate:            z.string().optional(),
@@ -34,23 +32,17 @@ const UpdateLeaveSchema = z.object({
   contactTambon:        z.string().max(100).optional(),
   contactAmphoe:        z.string().max(100).optional(),
   contactProvince:      z.string().max(100).optional(),
-  status:               z.enum(VALID_STATUSES).optional(),
   substitutePerson:     z.string().max(200).optional().nullable(),
   accumulatedLeaveDays: z.number().nonnegative().optional().nullable(),
   thisYearLeaveDays:    z.number().nonnegative().optional().nullable(),
-}).strict(); // reject unknown fields
+}).strict(); // reject unknown fields including status
 
 // ─── PUT /api/leaves/[id] ─────────────────────────────────────────────────────
 /**
- * Authorization matrix:
- *
- * Case A — status change (body.status !== existing.status):
- *   Requires APPROVE_LEAVE or SUPER_ADMIN.
- *   The leave may be in any current status (approvers use a controlled workflow).
- *
- * Case B — detail edit (no status change):
- *   Owner: allowed ONLY when existing.status === 'รออนุมัติ'
- *   MANAGE_PERSONNEL / SUPER_ADMIN: allowed in any status.
+ * Authorization matrix for Leave Record Detail Updates:
+ * - Changing 'status' via this endpoint is STRICTLY FORBIDDEN (must use /approve or /reject).
+ * - Owner: allowed ONLY when existing.status === 'รออนุมัติ'.
+ * - MANAGE_PERSONNEL / SUPER_ADMIN: allowed in any status.
  */
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
@@ -68,11 +60,21 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       return NextResponse.json({ error: 'Leave record not found' }, { status: 404 });
     }
 
-    let rawBody: unknown;
+    let rawBody: any;
     try {
       rawBody = await req.json();
     } catch {
       return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    }
+
+    // ── Security Check: Disallow status mutations via PUT ─────────────────────
+    if (rawBody && typeof rawBody === 'object' && 'status' in rawBody) {
+      return NextResponse.json(
+        {
+          error: 'ไม่อนุญาตให้เปลี่ยนสถานะใบลาผ่านช่องทางนี้ กรุณาใช้ระบบอนุมัติการลา (POST /api/leaves/[id]/approve หรือ POST /api/leaves/[id]/reject)',
+        },
+        { status: 400 }
+      );
     }
 
     const parsed = UpdateLeaveSchema.safeParse(rawBody);
@@ -84,39 +86,24 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
     const body = parsed.data;
 
-    const isStatusChange = body.status !== undefined && body.status !== existing.status;
-    const isOwner        = existing.personnelId === authUser.id;
-    const privileged     = await isPrivilegedLeaveUser(req, authUser.role);
+    const isOwner    = existing.personnelId === authUser.id;
+    const privileged = await isPrivilegedLeaveUser(req, authUser.role);
 
-    // ── Case A: status change ────────────────────────────────────────────────
-    if (isStatusChange) {
-      if (!privileged) {
+    if (isOwner) {
+      // Owner may only edit while still pending
+      if (existing.status !== 'รออนุมัติ') {
         return NextResponse.json(
-          { error: 'สิทธิ์ไม่เพียงพอ: ต้องมี APPROVE_LEAVE หรือ SUPER_ADMIN เพื่อเปลี่ยนสถานะใบลา' },
+          {
+            error: `ไม่สามารถแก้ไขใบลาที่มีสถานะ "${existing.status}" ได้ เฉพาะใบลาที่ยัง "รออนุมัติ" เท่านั้นที่แก้ไขได้`,
+          },
           { status: 403 }
         );
       }
-      // Privileged users can approve/reject from any status — fall through to update
-    }
-
-    // ── Case B: detail edit ───────────────────────────────────────────────────
-    if (!isStatusChange) {
-      if (isOwner) {
-        // Owner may only edit while still pending
-        if (existing.status !== 'รออนุมัติ') {
-          return NextResponse.json(
-            {
-              error: `ไม่สามารถแก้ไขใบลาที่มีสถานะ "${existing.status}" ได้ เฉพาะใบลาที่ยัง "รออนุมัติ" เท่านั้นที่แก้ไขได้`,
-            },
-            { status: 403 }
-          );
-        }
-      } else if (!privileged) {
-        return NextResponse.json(
-          { error: 'สิทธิ์ไม่เพียงพอ: ต้องมี MANAGE_PERSONNEL เพื่อแก้ไขใบลาของผู้อื่น' },
-          { status: 403 }
-        );
-      }
+    } else if (!privileged) {
+      return NextResponse.json(
+        { error: 'สิทธิ์ไม่เพียงพอ: ต้องมี MANAGE_PERSONNEL เพื่อแก้ไขใบลาของผู้อื่น' },
+        { status: 403 }
+      );
     }
 
     // ── Build update payload ──────────────────────────────────────────────────
@@ -144,37 +131,18 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       updateData.totalLeaveDays = acc !== null && year !== null ? acc + year : null;
     }
 
-    // Status — only privileged path reaches here with isStatusChange === true
-    if (body.status !== undefined) updateData.status = body.status;
-
     const leave = await prisma.leaveRecord.update({
       where: { id: params.id },
       data:  updateData,
     });
 
-    // Notify leave owner on status change
-    if (isStatusChange && body.status) {
-      const notifType =
-        body.status === 'อนุมัติแล้ว' ? 'success' :
-        body.status === 'ไม่อนุมัติ'  ? 'error'   : 'info';
-      await prisma.notification.create({
-        data: {
-          personnelId: leave.personnelId,
-          title:       `สถานะการ${leave.leaveType}ถูกอัปเดต`,
-          message:     `คำร้องขอ${leave.leaveType}ของคุณได้รับการอัปเดตเป็น: ${body.status}`,
-          type:        notifType,
-          link:        '/leave',
-        },
-      }).catch(() => {});
-    }
-
     await prisma.auditLog.create({
       data: {
         personnelId: authUser.id,
-        action:      isStatusChange ? 'LEAVE_STATUS_CHANGED' : 'LEAVE_UPDATED',
+        action:      'LEAVE_UPDATED',
         entity:      'LeaveRecord',
         entityId:    leave.id,
-        details:     JSON.stringify({ oldStatus: existing.status, newStatus: body.status }),
+        details:     JSON.stringify({ updatedFields: Object.keys(updateData) }),
       },
     }).catch(() => {});
 

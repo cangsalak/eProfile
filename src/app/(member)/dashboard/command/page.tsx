@@ -337,10 +337,13 @@ export default function CommandDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
           {/* 1. Date Picker */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="cmd-selected-date" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               วันที่ตรวจสอบ (Date)
             </label>
             <input
+              id="cmd-selected-date"
+              name="cmdSelectedDate"
+              aria-label="วันที่ตรวจสอบ"
               type="date"
               value={selectedDate}
               onChange={e => {
@@ -353,10 +356,13 @@ export default function CommandDashboardPage() {
 
           {/* 2. Year Picker */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="cmd-selected-year" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               ปีงบประมาณ/ปฏิทิน (Year)
             </label>
             <select
+              id="cmd-selected-year"
+              name="cmdSelectedYear"
+              aria-label="ปีงบประมาณหรือปฏิทิน"
               value={selectedYear}
               onChange={e => {
                 setSelectedYear(parseInt(e.target.value, 10));
@@ -374,10 +380,13 @@ export default function CommandDashboardPage() {
 
           {/* 3. Department Dropdown */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="cmd-selected-dept" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               หน่วยงาน / กอง (Department)
             </label>
             <select
+              id="cmd-selected-dept"
+              name="cmdSelectedDept"
+              aria-label="หน่วยงานหรือกอง"
               value={selectedDepartment}
               onChange={e => {
                 setSelectedDepartment(e.target.value);
@@ -399,10 +408,13 @@ export default function CommandDashboardPage() {
 
           {/* 4. Sub-Department Dropdown */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="cmd-selected-subdept" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               หน่วยย่อย / แผนก (Sub-Department)
             </label>
             <select
+              id="cmd-selected-subdept"
+              name="cmdSelectedSubdept"
+              aria-label="หน่วยย่อยหรือแผนก"
               value={selectedSubDepartment}
               onChange={e => {
                 setSelectedSubDepartment(e.target.value);
@@ -630,8 +642,14 @@ export default function CommandDashboardPage() {
 
           {/* Search Box */}
           <div className="relative w-full sm:w-64">
+            <label htmlFor="cmd-active-leaves-search" className="sr-only">
+              ค้นหากำลังพลที่อยู่ระหว่างการลา
+            </label>
             <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
             <input
+              id="cmd-active-leaves-search"
+              name="cmdActiveLeavesSearch"
+              aria-label="ค้นหาชื่อกำลังพลที่อยู่ระหว่างการลา"
               type="text"
               value={activeLeavesSearch}
               onChange={e => {
@@ -822,8 +840,14 @@ export default function CommandDashboardPage() {
             สิทธิ์มาตรฐานระบบ: <span className="font-bold text-slate-800 dark:text-slate-200">{data?.leaveSummary.policyQuota ?? 10} วัน/ปี</span>
           </div>
           <div className="relative w-full sm:w-64">
+            <label htmlFor="cmd-leave-summary-search" className="sr-only">
+              ค้นหาสรุปวันลากำลังพล
+            </label>
             <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
             <input
+              id="cmd-leave-summary-search"
+              name="cmdLeaveSummarySearch"
+              aria-label="ค้นหาสรุปวันลากำลังพล"
               type="text"
               value={leaveSummarySearch}
               onChange={e => {

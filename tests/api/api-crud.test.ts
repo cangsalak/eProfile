@@ -115,20 +115,20 @@ export async function runApiCrudTests() {
     assert.ok(leaveData.id, 'Leave record should have an ID');
     testLeaveId = leaveData.id;
 
-    // Approve leave
-    const approveRes = await fetch(`${BASE_URL}/api/leaves/${testLeaveId}`, {
-      method: 'PUT',
+    // Approve leave via dedicated approval endpoint
+    const approveRes = await fetch(`${BASE_URL}/api/leaves/${testLeaveId}/approve`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Cookie': `auth_token=${adminToken}`,
       },
       body: JSON.stringify({
-        status: 'อนุมัติแล้ว',
+        note: 'อนุมัติสำหรับการทดสอบ',
       }),
     });
     assert.strictEqual(approveRes.status, 200, 'Leave approval should return 200');
     const approveData = await approveRes.json();
-    assert.strictEqual(approveData.status, 'อนุมัติแล้ว');
+    assert.strictEqual(approveData.data.status, 'อนุมัติแล้ว');
 
     // Clean up leave
     const deleteLeaveRes = await fetch(`${BASE_URL}/api/leaves/${testLeaveId}`, {

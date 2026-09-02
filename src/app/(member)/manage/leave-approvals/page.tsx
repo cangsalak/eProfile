@@ -529,8 +529,14 @@ export default function LeaveApprovalsPage() {
 
           {/* Quick Search */}
           <div className="relative w-full md:w-72">
+            <label htmlFor="leave-approval-search" className="sr-only">
+              ค้นหาใบลา
+            </label>
             <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
             <input
+              id="leave-approval-search"
+              name="leaveApprovalSearch"
+              aria-label="ค้นหาชื่อ, ตำแหน่ง หรือรหัสกำลังพล"
               type="text"
               value={searchTerm}
               onChange={e => {
@@ -547,10 +553,13 @@ export default function LeaveApprovalsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
           {/* Leave Type */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="leave-type-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               ประเภทการลา
             </label>
             <select
+              id="leave-type-filter"
+              name="leaveTypeFilter"
+              aria-label="เลือกประเภทการลา"
               value={leaveTypeFilter}
               onChange={e => {
                 setLeaveTypeFilter(e.target.value);
@@ -570,10 +579,13 @@ export default function LeaveApprovalsPage() {
 
           {/* Department */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="department-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               หน่วยงาน / กอง
             </label>
             <select
+              id="department-filter"
+              name="departmentFilter"
+              aria-label="เลือกหน่วยงานหรือกอง"
               value={departmentFilter}
               onChange={e => {
                 setDepartmentFilter(e.target.value);
@@ -594,10 +606,13 @@ export default function LeaveApprovalsPage() {
 
           {/* Sub Department */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label htmlFor="sub-department-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
               หน่วยย่อย / แผนก
             </label>
             <select
+              id="sub-department-filter"
+              name="subDepartmentFilter"
+              aria-label="เลือกหน่วยย่อยหรือแผนก"
               value={subDepartmentFilter}
               onChange={e => {
                 setSubDepartmentFilter(e.target.value);
@@ -618,10 +633,13 @@ export default function LeaveApprovalsPage() {
           {/* Date Range */}
           <div className="flex items-center gap-2">
             <div className="flex-1">
-              <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+              <label htmlFor="start-date-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
                 ตั้งแต่วันที่
               </label>
               <input
+                id="start-date-filter"
+                name="startDateFilter"
+                aria-label="เลือกวันที่เริ่มต้น"
                 type="date"
                 value={startDateFilter}
                 onChange={e => {
@@ -632,10 +650,13 @@ export default function LeaveApprovalsPage() {
               />
             </div>
             <div className="flex-1">
-              <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+              <label htmlFor="end-date-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
                 ถึงวันที่
               </label>
               <input
+                id="end-date-filter"
+                name="endDateFilter"
+                aria-label="เลือกวันที่สิ้นสุด"
                 type="date"
                 value={endDateFilter}
                 onChange={e => {
@@ -1087,10 +1108,13 @@ export default function LeaveApprovalsPage() {
 
               {actionType === 'reject' && (
                 <div>
-                  <label className="block text-xs font-bold text-rose-600 dark:text-rose-400 mb-1">
+                  <label htmlFor="rejection-reason-input" className="block text-xs font-bold text-rose-600 dark:text-rose-400 mb-1">
                     เหตุผลการไม่อนุมัติ <span className="text-rose-500">*</span>
                   </label>
                   <textarea
+                    id="rejection-reason-input"
+                    name="rejectionReasonInput"
+                    aria-label="เหตุผลการไม่อนุมัติ"
                     value={rejectionReason}
                     onChange={e => setRejectionReason(e.target.value)}
                     placeholder="กรุณาระบุเหตุผล เช่น ติดภารกิจราชการเร่งด่วน, ข้อมูลไม่ครบถ้วน..."
@@ -1101,10 +1125,13 @@ export default function LeaveApprovalsPage() {
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="action-note-input" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                   หมายเหตุเพิ่มเติม (ถ้ามี)
                 </label>
                 <input
+                  id="action-note-input"
+                  name="actionNoteInput"
+                  aria-label="หมายเหตุเพิ่มเติม"
                   type="text"
                   value={actionNote}
                   onChange={e => setActionNote(e.target.value)}

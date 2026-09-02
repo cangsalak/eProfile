@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requirePermission } from '@/lib/auth-guards';
+import { resolveApproverScope, ALLOWED_LEAVE_TYPES } from '@/lib/leave-approvals';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 
@@ -8,19 +9,51 @@ export const dynamic = 'force-dynamic';
 
 const VALID_SORT_FIELDS = ['createdAt', 'startDate', 'endDate', 'status'] as const;
 
-const QuerySchema = z.object({
-  status: z.enum(['ALL', 'รออนุมัติ', 'อนุมัติแล้ว', 'ไม่อนุมัติ', 'ยกเลิก']).optional().default('รออนุมัติ'),
-  leaveType: z.string().optional(),
-  department: z.string().optional(),
-  subDepartment: z.string().optional(),
-  search: z.string().max(100).optional(),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(10),
-  sortBy: z.enum(VALID_SORT_FIELDS).default('createdAt'),
-  sortOrder: z.enum(['asc', 'desc']).default('desc'),
-});
+function isValidDateString(val: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(val)) return false;
+  const [year, month, day] = val.split('-').map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day));
+  return (
+    d.getUTCFullYear() === year &&
+    d.getUTCMonth() === month - 1 &&
+    d.getUTCDate() === day
+  );
+}
+
+const QuerySchema = z
+  .object({
+    status: z.enum(['ALL', 'รออนุมัติ', 'อนุมัติแล้ว', 'ไม่อนุมัติ', 'ยกเลิก']).optional().default('รออนุมัติ'),
+    leaveType: z.enum(['ALL', ...ALLOWED_LEAVE_TYPES]).optional(),
+    department: z.string().optional(),
+    subDepartment: z.string().optional(),
+    search: z.string().max(100).optional(),
+    startDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'รูปแบบวันที่ต้องเป็น YYYY-MM-DD')
+      .refine(isValidDateString, { message: 'วันที่เริ่มต้นไม่ใช่วันที่ที่มีอยู่จริงในปฏิทิน' })
+      .optional(),
+    endDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'รูปแบบวันที่ต้องเป็น YYYY-MM-DD')
+      .refine(isValidDateString, { message: 'วันที่สิ้นสุดไม่ใช่วันที่ที่มีอยู่จริงในปฏิทิน' })
+      .optional(),
+    page: z.coerce.number().int().min(1, 'หน้าที่ต้องการต้องมากกว่าหรือเท่ากับ 1').default(1),
+    limit: z.coerce.number().int().min(1).max(100, 'จำนวนรายการต่อหน้าต้องไม่เกิน 100').default(10),
+    sortBy: z.enum(VALID_SORT_FIELDS).default('createdAt'),
+    sortOrder: z.enum(['asc', 'desc']).default('desc'),
+  })
+  .refine(
+    data => {
+      if (data.startDate && data.endDate) {
+        return new Date(data.startDate) <= new Date(data.endDate);
+      }
+      return true;
+    },
+    {
+      message: 'วันที่เริ่มต้นต้องน้อยกว่าหรือเท่ากับวันที่สิ้นสุด',
+      path: ['startDate'],
+    }
+  );
 
 /**
  * GET /api/leaves/approvals
@@ -52,7 +85,7 @@ export async function GET(req: Request) {
 
     if (!parsedQuery.success) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: parsedQuery.error.flatten().fieldErrors },
+        { error: 'พารามิเตอร์การค้นหาไม่ถูกต้อง', details: parsedQuery.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
@@ -71,29 +104,34 @@ export async function GET(req: Request) {
       sortOrder,
     } = parsedQuery.data;
 
+    // ── 1. Determine Scope Boundaries using shared helper ───────────────────────
     const userProfile = await prisma.personnel.findUnique({
       where: { id: user.id },
       select: { department: true, subDepartment: true, role: true },
     });
 
-    const userDept = userProfile?.department || '';
-    const userSubDept = userProfile?.subDepartment || '';
+    const { scope, error: scopeError } = resolveApproverScope(user.role, userProfile);
+    if (scopeError || !scope) {
+      return NextResponse.json(
+        { error: scopeError || 'ไม่มีสิทธิ์เข้าถึงข้อมูลเนื่องจากไม่พบสังกัดที่ถูกต้อง' },
+        { status: 403 }
+      );
+    }
 
-    // ── 1. Determine Scope Boundaries ──────────────────────────────────────────
-    const isGlobalViewer = ['SUPER_ADMIN', 'ADMIN', 'HR_MANAGER'].includes(user.role) || !userDept;
     let effectiveDepartment: string | undefined = undefined;
     let effectiveSubDepartment: string | undefined = undefined;
 
-    if (isGlobalViewer) {
+    if (scope.isGlobalViewer) {
       effectiveDepartment = queryDept && queryDept !== 'ALL' ? queryDept : undefined;
       effectiveSubDepartment = querySubDept && querySubDept !== 'ALL' ? querySubDept : undefined;
-    } else if (user.role === 'DEPARTMENT_COMMANDER') {
-      effectiveDepartment = userDept;
+    } else if (scope.allowedDepartment && !scope.allowedSubDepartment) {
+      // Department Commander: locked to department, can filter subDepartment
+      effectiveDepartment = scope.allowedDepartment;
       effectiveSubDepartment = querySubDept && querySubDept !== 'ALL' ? querySubDept : undefined;
     } else {
-      // Sub-unit commander (COMMANDER)
-      effectiveDepartment = userDept;
-      effectiveSubDepartment = userSubDept && userSubDept !== '-' ? userSubDept : undefined;
+      // Sub-unit Commander: locked to department & subDepartment
+      effectiveDepartment = scope.allowedDepartment;
+      effectiveSubDepartment = scope.allowedSubDepartment;
     }
 
     // ── 2. Build Base Scope Condition for Personnel ───────────────────────────
@@ -197,10 +235,10 @@ export async function GET(req: Request) {
     return NextResponse.json({
       success: true,
       scope: {
-        isGlobalViewer,
+        isGlobalViewer: scope.isGlobalViewer,
         userRole: user.role,
-        userDepartment: userDept || null,
-        userSubDepartment: userSubDept || null,
+        userDepartment: scope.userDepartment,
+        userSubDepartment: scope.userSubDepartment,
         effectiveDepartment: effectiveDepartment || 'ALL',
         effectiveSubDepartment: effectiveSubDepartment || 'ALL',
       },

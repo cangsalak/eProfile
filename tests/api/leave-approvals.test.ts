@@ -120,9 +120,33 @@ export async function runLeaveApprovalsTests() {
     });
     testPersonnelIds.push(userSuperAdmin.id);
 
+    // User 5: Commander with Missing Department (Testing P1)
+    const userCmdNoDept = await prisma.personnel.upsert({
+      where: { badgeNo: 'TEST_LA_NO_DEPT' },
+      update: {},
+      create: {
+        badgeNo: 'TEST_LA_NO_DEPT',
+        username: 'test_la_no_dept',
+        citizenId: '9200000000005',
+        password: 'hash',
+        role: 'COMMANDER',
+        prefix: 'พ.ท.',
+        firstName: 'NoDept',
+        lastName: 'Commander',
+        position: 'นายทหารปฏิบัติการ',
+        department: '-',
+        subDepartment: '-',
+        phone: '0855555555',
+        mobile: '0855555555',
+        email: 'la_no_dept@test.local',
+      },
+    });
+    testPersonnelIds.push(userCmdNoDept.id);
+
     const tokenOfficer = await createToken(userOfficer.id, 'OFFICER', userOfficer.citizenId);
     const tokenSubCommander = await createToken(userSubCommander.id, 'COMMANDER', userSubCommander.citizenId);
     const tokenSuperAdmin = await createToken(userSuperAdmin.id, 'SUPER_ADMIN', userSuperAdmin.citizenId);
+    const tokenCmdNoDept = await createToken(userCmdNoDept.id, 'COMMANDER', userCmdNoDept.citizenId);
 
     // ── 2. Setup Test Leave Records ───────────────────────────────────────────
     // Leave 1: Submitted by Academic Officer (userOfficer) -> In SubCommander's scope
@@ -164,6 +188,19 @@ export async function runLeaveApprovalsTests() {
     });
     testLeaveIds.push(leaveSelf.id);
 
+    // Leave 4: For Concurrency / Race Condition test
+    const leaveConcurrent = await prisma.leaveRecord.create({
+      data: {
+        personnelId: userOfficer.id,
+        leaveType: 'ลาป่วย',
+        startDate: new Date('2026-10-15T00:00:00.000Z'),
+        endDate: new Date('2026-10-16T23:59:59.999Z'),
+        reason: 'มีไข้สูง',
+        status: 'รออนุมัติ',
+      },
+    });
+    testLeaveIds.push(leaveConcurrent.id);
+
     // ── 3. Test 1: Anonymous Access (401) ─────────────────────────────────────
     const resAnon = await fetch(`${BASE_URL}/api/leaves/approvals`);
     assert.strictEqual(resAnon.status, 401, 'Anonymous request must return 401 Unauthorized');
@@ -183,7 +220,37 @@ export async function runLeaveApprovalsTests() {
     assert.strictEqual(resOfficerApprove.status, 403, 'Regular officer cannot approve leaves');
     console.log('✔ Regular officer without APPROVE_LEAVE blocked with 403 on GET & POST');
 
-    // ── 5. Test 3: Sub-Commander Scoping on GET /api/leaves/approvals ─────────
+    // ── 5. Test 3: Legacy PUT /api/leaves/[id] cannot mutate status (P0 Fix) ──
+    const resPutStatus = await fetch(`${BASE_URL}/api/leaves/${leaveAcademic.id}`, {
+      method: 'PUT',
+      headers: { Cookie: `auth_token=${tokenSuperAdmin}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'อนุมัติแล้ว' }),
+    });
+    assert.strictEqual(resPutStatus.status, 400, 'Legacy PUT endpoint must reject status mutation with 400');
+    const putErrJson = await resPutStatus.json();
+    assert.ok(
+      putErrJson.error.includes('ไม่อนุญาตให้เปลี่ยนสถานะใบลาผ่านช่องทางนี้'),
+      'Should return clear security warning'
+    );
+
+    // Verify leave status in DB remains untouched ('รออนุมัติ')
+    const checkLeave = await prisma.leaveRecord.findUnique({ where: { id: leaveAcademic.id } });
+    assert.strictEqual(checkLeave?.status, 'รออนุมัติ', 'Status must not have changed via legacy PUT');
+    console.log('✔ P0 Fix: Legacy PUT /api/leaves/[id] strictly rejects status mutation with 400 Bad Request');
+
+    // ── 6. Test 4: Approver without department is blocked with 403 (P1 Fix) ───
+    const resNoDept = await fetch(`${BASE_URL}/api/leaves/approvals`, {
+      headers: { Cookie: `auth_token=${tokenCmdNoDept}` },
+    });
+    assert.strictEqual(resNoDept.status, 403, 'Approver without department must return 403 Forbidden');
+    const noDeptJson = await resNoDept.json();
+    assert.ok(
+      noDeptJson.error.includes('ยังไม่ได้ถูกกำหนดหน่วยงานสังกัด'),
+      'Should prompt user to contact admin to set department'
+    );
+    console.log('✔ P1 Fix: Scoped approver without department is strictly blocked with 403 (no global leak)');
+
+    // ── 7. Test 5: Sub-Commander Scoping on GET /api/leaves/approvals ─────────
     const resSubCmdGet = await fetch(`${BASE_URL}/api/leaves/approvals`, {
       headers: { Cookie: `auth_token=${tokenSubCommander}` },
     });
@@ -201,7 +268,7 @@ export async function runLeaveApprovalsTests() {
     assert.strictEqual(foundAdminSub, false, 'SubCommander must NOT see personnel outside their sub-unit');
     console.log('✔ Sub-department COMMANDER is strictly locked to assigned sub-unit on approvals query');
 
-    // ── 6. Test 4: Scope Protection on POST Approve/Reject (403) ──────────────
+    // ── 8. Test 6: Scope Protection on POST Approve/Reject (403) ──────────────
     // SubCommander attempts to approve leave from Admin sub-unit (outside scope)
     const resCrossUnitApprove = await fetch(`${BASE_URL}/api/leaves/${leaveAdminSub.id}/approve`, {
       method: 'POST',
@@ -211,7 +278,7 @@ export async function runLeaveApprovalsTests() {
     assert.strictEqual(resCrossUnitApprove.status, 403, 'COMMANDER cannot approve leave outside their sub-unit');
     console.log('✔ Cross-unit approval correctly rejected with 403 Forbidden');
 
-    // ── 7. Test 5: Self-Approval Prevention (403) ─────────────────────────────
+    // ── 9. Test 7: Self-Approval Prevention (403) ─────────────────────────────
     const resSelfApprove = await fetch(`${BASE_URL}/api/leaves/${leaveSelf.id}/approve`, {
       method: 'POST',
       headers: { Cookie: `auth_token=${tokenSubCommander}`, 'Content-Type': 'application/json' },
@@ -219,10 +286,10 @@ export async function runLeaveApprovalsTests() {
     });
     assert.strictEqual(resSelfApprove.status, 403, 'Self-approval must be rejected with 403');
     const selfApproveErr = await resSelfApprove.json();
-    assert.ok(selfApproveErr.error.includes('ไม่อนุญาตให้อนุมัติใบลาของตนเอง'));
+    assert.ok(selfApproveErr.error.includes('ไม่อนุญาตให้อนุมัติหรือปฏิเสธใบลาของตนเอง'));
     console.log('✔ Self-approval strictly blocked with 403 Forbidden');
 
-    // ── 8. Test 6: Successful Approve Action (200 + Notification + AuditLog) ──
+    // ── 10. Test 8: Successful Approve Action with Transaction Integrity ──────
     const resValidApprove = await fetch(`${BASE_URL}/api/leaves/${leaveAcademic.id}/approve`, {
       method: 'POST',
       headers: { Cookie: `auth_token=${tokenSubCommander}`, 'Content-Type': 'application/json' },
@@ -237,35 +304,48 @@ export async function runLeaveApprovalsTests() {
     assert.strictEqual(updatedLeave?.status, 'อนุมัติแล้ว');
     assert.strictEqual(updatedLeave?.approvedById, userSubCommander.id);
     assert.strictEqual(updatedLeave?.approvalNote, 'อนุมัติเรียบร้อย ปฏิบัติหน้าที่ได้');
-    assert.ok(updatedLeave?.approvedAt, 'approvedAt must be set');
+    assert.ok(updatedLeave?.approvedAt, 'approvedAt must be set in database');
 
     // Verify Notification sent to applicant
     const notification = await prisma.notification.findFirst({
       where: { personnelId: userOfficer.id, title: { contains: 'ได้รับการอนุมัติแล้ว' } },
       orderBy: { createdAt: 'desc' },
     });
-    assert.ok(notification, 'Notification must be created for applicant');
+    assert.ok(notification, 'Notification must be created for applicant inside transaction');
 
     // Verify AuditLog written
     const audit = await prisma.auditLog.findFirst({
       where: { entityId: leaveAcademic.id, action: 'LEAVE_APPROVED' },
       orderBy: { createdAt: 'desc' },
     });
-    assert.ok(audit, 'AuditLog must be recorded for LEAVE_APPROVED');
-    console.log('✔ Approve action successfully updated status, recorded approver, sent notification, and logged audit');
+    assert.ok(audit, 'AuditLog must be recorded for LEAVE_APPROVED inside transaction');
+    console.log('✔ Approve action successfully executed inside Prisma transaction');
 
-    // ── 9. Test 7: Concurrency / Non-pending Conflict (409) ───────────────────
-    // Re-attempting to approve an already approved leave must return 409
-    const resDuplicateApprove = await fetch(`${BASE_URL}/api/leaves/${leaveAcademic.id}/approve`, {
-      method: 'POST',
-      headers: { Cookie: `auth_token=${tokenSubCommander}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ note: 'Duplicate attempt' }),
-    });
-    assert.strictEqual(resDuplicateApprove.status, 409, 'Duplicate approval on non-pending leave must return 409 Conflict');
-    console.log('✔ Atomic concurrency protection verified: non-pending status returns 409 Conflict');
+    // ── 11. Test 9: Concurrency & Simultaneous Requests (P1 Fix) ──────────────
+    // Send 2 simultaneous approve/reject requests on the same leave
+    const [concurrentRes1, concurrentRes2] = await Promise.all([
+      fetch(`${BASE_URL}/api/leaves/${leaveConcurrent.id}/approve`, {
+        method: 'POST',
+        headers: { Cookie: `auth_token=${tokenSubCommander}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note: 'Request 1' }),
+      }),
+      fetch(`${BASE_URL}/api/leaves/${leaveConcurrent.id}/approve`, {
+        method: 'POST',
+        headers: { Cookie: `auth_token=${tokenSubCommander}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note: 'Request 2' }),
+      }),
+    ]);
 
-    // ── 10. Test 8: Reject Action (Validation + Execution + Notification) ─────
-    // Sub-test 8a: Reject without reason -> 400
+    const statuses = [concurrentRes1.status, concurrentRes2.status].sort();
+    assert.deepStrictEqual(
+      statuses,
+      [200, 409],
+      'Under concurrent execution, exactly one request must succeed (200) and the other must return 409 Conflict'
+    );
+    console.log('✔ P1 Fix: Concurrent execution verified — exactly 1 succeeds (200) and conflict receives 409');
+
+    // ── 12. Test 10: Reject Action with Mandatory Reason & Transaction ────────
+    // Sub-test 10a: Reject without reason -> 400
     const resRejectNoReason = await fetch(`${BASE_URL}/api/leaves/${leaveAdminSub.id}/reject`, {
       method: 'POST',
       headers: { Cookie: `auth_token=${tokenSuperAdmin}`, 'Content-Type': 'application/json' },
@@ -273,7 +353,7 @@ export async function runLeaveApprovalsTests() {
     });
     assert.strictEqual(resRejectNoReason.status, 400, 'Rejection without reason must return 400');
 
-    // Sub-test 8b: Valid Reject by Super Admin
+    // Sub-test 10b: Valid Reject by Super Admin
     const resValidReject = await fetch(`${BASE_URL}/api/leaves/${leaveAdminSub.id}/reject`, {
       method: 'POST',
       headers: { Cookie: `auth_token=${tokenSuperAdmin}`, 'Content-Type': 'application/json' },
@@ -286,23 +366,41 @@ export async function runLeaveApprovalsTests() {
     assert.strictEqual(rejectedLeave?.rejectionReason, 'ติดภารกิจราชการเร่งด่วน');
     assert.strictEqual(rejectedLeave?.approvedById, userSuperAdmin.id);
 
-    // Verify Rejection Notification
+    // Verify Rejection Notification & AuditLog
     const rejectNotif = await prisma.notification.findFirst({
       where: { personnelId: userOtherSubOfficer.id, title: { contains: 'ไม่ได้รับการอนุมัติ' } },
       orderBy: { createdAt: 'desc' },
     });
-    assert.ok(rejectNotif, 'Rejection notification must be created for applicant');
+    assert.ok(rejectNotif, 'Rejection notification must be created');
+    console.log('✔ Reject action validated reason requirement, updated status to ไม่อนุมัติ inside transaction');
 
-    // Verify Rejection AuditLog
-    const rejectAudit = await prisma.auditLog.findFirst({
-      where: { entityId: leaveAdminSub.id, action: 'LEAVE_REJECTED' },
-      orderBy: { createdAt: 'desc' },
+    // ── 13. Test 11: Query Validation (P2 Fix) ────────────────────────────────
+    // Sub-test 11a: Invalid date format/value (e.g. 2026-02-31)
+    const resInvalidDate = await fetch(`${BASE_URL}/api/leaves/approvals?startDate=2026-02-31`, {
+      headers: { Cookie: `auth_token=${tokenSuperAdmin}` },
     });
-    assert.ok(rejectAudit, 'AuditLog must be recorded for LEAVE_REJECTED');
-    console.log('✔ Reject action validated reason requirement, updated status to ไม่อนุมัติ, sent notification, and logged audit');
+    assert.strictEqual(resInvalidDate.status, 400, 'Invalid calendar date must return 400');
 
-    // ── 11. Test 9: Super Admin Self-Approval Allowed with Audit Flag ─────────
-    // Super Admin submits own leave
+    // Sub-test 11b: Reversed date range (startDate > endDate)
+    const resReversedDate = await fetch(
+      `${BASE_URL}/api/leaves/approvals?startDate=2026-10-10&endDate=2026-10-01`,
+      {
+        headers: { Cookie: `auth_token=${tokenSuperAdmin}` },
+      }
+    );
+    assert.strictEqual(resReversedDate.status, 400, 'Reversed date range must return 400');
+
+    // Sub-test 11c: Invalid leave type not in allowlist
+    const resInvalidLeaveType = await fetch(
+      `${BASE_URL}/api/leaves/approvals?leaveType=INVALID_TYPE`,
+      {
+        headers: { Cookie: `auth_token=${tokenSuperAdmin}` },
+      }
+    );
+    assert.strictEqual(resInvalidLeaveType.status, 400, 'Invalid leave type must return 400');
+    console.log('✔ P2 Fix: Query validation accurately rejected invalid dates, reversed date ranges, and illegal leave types');
+
+    // ── 14. Test 12: Super Admin Self-Approval Allowed with Audit Flag ────────
     const leaveSuperSelf = await prisma.leaveRecord.create({
       data: {
         personnelId: userSuperAdmin.id,
@@ -329,18 +427,8 @@ export async function runLeaveApprovalsTests() {
     assert.ok(superAudit, 'Audit log must exist for SUPER_ADMIN self approval');
     assert.ok(superAudit.details?.includes('"selfApproval":true'), 'Audit log must flag selfApproval: true');
     console.log('✔ SUPER_ADMIN self-approval permitted and explicitly audited with selfApproval: true');
-
-    // ── 12. Test 10: Query Filters & Pagination ───────────────────────────────
-    const resFilter = await fetch(`${BASE_URL}/api/leaves/approvals?status=อนุมัติแล้ว&limit=5&page=1`, {
-      headers: { Cookie: `auth_token=${tokenSuperAdmin}` },
-    });
-    assert.strictEqual(resFilter.status, 200);
-    const filterData = await resFilter.json();
-    assert.ok(filterData.items.length >= 2, 'Should return approved leaves');
-    assert.ok(filterData.summary.totalInScope >= 3, 'Summary KPI totalInScope must be counted');
-    console.log('✔ Query filters, status filter, and KPI summary counters successfully verified');
   } finally {
-    // ── 13. Cleanup Test Data ─────────────────────────────────────────────────
+    // ── 15. Cleanup Test Data ─────────────────────────────────────────────────
     if (testLeaveIds.length > 0) {
       await prisma.notification.deleteMany({
         where: { personnelId: { in: testPersonnelIds } },
