@@ -382,18 +382,28 @@ export async function runCommandDashboardTests() {
     assert.strictEqual(dataPagination.leaveSummary.pagination.total, 15, 'Total personnel count must be 15');
     assert.strictEqual(dataPagination.leaveSummary.pagination.totalPages, 3, 'Total pages must be 3');
 
-    // CRITICAL: Total Quota in banner MUST be 15 * 10 = 150 days (NOT 5 * 10 = 50 days)
+    // Verify realistic unit metrics in totals banner across whole scope (15 personnel)
     assert.strictEqual(
-      dataPagination.leaveSummary.totals.totalQuota,
-      150,
-      'Total scope quota must aggregate ALL 15 personnel in scope (150 days), not just current page items'
+      dataPagination.leaveSummary.totals.policyQuota,
+      10,
+      'Policy quota per person must be 10 days/person'
     );
     assert.strictEqual(
-      dataPagination.leaveSummary.totals.totalRemaining,
-      150,
-      'Total scope remaining must aggregate ALL 15 personnel in scope (150 days)'
+      dataPagination.leaveSummary.totals.totalPersonnel,
+      15,
+      'Total personnel count in scope must be 15'
     );
-    console.log('✔ Pagination totals correctly aggregated over entire unit scope (150 days total for 15 personnel across 3 pages)');
+    assert.strictEqual(
+      dataPagination.leaveSummary.totals.totalUsedApproved,
+      0,
+      'Total used approved days across scope must be 0'
+    );
+    assert.strictEqual(
+      dataPagination.leaveSummary.totals.utilizationRate,
+      0,
+      'Utilization rate across scope must be 0%'
+    );
+    console.log('✔ Pagination totals correctly report realistic unit metrics (policyQuota: 10 days/person, totalPersonnel: 15) across all 3 pages');
   } finally {
     // ── 10. Cleanup Test Records ───────────────────────────────────────────────
     if (createdLeaveIds.length > 0) {

@@ -97,10 +97,14 @@ interface DashboardData {
     year: number;
     policyQuota: number;
     totals: {
-      totalQuota: number;
+      policyQuota: number;
+      totalPersonnel: number;
       totalUsedApproved: number;
       totalPending: number;
-      totalRemaining: number;
+      personnelUsedCount: number;
+      personnelPendingCount: number;
+      averageDaysUsed: number;
+      utilizationRate: number;
     };
     items: LeaveSummaryItem[];
     pagination: {
@@ -774,15 +778,19 @@ export default function CommandDashboardPage() {
         {/* Scope Totals Banner */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
           <div>
-            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">สิทธิ์รวมทั้งหน่วย ({leaveSummaryType})</div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">สิทธิ์ตามระเบียบ ({leaveSummaryType})</div>
             <div className="text-xl font-black text-slate-900 dark:text-white font-mono mt-0.5">
-              {(data?.leaveSummary.totals.totalQuota ?? 0).toLocaleString()} วัน
+              {data?.leaveSummary.policyQuota ?? (leaveSummaryType === 'ลาพักผ่อน' ? 10 : 45)} วัน/คน
             </div>
+            <div className="text-[10px] text-slate-400 mt-0.5">สิทธิ์มาตรฐานต่อบุคคล</div>
           </div>
           <div>
             <div className="text-[11px] text-blue-600 dark:text-blue-400 font-medium">อนุมัติใช้ไปแล้วรวม</div>
             <div className="text-xl font-black text-blue-600 dark:text-blue-400 font-mono mt-0.5">
               {(data?.leaveSummary.totals.totalUsedApproved ?? 0).toLocaleString()} วัน
+            </div>
+            <div className="text-[10px] text-blue-500/80 dark:text-blue-400/80 mt-0.5 font-medium">
+              จากผู้ใช้สิทธิ์ {data?.leaveSummary.totals.personnelUsedCount ?? 0} นาย
             </div>
           </div>
           <div>
@@ -790,11 +798,17 @@ export default function CommandDashboardPage() {
             <div className="text-xl font-black text-amber-600 dark:text-amber-400 font-mono mt-0.5">
               {(data?.leaveSummary.totals.totalPending ?? 0).toLocaleString()} วัน
             </div>
+            <div className="text-[10px] text-amber-500/80 dark:text-amber-400/80 mt-0.5 font-medium">
+              จากผู้ยื่นคำขอ {data?.leaveSummary.totals.personnelPendingCount ?? 0} นาย
+            </div>
           </div>
           <div>
-            <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">คงเหลือรวมทั้งหน่วย</div>
+            <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">อัตราการใช้สิทธิ์ของหน่วย</div>
             <div className="text-xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-0.5">
-              {(data?.leaveSummary.totals.totalRemaining ?? 0).toLocaleString()} วัน
+              {data?.leaveSummary.totals.utilizationRate ?? 0}%
+            </div>
+            <div className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5 font-medium">
+              {data?.leaveSummary.totals.personnelUsedCount ?? 0}/{data?.leaveSummary.totals.totalPersonnel ?? 0} นาย (เฉลี่ย {data?.leaveSummary.totals.averageDaysUsed ?? 0} วัน/คน)
             </div>
           </div>
         </div>

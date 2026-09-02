@@ -399,13 +399,12 @@ export async function GET(req: Request) {
       },
     });
 
-    let totalScopeQuota = 0;
     let totalScopeUsed = 0;
     let totalScopePending = 0;
-    let totalScopeRemaining = 0;
+    let personnelUsedCount = 0;
+    let personnelPendingCount = 0;
 
     for (const person of allScopePersonnelWithLeaves) {
-      let customQuota: number | null = null;
       let usedApprovedDays = 0;
       let pendingDays = 0;
 
@@ -418,20 +417,25 @@ export async function GET(req: Request) {
         } else if (leave.status === 'รออนุมัติ') {
           pendingDays += durInYear;
         }
-
-        if (leave.leaveType === 'ลาพักผ่อน' && leave.totalLeaveDays !== null && leave.totalLeaveDays !== undefined) {
-          customQuota = leave.totalLeaveDays;
-        }
       }
 
-      const effectiveQuota = customQuota !== null ? customQuota : defaultQuotaForType;
-      const remainingDays = Math.max(0, effectiveQuota - usedApprovedDays);
+      if (usedApprovedDays > 0) {
+        personnelUsedCount++;
+      }
+      if (pendingDays > 0) {
+        personnelPendingCount++;
+      }
 
-      totalScopeQuota += effectiveQuota;
       totalScopeUsed += usedApprovedDays;
       totalScopePending += pendingDays;
-      totalScopeRemaining += remainingDays;
     }
+
+    const averageDaysUsed = totalLeaveSummaryPersonnelCount > 0
+      ? Number((totalScopeUsed / totalLeaveSummaryPersonnelCount).toFixed(1))
+      : 0;
+    const utilizationRate = totalLeaveSummaryPersonnelCount > 0
+      ? Math.round((personnelUsedCount / totalLeaveSummaryPersonnelCount) * 100)
+      : 0;
 
     // ── Paginated items query for the current page only ──
     const leaveSummaryPersonnel = await prisma.personnel.findMany({
@@ -551,10 +555,14 @@ export async function GET(req: Request) {
         year: targetYear,
         policyQuota: defaultQuotaForType,
         totals: {
-          totalQuota: totalScopeQuota,
+          policyQuota: defaultQuotaForType,
+          totalPersonnel: totalLeaveSummaryPersonnelCount,
           totalUsedApproved: totalScopeUsed,
           totalPending: totalScopePending,
-          totalRemaining: totalScopeRemaining,
+          personnelUsedCount,
+          personnelPendingCount,
+          averageDaysUsed,
+          utilizationRate,
         },
         items: leaveSummaryList,
         pagination: {
