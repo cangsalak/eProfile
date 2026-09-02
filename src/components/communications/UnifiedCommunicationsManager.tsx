@@ -369,11 +369,11 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
       
       {/* Header Banner - Dashboard Style Theme */}
       <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-100/60 via-indigo-100/40 to-purple-100/30 dark:from-primary-950/40 dark:via-indigo-950/20 dark:to-purple-950/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-200/50 via-primary-100/30 to-transparent dark:from-primary-950/40 dark:via-primary-900/20 dark:to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none"></div>
 
         <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex items-start space-x-5">
-            <div className="hidden sm:flex shrink-0 w-16 h-16 bg-gradient-to-br from-primary-500 via-indigo-600 to-purple-600 rounded-2xl items-center justify-center shadow-lg shadow-primary-500/20 text-white text-2xl font-bold">
+            <div className="hidden sm:flex shrink-0 w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl items-center justify-center shadow-lg shadow-primary-500/20 text-white text-2xl font-bold">
               <i className="fa-solid fa-bullhorn"></i>
             </div>
             <div>

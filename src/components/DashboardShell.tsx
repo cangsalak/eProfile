@@ -225,7 +225,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const isGuest = !currentUser;
 
   return (
-    <div className="flex h-screen print:h-auto bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 overflow-hidden print:overflow-visible font-prompt">
+    <div className="flex h-screen print:h-auto bg-slate-50 dark:bg-[var(--bg-dark,#0f172a)] text-slate-800 dark:text-slate-200 overflow-hidden print:overflow-visible font-prompt">
       {/* Mobile Backdrop */}
       {!isGuest && isSidebarOpen && (
         <div 
@@ -246,7 +246,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible bg-slate-50 dark:bg-[var(--bg-dark,#0f172a)] transition-colors duration-300">
         {/* Maintenance Mode Warning Banner for Admins */}
         {isMaintenanceActive && (
           <div className="bg-amber-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between shadow-md shrink-0 z-50">

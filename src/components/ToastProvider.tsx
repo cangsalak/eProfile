@@ -29,38 +29,30 @@ export default function ToastProvider() {
     fetchSettings();
   }, []);
 
-  const getThemeStyle = () => {
-    if (theme === 'dark') {
-      return {
-        background: '#1e293b',
-        color: '#fff',
-        border: '1px solid #334155'
-      };
-    }
-    // Default light theme
-    return {
-      background: '#fff',
-      color: '#0f172a',
-      border: '1px solid #e2e8f0'
-    };
-  };
+  const isDarkMode = theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
     <Toaster 
       position={position}
       toastOptions={{
         duration: 4000,
-        style: getThemeStyle(),
+        className: '!font-prompt !rounded-2xl !text-xs !shadow-xl !border',
+        style: {
+          background: isDarkMode ? 'var(--surface-card, #1e293b)' : '#ffffff',
+          color: isDarkMode ? '#f8fafc' : '#0f172a',
+          borderColor: isDarkMode ? 'var(--border-color, rgba(255, 255, 255, 0.1))' : 'rgba(226, 232, 240, 0.9)',
+          backdropFilter: 'blur(12px)',
+        },
         success: {
           iconTheme: {
-            primary: '#10b981',
-            secondary: '#fff',
+            primary: 'rgb(var(--color-primary-500, 16 185 129))',
+            secondary: '#ffffff',
           },
         },
         error: {
           iconTheme: {
             primary: '#ef4444',
-            secondary: '#fff',
+            secondary: '#ffffff',
           },
         },
       }} 
