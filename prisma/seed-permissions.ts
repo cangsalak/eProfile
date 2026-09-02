@@ -14,54 +14,9 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import { ROLE_DEFINITIONS } from '../src/lib/role-definitions';
 
 const prisma = new PrismaClient();
-
-/** Source of truth — must match PERMISSION_MATRIX.md */
-const ROLE_DEFINITIONS = [
-  {
-    name:        'SUPER_ADMIN',
-    displayName: 'ผู้ดูแลระบบสูงสุด',
-    description: 'มีสิทธิ์ทั้งหมดในระบบ ไม่สามารถถูกจำกัดได้',
-    permissions: ['MANAGE_PERSONNEL', 'MANAGE_SYSTEM', 'MANAGE_POSTS', 'APPROVE_LEAVE', 'VIEW_AUDIT_LOGS'],
-    isSystem:    true,
-  },
-  {
-    name:        'ADMIN',
-    displayName: 'ผู้ดูแลระบบ',
-    description: 'มีสิทธิ์เกือบทั้งหมด ยกเว้นการจัดการ SUPER_ADMIN',
-    permissions: ['MANAGE_PERSONNEL', 'MANAGE_SYSTEM', 'MANAGE_POSTS', 'APPROVE_LEAVE', 'VIEW_AUDIT_LOGS'],
-    isSystem:    true,
-  },
-  {
-    name:        'HR_MANAGER',
-    displayName: 'เจ้าหน้าที่บุคคล',
-    description: 'จัดการข้อมูลบุคลากรและอนุมัติใบลา',
-    permissions: ['MANAGE_PERSONNEL', 'APPROVE_LEAVE', 'VIEW_AUDIT_LOGS'],
-    isSystem:    true,
-  },
-  {
-    name:        'EDITOR',
-    displayName: 'บรรณาธิการ',
-    description: 'สร้าง/แก้ไข/ลบบทความและไฟล์มีเดีย',
-    permissions: ['MANAGE_POSTS'],
-    isSystem:    true,
-  },
-  {
-    name:        'OFFICER',
-    displayName: 'เจ้าหน้าที่',
-    description: 'ผู้ใช้งานทั่วไป ดูข้อมูลและจัดการใบลาของตนเอง',
-    permissions: [],
-    isSystem:    true,
-  },
-  {
-    name:        'USER',
-    displayName: 'ผู้ใช้งานทั่วไป',
-    description: 'สิทธิ์พื้นฐาน ดูข้อมูลและจัดการข้อมูลส่วนตัว',
-    permissions: [],
-    isSystem:    true,
-  },
-] as const;
 
 async function main() {
   console.log('🔐 Seeding role permissions (PERMISSION_MATRIX.md)…\n');

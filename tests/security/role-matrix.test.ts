@@ -93,7 +93,7 @@ export async function runRoleMatrixTests() {
         USER: [403],
         OFFICER: [403],
         EDITOR: [403],
-        ADMIN: [403], // ADMIN role in default seed does not have VIEW_AUDIT_LOGS
+        ADMIN: [200], // ADMIN has VIEW_AUDIT_LOGS per PERMISSION_MATRIX.md
         SUPER_ADMIN: [200],
       },
     },
@@ -120,7 +120,7 @@ export async function runRoleMatrixTests() {
         USER: [403],
         OFFICER: [403],
         EDITOR: [403],
-        ADMIN: [403], // ADMIN does not have MANAGE_SYSTEM / MANAGE_ROLES
+        ADMIN: [200, 201, 400], // ADMIN has MANAGE_SYSTEM per PERMISSION_MATRIX.md
         SUPER_ADMIN: [200, 201, 400],
       },
     },

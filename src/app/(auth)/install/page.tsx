@@ -59,10 +59,21 @@ export default function InstallPage() {
     setTestingDb(true);
     setDbTestResult(null);
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (formData.setupSecret?.trim()) {
+        headers['x-setup-secret'] = formData.setupSecret.trim();
+        headers['x-admin-setup-secret'] = formData.setupSecret.trim();
+      }
+
       const res = await fetch('/api/install/test-db', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dbConfig),
+        headers,
+        body: JSON.stringify({
+          ...dbConfig,
+          setupSecret: formData.setupSecret?.trim() || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -362,6 +373,20 @@ export default function InstallPage() {
                         className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-slate-500 dark:text-slate-400 mb-1">
+                      Setup Secret (รหัสลับการติดตั้ง - ถ้ามีกำหนดใน .env)
+                    </label>
+                    <input
+                      type="password"
+                      name="setupSecret"
+                      value={formData.setupSecret}
+                      onChange={handleChange}
+                      placeholder="เว้นว่างได้หากไม่ได้ตั้งค่าใน .env"
+                      className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                   </div>
                 </div>
               )}

@@ -1,4 +1,5 @@
 import net from 'net';
+import dns from 'dns';
 import fs from 'fs';
 import path from 'path';
 
@@ -19,6 +20,135 @@ export interface DbTestResult {
   connectionUrl?: string;
 }
 
+// ── CIDR Helpers ──────────────────────────────────────────────────────────────
+
+/** Convert a dotted-decimal IPv4 string to a 32-bit integer */
+function ipv4ToInt(ip: string): number {
+  return ip.split('.').reduce((acc, octet) => (acc << 8) | parseInt(octet, 10), 0) >>> 0;
+}
+
+interface Cidr4 { base: number; mask: number }
+
+function parseCidr4(cidr: string): Cidr4 {
+  const [addr, bits] = cidr.split('/');
+  const mask = bits ? (~0 << (32 - parseInt(bits, 10))) >>> 0 : 0xffffffff;
+  return { base: ipv4ToInt(addr) & mask, mask };
+}
+
+function inCidr4(ip: string, cidr: Cidr4): boolean {
+  return (ipv4ToInt(ip) & cidr.mask) === cidr.base;
+}
+
+/**
+ * RFC 1918 + loopback + link-local + reserved IPv4 ranges that must
+ * never be reachable from a public-facing connection test.
+ */
+const BLOCKED_CIDR4: Cidr4[] = [
+  '127.0.0.0/8',    // loopback
+  '10.0.0.0/8',     // RFC 1918
+  '172.16.0.0/12',  // RFC 1918
+  '192.168.0.0/16', // RFC 1918
+  '169.254.0.0/16', // link-local / APIPA
+  '100.64.0.0/10',  // CGNAT (RFC 6598)
+  '192.0.0.0/24',   // IETF Protocol Assignments
+  '192.0.2.0/24',   // TEST-NET-1 (RFC 5737)
+  '198.51.100.0/24',// TEST-NET-2
+  '203.0.113.0/24', // TEST-NET-3
+  '198.18.0.0/15',  // Benchmarking (RFC 2544)
+  '240.0.0.0/4',    // Reserved
+  '0.0.0.0/8',      // "This" network
+  '255.255.255.255/32', // broadcast
+].map(parseCidr4);
+
+/**
+ * Returns true if an IPv4 address falls within any blocked range.
+ */
+function isBlockedIPv4(ip: string): boolean {
+  if (!net.isIPv4(ip)) return false;
+  return BLOCKED_CIDR4.some(cidr => inCidr4(ip, cidr));
+}
+
+/**
+ * Returns true if an IPv6 address is loopback, link-local, or unique-local.
+ */
+function isBlockedIPv6(ip: string): boolean {
+  // Normalise: strip brackets
+  const h = ip.replace(/^\[|\]$/g, '').toLowerCase();
+  if (h === '::1') return true;                  // loopback
+  if (h === '::') return true;                   // unspecified
+  if (h.startsWith('fe80:')) return true;        // link-local
+  if (h.startsWith('fc') || h.startsWith('fd')) return true; // unique-local ULA
+  return false;
+}
+
+/**
+ * Returns true if a raw hostname string (before DNS lookup) is obviously private.
+ * This is a fast pre-filter; the real check happens after DNS resolution.
+ */
+function isPrivateHostByName(host: string): boolean {
+  const h = host.toLowerCase().trim();
+  if (h === 'localhost') return true;
+  // Numeric IPv4 in decimal notation bypass (e.g. 2130706433 → 127.0.0.1)
+  if (/^\d+$/.test(h)) return true;            // pure integer — block immediately
+  if (/^0x[0-9a-f]+$/i.test(h)) return true;  // hex notation
+  if (net.isIPv4(h)) return isBlockedIPv4(h);
+  if (net.isIPv6(h)) return isBlockedIPv6(h);
+  return false;
+}
+
+/**
+ * Resolve hostname to all IP addresses and validate every one.
+ * Throws an error with a reason if any resolved IP is private/blocked.
+ *
+ * Returns the first safe IPv4 (or IPv6) address to use for the actual
+ * TCP connection, preventing DNS rebinding between validation and connect.
+ */
+export async function resolveAndValidateHost(host: string): Promise<string> {
+  // Fast path: if the host is already an IP, validate directly
+  if (net.isIPv4(host)) {
+    if (isBlockedIPv4(host)) {
+      throw new Error(`Host ${host} resolves to a private/reserved address.`);
+    }
+    return host;
+  }
+  if (net.isIPv6(host)) {
+    if (isBlockedIPv6(host)) {
+      throw new Error(`Host ${host} resolves to a private/reserved IPv6 address.`);
+    }
+    return host;
+  }
+
+  // DNS resolution
+  let addresses: Array<{ address: string; family: number }>;
+  try {
+    addresses = await dns.promises.lookup(host, { all: true });
+  } catch {
+    throw new Error(`DNS resolution failed for host: ${host}`);
+  }
+
+  if (!addresses || addresses.length === 0) {
+    throw new Error(`No IP addresses found for host: ${host}`);
+  }
+
+  // Validate every resolved address
+  for (const { address, family } of addresses) {
+    if (family === 4 && isBlockedIPv4(address)) {
+      throw new Error(
+        `Host "${host}" resolves to a private/reserved address (${address}) and is not allowed.`
+      );
+    }
+    if (family === 6 && isBlockedIPv6(address)) {
+      throw new Error(
+        `Host "${host}" resolves to a private/reserved IPv6 address (${address}) and is not allowed.`
+      );
+    }
+  }
+
+  // Return first IPv4 (preferred) for stable TCP connect
+  const ipv4 = addresses.find(a => a.family === 4);
+  return ipv4 ? ipv4.address : addresses[0].address;
+}
+
 export function buildConnectionUrl(params: DbConnectionParams): string {
   const { provider, host = 'localhost', port, database = 'eprofile', user = 'root', password = '' } = params;
 
@@ -30,7 +160,7 @@ export function buildConnectionUrl(params: DbConnectionParams): string {
     return `file:./${database.endsWith('.db') ? database : `${database}.db`}`;
   }
 
-  const encodedUser = encodeURIComponent(user);
+  const encodedUser     = encodeURIComponent(user);
   const encodedPassword = encodeURIComponent(password);
 
   if (provider === 'postgresql') {
@@ -47,14 +177,19 @@ export function buildConnectionUrl(params: DbConnectionParams): string {
 }
 
 /**
- * Test socket connectivity to a TCP host and port
+ * Test TCP connectivity to a pre-validated (resolved) IP address.
+ * Connects to the numeric IP directly to prevent DNS rebinding between
+ * validation and connection.
  */
-function testTcpConnection(host: string, port: number, timeoutMs = 4000): Promise<{ ok: boolean; latency: number; error?: string }> {
-  return new Promise((resolve) => {
+function testTcpConnection(
+  resolvedIp: string,
+  port: number,
+  timeoutMs = 4000
+): Promise<{ ok: boolean; latency: number; error?: string }> {
+  return new Promise(resolve => {
     const startTime = Date.now();
-    const socket = new net.Socket();
-
-    let resolved = false;
+    const socket     = new net.Socket();
+    let resolved     = false;
 
     const cleanup = () => {
       socket.removeAllListeners();
@@ -75,38 +210,47 @@ function testTcpConnection(host: string, port: number, timeoutMs = 4000): Promis
       if (resolved) return;
       resolved = true;
       cleanup();
-      resolve({ ok: false, latency: 0, error: `Connection timed out after ${timeoutMs}ms (${host}:${port})` });
+      resolve({ ok: false, latency: 0, error: `Connection timed out after ${timeoutMs}ms` });
     });
 
-    socket.on('error', (err: any) => {
+    socket.on('error', (err: NodeJS.ErrnoException) => {
       if (resolved) return;
       resolved = true;
       cleanup();
-      resolve({ ok: false, latency: 0, error: err?.message || `Failed to connect to ${host}:${port}` });
+      resolve({ ok: false, latency: 0, error: err?.message || `Failed to connect` });
     });
 
     try {
-      socket.connect(port, host);
-    } catch (e: any) {
+      socket.connect(port, resolvedIp);
+    } catch (e: unknown) {
       if (!resolved) {
         resolved = true;
         cleanup();
-        resolve({ ok: false, latency: 0, error: e?.message || 'Socket error' });
+        resolve({
+          ok: false,
+          latency: 0,
+          error: e instanceof Error ? e.message : 'Socket error',
+        });
       }
     }
   });
 }
 
 /**
- * Validates and tests database connection parameters
+ * Validates and tests database connection parameters.
+ *
+ * Security contract:
+ * 1. Pre-validates hostname by name (blocks loopback literals, numeric IP, hex IP).
+ * 2. Resolves ALL DNS addresses and validates each — no private IPs allowed.
+ * 3. Connects using the resolved numeric IP to prevent DNS rebinding.
  */
 export async function testDatabaseConnection(params: DbConnectionParams): Promise<DbTestResult> {
-  const startTime = Date.now();
+  const startTime     = Date.now();
   const connectionUrl = buildConnectionUrl(params);
 
   if (params.provider === 'sqlite') {
     try {
-      const prismaDir = path.join(process.cwd(), 'prisma');
+      const prismaDir    = path.join(process.cwd(), 'prisma');
       if (!fs.existsSync(prismaDir)) {
         fs.mkdirSync(prismaDir, { recursive: true });
       }
@@ -115,38 +259,60 @@ export async function testDatabaseConnection(params: DbConnectionParams): Promis
       fs.unlinkSync(testFilePath);
 
       return {
-        success: true,
-        message: 'เชื่อมต่อ SQLite สำเร็จ! โฟลเดอร์ prisma/ มีสิทธิ์ในการสร้างและเขียนฐานข้อมูล',
-        latencyMs: Date.now() - startTime,
+        success:    true,
+        message:    'เชื่อมต่อ SQLite สำเร็จ! โฟลเดอร์ prisma/ มีสิทธิ์ในการสร้างและเขียนฐานข้อมูล',
+        latencyMs:  Date.now() - startTime,
         connectionUrl,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       return {
-        success: false,
-        message: `ข้อผิดพลาดของสิทธิ์ในไฟล์ SQLite: ${err.message}`,
+        success:  false,
+        message:  `ข้อผิดพลาดของสิทธิ์ในไฟล์ SQLite: ${err instanceof Error ? err.message : 'Unknown error'}`,
         connectionUrl,
       };
     }
   }
 
-  // Parse host and port for PostgreSQL / MySQL
-  const host = params.host || 'localhost';
+  // ── PostgreSQL / MySQL ──────────────────────────────────────────────────────
+  const rawHost = params.host || 'localhost';
   const defaultPort = params.provider === 'postgresql' ? 5432 : 3306;
-  const port = params.port || defaultPort;
+  const port        = params.port || defaultPort;
 
-  const tcpTest = await testTcpConnection(host, port);
+  // Step 1: quick name-based pre-filter
+  if (isPrivateHostByName(rawHost)) {
+    return {
+      success: false,
+      message: `การเชื่อมต่อไปยัง "${rawHost}" ไม่ได้รับอนุญาต (private/local address)`,
+      connectionUrl,
+    };
+  }
+
+  // Step 2: resolve DNS + validate every returned IP
+  let resolvedIp: string;
+  try {
+    resolvedIp = await resolveAndValidateHost(rawHost);
+  } catch (err: unknown) {
+    return {
+      success: false,
+      message: `การตรวจสอบ Host ล้มเหลว: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      connectionUrl,
+    };
+  }
+
+  // Step 3: connect using the validated numeric IP (prevents DNS rebinding)
+  const tcpTest = await testTcpConnection(resolvedIp, port);
 
   if (!tcpTest.ok) {
     return {
-      success: false,
-      message: `ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ ${params.provider.toUpperCase()} ที่ ${host}:${port} (${tcpTest.error})`,
+      success:  false,
+      message:  `ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ ${params.provider.toUpperCase()} ที่ ${rawHost}:${port} (${tcpTest.error})`,
       connectionUrl,
     };
   }
 
   return {
-    success: true,
-    message: `เชื่อมต่อเซิร์ฟเวอร์ ${params.provider.toUpperCase()} (${host}:${port}) สำเร็จ! ความเร็วตอบสนอง ${tcpTest.latency}ms`,
+    success:   true,
+    message:   `เชื่อมต่อเซิร์ฟเวอร์ ${params.provider.toUpperCase()} (${rawHost}:${port}) สำเร็จ! ความเร็วตอบสนอง ${tcpTest.latency}ms`,
     latencyMs: tcpTest.latency,
     connectionUrl,
   };

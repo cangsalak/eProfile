@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import { passwordPolicySchema } from '@/lib/validations';
+import { ROLE_DEFINITIONS } from '@/lib/role-definitions';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error('JWT_SECRET is not configured');
@@ -85,51 +86,23 @@ export async function POST(req: Request) {
       });
     }
 
-    // 6. Setup Default System Roles
-    const defaultRoles = [
-      {
-        name: 'SUPER_ADMIN',
-        displayName: 'ผู้ดูแลระบบสูงสุด',
-        description: 'มีสิทธิ์เข้าถึงทุกส่วนของระบบ (Super Admin)',
-        permissions: JSON.stringify([
-          'MANAGE_SYSTEM', 'MANAGE_ROLES', 'MANAGE_PERSONNEL', 
-          'MANAGE_DEPARTMENTS', 'MANAGE_POSTS', 'VIEW_AUDIT_LOGS', 
-          'MANAGE_CONTACTS', 'APPROVE_LEAVE'
-        ]),
-        isSystem: true
-      },
-      {
-        name: 'ADMIN',
-        displayName: 'ผู้ดูแลระบบ',
-        description: 'มีสิทธิ์ดูแลจัดการข้อมูลบุคลากรและระบบบางส่วน',
-        permissions: JSON.stringify([
-          'MANAGE_PERSONNEL', 'MANAGE_DEPARTMENTS', 'MANAGE_POSTS', 'APPROVE_LEAVE'
-        ]),
-        isSystem: true
-      },
-      {
-        name: 'EDITOR',
-        displayName: 'ผู้จัดการเนื้อหา',
-        description: 'มีสิทธิ์จัดการข่าวสารและเนื้อหา',
-        permissions: JSON.stringify([
-          'MANAGE_POSTS'
-        ]),
-        isSystem: true
-      },
-      {
-        name: 'USER',
-        displayName: 'ผู้ใช้งานทั่วไป',
-        description: 'สิทธิ์พื้นฐานสำหรับกำลังพล',
-        permissions: JSON.stringify([]),
-        isSystem: true
-      }
-    ];
-
-    for (const role of defaultRoles) {
+    // 6. Setup Default System Roles (from shared source of truth)
+    for (const role of ROLE_DEFINITIONS) {
       await prisma.systemRole.upsert({
         where: { name: role.name },
-        update: {}, 
-        create: role
+        update: {
+          displayName: role.displayName,
+          description: role.description,
+          permissions: JSON.stringify(role.permissions),
+          isSystem: role.isSystem,
+        },
+        create: {
+          name: role.name,
+          displayName: role.displayName,
+          description: role.description,
+          permissions: JSON.stringify(role.permissions),
+          isSystem: role.isSystem,
+        },
       });
     }
 
