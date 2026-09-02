@@ -8,6 +8,7 @@ interface SystemSettingsFormProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   handleLogoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
+  autoSaveStatus?: 'idle' | 'saving' | 'saved';
 }
 
 export default function SystemSettingsForm({ 
@@ -15,7 +16,8 @@ export default function SystemSettingsForm({
   setSettings, 
   handleChange, 
   handleLogoUpload, 
-  fileInputRef 
+  fileInputRef,
+  autoSaveStatus = 'saved'
 }: SystemSettingsFormProps) {
   const [subTab, setSubTab] = useState<'general' | 'calendar' | 'theme' | 'typography' | 'toast'>('general');
 
@@ -29,34 +31,51 @@ export default function SystemSettingsForm({
 
   return (
     <div className="space-y-6 animate-fade-in font-prompt">
-      {/* ─── Secondary Sub-Tabs Navigation (เมนูย่อยแบบแท็บ) ────────────────── */}
-      <div 
-        role="tablist" 
-        aria-label="หมวดย่อยการตั้งค่าระบบและธีม"
-        className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl w-full overflow-x-auto border border-slate-200 dark:border-slate-700/80"
-      >
-        {subTabs.map(st => {
-          const isSelected = subTab === st.id;
-          return (
-            <button
-              key={st.id}
-              role="tab"
-              id={`subtab-${st.id}`}
-              aria-controls={`subtabpanel-${st.id}`}
-              aria-selected={isSelected}
-              type="button"
-              onClick={() => setSubTab(st.id as any)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 shrink-0 ${
-                isSelected
-                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-sm border border-slate-200 dark:border-slate-700/70'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
-              }`}
-            >
-              <i className={`fa-solid ${st.icon} text-xs ${isSelected ? 'text-primary-500' : 'text-slate-400'}`}></i>
-              <span>{st.name}</span>
-            </button>
-          );
-        })}
+      {/* ─── Secondary Sub-Tabs Navigation + Auto-save indicator ───────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div 
+          role="tablist" 
+          aria-label="หมวดย่อยการตั้งค่าระบบและธีม"
+          className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl w-full sm:w-fit overflow-x-auto border border-slate-200 dark:border-slate-700/80"
+        >
+          {subTabs.map(st => {
+            const isSelected = subTab === st.id;
+            return (
+              <button
+                key={st.id}
+                role="tab"
+                id={`subtab-${st.id}`}
+                aria-controls={`subtabpanel-${st.id}`}
+                aria-selected={isSelected}
+                type="button"
+                onClick={() => setSubTab(st.id as any)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 shrink-0 ${
+                  isSelected
+                    ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-sm border border-slate-200 dark:border-slate-700/70'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50'
+                }`}
+              >
+                <i className={`fa-solid ${st.icon} text-xs ${isSelected ? 'text-primary-500' : 'text-slate-400'}`}></i>
+                <span>{st.name}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Auto-save Status Indicator Badge */}
+        <div className="flex items-center gap-2 self-end sm:self-center px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-[11px] shrink-0 font-medium">
+          {autoSaveStatus === 'saving' ? (
+            <>
+              <i className="fa-solid fa-circle-notch fa-spin text-amber-500 text-xs"></i>
+              <span className="text-slate-600 dark:text-slate-300">กำลังบันทึกอัตโนมัติ...</span>
+            </>
+          ) : (
+            <>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-semibold">บันทึกอัตโนมัติเรียบร้อย</span>
+            </>
+          )}
+        </div>
       </div>
 
       {/* ─── 1. GENERAL & ORGANIZATION INFO ──────────────────────────────────── */}
@@ -94,7 +113,7 @@ export default function SystemSettingsForm({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-semibold rounded-xl transition-all inline-flex items-center gap-2"
+                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white text-xs font-semibold rounded-xl transition-all inline-flex items-center gap-2 shadow-xs"
                 >
                   <i className="fa-solid fa-upload"></i>
                   <span>เลือกไฟล์รูปภาพโลโก้</span>

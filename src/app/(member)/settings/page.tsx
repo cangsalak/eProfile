@@ -1,22 +1,24 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import toast from 'react-hot-toast';
+import RoleSettings from '@/components/settings/RoleSettings';
 import DepartmentsManager from '@/components/DepartmentsManager';
 import SystemSettingsForm from '@/components/settings/SystemSettingsForm';
 import BadgeDesignSettings from '@/components/settings/BadgeDesignSettings';
-import DataCategorySettings from '@/components/settings/DataCategorySettings';
 import NotificationSettings from '@/components/settings/NotificationSettings';
+import DataCategorySettings from '@/components/settings/DataCategorySettings';
 import BackupRestoreSettings from '@/components/settings/BackupRestoreSettings';
-import RoleSettings from '@/components/settings/RoleSettings';
-import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState('system');
+  const [activeTab, setActiveTab] = useState<string>('system');
+  const [settings, setSettings] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [settings, setSettings] = useState<any>({});
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('saved');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   // Badge Preview State
   const [previewSide, setPreviewSide] = useState<'front' | 'back'>('front');
 
@@ -30,6 +32,12 @@ export default function SettingsPage() {
       setActiveTab(savedTab);
     }
     fetchSettings();
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
   }, []);
 
   const handleTabChange = (tabId: string) => {
@@ -50,6 +58,47 @@ export default function SettingsPage() {
     }
   };
 
+  // Perform server PUT save with payload
+  const persistSettingsToServer = async (payload: any) => {
+    setAutoSaveStatus('saving');
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        setAutoSaveStatus('saved');
+        if (payload.theme) {
+          document.documentElement.className = payload.theme;
+          localStorage.setItem('theme', payload.theme);
+        }
+      } else {
+        setAutoSaveStatus('idle');
+      }
+    } catch (err) {
+      console.error('Auto-save error:', err);
+      setAutoSaveStatus('idle');
+    }
+  };
+
+  // Auto-save dispatcher for System Settings Form
+  const handleSystemSettingsChange = useCallback((newSettings: any, immediate = false) => {
+    setSettings(newSettings);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    if (immediate) {
+      persistSettingsToServer(newSettings);
+    } else {
+      setAutoSaveStatus('saving');
+      debounceTimerRef.current = setTimeout(() => {
+        persistSettingsToServer(newSettings);
+      }, 500);
+    }
+  }, []);
+
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -59,7 +108,9 @@ export default function SettingsPage() {
       }
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSettings({ ...settings, systemLogo: reader.result as string });
+        const newSettings = { ...settings, systemLogo: reader.result as string };
+        handleSystemSettingsChange(newSettings, true);
+        toast.success('อัปเดตโลโก้ระบบเรียบร้อย');
       };
       reader.readAsDataURL(file);
     }
@@ -103,7 +154,18 @@ export default function SettingsPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked.toString() : e.target.value;
-    setSettings({ ...settings, [e.target.name]: value });
+    const isInstant = e.target.type === 'radio' || e.target.type === 'select-one' || e.target.type === 'color';
+    const newSettings = { ...settings, [e.target.name]: value };
+
+    if (activeTab === 'system') {
+      handleSystemSettingsChange(newSettings, isInstant);
+    } else {
+      setSettings(newSettings);
+    }
+  };
+
+  const handleSetSettingsForSystem = (newSettings: any) => {
+    handleSystemSettingsChange(newSettings, true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -116,17 +178,11 @@ export default function SettingsPage() {
         body: JSON.stringify(settings)
       });
       if (res.ok) {
-        toast.success('บันทึกการตั้งค่าเรียบร้อยแล้ว ระบบกำลังอัปเดต...');
-        // Immediately apply theme
+        toast.success('บันทึกการตั้งค่าเรียบร้อยแล้ว');
         if (settings.theme) {
           document.documentElement.className = settings.theme;
           localStorage.setItem('theme', settings.theme);
         }
-        
-        // Reload to apply global settings like Toast position
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
       } else {
         toast.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
       }
@@ -154,6 +210,8 @@ export default function SettingsPage() {
     { id: 'notifications', name: 'การแจ้งเตือน (LINE & Email)', icon: 'fa-bell' },
     { id: 'maintenance', name: 'บำรุงรักษาระบบ', icon: 'fa-tools' },
   ];
+
+  const showManualSaveButton = activeTab === 'badge' || activeTab === 'notifications' || activeTab === 'dropdowns';
 
   return (
     <div className="pb-16 max-w-7xl mx-auto space-y-6 animate-fade-in font-prompt">
@@ -236,10 +294,11 @@ export default function SettingsPage() {
               {activeTab === 'system' && (
                 <SystemSettingsForm 
                   settings={settings}
-                  setSettings={setSettings}
+                  setSettings={handleSetSettingsForSystem}
                   handleChange={handleChange}
                   handleLogoUpload={handleLogoUpload}
                   fileInputRef={fileInputRef}
+                  autoSaveStatus={autoSaveStatus}
                 />
               )}
 
@@ -276,16 +335,19 @@ export default function SettingsPage() {
                 />
               )}
 
-              <div className="flex justify-end pt-6 border-t border-slate-200 dark:border-slate-800">
-                <button 
-                  type="submit" 
-                  disabled={isSaving} 
-                  className="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-primary-500/20 transition-all flex items-center gap-2"
-                >
-                  {isSaving ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <i className="fa-solid fa-save"></i>}
-                  <span>บันทึกการตั้งค่า</span>
-                </button>
-              </div>
+              {/* Show manual Save Button only for tabs that need explicit form submission */}
+              {showManualSaveButton && (
+                <div className="flex justify-end pt-6 border-t border-slate-200 dark:border-slate-800">
+                  <button 
+                    type="submit" 
+                    disabled={isSaving} 
+                    className="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-primary-500/20 transition-all flex items-center gap-2"
+                  >
+                    {isSaving ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <i className="fa-solid fa-save"></i>}
+                    <span>บันทึกการตั้งค่า</span>
+                  </button>
+                </div>
+              )}
 
             </form>
           )}
