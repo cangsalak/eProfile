@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import { DEVELOPER_CREDIT } from '@/lib/developer-credit';
 import { QR_PAYMENT_B64 } from '@/lib/qr-payment-data';
+import { VERSION_LABEL, GIT_COMMIT, BUILD_INFO } from '@/lib/version';
 
 export default function DeveloperCreditFooter() {
   const [showQR, setShowQR] = useState(false);
@@ -115,10 +116,18 @@ export default function DeveloperCreditFooter() {
       >
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] text-slate-400 dark:text-slate-500">
 
-          {/* Left */}
-          <div className="flex items-center gap-1.5">
+          {/* Left: System name + version */}
+          <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
             <span className="font-semibold text-slate-500 dark:text-slate-400">eProfile System</span>
-            <span>•</span>
+            {/* Version badge — auto-read from package.json */}
+            <span
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40 cursor-default select-none"
+              title={`Build: ${BUILD_INFO.builtAt}\nCommit: ${GIT_COMMIT}\nBranch: ${process.env.NEXT_PUBLIC_GIT_BRANCH ?? 'unknown'}\nEnv: ${BUILD_INFO.environment}`}
+            >
+              <i className="fa-solid fa-tag text-[8px]" />
+              {VERSION_LABEL}
+            </span>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
             <span>ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์</span>
           </div>
 
