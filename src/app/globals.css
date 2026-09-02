@@ -240,11 +240,49 @@ html.dark .glass-card {
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 0 16px rgba(var(--color-primary-500), 0.15);
 }
 
+/* ─── Typography Dynamic Selection ────────────────────────────────────────── */
+html[data-font="prompt"],
+html[data-font="prompt"] body,
+html[data-font="prompt"] input,
+html[data-font="prompt"] button,
+html[data-font="prompt"] select,
+html[data-font="prompt"] textarea {
+  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="sarabun"],
+html[data-font="sarabun"] body,
+html[data-font="sarabun"] input,
+html[data-font="sarabun"] button,
+html[data-font="sarabun"] select,
+html[data-font="sarabun"] textarea {
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="kanit"],
+html[data-font="kanit"] body,
+html[data-font="kanit"] input,
+html[data-font="kanit"] button,
+html[data-font="kanit"] select,
+html[data-font="kanit"] textarea {
+  font-family: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="niramit"],
+html[data-font="niramit"] body,
+html[data-font="niramit"] input,
+html[data-font="niramit"] button,
+html[data-font="niramit"] select,
+html[data-font="niramit"] textarea {
+  font-family: 'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
 /* ─── Border Radius Themes ────────────────────────────────────────────────── */
 html[data-border="sharp"] button,
 html[data-border="sharp"] input,
 html[data-border="sharp"] select,
 html[data-border="sharp"] textarea,
+html[data-border="sharp"] [role="tab"],
 html[data-border="sharp"] .rounded:not(.cr80-card):not(.cr80-card *), 
 html[data-border="sharp"] .rounded-md:not(.cr80-card):not(.cr80-card *), 
 html[data-border="sharp"] .rounded-lg:not(.cr80-card):not(.cr80-card *), 
@@ -257,6 +295,13 @@ html[data-border="sharp"] .glass-card,
 html[data-border="sharp"] .ui-card,
 html[data-border="sharp"] .ui-card-glass {
   border-radius: 0px !important;
+}
+
+html[data-border="rounded"] button,
+html[data-border="rounded"] input,
+html[data-border="rounded"] select,
+html[data-border="rounded"] textarea {
+  border-radius: 0.75rem !important;
 }
 
 html[data-border="pill"] button,
@@ -273,6 +318,38 @@ html[data-border="pill"] .glass-card,
 html[data-border="pill"] .ui-card,
 html[data-border="pill"] .ui-card-glass {
   border-radius: 32px !important;
+}
+
+/* ─── Surface Styles ──────────────────────────────────────────────────────── */
+html[data-surface="flat"] .rounded-3xl,
+html[data-surface="flat"] .rounded-2xl,
+html[data-surface="flat"] .ui-card,
+html[data-surface="flat"] .glass-card {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-surface="shadow"] .rounded-3xl,
+html[data-surface="shadow"] .rounded-2xl,
+html[data-surface="shadow"] .ui-card,
+html[data-surface="shadow"] .glass-card {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-surface="glass"] .rounded-3xl,
+html[data-surface="glass"] .rounded-2xl,
+html[data-surface="glass"] .ui-card,
+html[data-surface="glass"] .glass-card {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html.dark[data-surface="glass"] .rounded-3xl,
+html.dark[data-surface="glass"] .rounded-2xl,
+html.dark[data-surface="glass"] .ui-card,
+html.dark[data-surface="glass"] .glass-card {
+  background-color: rgba(15, 23, 42, 0.75) !important;
 }
 
 /* Layout Density */

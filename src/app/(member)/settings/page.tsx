@@ -10,6 +10,8 @@ import NotificationSettings from '@/components/settings/NotificationSettings';
 import DataCategorySettings from '@/components/settings/DataCategorySettings';
 import BackupRestoreSettings from '@/components/settings/BackupRestoreSettings';
 
+import { applyThemeSettings } from '@/lib/theme-manager';
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<string>('system');
   const [settings, setSettings] = useState<any>({});
@@ -50,6 +52,7 @@ export default function SettingsPage() {
       const res = await fetch('/api/settings');
       const data = await res.json();
       setSettings(data);
+      applyThemeSettings(data);
     } catch (err) {
       console.error('Failed to fetch settings:', err);
       toast.error('ไม่สามารถโหลดการตั้งค่าได้');
@@ -69,10 +72,7 @@ export default function SettingsPage() {
       });
       if (res.ok) {
         setAutoSaveStatus('saved');
-        if (payload.theme) {
-          document.documentElement.className = payload.theme;
-          localStorage.setItem('theme', payload.theme);
-        }
+        applyThemeSettings(payload);
       } else {
         setAutoSaveStatus('idle');
       }
@@ -85,6 +85,9 @@ export default function SettingsPage() {
   // Auto-save dispatcher for System Settings Form
   const handleSystemSettingsChange = useCallback((newSettings: any, immediate = false) => {
     setSettings(newSettings);
+    // Apply immediate visual update in DOM so user sees change in 0ms!
+    applyThemeSettings(newSettings);
+
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
