@@ -23,6 +23,7 @@
 | `SUPER_ADMIN` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `ADMIN` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `HR_MANAGER` | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| `DEPARTMENT_COMMANDER` | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | `COMMANDER` | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | `EDITOR` | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
 | `OFFICER` | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyAuth } from '@/lib/auth';
 import { requirePermission } from '@/lib/auth-guards';
 import { Prisma } from '@prisma/client';
 
@@ -33,6 +32,20 @@ function calculateRemainingDays(endDate: Date | string, targetDate: Date | strin
   return Math.max(0, Math.round((eUtc - tUtc) / (1000 * 60 * 60 * 24)));
 }
 
+/** Calculate calendar days of a leave falling strictly within a specific calendar year */
+function calculateDaysInYear(startDate: Date | string, endDate: Date | string, year: number): number {
+  const s = new Date(startDate);
+  const e = new Date(endDate);
+  const yearStart = new Date(Date.UTC(year, 0, 1, 0, 0, 0, 0));
+  const yearEnd = new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999));
+
+  const effectiveStart = new Date(Math.max(s.getTime(), yearStart.getTime()));
+  const effectiveEnd = new Date(Math.min(e.getTime(), yearEnd.getTime()));
+
+  if (effectiveStart.getTime() > effectiveEnd.getTime()) return 0;
+  return calculateCalendarDays(effectiveStart, effectiveEnd);
+}
+
 /**
  * GET /api/dashboard/command
  *
@@ -47,8 +60,9 @@ export async function GET(req: Request) {
       return permError ?? NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Determine User Scope (Global Viewer vs Scoped Commander)
+    // 2. Determine User Scope (Global Viewer vs Department Commander vs Sub-Department Commander)
     const isGlobalViewer = ['SUPER_ADMIN', 'ADMIN', 'HR_MANAGER'].includes(authUser.role);
+    const isDeptCommander = authUser.role === 'DEPARTMENT_COMMANDER';
 
     // Fetch full profile of the requesting user to know their assigned department/subDepartment
     const userProfile = await prisma.personnel.findUnique({
@@ -59,7 +73,39 @@ export async function GET(req: Request) {
     const userDept = userProfile?.department || '';
     const userSubDept = userProfile?.subDepartment || '';
 
-    // 3. Parse and Validate Query Parameters
+    // 3. Fetch Leave Policy & Leave Types Allowlist from Database (SystemSetting table)
+    let leavePolicy: Record<string, number> = { ...FALLBACK_LEAVE_POLICY };
+    const dbLeavePolicySetting = await prisma.systemSetting.findUnique({
+      where: { key: 'leavePolicy' },
+    });
+    if (dbLeavePolicySetting?.value) {
+      try {
+        const parsed = JSON.parse(dbLeavePolicySetting.value);
+        if (parsed && typeof parsed === 'object') {
+          leavePolicy = { ...FALLBACK_LEAVE_POLICY, ...parsed };
+        }
+      } catch (e) {
+        console.error('Error parsing leavePolicy from DB:', e);
+      }
+    }
+
+    // Allowed Leave Types allowlist
+    let allowedLeaveTypes: string[] = Object.keys(leavePolicy);
+    const dbLeaveTypesSetting = await prisma.systemSetting.findUnique({
+      where: { key: 'leaveTypes' },
+    });
+    if (dbLeaveTypesSetting?.value) {
+      try {
+        const parsed = JSON.parse(dbLeaveTypesSetting.value);
+        if (Array.isArray(parsed)) {
+          allowedLeaveTypes = Array.from(new Set([...allowedLeaveTypes, ...parsed]));
+        }
+      } catch (e) {
+        console.error('Error parsing leaveTypes from DB:', e);
+      }
+    }
+
+    // 4. Parse and Strictly Validate Query Parameters (P2)
     const { searchParams } = new URL(req.url);
     const dateParam = searchParams.get('date');
     const yearParam = searchParams.get('year');
@@ -77,13 +123,46 @@ export async function GET(req: Request) {
     const leaveSummarySearch = searchParams.get('leaveSummarySearch')?.trim() || '';
     const leaveSummaryType = searchParams.get('leaveSummaryType')?.trim() || 'ลาพักผ่อน';
 
-    // Parse Target Date (default to today)
+    // Strict Date Validation
     let targetDate = new Date();
     if (dateParam) {
-      const parsed = new Date(dateParam);
-      if (!isNaN(parsed.getTime())) {
-        targetDate = parsed;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+        return NextResponse.json(
+          { error: 'รูปแบบวันที่ไม่ถูกต้อง ต้องอยู่ในรูปแบบ YYYY-MM-DD เช่น 2026-09-02' },
+          { status: 400 }
+        );
       }
+      const parsed = new Date(dateParam);
+      if (isNaN(parsed.getTime())) {
+        return NextResponse.json(
+          { error: 'วันที่ที่ระบุไม่ถูกต้อง' },
+          { status: 400 }
+        );
+      }
+      targetDate = parsed;
+    }
+
+    // Strict Year Validation
+    let targetYear = targetDate.getFullYear();
+    if (yearParam) {
+      const parsedYear = parseInt(yearParam, 10);
+      if (isNaN(parsedYear) || parsedYear < 2000 || parsedYear > 2100) {
+        return NextResponse.json(
+          { error: 'รูปแบบปีไม่ถูกต้อง ต้องเป็นตัวเลข พ.ศ. หรือ ค.ศ. ระหว่าง 2000 - 2100' },
+          { status: 400 }
+        );
+      }
+      targetYear = parsedYear;
+    }
+
+    // Strict Leave Type Validation
+    if (leaveSummaryType !== 'ALL' && !allowedLeaveTypes.includes(leaveSummaryType)) {
+      return NextResponse.json(
+        {
+          error: `ประเภทการลา '${leaveSummaryType}' ไม่ถูกต้องในระบบ ต้องเป็นหนึ่งใน [${allowedLeaveTypes.join(', ')}] หรือ 'ALL'`,
+        },
+        { status: 400 }
+      );
     }
 
     // Start & End of Target Date (UTC boundary)
@@ -92,18 +171,11 @@ export async function GET(req: Request) {
     const endOfTargetDate = new Date(targetDate);
     endOfTargetDate.setHours(23, 59, 59, 999);
 
-    // Target Year (default to current year)
-    let targetYear = targetDate.getFullYear();
-    if (yearParam) {
-      const parsedYear = parseInt(yearParam, 10);
-      if (!isNaN(parsedYear) && parsedYear >= 2000 && parsedYear <= 2100) {
-        targetYear = parsedYear;
-      }
-    }
-    const yearStartDate = new Date(targetYear, 0, 1, 0, 0, 0, 0);
-    const yearEndDate = new Date(targetYear, 11, 31, 23, 59, 59, 999);
+    // Year boundary (UTC)
+    const yearStartDate = new Date(Date.UTC(targetYear, 0, 1, 0, 0, 0, 0));
+    const yearEndDate = new Date(Date.UTC(targetYear, 11, 31, 23, 59, 59, 999));
 
-    // 4. Construct Strict Personnel WHERE Scope
+    // 5. Construct Strict Personnel WHERE Scope (P1)
     const personnelScopeWhere: Prisma.PersonnelWhereInput = {
       // Exclude system placeholder records (SYSTEM_ALL, SYSTEM_ADMIN)
       id: { notIn: ['ALL', 'ADMIN'] },
@@ -122,34 +194,23 @@ export async function GET(req: Request) {
           personnelScopeWhere.subDepartment = requestedSubDept;
         }
       }
-    } else {
-      // Scoped commander: strictly locked to user's assigned department
+    } else if (isDeptCommander || !userSubDept || userSubDept === '-') {
+      // Department Commander (or commander assigned at whole-department level)
       effectiveDepartment = userDept;
       personnelScopeWhere.department = userDept;
 
-      if (!includeSubDepts && userSubDept && userSubDept !== '-') {
-        effectiveSubDepartment = userSubDept;
-        personnelScopeWhere.subDepartment = userSubDept;
-      } else if (requestedSubDept && requestedSubDept !== 'ALL') {
+      if (!includeSubDepts && requestedSubDept && requestedSubDept !== 'ALL') {
         effectiveSubDepartment = requestedSubDept;
         personnelScopeWhere.subDepartment = requestedSubDept;
       }
-    }
+    } else {
+      // Sub-department Commander (COMMANDER role with assigned subDepartment)
+      // Strictly locked to their subDepartment by default!
+      effectiveDepartment = userDept;
+      personnelScopeWhere.department = userDept;
 
-    // 5. Fetch Leave Policy from Database (SystemSetting table)
-    let leavePolicy: Record<string, number> = { ...FALLBACK_LEAVE_POLICY };
-    const dbLeavePolicySetting = await prisma.systemSetting.findUnique({
-      where: { key: 'leavePolicy' },
-    });
-    if (dbLeavePolicySetting?.value) {
-      try {
-        const parsed = JSON.parse(dbLeavePolicySetting.value);
-        if (parsed && typeof parsed === 'object') {
-          leavePolicy = { ...FALLBACK_LEAVE_POLICY, ...parsed };
-        }
-      } catch (e) {
-        console.error('Error parsing leavePolicy from DB:', e);
-      }
+      effectiveSubDepartment = userSubDept;
+      personnelScopeWhere.subDepartment = userSubDept;
     }
 
     // 6. DB Aggregations: Personnel Readiness & Force Strength
@@ -199,7 +260,7 @@ export async function GET(req: Request) {
       _count: { id: true },
     });
 
-    // f. Distribution by Sub-Department (if specific department is selected)
+    // f. Distribution by Sub-Department
     const subDeptGroups = await prisma.personnel.groupBy({
       by: ['subDepartment'],
       where: personnelScopeWhere,
@@ -293,7 +354,7 @@ export async function GET(req: Request) {
       };
     });
 
-    // 8. Paginated Leave Quota & Balance Summary
+    // 8. Leave Quota & Balance Calculations
     const leaveSummaryPersonnelWhere: Prisma.PersonnelWhereInput = {
       ...personnelScopeWhere,
       ...(leaveSummarySearch
@@ -312,6 +373,67 @@ export async function GET(req: Request) {
       where: leaveSummaryPersonnelWhere,
     });
 
+    const defaultQuotaForType = leavePolicy[leaveSummaryType] ?? (leaveSummaryType === 'ลาพักผ่อน' ? 10 : 45);
+
+    // ── P1 FIX 1: Aggregate totals over ALL personnel in scope (NOT just paginated page) ──
+    const allScopePersonnelWithLeaves = await prisma.personnel.findMany({
+      where: leaveSummaryPersonnelWhere,
+      select: {
+        id: true,
+        leaves: {
+          where: {
+            // P1 FIX 2: Overlapping cross-year date condition
+            startDate: { lte: yearEndDate },
+            endDate: { gte: yearStartDate },
+            ...(leaveSummaryType && leaveSummaryType !== 'ALL' ? { leaveType: leaveSummaryType } : {}),
+            status: { in: ['อนุมัติแล้ว', 'รออนุมัติ'] },
+          },
+          select: {
+            leaveType: true,
+            startDate: true,
+            endDate: true,
+            status: true,
+            totalLeaveDays: true,
+          },
+        },
+      },
+    });
+
+    let totalScopeQuota = 0;
+    let totalScopeUsed = 0;
+    let totalScopePending = 0;
+    let totalScopeRemaining = 0;
+
+    for (const person of allScopePersonnelWithLeaves) {
+      let customQuota: number | null = null;
+      let usedApprovedDays = 0;
+      let pendingDays = 0;
+
+      for (const leave of person.leaves) {
+        // P1 FIX 2: Calculate only the days falling strictly in the selected target year
+        const durInYear = calculateDaysInYear(leave.startDate, leave.endDate, targetYear);
+
+        if (leave.status === 'อนุมัติแล้ว') {
+          usedApprovedDays += durInYear;
+        } else if (leave.status === 'รออนุมัติ') {
+          pendingDays += durInYear;
+        }
+
+        if (leave.leaveType === 'ลาพักผ่อน' && leave.totalLeaveDays !== null && leave.totalLeaveDays !== undefined) {
+          customQuota = leave.totalLeaveDays;
+        }
+      }
+
+      const effectiveQuota = customQuota !== null ? customQuota : defaultQuotaForType;
+      const remainingDays = Math.max(0, effectiveQuota - usedApprovedDays);
+
+      totalScopeQuota += effectiveQuota;
+      totalScopeUsed += usedApprovedDays;
+      totalScopePending += pendingDays;
+      totalScopeRemaining += remainingDays;
+    }
+
+    // ── Paginated items query for the current page only ──
     const leaveSummaryPersonnel = await prisma.personnel.findMany({
       where: leaveSummaryPersonnelWhere,
       select: {
@@ -325,8 +447,8 @@ export async function GET(req: Request) {
         avatarColor: true,
         leaves: {
           where: {
-            startDate: { gte: yearStartDate },
-            endDate: { lte: yearEndDate },
+            startDate: { lte: yearEndDate },
+            endDate: { gte: yearStartDate },
             ...(leaveSummaryType && leaveSummaryType !== 'ALL' ? { leaveType: leaveSummaryType } : {}),
             status: { in: ['อนุมัติแล้ว', 'รออนุมัติ'] },
           },
@@ -337,8 +459,6 @@ export async function GET(req: Request) {
             endDate: true,
             status: true,
             totalLeaveDays: true,
-            thisYearLeaveDays: true,
-            accumulatedLeaveDays: true,
           },
         },
       },
@@ -347,24 +467,20 @@ export async function GET(req: Request) {
       take: leaveSummaryLimit,
     });
 
-    const defaultQuotaForType = leavePolicy[leaveSummaryType] ?? (leaveSummaryType === 'ลาพักผ่อน' ? 10 : 45);
-
     const leaveSummaryList = leaveSummaryPersonnel.map(person => {
       let customQuota: number | null = null;
       let usedApprovedDays = 0;
       let pendingDays = 0;
 
       for (const leave of person.leaves) {
-        // Duration of this leave record
-        const dur = calculateCalendarDays(leave.startDate, leave.endDate);
+        const durInYear = calculateDaysInYear(leave.startDate, leave.endDate, targetYear);
 
         if (leave.status === 'อนุมัติแล้ว') {
-          usedApprovedDays += dur;
+          usedApprovedDays += durInYear;
         } else if (leave.status === 'รออนุมัติ') {
-          pendingDays += dur;
+          pendingDays += durInYear;
         }
 
-        // If person has customized totalLeaveDays on annual leave record
         if (leave.leaveType === 'ลาพักผ่อน' && leave.totalLeaveDays !== null && leave.totalLeaveDays !== undefined) {
           customQuota = leave.totalLeaveDays;
         }
@@ -394,19 +510,6 @@ export async function GET(req: Request) {
         remainingDays,
       };
     });
-
-    // Department-wide total leave quota aggregations
-    let totalScopeQuota = 0;
-    let totalScopeUsed = 0;
-    let totalScopePending = 0;
-    let totalScopeRemaining = 0;
-
-    for (const item of leaveSummaryList) {
-      totalScopeQuota += item.quota;
-      totalScopeUsed += item.usedApprovedDays;
-      totalScopePending += item.pendingDays;
-      totalScopeRemaining += item.remainingDays;
-    }
 
     // 9. Return Unified Dashboard Payload
     return NextResponse.json({

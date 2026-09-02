@@ -52,9 +52,19 @@ export const ROLE_DEFINITIONS = [
     isSystem: true,
   },
   {
+    name:        'DEPARTMENT_COMMANDER',
+    displayName: 'ผู้บังคับบัญชาระดับกอง/สำนัก',
+    description: 'ดูแดชบอร์ดกำลังพลและความพร้อมรบทุกหน่วยย่อยในกอง/สำนัก และอนุมัติใบลา',
+    permissions: [
+      'VIEW_COMMAND_DASHBOARD',
+      'APPROVE_LEAVE',
+    ] as string[],
+    isSystem: true,
+  },
+  {
     name:        'COMMANDER',
-    displayName: 'ผู้บังคับบัญชาหน่วย',
-    description: 'ดูแดชบอร์ดกำลังพลและความพร้อมรบในสังกัด และอนุมัติใบลา',
+    displayName: 'ผู้บังคับบัญชาหน่วยย่อย/แผนก',
+    description: 'ดูแดชบอร์ดกำลังพลและความพร้อมรบเฉพาะหน่วยย่อยในสังกัด และอนุมัติใบลา',
     permissions: [
       'VIEW_COMMAND_DASHBOARD',
       'APPROVE_LEAVE',
