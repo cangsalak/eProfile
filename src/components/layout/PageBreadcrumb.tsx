@@ -3,6 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { Breadcrumbs } from '@/components/tailgrids/core/breadcrumbs';
+import { ALL_SYSTEM_MODULES } from '@/lib/modules/registry';
 
 interface BreadcrumbItem {
   href: string;
@@ -14,263 +15,123 @@ interface PageMeta {
   items: BreadcrumbItem[];
 }
 
+// Static Base Pages (Non-module routes)
+const staticPageMap: Record<string, PageMeta> = {
+  '/': {
+    title: 'หน้าหลัก (Dashboard)',
+    items: [{ href: '/', label: 'Home' }, { href: '/dashboard', label: 'Dashboard' }],
+  },
+  '/dashboard': {
+    title: 'หน้าหลัก (Dashboard)',
+    items: [{ href: '/', label: 'Home' }, { href: '/dashboard', label: 'Dashboard' }],
+  },
+  '/settings': {
+    title: 'ตั้งค่าระบบ',
+    items: [{ href: '/', label: 'Home' }, { href: '/settings', label: 'Settings' }],
+  },
+  '/profile': {
+    title: 'โปรไฟล์ของฉัน',
+    items: [{ href: '/', label: 'Home' }, { href: '/profile', label: 'My Profile' }],
+  },
+  '/notifications': {
+    title: 'การแจ้งเตือนทั้งหมด',
+    items: [{ href: '/', label: 'Home' }, { href: '/notifications', label: 'Notifications' }],
+  },
+  '/about': {
+    title: 'เกี่ยวกับระบบ',
+    items: [{ href: '/', label: 'Home' }, { href: '/about', label: 'About' }],
+  },
+  '/contact': {
+    title: 'ติดต่อเรา',
+    items: [{ href: '/', label: 'Home' }, { href: '/contact', label: 'Contact Us' }],
+  },
+};
+
+/**
+ * Automatically resolves Page Title and Breadcrumbs for any module (Built-in or newly added).
+ * Reads directly from Module Manifests so new modules work with zero configuration.
+ */
 function resolvePageMeta(pathname: string): PageMeta {
-  // Normalize path (remove trailing slashes)
   const path = pathname.replace(/\/+$/, '') || '/';
 
-  // Exact Match Mapping
-  const exactMap: Record<string, PageMeta> = {
-    '/': {
-      title: 'หน้าหลัก (Dashboard)',
-      items: [{ href: '/', label: 'Home' }, { href: '/dashboard', label: 'Dashboard' }],
-    },
-    '/dashboard': {
-      title: 'หน้าหลัก (Dashboard)',
-      items: [{ href: '/', label: 'Home' }, { href: '/dashboard', label: 'Dashboard' }],
-    },
-    '/modules/command-dashboard': {
-      title: 'ศูนย์บัญชาการและรายงานความพร้อม',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/command-dashboard', label: 'Command Dashboard' }],
-    },
-    '/dashboard/command': {
-      title: 'ศูนย์บัญชาการและรายงานความพร้อม',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/command-dashboard', label: 'Command Dashboard' }],
-    },
-    '/modules/personnel': {
-      title: 'ระบบทำเนียบบุคลากร',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/personnel', label: 'Personnel' }],
-    },
-    '/personnel': {
-      title: 'ระบบทำเนียบบุคลากร',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/personnel', label: 'Personnel' }],
-    },
-    '/modules/personnel/directory': {
-      title: 'ทำเนียบบุคลากร (Directory)',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/modules/personnel/directory', label: 'Directory' },
-      ],
-    },
-    '/directory': {
-      title: 'ทำเนียบบุคลากร (Directory)',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/modules/personnel/directory', label: 'Directory' },
-      ],
-    },
-    '/modules/personnel/manage': {
-      title: 'จัดการข้อมูลบุคลากร',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/modules/personnel/manage', label: 'Manage Personnel' },
-      ],
-    },
-    '/manage/personnel': {
-      title: 'จัดการข้อมูลบุคลากร',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/modules/personnel/manage', label: 'Manage Personnel' },
-      ],
-    },
-    '/modules/personnel/roles': {
-      title: 'จัดการบทบาทและสิทธิ์',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/manage/roles', label: 'Roles & Permissions' },
-      ],
-    },
-    '/manage/roles': {
-      title: 'จัดการบทบาทและสิทธิ์',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/manage/roles', label: 'Roles & Permissions' },
-      ],
-    },
-    '/modules/badges': {
-      title: 'พิมพ์บัตรประจำตัว',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: '/modules/badges', label: 'ID Badges' },
-      ],
-    },
-    '/modules/leaves': {
-      title: 'ระบบการลา',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/leaves', label: 'Leave Management' }],
-    },
-    '/leaves': {
-      title: 'ระบบการลา',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/leaves', label: 'Leave Management' }],
-    },
-    '/leave': {
-      title: 'ระบบการลา',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/leaves', label: 'Leave Management' }],
-    },
-    '/modules/leaves/approvals': {
-      title: 'อนุมัติการลา (Leave Approvals)',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/leaves', label: 'Leave Management' },
-        { href: '/modules/leaves/approvals', label: 'Approvals' },
-      ],
-    },
-    '/manage/leave-approvals': {
-      title: 'อนุมัติการลา (Leave Approvals)',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/leaves', label: 'Leave Management' },
-        { href: '/modules/leaves/approvals', label: 'Approvals' },
-      ],
-    },
-    '/modules/vehicles': {
-      title: 'ระบบยานพาหนะ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/vehicles', label: 'Vehicle Management' }],
-    },
-    '/vehicles': {
-      title: 'ระบบยานพาหนะ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/vehicles', label: 'Vehicle Management' }],
-    },
-    '/modules/calendar': {
-      title: 'ปฏิทินปฏิบัติงาน',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/calendar', label: 'Duty Calendar' }],
-    },
-    '/calendar': {
-      title: 'ปฏิทินปฏิบัติงาน',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/calendar', label: 'Duty Calendar' }],
-    },
-    '/modules/news': {
-      title: 'ข่าวสารและประกาศ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/news', label: 'News & Announcements' }],
-    },
-    '/news': {
-      title: 'ข่าวสารและประกาศ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/news', label: 'News & Announcements' }],
-    },
-    '/manage/news/settings': {
-      title: 'ตั้งค่าหมวดหมู่ข่าวสาร',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/news', label: 'News' },
-        { href: '/manage/news/settings', label: 'Category Settings' },
-      ],
-    },
-    '/modules/contacts': {
-      title: 'จัดการข้อมูลติดต่อ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/contacts', label: 'Contact Management' }],
-    },
-    '/contacts': {
-      title: 'จัดการข้อมูลติดต่อ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/contacts', label: 'Contact Management' }],
-    },
-    '/contact': {
-      title: 'จัดการข้อมูลติดต่อ',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/contacts', label: 'Contact Management' }],
-    },
-    '/modules/system-inspector': {
-      title: 'ระบบตรวจสอบความปลอดภัย (System Inspector)',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/system-inspector', label: 'System Inspector' }],
-    },
-    '/manage/inspector': {
-      title: 'ระบบตรวจสอบความปลอดภัย (System Inspector)',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/system-inspector', label: 'System Inspector' }],
-    },
-    '/manage/inspector/categories': {
-      title: 'จัดการหมวดหมู่การตรวจสอบความปลอดภัย',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/system-inspector', label: 'System Inspector' },
-        { href: '/manage/inspector/categories', label: 'Categories' },
-      ],
-    },
-    '/modules/menus': {
-      title: 'จัดการเมนูและแถบนำทาง',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/menus', label: 'Menu Manager' }],
-    },
-    '/manage/menus': {
-      title: 'จัดการเมนูและแถบนำทาง',
-      items: [{ href: '/', label: 'Home' }, { href: '/modules/menus', label: 'Menu Manager' }],
-    },
-    '/modules/theme': {
-      title: 'ตั้งค่าการแสดงผลและธีม',
-      items: [{ href: '/', label: 'Home' }, { href: '/manage/theme', label: 'Theme Settings' }],
-    },
-    '/manage/theme': {
-      title: 'ตั้งค่าการแสดงผลและธีม',
-      items: [{ href: '/', label: 'Home' }, { href: '/manage/theme', label: 'Theme Settings' }],
-    },
-    '/modules/backup': {
-      title: 'สำรองและฟื้นฟูข้อมูล',
-      items: [{ href: '/', label: 'Home' }, { href: '/manage/backup', label: 'Backup & Restore' }],
-    },
-    '/manage/backup': {
-      title: 'สำรองและฟื้นฟูข้อมูล',
-      items: [{ href: '/', label: 'Home' }, { href: '/manage/backup', label: 'Backup & Restore' }],
-    },
-    '/modules/module-manager': {
-      title: 'จัดการโมดูลส่วนเสริม',
-      items: [{ href: '/', label: 'Home' }, { href: '/manage/modules', label: 'Module Manager' }],
-    },
-    '/manage/modules': {
-      title: 'จัดการโมดูลส่วนเสริม',
-      items: [{ href: '/', label: 'Home' }, { href: '/manage/modules', label: 'Module Manager' }],
-    },
-    '/settings': {
-      title: 'ตั้งค่าระบบ',
-      items: [{ href: '/', label: 'Home' }, { href: '/settings', label: 'Settings' }],
-    },
-    '/profile': {
-      title: 'โปรไฟล์ของฉัน',
-      items: [{ href: '/', label: 'Home' }, { href: '/profile', label: 'My Profile' }],
-    },
-    '/notifications': {
-      title: 'การแจ้งเตือนทั้งหมด',
-      items: [{ href: '/', label: 'Home' }, { href: '/notifications', label: 'Notifications' }],
-    },
-    '/about': {
-      title: 'เกี่ยวกับระบบ',
-      items: [{ href: '/', label: 'Home' }, { href: '/about', label: 'About' }],
-    },
-  };
-
-  if (exactMap[path]) {
-    return exactMap[path];
+  // 1. Static base pages lookup
+  if (staticPageMap[path]) {
+    return staticPageMap[path];
   }
 
-  // Dynamic prefix matching
-  if (path.startsWith('/news/')) {
-    return {
-      title: 'รายละเอียดข่าวสาร',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/news', label: 'News' },
-        { href: path, label: 'News Detail' },
-      ],
-    };
+  // 2. Search across ALL registered Module Manifests dynamically
+  for (const mod of ALL_SYSTEM_MODULES) {
+    const modBaseUrl = `/modules/${mod.id}`;
+    const modName = mod.name;
+    const modNameEn = mod.nameEn || mod.name;
+
+    // A. Exact match with module base URL
+    if (path === modBaseUrl) {
+      return {
+        title: modName,
+        items: [{ href: '/', label: 'Home' }, { href: modBaseUrl, label: modNameEn }],
+      };
+    }
+
+    // B. Match menus or subItems defined in the manifest
+    for (const menu of mod.menus) {
+      if (menu.path === path) {
+        return {
+          title: menu.title,
+          items: [{ href: '/', label: 'Home' }, { href: modBaseUrl, label: modNameEn }, { href: path, label: menu.title }],
+        };
+      }
+
+      if (menu.subItems) {
+        for (const sub of menu.subItems) {
+          if (sub.path === path) {
+            return {
+              title: sub.name,
+              items: [
+                { href: '/', label: 'Home' },
+                { href: modBaseUrl, label: modNameEn },
+                { href: menu.path, label: menu.title },
+                { href: sub.path, label: sub.name },
+              ],
+            };
+          }
+        }
+      }
+    }
+
+    // C. Check Legacy Routes mapping in the manifest
+    if (mod.legacyRoutes) {
+      for (const [legacyPath, targetPath] of Object.entries(mod.legacyRoutes)) {
+        if (path === legacyPath || path.startsWith(`${legacyPath}/`)) {
+          return resolvePageMeta(targetPath);
+        }
+      }
+    }
+
+    // D. Path is within this module (/modules/[mod.id]/[...slug])
+    if (path.startsWith(`${modBaseUrl}/`)) {
+      const subSlug = path.slice(modBaseUrl.length + 1);
+      const subSegments = subSlug.split('/').filter(Boolean);
+      const lastSegment = subSegments[subSegments.length - 1];
+      const formattedSlug = lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
+
+      return {
+        title: `${modName} (${formattedSlug})`,
+        items: [
+          { href: '/', label: 'Home' },
+          { href: modBaseUrl, label: modNameEn },
+          { href: path, label: formattedSlug },
+        ],
+      };
+    }
   }
 
-  if (path.startsWith('/personnel/')) {
-    return {
-      title: 'รายละเอียดข้อมูลบุคลากร',
-      items: [
-        { href: '/', label: 'Home' },
-        { href: '/modules/personnel', label: 'Personnel' },
-        { href: path, label: 'Personnel Detail' },
-      ],
-    };
-  }
-
-  // Fallback parser: build from path segments
+  // 3. Fallback Auto-Parser for any dynamic URL or unlisted custom page
   const segments = path.split('/').filter(Boolean);
   const items: BreadcrumbItem[] = [{ href: '/', label: 'Home' }];
 
   let accumulated = '';
-  segments.forEach((seg, idx) => {
+  segments.forEach((seg) => {
     accumulated += `/${seg}`;
     const formatted = seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ');
     items.push({
