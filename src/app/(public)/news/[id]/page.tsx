@@ -54,8 +54,8 @@ export default async function NewsDetailPage({ params }: NewsDetailProps) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 md:-mt-32 relative z-10">
         <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-8 md:p-12 border border-slate-100 dark:border-slate-800">
           <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-            <span className="bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 px-3 py-1 rounded-full font-semibold">
-              ข่าวทั่วไป
+            <span className="bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 px-3.5 py-1 rounded-full font-bold text-xs border border-primary-200 dark:border-primary-800">
+              {post.category || 'ข่าวทั่วไป'}
             </span>
             <span className="flex items-center gap-2">
               <i className="fa-regular fa-calendar"></i>
@@ -70,13 +70,13 @@ export default async function NewsDetailPage({ params }: NewsDetailProps) {
           <div className="flex items-center gap-4 pb-8 border-b border-slate-100 dark:border-slate-800 mb-8">
             <div 
               className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl"
-              style={{ backgroundColor: post.author.avatarColor || '#3b82f6' }}
+              style={{ backgroundColor: post.author?.avatarColor || '#3b82f6' }}
             >
-              {post.author.firstName?.[0] || 'A'}
+              {post.author?.firstName?.[0] || 'A'}
             </div>
             <div>
               <p className="font-semibold text-slate-900 dark:text-white">
-                {post.author.firstName} {post.author.lastName}
+                {post.author ? `${post.author.firstName} ${post.author.lastName}` : 'ผู้ดูแลระบบ'}
               </p>
               <p className="text-xs text-slate-500">ผู้เขียน</p>
             </div>

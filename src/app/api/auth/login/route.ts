@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     // Zod validation
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: (parsed.error as any).errors[0].message }, { status: 400 });
+      return NextResponse.json({ error: parsed.error.issues[0]?.message || 'ข้อมูลเข้าสู่ระบบไม่ถูกต้อง' }, { status: 400 });
     }
 
     const { username, password } = parsed.data;

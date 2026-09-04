@@ -1,7 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { verifyAuth } from '@/lib/auth';
 
-export default function PublicLandingPage() {
+export default async function PublicLandingPage() {
+  const user = await verifyAuth();
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -16,7 +19,7 @@ export default function PublicLandingPage() {
           
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-8 animate-fade-in-up animation-delay-100">
             ยกระดับการบริหาร <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600 dark:from-primary-400 dark:to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-300">
               ทรัพยากรบุคคล
             </span>
           </h1>
@@ -26,18 +29,31 @@ export default function PublicLandingPage() {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-300">
-            <Link 
-              href="/login" 
-              className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold shadow-lg shadow-primary-600/30 transition-all hover:-translate-y-1"
-            >
-              เข้าสู่ระบบสมาชิก
-            </Link>
-            <Link 
-              href="/register" 
-              className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl font-bold transition-all hover:-translate-y-1"
-            >
-              เริ่มต้นใช้งานฟรี
-            </Link>
+            {user ? (
+              <Link 
+                href="/dashboard" 
+                className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold shadow-lg shadow-primary-600/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2.5"
+              >
+                <i className="fa-solid fa-gauge"></i>
+                <span>เข้าสู่ระบบจัดการ (Dashboard)</span>
+                <i className="fa-solid fa-arrow-right text-xs"></i>
+              </Link>
+            ) : (
+              <>
+                <Link 
+                  href="/login" 
+                  className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold shadow-lg shadow-primary-600/30 transition-all hover:-translate-y-1"
+                >
+                  เข้าสู่ระบบสมาชิก
+                </Link>
+                <Link 
+                  href="/register" 
+                  className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl font-bold transition-all hover:-translate-y-1"
+                >
+                  เริ่มต้นใช้งานฟรี
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -52,45 +68,29 @@ export default function PublicLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+              <div className="w-14 h-14 bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                 <i className="fa-solid fa-users"></i>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">จัดการข้อมูลบุคลากร</h3>
               <p className="text-slate-600 dark:text-slate-400">จัดเก็บข้อมูลประวัติอย่างเป็นระบบ ค้นหาง่าย สร้างบัตรประจำตัวพนักงานได้ทันที</p>
             </div>
-            
+
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+              <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                 <i className="fa-solid fa-calendar-check"></i>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ระบบการลาออนไลน์</h3>
-              <p className="text-slate-600 dark:text-slate-400">ยื่นใบลา ตรวจสอบสถานะ และอนุมัติการลาได้ทุกที่ทุกเวลา พร้อมสรุปวันลาคงเหลือ</p>
+              <p className="text-slate-600 dark:text-slate-400">ยื่นใบลาและอนุมัติผ่านระบบได้ทุกที่ พร้อมพิมพ์ใบลาตามแบบฟอร์มราชการ</p>
             </div>
 
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                <i className="fa-solid fa-car"></i>
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                <i className="fa-solid fa-shield-halved"></i>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ฐานข้อมูลยานพาหนะ</h3>
-              <p className="text-slate-600 dark:text-slate-400">บันทึกข้อมูลรถยนต์และจักรยานยนต์ของบุคลากร เพื่อความปลอดภัยและจัดระเบียบพื้นที่จอดรถ</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ความปลอดภัยระดับสูง</h3>
+              <p className="text-slate-600 dark:text-slate-400">เข้ารหัสข้อมูลตามมาตรฐานความปลอดภัย พร้อมระบบกำหนดสิทธิ์การเข้าถึงแบบละเอียด</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-primary-600 dark:bg-primary-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">พร้อมที่จะเปลี่ยนผ่านองค์กรของคุณหรือยัง?</h2>
-          <p className="text-primary-100 text-lg mb-10">
-            เข้าร่วมกับองค์กรชั้นนำที่เลือกใช้ eProfile ในการบริหารงานทรัพยากรบุคคล
-          </p>
-          <Link 
-            href="/register" 
-            className="inline-block px-8 py-4 bg-white text-primary-700 hover:bg-slate-50 rounded-2xl font-bold shadow-xl transition-transform hover:-translate-y-1"
-          >
-            สมัครใช้งานวันนี้
-          </Link>
         </div>
       </section>
     </div>

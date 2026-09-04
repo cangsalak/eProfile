@@ -9,17 +9,32 @@ export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [systemName, setSystemName] = useState('eProfile');
 
   useEffect(() => {
+    // If already authenticated via HttpOnly cookie, redirect to dashboard
+    fetch('/api/auth/me')
+      .then(res => {
+        if (res.ok) return res.json();
+        return null;
+      })
+      .then(data => {
+        if (data?.user) {
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
+          router.replace('/dashboard');
+        }
+      })
+      .catch(() => {});
+
     fetch('/api/settings').then(res => res.json()).then(data => {
       if (data.systemName) setSystemName(data.systemName);
       if (data.isInstalled === 'false') {
         router.push('/install');
       }
     }).catch(e => console.error(e));
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,17 +76,18 @@ export default function LoginPage() {
       </div>
 
       <div className="bg-white dark:bg-slate-800 py-8 px-4 shadow-xl shadow-slate-200/20 dark:shadow-none sm:rounded-2xl sm:px-10 border border-slate-100 dark:border-slate-700">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit} autoComplete="off">
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               Username หรือ รหัสประจำตัว
             </label>
             <input
               type="text"
+              autoComplete="off"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
+              className="form-control"
             />
           </div>
 
@@ -84,13 +100,24 @@ export default function LoginPage() {
                 ลืมรหัสผ่าน?
               </Link>
             </div>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-control pr-10"
+              />
+              <button
+                type="button"
+                aria-label={showPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
+              >
+                <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'} text-sm`}></i>
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center">
@@ -108,7 +135,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex justify-center mt-6 py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-70"
+            className="w-full ui-btn-primary py-3"
           >
             {isLoading ? (
               <><i className="fa-solid fa-circle-notch fa-spin mr-2 mt-0.5"></i> กำลังตรวจสอบ...</>

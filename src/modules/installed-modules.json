@@ -1,0 +1,16 @@
+[
+  {
+    "id": "test-slip",
+    "name": "Test Slip",
+    "description": "",
+    "version": "1.0.0",
+    "icon": "fa-box",
+    "category": "tools",
+    "isCore": false,
+    "defaultEnabled": true,
+    "menus": [],
+    "permissions": [],
+    "installedAt": "2026-09-03T04:47:21.178Z",
+    "installedBy": "cmtig1y5m0006ssnbh8o6hg83"
+  }
+]

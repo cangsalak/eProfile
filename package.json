@@ -1,17 +1,19 @@
 {
   "name": "eprofile-system",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "prisma generate && prisma db push && next build",
+    "build": "prisma generate && next build",
     "start": "next start -p 3000",
     "lint": "next lint",
-    "test": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' tests/run-all.ts",
+    "test": "ts-node -r tsconfig-paths/register --compiler-options '{\"module\":\"CommonJS\"}' tests/run-all.ts",
     "version:check": "node scripts/check-version.mjs",
     "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
     "prisma:push": "prisma db push",
-    "prisma:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "prisma:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
+    "prisma:seed-permissions": "npx tsx prisma/seed-permissions.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

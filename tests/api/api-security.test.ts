@@ -179,20 +179,28 @@ export async function runApiSecurityTests() {
 
   // 4. API test: Backup & Restore Endpoint Protection
   {
-    // Backup with admin token
-    const backupRes = await fetch(`${BASE_URL}/api/backup`, {
+    // 4a. Universal JSON Backup with admin token
+    const jsonBackupRes = await fetch(`${BASE_URL}/api/backup?format=json`, {
       headers: { 'Cookie': `auth_token=${adminToken}` },
     });
-    assert.strictEqual(backupRes.status, 200, 'Admin backup request should return 200');
-    const buffer = Buffer.from(await backupRes.arrayBuffer());
+    assert.strictEqual(jsonBackupRes.status, 200, 'Admin universal backup request should return 200');
+    const jsonBackupData = await jsonBackupRes.json();
+    assert.strictEqual(jsonBackupData.app, 'eProfile');
+    assert.ok(jsonBackupData.data.personnel, 'Universal backup must contain personnel data');
+
+    // 4b. Native DB backup with admin token
+    const dbBackupRes = await fetch(`${BASE_URL}/api/backup?format=db`, {
+      headers: { 'Cookie': `auth_token=${adminToken}` },
+    });
+    assert.strictEqual(dbBackupRes.status, 200, 'Admin db backup request should return 200');
+    const buffer = Buffer.from(await dbBackupRes.arrayBuffer());
     assert.ok(buffer.length > 0, 'Backup file should not be empty');
-    // Check SQLite header magic bytes
     const magic = buffer.slice(0, 16).toString('binary');
     assert.strictEqual(magic, 'SQLite format 3\0', 'Backup must be a valid SQLite database');
 
-    // Restore rejection of invalid file
+    // 4c. Restore rejection of invalid file
     const formData = new FormData();
-    const fakeFile = new Blob(['not a sqlite db content'], { type: 'application/octet-stream' });
+    const fakeFile = new Blob(['not a valid db or json content'], { type: 'application/octet-stream' });
     formData.append('file', fakeFile, 'fake.db');
 
     const restoreRes = await fetch(`${BASE_URL}/api/restore`, {
@@ -203,7 +211,7 @@ export async function runApiSecurityTests() {
     assert.strictEqual(restoreRes.status, 400, 'Restore with fake DB file must return 400');
     const restoreData = await restoreRes.json();
     assert.ok(restoreData.error, 'Error message should be returned for fake DB');
-    console.log('✔ Backup generation & Restore integrity checks passed');
+    console.log('✔ Backup generation (JSON + Native) & Restore integrity checks passed');
   }
 }
 

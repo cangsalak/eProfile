@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { sendLineNotify } from '../../../../lib/notifications';
-import { verifyAuth } from '@/lib/auth';
+import { sendLineNotify } from '@/lib/notifications';
 import { requireAuth, requirePermission } from '@/lib/auth-guards';
+import { apiError, apiSuccess } from '@/lib/api-response';
 import { isValidId } from '@/lib/validate-utils';
 import { passwordPolicySchema } from '@/lib/validations';
 
@@ -12,7 +12,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    if (!isValidId(params.id)) return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+    if (!isValidId(params.id)) return apiError('Invalid ID', 400);
     
     const { error: authError } = await requireAuth(request);
     if (authError) return authError;
@@ -22,14 +22,13 @@ export async function GET(
     });
     
     if (!person) {
-      return NextResponse.json({ error: 'Personnel not found' }, { status: 404 });
+      return apiError('Personnel not found', 404);
     }
 
     const { password, ...personWithoutPassword } = person;
-    return NextResponse.json(personWithoutPassword);
+    return apiSuccess(personWithoutPassword);
   } catch (error) {
-    console.error('Error fetching personnel:', error);
-    return NextResponse.json({ error: 'Failed to fetch personnel' }, { status: 500 });
+    return apiError('Failed to fetch personnel', 500, error);
   }
 }
 
@@ -38,10 +37,10 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    if (!isValidId(params.id)) return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+    if (!isValidId(params.id)) return apiError('Invalid ID', 400);
     // Auth MUST happen before any DB mutation
-    const authUser = await verifyAuth(request);
-    if (!authUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { user: authUser, error: reqAuthErr } = await requireAuth(request);
+    if (reqAuthErr || !authUser) return reqAuthErr || apiError('Unauthorized', 401);
     
     // Allow editing own profile, otherwise require MANAGE_PERSONNEL
     if (authUser.id !== params.id) {
@@ -56,7 +55,7 @@ export async function PUT(
     if (body.password) {
       const pwCheck = passwordPolicySchema.safeParse(body.password);
       if (!pwCheck.success) {
-        return NextResponse.json({ error: pwCheck.error.issues[0].message }, { status: 400 });
+        return apiError(pwCheck.error.issues[0].message, 400);
       }
       body.password = await bcrypt.hash(body.password, 10);
       body.mustChangePassword = false;
@@ -105,15 +104,16 @@ export async function PUT(
       data: safeData,
     });
     
-    await sendLineNotify(`✏️ มีการแก้ไขข้อมูลบุคลากร: ${updated.prefix}${updated.firstName} ${updated.lastName}`);
-    
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
+
     await prisma.auditLog.create({
       data: {
         personnelId: authUser.id,
         action: 'PERSONNEL_UPDATED',
         entity: 'Personnel',
         entityId: updated.id,
-        details: JSON.stringify({ name: `${updated.firstName} ${updated.lastName}` })
+        details: JSON.stringify({ name: `${updated.firstName} ${updated.lastName}` }),
+        ipAddress: clientIp,
       }
     });
 
@@ -124,16 +124,16 @@ export async function PUT(
           action: 'PASSWORD_CHANGED',
           entity: 'Personnel',
           entityId: updated.id,
-          details: 'User password was changed'
+          details: 'User password was changed',
+          ipAddress: clientIp,
         }
       });
     }
 
     const { password: _, ...updatedWithoutPassword } = updated;
-    return NextResponse.json(updatedWithoutPassword);
+    return apiSuccess(updatedWithoutPassword);
   } catch (error) {
-    console.error('Error updating personnel:', error);
-    return NextResponse.json({ error: 'Failed to update personnel' }, { status: 500 });
+    return apiError('Failed to update personnel', 500, error);
   }
 }
 
@@ -142,15 +142,17 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!isValidId(params.id)) return apiError('Invalid ID', 400);
     // Auth MUST happen before any DB mutation
-    const authUser = await verifyAuth(request);
-    if (!authUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { user: authUser, error: reqAuthErr } = await requireAuth(request);
+    if (reqAuthErr || !authUser) return reqAuthErr || apiError('Unauthorized', 401);
     
     const { error: authError } = await requirePermission(request, 'MANAGE_PERSONNEL');
     if (authError) return authError;
 
     const person = await prisma.personnel.findUnique({ where: { id: params.id } });
     if (person) {
+      const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
       await prisma.personnel.delete({ where: { id: params.id } });
       await sendLineNotify(`🗑️ ข้อมูลบุคลากรถูกลบออกจากระบบ: ${person.prefix}${person.firstName} ${person.lastName}`);
       await prisma.auditLog.create({
@@ -159,13 +161,14 @@ export async function DELETE(
           action: 'PERSONNEL_DELETED',
           entity: 'Personnel',
           entityId: person.id,
-          details: JSON.stringify({ name: `${person.firstName} ${person.lastName}` })
+          details: JSON.stringify({ name: `${person.firstName} ${person.lastName}` }),
+          ipAddress: clientIp,
         }
       });
     }
-    return NextResponse.json({ success: true });
+    return apiSuccess({ success: true });
   } catch (error) {
-    console.error('Error deleting personnel:', error);
-    return NextResponse.json({ error: 'Failed to delete personnel' }, { status: 500 });
+    return apiError('Failed to delete personnel', 500, error);
   }
 }
+

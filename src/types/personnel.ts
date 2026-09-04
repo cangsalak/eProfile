@@ -41,6 +41,13 @@ export interface Personnel {
   profileTheme?: string | null;
   username?: string;
   password?: string;
+  currentLeave?: {
+    id: string;
+    leaveType: string;
+    startDate: string | Date;
+    endDate: string | Date;
+    status: string;
+  } | null;
 }
 
 export interface Vehicle {

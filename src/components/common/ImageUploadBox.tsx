@@ -15,32 +15,32 @@ export default function ImageUploadBox({ label, imageUrl, onChange, onRemove }: 
   const [isWebcamOpen, setIsWebcamOpen] = useState(false);
   const webcamRef = useRef<Webcam>(null);
 
-  const processImage = (src: string) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800;
-        const scaleSize = MAX_WIDTH / img.width;
-        
-        let targetWidth = img.width;
-        let targetHeight = img.height;
-        
-        if (img.width > MAX_WIDTH) {
-          targetWidth = MAX_WIDTH;
-          targetHeight = img.height * scaleSize;
-        }
+  const processImage = useCallback((src: string) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 800;
+      const scaleSize = MAX_WIDTH / img.width;
+      
+      let targetWidth = img.width;
+      let targetHeight = img.height;
+      
+      if (img.width > MAX_WIDTH) {
+        targetWidth = MAX_WIDTH;
+        targetHeight = img.height * scaleSize;
+      }
 
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
-        const base64 = canvas.toDataURL('image/jpeg', 0.7);
-        onChange(base64);
-        setIsWebcamOpen(false);
-      };
-      img.src = src;
-  };
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      const base64 = canvas.toDataURL('image/jpeg', 0.7);
+      onChange(base64);
+      setIsWebcamOpen(false);
+    };
+    img.src = src;
+  }, [onChange]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,9 +56,9 @@ export default function ImageUploadBox({ label, imageUrl, onChange, onRemove }: 
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
-        processImage(imageSrc);
+      processImage(imageSrc);
     }
-  }, [webcamRef]);
+  }, [webcamRef, processImage]);
 
   if (isWebcamOpen) {
       return (
@@ -150,6 +150,7 @@ export default function ImageUploadBox({ label, imageUrl, onChange, onRemove }: 
         ref={fileInputRef} 
         onChange={handleImageUpload} 
         accept="image/*" 
+        aria-label={label || "อัปโหลดรูปภาพ"}
         className="hidden" 
       />
     </div>

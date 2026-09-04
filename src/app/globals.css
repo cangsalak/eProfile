@@ -2,78 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./css/default.css";
+@import "./css/dark.css";
+
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Niramit:wght@300;400;500;600;700&display=swap');
 
+
+/* ─── Global Design Tokens (NextAdmin HQ Unified Theme System) ─────────────── */
 :root,
-[data-theme="indigo"] {
-  --color-primary-50: 238 242 255;
-  --color-primary-100: 224 231 255;
-  --color-primary-200: 199 210 254;
-  --color-primary-300: 165 180 252;
-  --color-primary-400: 129 140 248;
-  --color-primary-500: 99 102 241;
-  --color-primary-600: 79 70 229;
-  --color-primary-700: 67 56 202;
-  --color-primary-800: 55 48 163;
-  --color-primary-900: 49 46 129;
+[data-theme="nextadmin"] {
+  --color-primary-50: 239 243 255;
+  --color-primary-100: 218 226 255;
+  --color-primary-200: 190 205 255;
+  --color-primary-300: 145 174 255;
+  --color-primary-400: 94 132 252;
+  --color-primary-500: 87 80 241; /* NextAdmin HQ Blue #5750F1 */
+  --color-primary-600: 70 63 224;
+  --color-primary-700: 60 53 216;
+  --color-primary-800: 45 38 180;
+  --color-primary-900: 28 34 140;
+  --color-primary-950: 22 23 85;
   
-  --bg-dark: #0f172a; /* slate-900 */
-  --surface-card: rgba(30, 41, 59, 0.75); /* slate-800 */
-  --border-color: rgba(255, 255, 255, 0.1);
+  --bg-light: #f9fafb;
+  --bg-dark: #1a222c;
+  --surface-card: #24303f;
+  --border-color: #2e3a47;
   --font-prompt: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-sarabun: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-kanit: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-niramit: 'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-[data-theme="emerald"] {
-  --color-primary-50: 236 253 245;
-  --color-primary-100: 209 250 229;
-  --color-primary-200: 167 243 208;
-  --color-primary-300: 110 231 183;
-  --color-primary-400: 52 211 153;
-  --color-primary-500: 16 185 129;
-  --color-primary-600: 5 150 105;
-  --color-primary-700: 4 120 87;
-  --color-primary-800: 6 95 70;
-  --color-primary-900: 6 78 59;
-  
-  --bg-dark: #022c22;
-  --surface-card: rgba(2, 44, 34, 0.75);
+/* ─── Component Layer ──────────────────────────────────────────────────────── */
+@layer components {
+  /* Unified Form Inputs & Dropdowns */
+  .form-control,
+  .form-input,
+  .form-select,
+  .form-textarea {
+    @apply w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all;
+  }
+
+  .form-label {
+    @apply block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5;
+  }
+
+  .form-select {
+    @apply cursor-pointer;
+  }
+
+
+  /* Unified Card Design System */
+  .ui-card {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm transition-all;
+  }
+
+  .ui-card-glass {
+    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-3xl shadow-sm transition-all;
+  }
+
+  .ui-card-interactive {
+    @apply ui-card hover:border-primary-500/40 hover:shadow-md transition-all;
+  }
+
+  /* Unified Buttons */
+  .ui-btn-primary {
+    @apply px-4 py-2.5 bg-primary-600 hover:bg-primary-500 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-primary-500/20 transition-all flex items-center justify-center gap-2;
+  }
+
+  .ui-btn-secondary {
+    @apply px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all flex items-center justify-center gap-2;
+  }
+
+  .ui-btn-danger {
+    @apply px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-2;
+  }
+
+  /* Unified Badges */
+  .ui-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .ui-badge-primary {
+    @apply ui-badge bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800/80;
+  }
+
+  .ui-badge-success {
+    @apply ui-badge bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800;
+  }
+
+  .ui-badge-warning {
+    @apply ui-badge bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800;
+  }
+
+  .ui-badge-danger {
+    @apply ui-badge bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800;
+  }
+
+  .ui-badge-neutral {
+    @apply ui-badge bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700;
+  }
 }
 
-[data-theme="rose"] {
-  --color-primary-50: 255 241 242;
-  --color-primary-100: 255 228 230;
-  --color-primary-200: 254 205 211;
-  --color-primary-300: 253 164 175;
-  --color-primary-400: 251 113 133;
-  --color-primary-500: 244 63 94;
-  --color-primary-600: 225 29 72;
-  --color-primary-700: 190 18 60;
-  --color-primary-800: 159 18 57;
-  --color-primary-900: 136 19 55;
-  
-  --bg-dark: #2a0a18;
-  --surface-card: rgba(63, 20, 36, 0.75);
-}
-
-[data-theme="ocean"] {
-  --color-primary-50: 240 249 255;
-  --color-primary-100: 224 242 254;
-  --color-primary-200: 186 230 253;
-  --color-primary-300: 125 211 252;
-  --color-primary-400: 56 189 248;
-  --color-primary-500: 14 165 233;
-  --color-primary-600: 2 132 199;
-  --color-primary-700: 3 105 161;
-  --color-primary-800: 7 89 133;
-  --color-primary-900: 12 74 110;
-  
-  --bg-dark: #082f49;
-  --surface-card: rgba(12, 74, 110, 0.75);
-}
-
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -82,23 +113,69 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-primary, var(--font-prompt));
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a; /* slate-900 */
+  background-color: var(--bg-light, #f8fafc);
+  color: #0f172a;
   min-height: 100vh;
-  transition: background-color 0.5s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 html.dark body {
-  background-color: var(--bg-dark);
+  background-color: var(--bg-dark, #0f172a);
   color: #f8fafc;
 }
 
-/* Glassmorphism Card Effects */
+/* ─── Global Animation Keyframes (Active in regular browser & print) ─────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* ─── Glassmorphism Card Effects ─────────────────────────────────────────── */
 .glass-card {
-  background: var(--surface-bg, rgba(255, 255, 255, 0.8));
+  background: var(--surface-bg, rgba(255, 255, 255, 0.85));
   backdrop-filter: blur(var(--surface-blur, 16px));
   -webkit-backdrop-filter: blur(var(--surface-blur, 16px));
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-card, 16px);
   box-shadow: var(--surface-shadow, none);
 }
@@ -113,61 +190,150 @@ html.dark .glass-card {
 }
 
 .glass-card-hover:hover {
-  transform: translateY(-6px);
-  border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.2);
+  transform: translateY(-4px);
+  border-color: rgba(var(--color-primary-500), 0.4);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 0 16px rgba(var(--color-primary-500), 0.15);
 }
 
-/* Dynamic Themes CSS */
-/* Sharp Theme */
+/* ─── Typography Dynamic Selection ────────────────────────────────────────── */
+html[data-font="prompt"],
+html[data-font="prompt"] body,
+html[data-font="prompt"] input,
+html[data-font="prompt"] button,
+html[data-font="prompt"] select,
+html[data-font="prompt"] textarea {
+  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="sarabun"],
+html[data-font="sarabun"] body,
+html[data-font="sarabun"] input,
+html[data-font="sarabun"] button,
+html[data-font="sarabun"] select,
+html[data-font="sarabun"] textarea {
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="kanit"],
+html[data-font="kanit"] body,
+html[data-font="kanit"] input,
+html[data-font="kanit"] button,
+html[data-font="kanit"] select,
+html[data-font="kanit"] textarea {
+  font-family: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="niramit"],
+html[data-font="niramit"] body,
+html[data-font="niramit"] input,
+html[data-font="niramit"] button,
+html[data-font="niramit"] select,
+html[data-font="niramit"] textarea {
+  font-family: 'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* ─── Border Radius Themes ────────────────────────────────────────────────── */
 html[data-border="sharp"] button,
 html[data-border="sharp"] input,
 html[data-border="sharp"] select,
 html[data-border="sharp"] textarea,
+html[data-border="sharp"] [role="tab"],
 html[data-border="sharp"] .rounded:not(.cr80-card):not(.cr80-card *), 
 html[data-border="sharp"] .rounded-md:not(.cr80-card):not(.cr80-card *), 
 html[data-border="sharp"] .rounded-lg:not(.cr80-card):not(.cr80-card *), 
 html[data-border="sharp"] .rounded-xl:not(.cr80-card):not(.cr80-card *), 
-html[data-border="sharp"] .rounded-2xl:not(.cr80-card):not(.cr80-card *) {
+html[data-border="sharp"] .rounded-2xl:not(.cr80-card):not(.cr80-card *),
+html[data-border="sharp"] .rounded-3xl:not(.cr80-card):not(.cr80-card *) {
   border-radius: 0px !important;
 }
-html[data-border="sharp"] .glass-card {
+html[data-border="sharp"] .glass-card,
+html[data-border="sharp"] .ui-card,
+html[data-border="sharp"] .ui-card-glass {
   border-radius: 0px !important;
 }
 
-/* Pill Theme - Interactive elements become pills, containers become very rounded */
+html[data-border="rounded"] button,
+html[data-border="rounded"] input,
+html[data-border="rounded"] select,
+html[data-border="rounded"] textarea {
+  border-radius: 0.75rem !important;
+}
+
 html[data-border="pill"] button,
 html[data-border="pill"] input,
 html[data-border="pill"] select {
   border-radius: 9999px !important;
 }
-
 html[data-border="pill"] .rounded:not(.cr80-card):not(.cr80-card *) { border-radius: 8px !important; }
 html[data-border="pill"] .rounded-md:not(.cr80-card):not(.cr80-card *) { border-radius: 12px !important; }
 html[data-border="pill"] .rounded-lg:not(.cr80-card):not(.cr80-card *) { border-radius: 16px !important; }
 html[data-border="pill"] .rounded-xl:not(.cr80-card):not(.cr80-card *) { border-radius: 24px !important; }
 html[data-border="pill"] .rounded-2xl:not(.cr80-card):not(.cr80-card *) { border-radius: 32px !important; }
-
-html[data-border="pill"] .glass-card {
+html[data-border="pill"] .glass-card,
+html[data-border="pill"] .ui-card,
+html[data-border="pill"] .ui-card-glass {
   border-radius: 32px !important;
 }
 
-/* Layout Density */
-html[data-density="compact"] .p-6 {
-  padding: 1rem !important;
-}
-html[data-density="compact"] .py-6 {
-  padding-top: 1rem !important;
-  padding-bottom: 1rem !important;
-}
-html[data-density="compact"] .gap-6 {
-  gap: 1rem !important;
-}
-html[data-density="compact"] .mb-8 {
-  margin-bottom: 1rem !important;
+/* ─── Surface Styles ──────────────────────────────────────────────────────── */
+html[data-surface="flat"] .rounded-3xl,
+html[data-surface="flat"] .rounded-2xl,
+html[data-surface="flat"] .ui-card,
+html[data-surface="flat"] .glass-card {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
-/* Badge ID Print Specific Styling */
+html[data-surface="shadow"] .rounded-3xl,
+html[data-surface="shadow"] .rounded-2xl,
+html[data-surface="shadow"] .ui-card,
+html[data-surface="shadow"] .glass-card {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-surface="glass"] .rounded-3xl,
+html[data-surface="glass"] .rounded-2xl,
+html[data-surface="glass"] .ui-card,
+html[data-surface="glass"] .glass-card {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html.dark[data-surface="glass"] .rounded-3xl,
+html.dark[data-surface="glass"] .rounded-2xl,
+html.dark[data-surface="glass"] .ui-card,
+html.dark[data-surface="glass"] .glass-card {
+  background-color: rgba(15, 23, 42, 0.75) !important;
+}
+
+/* Layout Density */
+html[data-density="compact"] .p-6 { padding: 1rem !important; }
+html[data-density="compact"] .py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+html[data-density="compact"] .gap-6 { gap: 1rem !important; }
+html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
+
+/* ─── Flip Card Utilities ─────────────────────────────────────────────────── */
+.flip-card-container { perspective: 1000px; }
+.flip-card-inner {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.flip-card-container:hover .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.flip-card-back { transform: rotateY(180deg); }
+
+/* ─── Print Specific Styles (Isolated from regular web layout) ────────────── */
 @media print {
   body {
     background: white !important;
@@ -185,39 +351,4 @@ html[data-density="compact"] .mb-8 {
     background: white !important;
     color: black !important;
   }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
-  }
-}
-
-/* Flip Card Utilities */
-.flip-card-container {
-  perspective: 1000px;
-}
-.flip-card-inner {
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-.flip-card-container:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
-.flip-card-front, .flip-card-back {
-  backface-visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.flip-card-back {
-  transform: rotateY(180deg);
 }

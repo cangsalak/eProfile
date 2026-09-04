@@ -1,6 +1,9 @@
 'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { BellIcon, SettingIcon } from './icons';
+import { cn } from '@/utils/cn';
 
 interface NotificationDropdownProps {
   currentUser: any;
@@ -10,25 +13,6 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (currentUser) {
-      fetchNotifications();
-      // Polling every 1 minute
-      const interval = setInterval(fetchNotifications, 60000);
-      return () => clearInterval(interval);
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const fetchNotifications = async () => {
     try {
@@ -42,10 +26,45 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
     }
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      fetchNotifications();
+      const handleSync = () => fetchNotifications();
+      window.addEventListener('notifications-updated', handleSync);
+      window.addEventListener('focus', handleSync);
+
+      const interval = setInterval(fetchNotifications, 30000);
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('notifications-updated', handleSync);
+        window.removeEventListener('focus', handleSync);
+      };
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleToggle = () => {
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+    if (nextState) {
+      fetchNotifications();
+    }
+  };
+
   const markAllAsRead = async () => {
     try {
       await fetch('/api/notifications', { method: 'PUT' });
       setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+      window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {
       console.error('Failed to mark as read', err);
     }
@@ -55,6 +74,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
     try {
       await fetch(`/api/notifications/${id}`, { method: 'PUT' });
       setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+      window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {
       console.error('Failed to mark as read', err);
     }
@@ -62,103 +82,107 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'success': return 'fa-check-circle text-emerald-500';
-      case 'warning': return 'fa-exclamation-triangle text-amber-500';
-      case 'error': return 'fa-times-circle text-red-500';
-      default: return 'fa-info-circle text-blue-500';
-    }
-  };
-
   return (
     <div className="relative" ref={dropdownRef}>
       <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-        title="การแจ้งเตือน"
+        type="button"
+        onClick={handleToggle}
+        className="relative size-10 rounded-lg border border-card-border bg-card-background text-icon-primary shadow-xs flex items-center justify-center hover:bg-background-gray-primary transition-colors focus:outline-none"
+        title="Notifications"
+        aria-label="Notifications"
       >
-        <i className="fa-solid fa-bell"></i>
+        <BellIcon />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800 animate-pulse"></span>
+          <span className="absolute top-2 right-2.5 z-1 size-2 rounded-full bg-red-500">
+            <span className="absolute inset-0 -z-1 animate-ping rounded-full bg-red-400 opacity-75" />
+          </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden z-50 animate-fade-in">
-          <div className="p-3 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-            <h3 className="font-semibold text-slate-900 dark:text-white">การแจ้งเตือน</h3>
-            {unreadCount > 0 && (
-              <button 
-                onClick={markAllAsRead}
-                className="text-xs text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-              >
-                อ่านทั้งหมด
-              </button>
-            )}
+        <div className="absolute right-0 mt-2 w-80 sm:w-88 overflow-hidden rounded-2xl border border-card-border bg-card-surface-area shadow-3xl z-50 animate-fade-in">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-card-border px-5 pt-5 pb-4 bg-card-surface-area">
+            <h4 className="leading-6 font-semibold text-text-primary text-base">
+              Notifications
+            </h4>
+
+            <Link
+              className="p-1 text-icon-secondary transition-colors hover:text-icon-primary"
+              href="/settings"
+              onClick={() => setIsOpen(false)}
+            >
+              <SettingIcon />
+            </Link>
           </div>
           
-          <div className="max-h-[60vh] overflow-y-auto">
+          {/* List */}
+          <div className="max-h-96 overflow-y-auto scrollbar-thin px-3 py-2">
             {notifications.length === 0 ? (
-              <div className="p-8 text-center text-slate-500 dark:text-slate-400">
-                <i className="fa-regular fa-bell-slash text-3xl mb-2 opacity-20"></i>
-                <p className="text-sm">ไม่มีการแจ้งเตือนใหม่</p>
+              <div className="p-8 text-center text-text-tertiary">
+                <i className="fa-regular fa-bell-slash text-2xl mb-2 opacity-40"></i>
+                <p className="text-sm">No new notifications</p>
               </div>
             ) : (
-              <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
+              <ul className="space-y-1">
                 {notifications.slice(0, 10).map((noti) => (
-                  <div 
-                    key={noti.id} 
-                    className={`p-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/30 ${!noti.isRead ? 'bg-primary-50/50 dark:bg-primary-900/10' : ''}`}
-                    onClick={() => { if (!noti.isRead) markAsRead(noti.id); }}
-                  >
-                    <div className="flex gap-3">
-                      <div className="shrink-0 mt-1">
-                        <i className={`fa-solid ${getTypeIcon(noti.type)}`}></i>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        {noti.link ? (
-                          <Link href={noti.link} className="block group">
-                            <p className={`text-sm font-medium truncate group-hover:text-primary-500 transition-colors ${!noti.isRead ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
-                              {noti.title}
-                            </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
-                              {noti.message}
-                            </p>
-                          </Link>
-                        ) : (
-                          <>
-                            <p className={`text-sm font-medium truncate ${!noti.isRead ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
-                              {noti.title}
-                            </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
-                              {noti.message}
-                            </p>
-                          </>
-                        )}
-                        <p className="text-[10px] text-slate-400 mt-1">
+                  <li key={noti.id}>
+                    <button
+                      type="button"
+                      className="group flex w-full cursor-pointer gap-3.5 rounded-lg px-3 py-3 transition-colors duration-200 hover:bg-background-gray-primary text-left"
+                      onClick={() => { if (!noti.isRead) markAsRead(noti.id); }}
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-card-border bg-background-gray-primary text-icon-secondary transition-all duration-200 group-hover:bg-brand-500 group-hover:text-white">
+                        <i className={cn(
+                          'fa-solid text-sm',
+                          noti.type === 'success' ? 'fa-check-circle text-emerald-500 group-hover:text-white' :
+                          noti.type === 'warning' ? 'fa-triangle-exclamation text-amber-500 group-hover:text-white' :
+                          noti.type === 'error' ? 'fa-circle-xmark text-rose-500 group-hover:text-white' :
+                          'fa-info-circle text-brand-500 group-hover:text-white'
+                        )} />
+                      </span>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm leading-5 font-semibold text-text-primary truncate">
+                            {noti.title}
+                          </p>
+                          {!noti.isRead && (
+                            <div className="size-1.5 shrink-0 rounded-full bg-brand-500" />
+                          )}
+                        </div>
+
+                        <p className="mt-1 line-clamp-2 text-xs leading-4 text-text-secondary">
+                          {noti.message}
+                        </p>
+                        <p className="mt-1.5 text-xs text-text-tertiary">
                           {new Date(noti.createdAt).toLocaleString('th-TH')}
                         </p>
                       </div>
-                      {!noti.isRead && (
-                        <div className="shrink-0 flex items-center justify-center w-2">
-                          <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
           
-          <div className="p-2 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-center">
+          {/* Footer */}
+          <div className="flex items-center justify-between border-t border-card-border px-5 py-3.5 bg-card-surface-area">
+            {unreadCount > 0 ? (
+              <button
+                type="button"
+                onClick={markAllAsRead}
+                className="text-xs font-medium text-text-secondary underline transition-colors hover:text-text-primary"
+              >
+                Mark all as read
+              </button>
+            ) : <div />}
             <Link 
               href="/notifications" 
               onClick={() => setIsOpen(false)}
-              className="text-sm text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium p-1 block"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white transition-colors"
             >
-              ดูการแจ้งเตือนทั้งหมด
+              View All
             </Link>
           </div>
         </div>
