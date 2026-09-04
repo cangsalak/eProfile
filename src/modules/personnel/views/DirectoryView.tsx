@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Personnel } from '@/types/personnel';
 import Navbar from '@/components/Navbar';
 import BannerSummary from '@/components/BannerSummary';
@@ -12,10 +13,18 @@ import ScannerModal from '../components/ScannerModal';
 import PrintBadgeView from '@/modules/badges/components/PrintBadgeView';
 
 export default function EProfilePage() {
+  const searchParams = useSearchParams();
   const [personnelList, setPersonnelList] = useState<Personnel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams?.get('search') || '');
   const [selectedDept, setSelectedDept] = useState('ทั้งหมด');
+
+  useEffect(() => {
+    const q = searchParams?.get('search');
+    if (q !== null && q !== undefined) {
+      setSearchQuery(q);
+    }
+  }, [searchParams]);
   const [activeProfile, setActiveProfile] = useState<Personnel | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<Personnel | null>(null);

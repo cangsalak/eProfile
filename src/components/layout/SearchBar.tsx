@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { SearchIcon } from './icons';
 import { ALL_SYSTEM_MODULES } from '@/lib/modules/registry';
@@ -16,12 +16,30 @@ interface SearchItem {
   icon?: string;
 }
 
+interface PersonnelResult {
+  id: string;
+  title?: string;
+  firstName: string;
+  lastName: string;
+  rank?: string;
+  position: string;
+  department: string;
+  subDepartment?: string;
+  badgeNo: string;
+  status: string;
+  avatarUrl?: string;
+  personnelType?: string;
+}
+
 export default function SearchBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [personnelResults, setPersonnelResults] = useState<PersonnelResult[]>([]);
+  const [isSearchingPersonnel, setIsSearchingPersonnel] = useState(false);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Keyboard shortcut listener (Cmd+K / Ctrl+K / ESC)
   useEffect(() => {
@@ -45,6 +63,7 @@ export default function SearchBar() {
       setSelectedIndex(0);
     } else {
       setQuery('');
+      setPersonnelResults([]);
     }
   }, [isOpen]);
 
@@ -136,7 +155,7 @@ export default function SearchBar() {
   }, []);
 
   // Filter items matching query
-  const filteredItems = useMemo(() => {
+  const filteredPageItems = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return allSearchItems;
 
@@ -150,17 +169,79 @@ export default function SearchBar() {
     });
   }, [allSearchItems, query]);
 
-  // Group filtered items by section
-  const groupedItems = useMemo(() => {
-    const groups: Record<string, SearchItem[]> = {};
-    filteredItems.forEach((item) => {
-      if (!groups[item.section]) {
-        groups[item.section] = [];
+  // Debounced fetch for personnel search
+  const fetchPersonnel = useCallback(async (q: string) => {
+    if (!q || q.length < 1) {
+      setPersonnelResults([]);
+      setIsSearchingPersonnel(false);
+      return;
+    }
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    setIsSearchingPersonnel(true);
+    try {
+      const res = await fetch(`/api/personnel?search=${encodeURIComponent(q)}&limit=6`, {
+        signal: controller.signal,
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const list: PersonnelResult[] = Array.isArray(json) ? json : json.data || [];
+        setPersonnelResults(list);
+      } else {
+        setPersonnelResults([]);
       }
-      groups[item.section].push(item);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        setPersonnelResults([]);
+      }
+    } finally {
+      setIsSearchingPersonnel(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    const timer = setTimeout(() => {
+      fetchPersonnel(trimmed);
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [query, fetchPersonnel]);
+
+  // Flatten all navigable items for keyboard index selection
+  const flatNavigableItems = useMemo(() => {
+    const items: Array<{
+      type: 'personnel' | 'page';
+      url: string;
+      data: any;
+    }> = [];
+
+    // Add personnel items first when searching
+    personnelResults.forEach((person) => {
+      items.push({
+        type: 'personnel',
+        url: `/modules/personnel/directory?search=${encodeURIComponent(person.firstName)}`,
+        data: person,
+      });
     });
-    return groups;
-  }, [filteredItems]);
+
+    // Add page/module items
+    filteredPageItems.forEach((page) => {
+      items.push({
+        type: 'page',
+        url: page.url,
+        data: page,
+      });
+    });
+
+    return items;
+  }, [personnelResults, filteredPageItems]);
 
   const handleSelect = (url: string) => {
     setIsOpen(false);
@@ -168,22 +249,34 @@ export default function SearchBar() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (filteredItems.length === 0) return;
+    if (flatNavigableItems.length === 0) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % filteredItems.length);
+      setSelectedIndex((prev) => (prev + 1) % flatNavigableItems.length);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+      setSelectedIndex((prev) => (prev - 1 + flatNavigableItems.length) % flatNavigableItems.length);
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      const target = filteredItems[selectedIndex];
+      const target = flatNavigableItems[selectedIndex];
       if (target) {
         handleSelect(target.url);
       }
     }
   };
+
+  // Group filtered pages by section
+  const groupedPageItems = useMemo(() => {
+    const groups: Record<string, SearchItem[]> = {};
+    filteredPageItems.forEach((item) => {
+      if (!groups[item.section]) {
+        groups[item.section] = [];
+      }
+      groups[item.section].push(item);
+    });
+    return groups;
+  }, [filteredPageItems]);
 
   return (
     <>
@@ -208,7 +301,7 @@ export default function SearchBar() {
             <SearchIcon />
           </span>
           <span className="flex-1 select-none truncate text-text-tertiary text-xs sm:text-sm">
-            Search pages & modules...
+            ค้นหาหน้า, เมนู หรือ บุคลากร...
           </span>
           <div className="flex items-center gap-0.5 rounded-md border border-card-border bg-background-gray-primary/80 px-1.5 py-0.5 text-[10px] font-medium text-text-tertiary shadow-xs">
             <span>⌘</span>
@@ -219,7 +312,7 @@ export default function SearchBar() {
 
       {/* Command Search Palette Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-14 sm:pt-20 px-4">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-200"
@@ -228,7 +321,7 @@ export default function SearchBar() {
 
           {/* Modal Container */}
           <div
-            className="relative z-50 w-full max-w-xl overflow-hidden rounded-2xl border border-card-border bg-card-surface-area text-text-primary shadow-2xl animate-fade-in"
+            className="relative z-50 w-full max-w-2xl overflow-hidden rounded-2xl border border-card-border bg-card-surface-area text-text-primary shadow-2xl animate-fade-in"
             onKeyDown={handleKeyDown}
           >
             {/* Search Input Bar */}
@@ -244,9 +337,12 @@ export default function SearchBar() {
                   setQuery(e.target.value);
                   setSelectedIndex(0);
                 }}
-                placeholder="ค้นหาหน้า, เมนู หรือโมดูล (พิมพ์ชื่อภาษาไทย หรือภาษาอังกฤษ)..."
+                placeholder="พิมพ์ชื่อบุคคลากร, เลขประจำตัว, หน้า หรือเมนูระบบ..."
                 className="w-full min-w-0 flex-1 border-none bg-transparent text-sm text-text-primary placeholder:text-text-tertiary outline-none focus:ring-0 focus:outline-none"
               />
+              {isSearchingPersonnel && (
+                <div className="mr-2 size-4 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
+              )}
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
@@ -257,62 +353,157 @@ export default function SearchBar() {
             </div>
 
             {/* Results List */}
-            <div className="scrollbar-thin max-h-96 overflow-y-auto p-2">
-              {filteredItems.length === 0 ? (
+            <div className="scrollbar-thin max-h-[28rem] overflow-y-auto p-2 divide-y divide-card-border/50">
+              {flatNavigableItems.length === 0 ? (
                 <div className="py-12 text-center text-sm text-text-tertiary">
                   <i className="fa-solid fa-magnifying-glass text-2xl mb-2 opacity-30"></i>
-                  <p>ไม่พบหน้าที่ตรงกับคำค้นหา "{query}"</p>
+                  <p>ไม่พบผลลัพธ์ที่ตรงกับคำค้นหา "{query}"</p>
                 </div>
               ) : (
-                Object.entries(groupedItems).map(([sectionLabel, sectionItems]) => (
-                  <div key={sectionLabel} className="py-1.5">
-                    <p className="px-3 py-1.5 text-[11px] font-semibold tracking-wider text-text-tertiary uppercase">
-                      {sectionLabel}
-                    </p>
+                <>
+                  {/* PERSONNEL SECTION */}
+                  {personnelResults.length > 0 && (
+                    <div className="py-2">
+                      <div className="flex items-center justify-between px-3 py-1.5">
+                        <p className="text-[11px] font-semibold tracking-wider text-brand-600 dark:text-brand-400 uppercase flex items-center gap-1.5">
+                          <i className="fa-solid fa-users text-xs"></i>
+                          <span>กำลังพล / บุคลากร ({personnelResults.length})</span>
+                        </p>
+                        <span className="text-[10px] text-text-tertiary">กดเพื่อดูทำเนียบบุคลากร</span>
+                      </div>
 
-                    <div className="space-y-0.5">
-                      {sectionItems.map((item) => {
-                        const globalIndex = filteredItems.indexOf(item);
-                        const isSelected = globalIndex === selectedIndex;
+                      <div className="space-y-1 mt-1">
+                        {personnelResults.map((person) => {
+                          const itemIndex = flatNavigableItems.findIndex(
+                            (it) => it.type === 'personnel' && it.data.id === person.id,
+                          );
+                          const isSelected = itemIndex === selectedIndex;
+                          const fullName = `${person.rank ? person.rank + ' ' : ''}${person.firstName} ${person.lastName}`;
+                          const url = `/modules/personnel/directory?search=${encodeURIComponent(person.firstName)}`;
 
-                        return (
-                          <div
-                            key={item.id}
-                            onClick={() => handleSelect(item.url)}
-                            onMouseEnter={() => setSelectedIndex(globalIndex)}
-                            className={cn(
-                              'flex cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-colors',
-                              isSelected
-                                ? 'bg-sidebar-navigation-nav-item-nav-hover-background text-text-primary font-medium'
-                                : 'text-text-secondary hover:bg-background-gray-primary',
-                            )}
-                          >
-                            <div className="flex min-w-0 items-center gap-3">
-                              <span className={cn('flex size-5 shrink-0 items-center justify-center text-base', isSelected ? 'text-brand-500' : 'text-icon-secondary')}>
-                                <i className={item.icon || 'fa-solid fa-circle-dot'} />
-                              </span>
+                          return (
+                            <div
+                              key={`person-${person.id}`}
+                              onClick={() => handleSelect(url)}
+                              onMouseEnter={() => setSelectedIndex(itemIndex)}
+                              className={cn(
+                                'flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-sm transition-all',
+                                isSelected
+                                  ? 'bg-sidebar-navigation-nav-item-nav-hover-background text-text-primary ring-1 ring-brand-500/30'
+                                  : 'text-text-secondary hover:bg-background-gray-primary',
+                              )}
+                            >
+                              <div className="flex min-w-0 items-center gap-3">
+                                {person.avatarUrl ? (
+                                  <img
+                                    src={person.avatarUrl}
+                                    alt={fullName}
+                                    className="size-9 rounded-full object-cover ring-1 ring-card-border shrink-0"
+                                  />
+                                ) : (
+                                  <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold text-xs ring-1 ring-card-border">
+                                    <i className="fa-solid fa-user text-sm" />
+                                  </div>
+                                )}
 
-                              <div className="flex items-center gap-1.5 truncate">
-                                {item.parentTitle && (
-                                  <span className="truncate font-normal text-text-tertiary">
-                                    {item.parentTitle} /
+                                <div className="min-w-0 truncate">
+                                  <div className="flex items-center gap-2 truncate">
+                                    <span className="font-semibold text-text-primary truncate">{fullName}</span>
+                                    {person.badgeNo && (
+                                      <span className="rounded bg-background-gray-primary px-1.5 py-0.5 font-mono text-[10px] text-text-tertiary">
+                                        #{person.badgeNo}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-xs text-text-tertiary truncate flex items-center gap-1.5 mt-0.5">
+                                    <span>{person.position || 'ไม่ระบุตำแหน่ง'}</span>
+                                    <span>•</span>
+                                    <span className="truncate">{person.department}{person.subDepartment ? ` (${person.subDepartment})` : ''}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex shrink-0 items-center gap-2 pl-2">
+                                {person.status && (
+                                  <span className={cn(
+                                    'text-[10px] px-2 py-0.5 rounded-full font-medium',
+                                    person.status === 'ปฏิบัติงานปกติ'
+                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                      : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                                  )}>
+                                    {person.status}
                                   </span>
                                 )}
-                                <span className="truncate">{item.title}</span>
                               </div>
                             </div>
-
-                            <div className="flex shrink-0 items-center gap-2">
-                              <span className="hidden text-xs text-text-tertiary sm:inline font-mono">
-                                {item.url}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  )}
+
+                  {/* PAGES & MODULES SECTION */}
+                  {filteredPageItems.length > 0 && (
+                    <div className="py-2">
+                      {Object.entries(groupedPageItems).map(([sectionLabel, sectionItems]) => (
+                        <div key={sectionLabel} className="py-1">
+                          <p className="px-3 py-1 text-[11px] font-semibold tracking-wider text-text-tertiary uppercase">
+                            {sectionLabel}
+                          </p>
+
+                          <div className="space-y-0.5">
+                            {sectionItems.map((item) => {
+                              const itemIndex = flatNavigableItems.findIndex(
+                                (it) => it.type === 'page' && it.data.id === item.id,
+                              );
+                              const isSelected = itemIndex === selectedIndex;
+
+                              return (
+                                <div
+                                  key={item.id}
+                                  onClick={() => handleSelect(item.url)}
+                                  onMouseEnter={() => setSelectedIndex(itemIndex)}
+                                  className={cn(
+                                    'flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
+                                    isSelected
+                                      ? 'bg-sidebar-navigation-nav-item-nav-hover-background text-text-primary font-medium ring-1 ring-card-border'
+                                      : 'text-text-secondary hover:bg-background-gray-primary',
+                                  )}
+                                >
+                                  <div className="flex min-w-0 items-center gap-3">
+                                    <span
+                                      className={cn(
+                                        'flex size-5 shrink-0 items-center justify-center text-sm',
+                                        isSelected ? 'text-brand-500' : 'text-icon-secondary',
+                                      )}
+                                    >
+                                      <i className={item.icon || 'fa-solid fa-circle-dot'} />
+                                    </span>
+
+                                    <div className="flex items-center gap-1.5 truncate">
+                                      {item.parentTitle && (
+                                        <span className="truncate font-normal text-text-tertiary">
+                                          {item.parentTitle} /
+                                        </span>
+                                      )}
+                                      <span className="truncate">{item.title}</span>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex shrink-0 items-center gap-2">
+                                    <span className="hidden text-xs text-text-tertiary sm:inline font-mono">
+                                      {item.url}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
 

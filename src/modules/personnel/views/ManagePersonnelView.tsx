@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Personnel } from '@/types/personnel';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AddPersonnelModal from '../components/AddPersonnelModal';
 import JSZip from 'jszip';
 import LeaveList from '@/modules/leaves/components/LeaveList';
@@ -50,9 +50,12 @@ export default function ManagePersonnelView() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [deleteTargetPerson, setDeleteTargetPerson] = useState<{ id: string; name: string } | null>(null);
   
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams?.get('search') || '';
+
   // Server-side Pagination & Search & Sorting
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalItems, setTotalItems] = useState(0);
@@ -62,6 +65,15 @@ export default function ManagePersonnelView() {
   
   const zipInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  // Sync search query from URL parameter if provided
+  useEffect(() => {
+    const q = searchParams?.get('search');
+    if (q !== null && q !== undefined) {
+      setSearchQuery(q);
+      setDebouncedSearch(q);
+    }
+  }, [searchParams]);
 
   // Debounce search input (300ms)
   useEffect(() => {
