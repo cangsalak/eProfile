@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import ProfileDropdown from './ProfileDropdown';
 import NotificationDropdown from './NotificationDropdown';
+import SearchBar from './SearchBar';
 import { Personnel } from '@/types/personnel';
-import { SunIcon, MoonIcon, MenuIcon, SearchIcon } from './icons';
+import { SunIcon, MoonIcon, MenuIcon } from './icons';
 import { ThreeDots } from '@/components/common/sidebar/icon';
 import { cn } from '@/utils/cn';
 
@@ -33,7 +34,6 @@ export default function TopNavbar({
   isDarkMode,
   toggleDarkMode,
 }: TopNavbarProps) {
-  const [searchQuery, setSearchQuery] = useState('');
   const [isMobileInfoOpen, setIsMobileInfoOpen] = useState(false);
 
   return (
@@ -84,21 +84,7 @@ export default function TopNavbar({
             <div className="hidden lg:flex items-center justify-between w-full">
               {/* Left Side - Search */}
               <div className="max-w-xs flex-1">
-                <div className="relative w-full">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-icon-tertiary">
-                    <SearchIcon />
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Search pages..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-14 py-2 bg-card-background border border-card-border rounded-lg text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-input-primary-focus-border transition-all shadow-xs"
-                  />
-                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-card-border bg-background-gray-primary/50 px-1.5 py-0.5 text-xs text-text-tertiary pointer-events-none">
-                    <span className="font-medium">⌘</span> K
-                  </div>
-                </div>
+                <SearchBar />
               </div>
 
               {/* Right Side - Actions */}
@@ -136,13 +122,15 @@ export default function TopNavbar({
 
       {/* Mobile Quick Actions Bar (< lg) */}
       {!isGuest && isMobileInfoOpen && (
-        <div className="lg:hidden border-b border-card-border bg-card-surface-area px-4 py-3 shadow-xs">
+        <div className="lg:hidden border-b border-card-border bg-card-surface-area px-4 py-3 shadow-xs animate-slide-down">
           <div className="flex items-center justify-between gap-2.5">
             <div className="flex items-center gap-2.5">
+              <SearchBar />
+
               <button 
                 type="button"
                 onClick={toggleDarkMode}
-                className="size-10 rounded-lg border border-card-border bg-card-background text-icon-primary shadow-xs flex items-center justify-center hover:bg-background-gray-primary transition-colors"
+                className="size-10 rounded-lg border border-card-border bg-card-background text-icon-primary shadow-xs flex items-center justify-center hover:bg-background-gray-primary transition-colors shrink-0"
                 title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
               >
                 {isDarkMode ? <MoonIcon /> : <SunIcon />}
