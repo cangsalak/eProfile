@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
+import { ModuleRegistry } from '@/lib/modules/registry';
 
 /*
  * ============================================================
@@ -29,23 +30,18 @@ const publicApiPaths = [
   '/api/auth/login',
   '/api/auth/setup-admin',
   '/api/install',
+  '/api/install/test-db',
   '/api/health',
   '/api/auth/forgot-password',
   '/api/auth/me',
 ];
 const publicApiPrefixes = ['/api/verify/'];
 
-// Protected member page prefixes
+// Protected member page prefixes — all modules live under /modules
 const protectedPagePrefixes = [
-  '/dashboard',
+  '/modules',
+  '/print',
   '/manage',
-  '/directory',
-  '/calendar',
-  '/leave',
-  '/settings',
-  '/profile',
-  '/notifications',
-  '/setup',
 ];
 
 export async function middleware(request: NextRequest) {
@@ -88,9 +84,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 1. If user is authenticated and tries to visit auth pages (/login, /register), redirect to /dashboard
+  // 0. Dynamic Module Legacy Redirects
+  const legacyDest = ModuleRegistry.getLegacyRedirect(pathname);
+  if (legacyDest) {
+    const redirectUrl = new URL(legacyDest, request.url);
+    redirectUrl.search = request.nextUrl.search;
+    // Use 308 for permanent redirect (or 307 for temporary). We use 308 to match next.config.js behavior if we wanted permanent, but next.config.js used permanent: false (which is 307/308 depending on method, but usually 307).
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  // 1. If user is authenticated and tries to visit auth pages (/login, /register), redirect to /modules/personnel
   if (isAuthenticated && (pathname === '/login' || pathname === '/register')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/modules/personnel', request.url));
   }
 
   // 2. For protected member page routes, require authentication
@@ -116,8 +121,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Exception: Allow GET /api/settings for basic non-sensitive settings used by public verify page
-    if (pathname === '/api/settings' && request.method === 'GET') {
+    // Exception: Allow GET /api/settings & GET /api/modules for basic non-sensitive metadata
+    if ((pathname === '/api/settings' || pathname === '/api/modules') && request.method === 'GET') {
       return NextResponse.next();
     }
 

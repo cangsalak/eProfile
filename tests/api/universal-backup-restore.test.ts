@@ -20,8 +20,9 @@ export async function runUniversalBackupRestoreTests() {
   console.log('\n--- Running Universal Multi-Database Backup & Restore Tests (v1.3.0) ---');
 
   let admin = await prisma.personnel.findFirst({
-    where: { role: { in: ['ADMIN', 'SUPER_ADMIN'] } }
+    where: { role: 'SUPER_ADMIN' }
   });
+
 
   if (!admin) {
     const pwHash = await bcrypt.hash('admin1234', 10);
@@ -103,10 +104,14 @@ export async function runUniversalBackupRestoreTests() {
     body: validJsonFormData,
   });
   const validRestoreRes = await postRestoreHandler(validRestoreReq);
-  assert.strictEqual(validRestoreRes.status, 200, 'Valid Universal JSON Restore should return 200');
   const validRestoreData = await validRestoreRes.json();
+  if (validRestoreRes.status !== 200) {
+    console.error('validRestoreRes Error details:', validRestoreData);
+  }
+  assert.strictEqual(validRestoreRes.status, 200, `Valid Universal JSON Restore should return 200: ${JSON.stringify(validRestoreData)}`);
   assert.strictEqual(validRestoreData.success, true);
   assert.strictEqual(validRestoreData.format, 'universal_json');
+
   console.log('✔ Universal JSON Restore verified with atomic table repopulation');
 
   // Cleanup synthetic admin if created

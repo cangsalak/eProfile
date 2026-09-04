@@ -6,6 +6,15 @@ import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
+const SENSITIVE_SETTING_PATTERNS = [
+  /connection/i,
+  /secret/i,
+  /token/i,
+  /password/i,
+  /credential/i,
+  /apikey/i,
+];
+
 export async function GET(req: Request) {
   try {
     const { error, user } = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
@@ -18,8 +27,14 @@ export async function GET(req: Request) {
     const date = new Date();
     const timestampStr = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}_${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}`;
 
-    // 1. Native .db file backup (for SQLite)
+    // 1. Native .db file backup (for SQLite) - strictly SUPER_ADMIN only
     if (format === 'db' || format === 'sqlite') {
+      if (user.role !== 'SUPER_ADMIN') {
+        return NextResponse.json({
+          error: 'การดาวน์โหลดไฟล์ฐานข้อมูลไบนารี SQLite สงวนสิทธิ์เฉพาะผู้ดูแลระบบระดับสูง (SUPER_ADMIN) เท่านั้น'
+        }, { status: 403 });
+      }
+
       const dbPath = path.join(process.cwd(), 'prisma', 'dev.db');
 
       if (!fs.existsSync(dbPath)) {
@@ -37,7 +52,7 @@ export async function GET(req: Request) {
           action: 'BACKUP_CREATED',
           entity: 'Database',
           entityId: 'dev.db',
-          details: `SQLite binary backup downloaded by ${user.role}`,
+          details: `SQLite binary backup downloaded by ${user.role} (${user.username})`,
           ipAddress: clientIp,
         },
       }).catch(() => {/* non-blocking */});
@@ -54,10 +69,10 @@ export async function GET(req: Request) {
 
     // 2. Universal JSON Backup (Cross-Database: SQLite, PostgreSQL, MySQL)
     const [
-      systemSettings,
+      rawSettings,
       systemRoles,
       departments,
-      personnelList,
+      rawPersonnelList,
       vehicles,
       leaveRecords,
       notifications,
@@ -81,8 +96,25 @@ export async function GET(req: Request) {
       prisma.auditLog.findMany({ take: 1000, orderBy: { createdAt: 'desc' } }),
     ]);
 
-    // Detect DB Provider from settings
-    const providerSetting = systemSettings.find((s: { key: string }) => s.key === 'dbProvider');
+    // Data Privacy & Security Sanitization:
+    // 1. Sanitize System Settings (Omit secrets, connection strings, tokens, and credentials)
+    const sanitizedSettings = rawSettings.filter((s: { key: string }) => {
+      return !SENSITIVE_SETTING_PATTERNS.some((pattern) => pattern.test(s.key));
+    });
+
+    // 2. Sanitize Personnel (Strip password hashes, sensitive lock fields)
+    const sanitizedPersonnel = rawPersonnelList.map((p: any) => {
+      const {
+        password,
+        failedLoginAttempts,
+        lockedUntil,
+        ...safePersonnel
+      } = p;
+      return safePersonnel;
+    });
+
+    // Detect DB Provider from sanitized settings or default
+    const providerSetting = rawSettings.find((s: { key: string }) => s.key === 'dbProvider');
     const dbProvider = providerSetting?.value || 'sqlite';
 
     const backupPayload = {
@@ -96,10 +128,10 @@ export async function GET(req: Request) {
       },
       dbProvider,
       summary: {
-        systemSettings: systemSettings.length,
+        systemSettings: sanitizedSettings.length,
         systemRoles: systemRoles.length,
         departments: departments.length,
-        personnel: personnelList.length,
+        personnel: sanitizedPersonnel.length,
         vehicles: vehicles.length,
         leaveRecords: leaveRecords.length,
         notifications: notifications.length,
@@ -109,10 +141,10 @@ export async function GET(req: Request) {
         contactMessages: contactMessages.length,
         auditLogs: auditLogs.length,
         totalRecords:
-          systemSettings.length +
+          sanitizedSettings.length +
           systemRoles.length +
           departments.length +
-          personnelList.length +
+          sanitizedPersonnel.length +
           vehicles.length +
           leaveRecords.length +
           notifications.length +
@@ -123,10 +155,10 @@ export async function GET(req: Request) {
           auditLogs.length,
       },
       data: {
-        systemSettings,
+        systemSettings: sanitizedSettings,
         systemRoles,
         departments,
-        personnel: personnelList,
+        personnel: sanitizedPersonnel,
         vehicles,
         leaveRecords,
         notifications,
@@ -145,7 +177,7 @@ export async function GET(req: Request) {
         action: 'BACKUP_CREATED',
         entity: 'Database',
         entityId: `universal_backup_${timestampStr}.json`,
-        details: `Universal JSON backup created (${backupPayload.summary.totalRecords} records) by ${user.role}`,
+        details: `Universal JSON backup created (${backupPayload.summary.totalRecords} records, sanitized) by ${user.role}`,
         ipAddress: clientIp,
       },
     }).catch(() => {/* non-blocking */});

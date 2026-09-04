@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { requireRole } from '@/lib/auth-guards';
+import { universalBackupPayloadSchema, isValidBcryptHash } from '@/lib/backup-validation';
 
 export const dynamic = 'force-dynamic';
 
-// Validate that buffer is a valid SQLite file
 function isSQLiteFile(buffer: Buffer): boolean {
   const magic = 'SQLite format 3\0';
   if (buffer.length < 16) return false;
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
 
     const fileName = file.name.toLowerCase();
     const isJsonFile = fileName.endsWith('.json');
-    const isDbFile = fileName.endsWith('.db');
+    const isDbFile = fileName.endsWith('.db') || fileName.endsWith('.sqlite');
 
     // 1. Validate extension
     if (!isJsonFile && !isDbFile) {
@@ -40,47 +41,94 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
 
-    // 2. Validate file size (max 500MB)
-    if (file.size > 500 * 1024 * 1024) {
-      return NextResponse.json({ error: 'ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 500MB)' }, { status: 400 });
+    // 2. Validate file size (max 50MB for JSON, 500MB for SQLite binary)
+    const maxSizeBytes = isJsonFile ? 50 * 1024 * 1024 : 500 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      return NextResponse.json({
+        error: `ไฟล์มีขนาดใหญ่เกินไป (สูงสุด ${isJsonFile ? '50MB' : '500MB'})`
+      }, { status: 400 });
     }
 
     const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || request.headers.get('x-real-ip') || '127.0.0.1';
 
     // -------------------------------------------------------------
-    // BRANCH A: Universal JSON Restore (Works on SQLite, PostgreSQL, MySQL)
+    // BRANCH A: Universal JSON Restore (Cross-Database)
     // -------------------------------------------------------------
     if (isJsonFile) {
       const fileText = await file.text();
-      let backupJson: any;
+      let rawJson: any;
 
       try {
-        backupJson = JSON.parse(fileText);
+        rawJson = JSON.parse(fileText);
       } catch {
         return NextResponse.json({ error: 'รูปแบบไฟล์ JSON ไม่ถูกต้อง ไม่สามารถอ่านข้อมูลได้' }, { status: 400 });
       }
 
-      if (!backupJson || typeof backupJson !== 'object' || (!backupJson.data && !backupJson.personnel)) {
-        return NextResponse.json({ error: 'โครงสร้างไฟล์สำรองข้อมูลไม่ถูกต้อง ไม่พบข้อมูลตาราง' }, { status: 400 });
+      if (!rawJson || typeof rawJson !== 'object') {
+        return NextResponse.json({ error: 'โครงสร้างไฟล์สำรองข้อมูลไม่ถูกต้อง' }, { status: 400 });
       }
 
-      const data = backupJson.data || backupJson;
+      // Format payload wrapper if passed as flat object or { data: {...} }
+      const normalizedPayload = rawJson.data ? rawJson : { data: rawJson };
 
-      // Extract collections safely
-      const systemRoles = Array.isArray(data.systemRoles) ? data.systemRoles : [];
-      const departments = Array.isArray(data.departments) ? data.departments : [];
-      const personnelList = Array.isArray(data.personnel) ? data.personnel : [];
-      const vehicles = Array.isArray(data.vehicles) ? data.vehicles : [];
-      const leaveRecords = Array.isArray(data.leaveRecords || data.leaveRequests) ? (data.leaveRecords || data.leaveRequests) : [];
-      const notifications = Array.isArray(data.notifications) ? data.notifications : [];
-      const posts = Array.isArray(data.posts) ? data.posts : [];
-      const documents = Array.isArray(data.documents || data.personnelDocuments) ? (data.documents || data.personnelDocuments) : [];
-      const calendarEvents = Array.isArray(data.calendarEvents) ? data.calendarEvents : [];
-      const contactMessages = Array.isArray(data.contactMessages) ? data.contactMessages : [];
-      const auditLogs = Array.isArray(data.auditLogs) ? data.auditLogs : [];
-      const systemSettings = Array.isArray(data.systemSettings) ? data.systemSettings : [];
+      // Validate with Zod Schema
+      const validationResult = universalBackupPayloadSchema.safeParse(normalizedPayload);
+      if (!validationResult.success) {
+        const errorMsg = validationResult.error.issues
+          .slice(0, 3)
+          .map(i => `${i.path.join('.')}: ${i.message}`)
+          .join(', ');
+        return NextResponse.json({
+          error: `โครงสร้างข้อมูลสำรองไม่ถูกต้องตามมาตรฐาน: ${errorMsg}`
+        }, { status: 400 });
+      }
 
-      // Perform clean atomic transaction
+      const { data } = validationResult.data;
+
+      // Extract validated collections
+      const systemRoles = data.systemRoles || [];
+      const departments = data.departments || [];
+      const rawPersonnelList = data.personnel || [];
+      const vehicles = data.vehicles || [];
+      const leaveRecords = data.leaveRecords || data.leaveRequests || [];
+      const notifications = data.notifications || [];
+      const posts = data.posts || [];
+      const documents = data.documents || data.personnelDocuments || [];
+      const calendarEvents = data.calendarEvents || [];
+      const contactMessages = data.contactMessages || [];
+      const auditLogs = data.auditLogs || [];
+      const systemSettings = data.systemSettings || [];
+
+      // Password Security Processing:
+      // Ensure all personnel passwords are valid Bcrypt hashes. If missing or invalid, generate random hash and flag mustChangePassword.
+      const processedPersonnel = await Promise.all(
+        rawPersonnelList.map(async (p) => {
+          let safePassword = p.password;
+          let mustChangePassword = p.mustChangePassword;
+
+          if (!isValidBcryptHash(safePassword)) {
+            // Generate unguessable random password hash
+            safePassword = await bcrypt.hash(Math.random().toString(36) + Date.now().toString(), 10);
+            mustChangePassword = true;
+          }
+
+          return {
+            ...p,
+            password: safePassword,
+            mustChangePassword,
+          };
+        })
+      );
+
+      // Foreign Key Sanity Checks
+      const validPersonnelIds = new Set(processedPersonnel.map(p => p.id));
+
+      const validVehicles = vehicles.filter(v => validPersonnelIds.has(v.personnelId));
+      const validLeaveRecords = leaveRecords.filter(l => validPersonnelIds.has(l.personnelId));
+      const validDocuments = documents.filter(d => validPersonnelIds.has(d.personnelId));
+      const validPosts = posts.filter(po => validPersonnelIds.has(po.authorId));
+
+      // Execute Atomic Restore Transaction
       await prisma.$transaction(async (tx) => {
         // 1. Delete in reverse foreign-key order
         await tx.personnelDocument.deleteMany({});
@@ -96,10 +144,10 @@ export async function POST(request: Request) {
         await tx.systemRole.deleteMany({});
         await tx.systemSetting.deleteMany({});
 
-        // 2. Insert parent to child
+        // 2. Insert parent-to-child
         if (systemRoles.length > 0) {
           await tx.systemRole.createMany({
-            data: systemRoles.map((r: any) => ({
+            data: systemRoles.map((r) => ({
               id: r.id,
               name: r.name,
               displayName: r.displayName || r.name,
@@ -114,7 +162,7 @@ export async function POST(request: Request) {
 
         if (departments.length > 0) {
           await tx.department.createMany({
-            data: departments.map((d: any) => ({
+            data: departments.map((d) => ({
               id: d.id,
               name: d.name,
               shortName: d.shortName || null,
@@ -126,13 +174,13 @@ export async function POST(request: Request) {
           });
         }
 
-        if (personnelList.length > 0) {
+        if (processedPersonnel.length > 0) {
           await tx.personnel.createMany({
-            data: personnelList.map((p: any) => ({
+            data: processedPersonnel.map((p) => ({
               id: p.id,
               badgeNo: p.badgeNo || '',
               username: p.username || '',
-              password: p.password || '',
+              password: p.password,
               role: p.role || 'USER',
               prefix: p.prefix || '',
               firstName: p.firstName || '',
@@ -178,9 +226,9 @@ export async function POST(request: Request) {
           });
         }
 
-        if (vehicles.length > 0) {
+        if (validVehicles.length > 0) {
           await tx.vehicle.createMany({
-            data: vehicles.map((v: any) => ({
+            data: validVehicles.map((v) => ({
               id: v.id,
               personnelId: v.personnelId,
               type: v.type || 'รถยนต์',
@@ -197,9 +245,9 @@ export async function POST(request: Request) {
           });
         }
 
-        if (leaveRecords.length > 0) {
+        if (validLeaveRecords.length > 0) {
           await tx.leaveRecord.createMany({
-            data: leaveRecords.map((l: any) => ({
+            data: validLeaveRecords.map((l) => ({
               id: l.id,
               personnelId: l.personnelId,
               leaveType: l.leaveType,
@@ -233,9 +281,9 @@ export async function POST(request: Request) {
 
         if (notifications.length > 0) {
           await tx.notification.createMany({
-            data: notifications.map((n: any) => ({
+            data: notifications.map((n) => ({
               id: n.id,
-              personnelId: n.personnelId || n.recipientId,
+              personnelId: n.personnelId || n.recipientId || '',
               title: n.title,
               message: n.message,
               type: n.type || 'info',
@@ -246,9 +294,9 @@ export async function POST(request: Request) {
           });
         }
 
-        if (posts.length > 0) {
+        if (validPosts.length > 0) {
           await tx.post.createMany({
-            data: posts.map((po: any) => ({
+            data: validPosts.map((po) => ({
               id: po.id,
               title: po.title,
               content: po.content,
@@ -262,9 +310,9 @@ export async function POST(request: Request) {
           });
         }
 
-        if (documents.length > 0) {
+        if (validDocuments.length > 0) {
           await tx.personnelDocument.createMany({
-            data: documents.map((doc: any) => ({
+            data: validDocuments.map((doc) => ({
               id: doc.id,
               personnelId: doc.personnelId,
               category: doc.category || 'คำสั่ง',
@@ -283,7 +331,7 @@ export async function POST(request: Request) {
 
         if (calendarEvents.length > 0) {
           await tx.calendarEvent.createMany({
-            data: calendarEvents.map((c: any) => ({
+            data: calendarEvents.map((c) => ({
               id: c.id,
               title: c.title,
               description: c.description || null,
@@ -298,7 +346,7 @@ export async function POST(request: Request) {
 
         if (contactMessages.length > 0) {
           await tx.contactMessage.createMany({
-            data: contactMessages.map((cm: any) => ({
+            data: contactMessages.map((cm) => ({
               id: cm.id,
               name: cm.name,
               email: cm.email,
@@ -313,7 +361,7 @@ export async function POST(request: Request) {
 
         if (auditLogs.length > 0) {
           await tx.auditLog.createMany({
-            data: auditLogs.map((a: any) => ({
+            data: auditLogs.map((a) => ({
               id: a.id,
               personnelId: a.personnelId || null,
               action: a.action,
@@ -328,7 +376,7 @@ export async function POST(request: Request) {
 
         if (systemSettings.length > 0) {
           await tx.systemSetting.createMany({
-            data: systemSettings.map((s: any) => ({
+            data: systemSettings.map((s) => ({
               id: s.id,
               key: s.key,
               value: s.value,
@@ -338,14 +386,14 @@ export async function POST(request: Request) {
       });
 
       const totalRestored =
-        personnelList.length +
-        leaveRecords.length +
-        vehicles.length +
+        processedPersonnel.length +
+        validLeaveRecords.length +
+        validVehicles.length +
         departments.length +
         systemRoles.length +
         notifications.length +
-        posts.length +
-        documents.length;
+        validPosts.length +
+        validDocuments.length;
 
       // Record Audit Log
       await prisma.auditLog.create({
@@ -354,7 +402,7 @@ export async function POST(request: Request) {
           action: 'BACKUP_RESTORED',
           entity: 'Database',
           entityId: file.name,
-          details: `Universal JSON backup restored (${totalRestored} items) by ${user.role}`,
+          details: `Universal JSON backup restored (${totalRestored} validated items) by ${user.role}`,
           ipAddress: clientIp,
         },
       }).catch(() => {});
@@ -364,20 +412,26 @@ export async function POST(request: Request) {
         message: `กู้คืนข้อมูลสำเร็จเรียบร้อยแล้ว (รวม ${totalRestored} รายการ)`,
         format: 'universal_json',
         summary: {
-          personnel: personnelList.length,
-          leaveRecords: leaveRecords.length,
-          vehicles: vehicles.length,
+          personnel: processedPersonnel.length,
+          leaveRecords: validLeaveRecords.length,
+          vehicles: validVehicles.length,
           departments: departments.length,
           systemRoles: systemRoles.length,
-          posts: posts.length,
-          documents: documents.length,
+          posts: validPosts.length,
+          documents: validDocuments.length,
         },
       });
     }
 
     // -------------------------------------------------------------
-    // BRANCH B: Binary .db File Restore (For SQLite)
+    // BRANCH B: Binary .db File Restore (For SQLite - SUPER_ADMIN ONLY)
     // -------------------------------------------------------------
+    if (user.role !== 'SUPER_ADMIN') {
+      return NextResponse.json({
+        error: 'การกู้คืนไฟล์ไบนารี SQLite สงวนสิทธิ์เฉพาะผู้ดูแลระบบระดับสูง (SUPER_ADMIN) เท่านั้น'
+      }, { status: 403 });
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
 
     // Validate SQLite magic bytes

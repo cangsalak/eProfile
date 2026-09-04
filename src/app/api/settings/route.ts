@@ -19,6 +19,11 @@ const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'organizationName',
   'organizationAddress',
   'organizationPhone',
+  'contactPhoneSecondary',
+  'contactEmail',
+  'contactEmailSupport',
+  'contactMapEmbedUrl',
+  'contactMapLink',
   'cardTermsConditions',
   'defaultPageSize',
   'theme',
@@ -44,6 +49,8 @@ const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'enableLineNotify',
   'enableEmailNotify',
   'notifyEmailTo',
+  'dbProvider',
+  'hasDemoData',
   // Dropdown options needed by public-facing pages
   'personnelTypes',
   'statusList',
@@ -53,20 +60,30 @@ const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'vehicleTypes',
   'bloodGroups',
   'educationLevels',
+  'enabledModules',
 ]);
 
 /** Default values for public settings not yet stored in DB */
 const PUBLIC_DEFAULTS: Record<string, string> = {
   isInstalled:     'false',
+  dbProvider:      'sqlite',
+  hasDemoData:     'false',
   defaultPageSize: '20',
   theme:           'dark',
-  systemColor:     'indigo',
+  systemColor:     'nextadmin',
   systemFont:      'prompt',
   fontSizeScale:   '100',
   borderRadius:    'rounded',
   surfaceStyle:    'shadow',
   toastPosition:   'top-right',
   toastTheme:      'light',
+  organizationAddress: 'ศูนย์ราชการเฉลิมพระเกียรติฯ อาคาร B ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร 10210',
+  organizationPhone:   '02-123-4567',
+  contactPhoneSecondary: '02-123-4568 (ฝ่ายบริการ/สอบถาม)',
+  contactEmail:        'contact@eprofile.com',
+  contactEmailSupport: 'support@eprofile.com',
+  contactMapEmbedUrl:  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.7142718131343!2d100.56209507567849!3d13.886121595166432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e28329ab59218d%3A0xc6cba4b4260dfa02!2sGovernment%20Complex!5e0!3m2!1sen!2sth!4v1709210214327!5m2!1sen!2sth',
+  contactMapLink:      'https://maps.google.com/?q=Government+Complex+Chaeng+Watthana',
   personnelTypes:  JSON.stringify(['นายทหารสัญญาบัตร', 'นายทหารประทวน', 'พนักงานราชการ', 'ลูกจ้าง', 'ทหารกองประจำการ']),
   statusList:      JSON.stringify(['ปฏิบัติงานปกติ', 'ไปช่วยราชการ', 'ไปช่วยราชการภายนอกหน่วย', 'มาช่วยราชการ', 'ลาพักผ่อน', 'ลาป่วย/ลากิจ', 'ศึกษา/ดูงาน', 'ย้ายหน่วย/พ้นสภาพ']),
   prefixes:        JSON.stringify(['นาย', 'นาง', 'นางสาว', 'ร.ต.', 'ร.ท.', 'ร.อ.', 'พ.ต.', 'พ.ท.', 'พ.อ.', 'พล.ต.', 'พล.ท.', 'พล.อ.', 'ส.ต.', 'ส.ท.', 'ส.อ.', 'จ.ส.ต.', 'จ.ส.ท.', 'จ.ส.อ.']),
@@ -75,6 +92,7 @@ const PUBLIC_DEFAULTS: Record<string, string> = {
   vehicleTypes:    JSON.stringify(['รถยนต์ส่วนบุคคล', 'รถจักรยานยนต์', 'รถยนต์ราชการ', 'รถจักรยานยนต์ราชการ']),
   bloodGroups:     JSON.stringify(['A', 'B', 'AB', 'O']),
   educationLevels: JSON.stringify(['มัธยมศึกษาตอนต้น', 'มัธยมศึกษาตอนปลาย / ปวช.', 'อนุปริญญา / ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก']),
+  enabledModules:  JSON.stringify(['personnel', 'leaves', 'vehicles', 'badges', 'calendar', 'news', 'contacts', 'command-dashboard', 'system-inspector']),
 };
 
 /**

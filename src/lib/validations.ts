@@ -46,3 +46,26 @@ export const contactSchema = z.object({
   phone: z.string().max(20).optional().or(z.literal('')),
   message: z.string().min(10, 'ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร').max(2000),
 });
+
+export const installRequestSchema = z.object({
+  firstName: z.string().trim().min(1, 'กรุณากรอกชื่อผู้ดูแลระบบ').max(100),
+  lastName: z.string().trim().min(1, 'กรุณากรอกนามสกุลผู้ดูแลระบบ').max(100),
+  citizenId: z.string().trim().regex(/^\d{13}$/, 'เลขประจำตัวประชาชนต้องเป็นตัวเลข 13 หลักเท่านั้น'),
+  badgeNo: z.string().trim().regex(/^\d{10}$/, 'หมายเลขประจำตัวทหาร/เจ้าหน้าที่ต้องเป็นตัวเลข 10 หลักเท่านั้น'),
+  password: passwordPolicySchema,
+  setupSecret: z.string().optional(),
+  systemName: z.string().max(200).optional(),
+  organizationName: z.string().max(200).optional(),
+  organizationAddress: z.string().max(500).optional(),
+  organizationPhone: z.string().max(100).optional(),
+  contactPhoneSecondary: z.string().max(100).optional(),
+  contactEmail: z.string().email('รูปแบบอีเมลไม่ถูกต้อง').max(100).optional().or(z.literal('')),
+  contactEmailSupport: z.string().email('รูปแบบอีเมลไม่ถูกต้อง').max(100).optional().or(z.literal('')),
+  contactMapEmbedUrl: z.string().max(2000).optional().or(z.literal('')),
+  contactMapLink: z.string().max(2000).optional().or(z.literal('')),
+  dbProvider: z.enum(['sqlite', 'postgresql', 'mysql']).optional().default('sqlite'),
+  dbConnectionString: z.string().max(1000).optional().default(''),
+  installDemoData: z.boolean().optional().default(false),
+  theme: z.string().max(50).optional().default('dark'),
+});
+

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { ALL_SYSTEM_MODULES } from '@/lib/modules/registry';
 
 export interface DiscoveredRoute {
   path: string;
@@ -11,72 +12,101 @@ export interface DiscoveredRoute {
 }
 
 /**
- * Recursively scans src/app to dynamically discover all page routes
+ * Dynamically discovers all active page routes from system modules and app router
  */
 export function scanProjectPageRoutes(baseDir?: string, includeDynamic = false): DiscoveredRoute[] {
-  const appDir = baseDir || path.join(process.cwd(), 'src', 'app');
   const discovered: DiscoveredRoute[] = [];
 
-  if (!fs.existsSync(appDir)) {
-    return [];
-  }
+  // Core & Default system routes
+  const staticRoutes: { path: string; name: string; category: DiscoveredRoute['category'] }[] = [
+    { path: '/dashboard', name: 'หน้าหลัก (Dashboard)', category: 'Core' },
+    { path: '/login', name: 'เข้าสู่ระบบ (Login)', category: 'Auth' },
+  ];
 
-  function walk(currentDir: string) {
-    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+  staticRoutes.forEach(r => {
+    discovered.push({
+      path: r.path,
+      name: r.name,
+      category: r.category,
+      sourceFile: 'src/app/page.tsx',
+      isDynamic: false,
+    });
+  });
 
-    for (const entry of entries) {
-      const fullPath = path.join(currentDir, entry.name);
-
-      if (entry.isDirectory()) {
-        // Skip API routes directory since they are endpoints, not UI pages
-        if (entry.name === 'api') continue;
-        walk(fullPath);
-      } else if (entry.isFile()) {
-        // Check for page.tsx, page.jsx, page.js, page.ts
-        if (/^page\.(tsx|jsx|js|ts)$/.test(entry.name)) {
-          const relativeToApp = path.relative(appDir, currentDir);
-          
-          // Clean route path by stripping route groups like (member), (auth), etc.
-          const segments = relativeToApp
-            .split(path.sep)
-            .filter(segment => segment && !segment.startsWith('(') && !segment.endsWith(')'));
-
-          let routePath = '/' + segments.join('/');
-          if (routePath === '//' || routePath === '') {
-            routePath = '/';
-          }
-
-          // Check for dynamic segments like [id]
-          const isDynamic = /\[.*?\]/.test(routePath);
-          const dynamicParams = isDynamic
-            ? (routePath.match(/\[(.*?)\]/g) || []).map(p => p.slice(1, -1))
-            : [];
-
-          // Skip dynamic parameterized template routes from static direct crawling
-          if (isDynamic && !includeDynamic) {
-            continue;
-          }
-
-          // Guess friendly name & category
-          const { name, category } = deriveRouteMetadata(routePath, fullPath);
-
-          // Avoid duplicates
-          if (!discovered.some(d => d.path === routePath)) {
+  // Extract active modular routes from ALL_SYSTEM_MODULES
+  ALL_SYSTEM_MODULES.forEach(mod => {
+    mod.menus.forEach(menu => {
+      if (menu.path && !discovered.some(d => d.path === menu.path)) {
+        discovered.push({
+          path: menu.path,
+          name: `${menu.title} (${mod.name})`,
+          category: mod.category === 'core' ? 'Core' : 'Management',
+          sourceFile: `src/modules/${mod.id}`,
+          isDynamic: false,
+        });
+      }
+      if (menu.subItems) {
+        menu.subItems.forEach(sub => {
+          if (sub.path && !discovered.some(d => d.path === sub.path)) {
             discovered.push({
-              path: routePath,
-              name,
-              category,
-              sourceFile: path.relative(process.cwd(), fullPath),
-              isDynamic,
-              dynamicParams,
+              path: sub.path,
+              name: `${sub.name} (${mod.name})`,
+              category: 'Management',
+              sourceFile: `src/modules/${mod.id}`,
+              isDynamic: false,
             });
           }
-        }
+        });
       }
-    }
-  }
+    });
 
-  walk(appDir);
+    if (mod.settingsPath && !discovered.some(d => d.path === mod.settingsPath)) {
+      discovered.push({
+        path: mod.settingsPath,
+        name: `ตั้งค่า ${mod.name}`,
+        category: 'Settings',
+        sourceFile: `src/modules/${mod.id}`,
+        isDynamic: false,
+      });
+    }
+  });
+
+  // Also walk physical app dir for non-module standalone pages
+  const appDir = baseDir || path.join(process.cwd(), 'src', 'app');
+  if (fs.existsSync(appDir)) {
+    try {
+      const walk = (currentDir: string) => {
+        const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+        for (const entry of entries) {
+          const fullPath = path.join(currentDir, entry.name);
+          if (entry.isDirectory()) {
+            if (entry.name === 'api' || entry.name === 'modules') continue;
+            walk(fullPath);
+          } else if (entry.isFile() && /^page\.(tsx|jsx|js|ts)$/.test(entry.name)) {
+            const relativeToApp = path.relative(appDir, currentDir);
+            const segments = relativeToApp
+              .split(path.sep)
+              .filter(segment => segment && !segment.startsWith('(') && !segment.endsWith(')'));
+
+            let routePath = '/' + segments.join('/');
+            if (routePath === '//' || routePath === '') routePath = '/';
+
+            const isDynamic = /\[.*?\]/.test(routePath);
+            if (!isDynamic && !discovered.some(d => d.path === routePath)) {
+              discovered.push({
+                path: routePath,
+                name: routePath,
+                category: 'Public',
+                sourceFile: path.relative(process.cwd(), fullPath),
+                isDynamic: false,
+              });
+            }
+          }
+        }
+      };
+      walk(appDir);
+    } catch {}
+  }
 
   // Sort logically: Core -> Personnel -> Management -> Settings -> Auth -> Public
   const categoryOrder: Record<string, number> = {
@@ -97,66 +127,3 @@ export function scanProjectPageRoutes(baseDir?: string, includeDynamic = false):
   });
 }
 
-function deriveRouteMetadata(routePath: string, filePath: string): { name: string; category: DiscoveredRoute['category'] } {
-  // Read a snippet of file to look for Thai title/heading if available
-  let fileTitle = '';
-  try {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const titleMatch = content.match(/<h[12][^>]*>(.*?)<\/h[12]>/);
-    if (titleMatch && titleMatch[1]) {
-      const clean = titleMatch[1].replace(/<[^>]+>/g, '').trim();
-      if (clean && clean.length > 2 && clean.length < 50) {
-        fileTitle = clean;
-      }
-    }
-  } catch {}
-
-  if (routePath === '/' || routePath === '/dashboard') {
-    return { name: fileTitle || 'หน้าหลัก (Dashboard)', category: 'Core' };
-  }
-  if (routePath === '/directory') {
-    return { name: fileTitle || 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' };
-  }
-  if (routePath === '/leave') {
-    return { name: fileTitle || 'ระบบการลา (Leave)', category: 'Personnel' };
-  }
-  if (routePath === '/calendar') {
-    return { name: fileTitle || 'ปฏิทินปฏิบัติงาน (Calendar)', category: 'Core' };
-  }
-  if (routePath === '/profile') {
-    return { name: fileTitle || 'โปรไฟล์ส่วนตัว (Profile)', category: 'Personnel' };
-  }
-  if (routePath === '/profile/badges') {
-    return { name: fileTitle || 'บัตรประจำตัวดิจิทัล (Badges)', category: 'Personnel' };
-  }
-  if (routePath === '/settings') {
-    return { name: fileTitle || 'ตั้งค่าระบบ (Settings)', category: 'Settings' };
-  }
-  if (routePath.startsWith('/manage/')) {
-    const sub = routePath.replace('/manage/', '');
-    const titleMap: Record<string, string> = {
-      personnel: 'จัดการข้อมูลบุคลากร (Personnel Management)',
-      'personnel/print-badges': 'พิมพ์บัตรประจำตัว (Print Badges)',
-      notifications: 'จัดการการแจ้งเตือน (Notifications)',
-      posts: 'ข่าวสารประชาสัมพันธ์ (Posts)',
-      contacts: 'สมุดโทรศัพท์ (Contacts)',
-      media: 'คลังสื่อและเอกสาร (Media)',
-      'audit-logs': 'บันทึกกิจกรรมระบบ (Audit Logs)',
-      'api-docs': 'API Reference & Documentation',
-      inspector: 'System Inspector',
-    };
-    return { name: fileTitle || titleMap[sub] || `จัดการ ${sub}`, category: 'Management' };
-  }
-  if (['/login', '/register', '/forgot-password', '/setup', '/install'].includes(routePath)) {
-    const authMap: Record<string, string> = {
-      '/login': 'เข้าสู่ระบบ (Login)',
-      '/register': 'ลงทะเบียน (Register)',
-      '/forgot-password': 'ลืมรหัสผ่าน (Forgot Password)',
-      '/setup': 'ตั้งค่าเริ่มต้น (Setup)',
-      '/install': 'ติดตั้งระบบ (Install)',
-    };
-    return { name: fileTitle || authMap[routePath] || routePath, category: 'Auth' };
-  }
-
-  return { name: fileTitle || routePath, category: 'Public' };
-}

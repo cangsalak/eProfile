@@ -2,85 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./css/default.css";
+@import "./css/dark.css";
+
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Niramit:wght@300;400;500;600;700&display=swap');
 
-/* ─── Global Design Tokens ─────────────────────────────────────────────────── */
+
+/* ─── Global Design Tokens (NextAdmin HQ Unified Theme System) ─────────────── */
 :root,
-[data-theme="indigo"] {
-  --color-primary-50: 238 242 255;
-  --color-primary-100: 224 231 255;
-  --color-primary-200: 199 210 254;
-  --color-primary-300: 165 180 252;
-  --color-primary-400: 129 140 248;
-  --color-primary-500: 99 102 241;
-  --color-primary-600: 79 70 229;
-  --color-primary-700: 67 56 202;
-  --color-primary-800: 55 48 163;
-  --color-primary-900: 49 46 129;
-  --color-primary-950: 30 27 75;
+[data-theme="nextadmin"] {
+  --color-primary-50: 239 243 255;
+  --color-primary-100: 218 226 255;
+  --color-primary-200: 190 205 255;
+  --color-primary-300: 145 174 255;
+  --color-primary-400: 94 132 252;
+  --color-primary-500: 87 80 241; /* NextAdmin HQ Blue #5750F1 */
+  --color-primary-600: 70 63 224;
+  --color-primary-700: 60 53 216;
+  --color-primary-800: 45 38 180;
+  --color-primary-900: 28 34 140;
+  --color-primary-950: 22 23 85;
   
-  --bg-light: #f8fafc;
-  --bg-dark: #0f172a; /* slate-900 */
-  --surface-card: rgba(30, 41, 59, 0.75); /* slate-800 */
-  --border-color: rgba(255, 255, 255, 0.1);
+  --bg-light: #f9fafb;
+  --bg-dark: #1a222c;
+  --surface-card: #24303f;
+  --border-color: #2e3a47;
   --font-prompt: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-sarabun: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-kanit: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-niramit: 'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-[data-theme="emerald"] {
-  --color-primary-50: 236 253 245;
-  --color-primary-100: 209 250 229;
-  --color-primary-200: 167 243 208;
-  --color-primary-300: 110 231 183;
-  --color-primary-400: 52 211 153;
-  --color-primary-500: 16 185 129;
-  --color-primary-600: 5 150 105;
-  --color-primary-700: 4 120 87;
-  --color-primary-800: 6 95 70;
-  --color-primary-900: 6 78 59;
-  --color-primary-950: 2 44 34;
-  
-  --bg-light: #f8fafc;
-  --bg-dark: #022c22;
-  --surface-card: rgba(2, 44, 34, 0.75);
-}
-
-[data-theme="rose"] {
-  --color-primary-50: 255 241 242;
-  --color-primary-100: 255 228 230;
-  --color-primary-200: 254 205 211;
-  --color-primary-300: 253 164 175;
-  --color-primary-400: 251 113 133;
-  --color-primary-500: 244 63 94;
-  --color-primary-600: 225 29 72;
-  --color-primary-700: 190 18 60;
-  --color-primary-800: 159 18 57;
-  --color-primary-900: 136 19 55;
-  --color-primary-950: 76 5 25;
-  
-  --bg-light: #f8fafc;
-  --bg-dark: #2a0a18;
-  --surface-card: rgba(63, 20, 36, 0.75);
-}
-
-[data-theme="ocean"] {
-  --color-primary-50: 240 249 255;
-  --color-primary-100: 224 242 254;
-  --color-primary-200: 186 230 253;
-  --color-primary-300: 125 211 252;
-  --color-primary-400: 56 189 248;
-  --color-primary-500: 14 165 233;
-  --color-primary-600: 2 132 199;
-  --color-primary-700: 3 105 161;
-  --color-primary-800: 7 89 133;
-  --color-primary-900: 12 74 110;
-  --color-primary-950: 8 47 73;
-  
-  --bg-light: #f8fafc;
-  --bg-dark: #082f49;
-  --surface-card: rgba(12, 74, 110, 0.75);
 }
 
 /* ─── Component Layer ──────────────────────────────────────────────────────── */
@@ -93,9 +43,14 @@
     @apply w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all;
   }
 
+  .form-label {
+    @apply block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5;
+  }
+
   .form-select {
     @apply cursor-pointer;
   }
+
 
   /* Unified Card Design System */
   .ui-card {

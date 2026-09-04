@@ -36,7 +36,7 @@ export function applyThemeSettings(settings: Partial<ThemeSettings>) {
   localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
 
   // 2. Primary Color Theme & Custom Hex Engine
-  const activeColor = settings.systemColor || localStorage.getItem('theme') || 'indigo';
+  const activeColor = settings.systemColor || localStorage.getItem('theme') || 'nextadmin';
   if (activeColor === 'custom' && (settings.customPrimaryColor || localStorage.getItem('customPrimaryColor'))) {
     const customHex = settings.customPrimaryColor || localStorage.getItem('customPrimaryColor') || '#6366f1';
     root.setAttribute('data-theme', 'custom');

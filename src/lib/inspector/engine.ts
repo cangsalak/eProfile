@@ -75,19 +75,19 @@ export async function fetchDynamicProjectRoutes(): Promise<ProjectRouteItem[]> {
   }
   return [
     { path: '/dashboard', name: 'หน้าหลัก (Dashboard)', category: 'Core' },
-    { path: '/directory', name: 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' },
-    { path: '/leave', name: 'ระบบการลา (Leave)', category: 'Personnel' },
-    { path: '/calendar', name: 'ปฏิทินปฏิบัติงาน (Calendar)', category: 'Core' },
-    { path: '/profile', name: 'โปรไฟล์ส่วนตัว (Profile)', category: 'Personnel' },
-    { path: '/settings', name: 'ตั้งค่าระบบ (Settings)', category: 'Settings' },
-    { path: '/manage/personnel', name: 'จัดการบุคลากร', category: 'Management' },
-    { path: '/manage/notifications', name: 'จัดการการแจ้งเตือน', category: 'Management' },
-    { path: '/manage/posts', name: 'ข่าวสารประชาสัมพันธ์', category: 'Management' },
-    { path: '/manage/contacts', name: 'สมุดโทรศัพท์', category: 'Management' },
-    { path: '/manage/media', name: 'คลังสื่อและเอกสาร', category: 'Management' },
-    { path: '/manage/audit-logs', name: 'บันทึกกิจกรรมระบบ', category: 'Management' },
-    { path: '/manage/api-docs', name: 'API Reference', category: 'Management' },
-    { path: '/manage/inspector', name: 'System Inspector', category: 'Management' },
+    { path: '/modules/personnel/directory', name: 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' },
+    { path: '/modules/personnel/manage', name: 'จัดการบุคลากร (Personnel Management)', category: 'Personnel' },
+    { path: '/modules/leaves', name: 'ระบบการลา (Leave Management)', category: 'Personnel' },
+    { path: '/modules/vehicles', name: 'ระบบยานพาหนะ (Vehicle Management)', category: 'Management' },
+    { path: '/modules/badges', name: 'พิมพ์บัตรประจำตัว (Badge Studio)', category: 'Management' },
+    { path: '/modules/calendar', name: 'ปฏิทินปฏิบัติงาน (Duty Calendar)', category: 'Core' },
+    { path: '/modules/news', name: 'ระบบข่าวสารและประกาศ (News & Announcements)', category: 'Management' },
+    { path: '/modules/contacts', name: 'ระบบข้อมูลติดต่อ (Contacts)', category: 'Management' },
+    { path: '/modules/command-dashboard', name: 'แดชบอร์ดผู้บังคับบัญชา (Command Dashboard)', category: 'Core' },
+    { path: '/modules/system-inspector', name: 'ตรวจสอบความปลอดภัยระบบ (System Inspector)', category: 'Management' },
+    { path: '/modules/module-manager', name: 'จัดการโมดูลส่วนเสริม (Module Manager)', category: 'Settings' },
+    { path: '/modules/theme', name: 'ตั้งค่าธีมและระบบทั่วไป (Theme & Branding)', category: 'Settings' },
+    { path: '/modules/backup', name: 'สำรองและกู้คืนข้อมูล (Backup & Restore)', category: 'Settings' },
   ];
 }
 
@@ -291,13 +291,84 @@ export function inspectDomDocument(
     console.warn('Button check error:', err);
   }
 
-  // 5. Form & Input Checker
+  // 5. Deep Form, Input, Button & CSS Design System Inspection
   try {
-    const inputs = Array.from(doc.querySelectorAll('input:not([type="hidden"]):not(.no-inspect *), select:not(.no-inspect *), textarea:not(.no-inspect *)'));
+    const forms = Array.from(doc.querySelectorAll('form:not(.no-inspect *)'));
+    for (const form of forms) {
+      const classStr = form.getAttribute('class') || '';
+      const hasDarkMode = classStr.includes('dark:');
+      if (classStr.includes('bg-white') && !hasDarkMode) {
+        findings.push({
+          findingCode: nextCode('CSS'),
+          category: 'Form',
+          severity: 'LOW',
+          title: 'ฟอร์ม <form> ขาดคลาส Dark Mode Pair (dark:bg-slate-900)',
+          description: 'พบฟอร์มที่มีคลาส bg-white แต่ไม่มีคลาส dark:bg-* กำกับคู่กัน อาจทำให้การแสดงผลในโหมดมืด (Dark Mode) ไม่สมบูรณ์',
+          page: pageTitle,
+          url: pageUrl,
+          expected: 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800',
+          actual: classStr || 'ไม่มีคลาส Dark Mode',
+          element: 'form',
+          recommendation: 'ระบุคู่คลาส Light Mode และ Dark Mode ร่วมกันเสมอตามกฎ AGENTS.md',
+        });
+      }
+    }
+
+    const inputs = Array.from(
+      doc.querySelectorAll(
+        'input:not([type="hidden"]):not(.no-inspect *), select:not(.no-inspect *), textarea:not(.no-inspect *), button:not(.no-inspect *)'
+      )
+    );
+
     for (const input of inputs) {
+      const tag = input.tagName.toLowerCase();
+      const inputType = (input.getAttribute('type') || '').toLowerCase();
+      const classStr = input.getAttribute('class') || '';
       const id = input.getAttribute('id');
+      const name = input.getAttribute('name');
       const ariaLabel = input.getAttribute('aria-label');
       const ariaLabelledBy = input.getAttribute('aria-labelledby');
+
+      // 5.1 Button Type & Brand Color Inspection
+      if (tag === 'button') {
+        const typeAttr = input.getAttribute('type');
+        if (!typeAttr) {
+          findings.push({
+            findingCode: nextCode('BTN'),
+            category: 'Buttons',
+            severity: 'LOW',
+            title: 'ปุ่ม <button> ขาดการระบุ attribute type',
+            description: 'พบปุ่ม <button> ที่ไม่ได้ระบุ type="button" หรือ type="submit" (ค่าเริ่มต้นของเบราว์เซอร์จะถือเป็น submit ซึ่งอาจทำให้ฟอร์มส่งข้อมูลโดยไม่ตั้งใจ)',
+            page: pageTitle,
+            url: pageUrl,
+            expected: 'type="button" หรือ type="submit"',
+            actual: 'type attribute missing',
+            element: 'button',
+            recommendation: 'ระบุ type="button" หรือ type="submit" ให้ชัดเจนบนทุกแท็ก <button>',
+          });
+        }
+
+        // Hardcoded Non-Theme Color Check (e.g. indigo-*, purple-*)
+        if (classStr.match(/\b(bg|text|border|ring)-(indigo|purple|violet)-\d+/)) {
+          const matched = classStr.match(/\b(bg|text|border|ring)-(indigo|purple|violet)-\d+/)?.[0];
+          findings.push({
+            findingCode: nextCode('CSS'),
+            category: 'UI',
+            severity: 'LOW',
+            title: 'ปุ่มใช้คลาสสีแบรนด์แบบคงที่ (Fixed Branding Color)',
+            description: `พบการใช้คลาสสีคงที่ "${matched}" บนปุ่ม ซึ่งขัดต่อกฎการรักษาระบบธีมของแอปพลิเคชัน`,
+            page: pageTitle,
+            url: pageUrl,
+            expected: 'ใช้คลาสธีม primary-* (เช่น bg-primary-600 hover:bg-primary-700)',
+            actual: matched || classStr,
+            element: 'button',
+            recommendation: 'เปลี่ยนคลาสสีแบรนด์คงที่ indigo-*/purple-* เป็น primary-* เพื่อให้รองรับการเปลี่ยนธีมย่อยของระบบ',
+          });
+        }
+        continue;
+      }
+
+      // 5.2 Label Association & ARIA Check
       const hasLabel = id ? doc.querySelector(`label[for="${id}"]`) : null;
       const parentLabel = input.closest('label');
 
@@ -306,40 +377,90 @@ export function inspectDomDocument(
           findingCode: nextCode('FM'),
           category: 'Form',
           severity: 'LOW',
-          title: 'ช่องกรอกข้อมูลไม่มี Label กำกับ',
-          description: `ช่องกรอกข้อมูลประเภท ${input.getAttribute('type') || input.tagName.toLowerCase()} ไม่มี <label for="..."> หรือ aria-label`,
+          title: `ช่องกรอกข้อมูล <${tag}> ไม่มี Label กำกับ`,
+          description: `ช่องกรอกข้อมูลประเภท ${inputType || tag} ไม่มี <label for="..."> หรือ aria-label`,
           page: pageTitle,
           url: pageUrl,
-          expected: '<label for="inputId">ชื่อฟิลด์</label>',
+          expected: `<label for="${id || 'inputId'}">ชื่อฟิลด์</label>`,
           actual: 'No associated label',
-          element: input.tagName.toLowerCase(),
-          recommendation: 'เพิ่มแท็ก <label for="..."> หรือ aria-label เพื่อให้ผู้ใช้และ Screen Reader เข้าใจความหมายของฟิลด์',
+          element: tag,
+          recommendation: 'เพิ่มแท็ก <label for="..."> หรือ aria-label เพื่อรองรับ Accessibility (WCAG 2.2)',
         });
       }
 
-      // 5.2 Form & Dropdown Style Consistency Check
-      const inputType = input.getAttribute('type') || '';
+      // 5.3 Form Input Name / ID Identifier Check
+      if (!id && !name && !['submit', 'button', 'reset', 'checkbox', 'radio'].includes(inputType)) {
+        findings.push({
+          findingCode: nextCode('FM'),
+          category: 'Form',
+          severity: 'INFO',
+          title: `ช่องกรอกข้อมูล <${tag}> ขาด attribute name หรือ id`,
+          description: `ช่องกรอกข้อมูลไม่มีทั้ง name และ id ซึ่งอาจทำให้การจัดการฟอร์มและบันทึกข้อมูลยุ่งยาก`,
+          page: pageTitle,
+          url: pageUrl,
+          expected: 'name="fieldName" หรือ id="fieldId"',
+          actual: 'name & id are missing',
+          element: tag,
+          recommendation: 'กำหนด attribute name หรือ id ให้ชัดเจนสำหรับทุกฟิลด์ในฟอร์ม',
+        });
+      }
+
+      // 5.4 Form Input Style & Theme Consistency Check
       const isCustomWidget = ['hidden', 'checkbox', 'radio', 'file', 'color', 'range', 'submit', 'button', 'reset'].includes(inputType);
-      const isSrOnly = input.classList?.contains('sr-only') || input.classList?.contains('hidden');
+      const isSrOnly = classStr.includes('sr-only') || classStr.includes('hidden');
 
       if (!isCustomWidget && !isSrOnly) {
-        const classStr = input.getAttribute('class') || '';
         const hasBorder = classStr.includes('border');
         const hasRounded = classStr.includes('rounded');
+        const hasDarkMode = classStr.includes('dark:');
 
         if (!hasBorder || !hasRounded) {
           findings.push({
             findingCode: nextCode('FM'),
             category: 'Form',
             severity: 'LOW',
-            title: `รูปแบบสไตล์ UI ของ <${input.tagName.toLowerCase()}> ไม่ตรงตาม Design System`,
-            description: `Element <${input.tagName.toLowerCase()}> มีคลาสสไตล์ที่ขาดความสอดคล้อง (ขาด border หรือ rounded ตาม Design System)`,
+            title: `รูปแบบสไตล์ UI ของ <${tag}> ขาดความสอดคล้องตาม Design System`,
+            description: `Element <${tag}> มีคลาสสไตล์ที่ขาด border หรือ rounded ตามมาตรฐานฟอร์มของระบบ`,
             page: pageTitle,
             url: pageUrl,
-            expected: 'ใช้คลาส Design System (rounded-xl, border-slate-200, focus:ring-primary-500)',
+            expected: 'ใช้คลาส form-input/form-select/form-textarea หรือ (rounded-xl border-slate-200 focus:ring-primary-500)',
             actual: classStr ? `class="${classStr}"` : 'ไม่มีคลาสสไตล์ (Unstyled)',
-            element: input.tagName.toLowerCase(),
-            recommendation: 'ปรับใช้คลาสฟอร์มมาตรฐาน เช่น form-input / form-select หรือ rounded-xl border เพื่อให้ UI ของ Form ทั้งระบบเป็นมาตรฐานเดียวกัน',
+            element: tag,
+            recommendation: 'ใช้คลาสฟอร์มมาตรฐาน เช่น .form-input, .form-select, .form-textarea หรือคลาส rounded-xl border เพื่อความสอดคล้องทั้งระบบ',
+          });
+        } else if (!hasDarkMode) {
+          findings.push({
+            findingCode: nextCode('CSS'),
+            category: 'Form',
+            severity: 'LOW',
+            title: `ช่องกรอกข้อมูล <${tag}> ขาดคลาส Dark Mode (dark:bg-* / dark:border-*)`,
+            description: `Element <${tag}> มีคลาสสไตล์สำหรับ Light Mode แต่ไม่มีคลาส dark:bg-* หรือ dark:border-* สำหรับ Dark Mode`,
+            page: pageTitle,
+            url: pageUrl,
+            expected: 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white',
+            actual: classStr,
+            element: tag,
+            recommendation: 'เพิ่มคลาส Dark Mode เช่น dark:bg-slate-800 dark:border-slate-700 dark:text-white',
+          });
+        }
+      }
+
+      // 5.5 Select Dropdown Options Check
+      if (tag === 'select') {
+        const options = input.querySelectorAll('option');
+        if (options.length === 0) {
+          findings.push({
+            findingCode: nextCode('FM'),
+            category: 'Form',
+            severity: 'HIGH',
+            title: 'ตัวเลือก <select> ว่างเปล่า (ไม่มีตัวเลือก <option>)',
+            description: 'พบ Dropdown <select> ที่ไม่มีตัวเลือก <option> ภายใน',
+            page: pageTitle,
+            url: pageUrl,
+            expected: '<select><option value="">กรุณาเลือก...</option></select>',
+            actual: '0 options inside select',
+            element: 'select',
+            recommendation: 'เพิ่มรายการ <option> หรือตรวจสอบการโหลดข้อมูลไดนามิกใน dropdown',
           });
         }
       }

@@ -2,13 +2,11 @@
  * Validates that a string is a valid UUID v4 or CUID (used by Prisma by default).
  * This prevents path traversal and injection via ID parameters.
  */
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const CUID_REGEX = /^c[a-z0-9]{24,}$/i;
+const SAFE_ID_REGEX = /^[a-z0-9_-]{2,64}$/i;
 
 export function isValidId(id: string): boolean {
   if (!id || typeof id !== 'string') return false;
-  // Allow UUID v4, CUID (Prisma default), or uppercase test role IDs like ADMIN, USER
-  return UUID_REGEX.test(id) || CUID_REGEX.test(id) || ['ADMIN', 'SUPER_ADMIN', 'OFFICER', 'EDITOR', 'USER'].includes(id);
+  return SAFE_ID_REGEX.test(id);
 }
 
 export function validateId(id: string): { valid: boolean; error?: string } {

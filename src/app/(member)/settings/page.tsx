@@ -1,361 +1,62 @@
-'use client';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import toast from 'react-hot-toast';
-import RoleSettings from '@/components/settings/RoleSettings';
-import DepartmentsManager from '@/components/DepartmentsManager';
-import SystemSettingsForm from '@/components/settings/SystemSettingsForm';
-import BadgeDesignSettings from '@/components/settings/BadgeDesignSettings';
-import NotificationSettings from '@/components/settings/NotificationSettings';
-import DataCategorySettings from '@/components/settings/DataCategorySettings';
-import BackupRestoreSettings from '@/components/settings/BackupRestoreSettings';
+const legacyTabRoutes: Record<string, string> = {
+  system: '/modules/theme',
+  badge: '/modules/badges/settings',
+  roles: '/modules/personnel/roles',
+  dropdowns: '/modules/system-inspector/categories',
+  departments: '/modules/personnel/departments',
+  notifications: '/modules/news/settings',
+  line: '/modules/news/settings',
+  mail: '/modules/news/settings',
+  modules: '/modules/system-inspector/modules',
+  menus: '/modules/menus',
+  maintenance: '/modules/backup',
+};
 
-import { applyThemeSettings } from '@/lib/theme-manager';
+const settingsModules = [
+  { href: '/modules/theme', icon: 'fa-palette', title: 'ระบบทั่วไปและธีม', description: 'ชื่อระบบ โลโก้ สี และรูปแบบการแสดงผล' },
+  { href: '/modules/badges/settings', icon: 'fa-id-card', title: 'ออกแบบบัตร', description: 'รูปแบบและข้อมูลบนบัตรประจำตัว' },
+  { href: '/modules/personnel/roles', icon: 'fa-user-shield', title: 'สิทธิ์การใช้งาน', description: 'บทบาทและสิทธิ์การเข้าถึงระบบ' },
+  { href: '/modules/personnel/departments', icon: 'fa-building', title: 'หน่วยงาน', description: 'โครงสร้างหน่วยงานและหน่วยย่อย' },
+  { href: '/modules/system-inspector/categories', icon: 'fa-tags', title: 'ข้อมูลพื้นฐาน', description: 'รายการตัวเลือกที่ใช้ในระบบ' },
+  { href: '/modules/news/settings', icon: 'fa-bell', title: 'การแจ้งเตือน', description: 'การแจ้งเตือน LINE และ Email' },
+  { href: '/modules/system-inspector/modules', icon: 'fa-puzzle-piece', title: 'จัดการโมดูล', description: 'เปิด ปิด ติดตั้ง และถอนการติดตั้งโมดูล' },
+  { href: '/modules/menus', icon: 'fa-compass', title: 'จัดการเมนู', description: 'ตรวจสอบโครงสร้างและเส้นทางเมนู' },
+  { href: '/modules/backup', icon: 'fa-database', title: 'สำรองและกู้คืนข้อมูล', description: 'จัดการ backup และ restore ระบบ' },
+];
 
-export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<string>('system');
-  const [settings, setSettings] = useState<any>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('saved');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Badge Preview State
-  const [previewSide, setPreviewSide] = useState<'front' | 'back'>('front');
-
-  // Backup & Restore
-  const restoreFileInputRef = useRef<HTMLInputElement>(null);
-  const [isRestoring, setIsRestoring] = useState(false);
-
-  useEffect(() => {
-    const savedTab = localStorage.getItem('activeSettingsTab');
-    if (savedTab) {
-      setActiveTab(savedTab);
-    }
-    fetchSettings();
-
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
-
-  const handleTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-    localStorage.setItem('activeSettingsTab', tabId);
-  };
-
-  const fetchSettings = async () => {
-    try {
-      const res = await fetch('/api/settings');
-      const data = await res.json();
-      setSettings(data);
-      applyThemeSettings(data);
-    } catch (err) {
-      console.error('Failed to fetch settings:', err);
-      toast.error('ไม่สามารถโหลดการตั้งค่าได้');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Perform server PUT save with payload
-  const persistSettingsToServer = async (payload: any) => {
-    setAutoSaveStatus('saving');
-    try {
-      const res = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        setAutoSaveStatus('saved');
-        applyThemeSettings(payload);
-      } else {
-        setAutoSaveStatus('idle');
-      }
-    } catch (err) {
-      console.error('Auto-save error:', err);
-      setAutoSaveStatus('idle');
-    }
-  };
-
-  // Auto-save dispatcher for System Settings Form
-  const handleSystemSettingsChange = useCallback((newSettings: any, immediate = false) => {
-    setSettings(newSettings);
-    // Apply immediate visual update in DOM so user sees change in 0ms!
-    applyThemeSettings(newSettings);
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    if (immediate) {
-      persistSettingsToServer(newSettings);
-    } else {
-      setAutoSaveStatus('saving');
-      debounceTimerRef.current = setTimeout(() => {
-        persistSettingsToServer(newSettings);
-      }, 500);
-    }
-  }, []);
-
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('ขนาดไฟล์ต้องไม่เกิน 2MB');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newSettings = { ...settings, systemLogo: reader.result as string };
-        handleSystemSettingsChange(newSettings, true);
-        toast.success('อัปเดตโลโก้ระบบเรียบร้อย');
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRestore = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!confirm('คำเตือน: การกู้คืนจะเขียนทับข้อมูลปัจจุบันทั้งหมด คุณแน่ใจหรือไม่?')) {
-      if (restoreFileInputRef.current) restoreFileInputRef.current.value = '';
-      return;
-    }
-
-    setIsRestoring(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await fetch('/api/restore', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || 'กู้คืนฐานข้อมูลสำเร็จ ระบบกำลังเริ่มใหม่...');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      } else {
-        toast.error(data.error || 'เกิดข้อผิดพลาดในการกู้คืนฐานข้อมูล');
-        setIsRestoring(false);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
-      setIsRestoring(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked.toString() : e.target.value;
-    const isInstant = e.target.type === 'radio' || e.target.type === 'select-one' || e.target.type === 'color';
-    const newSettings = { ...settings, [e.target.name]: value };
-
-    if (activeTab === 'system') {
-      handleSystemSettingsChange(newSettings, isInstant);
-    } else {
-      setSettings(newSettings);
-    }
-  };
-
-  const handleSetSettingsForSystem = (newSettings: any) => {
-    handleSystemSettingsChange(newSettings, true);
-  };
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    try {
-      const res = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings)
-      });
-      if (res.ok) {
-        toast.success('บันทึกการตั้งค่าเรียบร้อยแล้ว');
-        if (settings.theme) {
-          document.documentElement.className = settings.theme;
-          localStorage.setItem('theme', settings.theme);
-        }
-      } else {
-        toast.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-      }
-    } catch (err) {
-      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-    }
-    setIsSaving(false);
-  };
-
-  const testLineNotify = async () => {
-    if (!settings.lineNotifyToken) {
-      toast.error('กรุณากรอก Token ก่อนทดสอบ');
-      return;
-    }
-
-    toast.success('ทดสอบส่งข้อความ (ฟังก์ชันนี้ยังไม่ได้ต่อ API ทดสอบตรง)');
-  };
-
-  const tabsList = [
-    { id: 'system', name: 'ระบบทั่วไป และ ธีม', icon: 'fa-desktop' },
-    { id: 'badge', name: 'ออกแบบบัตร (Badge)', icon: 'fa-id-badge' },
-    { id: 'roles', name: 'สิทธิ์การใช้งาน (Roles)', icon: 'fa-user-shield' },
-    { id: 'dropdowns', name: 'จัดการตัวเลือก', icon: 'fa-list' },
-    { id: 'departments', name: 'หน่วยงาน', icon: 'fa-sitemap' },
-    { id: 'notifications', name: 'การแจ้งเตือน (LINE & Email)', icon: 'fa-bell' },
-    { id: 'maintenance', name: 'บำรุงรักษาระบบ', icon: 'fa-tools' },
-  ];
-
-  const showManualSaveButton = activeTab === 'badge' || activeTab === 'notifications' || activeTab === 'dropdowns';
+export default function SettingsPage({
+  searchParams,
+}: {
+  searchParams: { tab?: string };
+}) {
+  const legacyRoute = searchParams.tab ? legacyTabRoutes[searchParams.tab] : undefined;
+  if (legacyRoute) redirect(legacyRoute);
 
   return (
-    <div className="pb-16 max-w-7xl mx-auto space-y-6 animate-fade-in font-prompt">
-      {/* Header Banner & Horizontal Tab Navigation */}
-      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-        {/* Background glow */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-200/50 via-primary-100/20 to-transparent dark:from-primary-950/40 dark:via-primary-900/20 dark:to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none" />
-
-        <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="flex items-center space-x-4">
-            <div className="shrink-0 w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-primary-500/20">
-              <i className="fa-solid fa-gear"></i>
-            </div>
-            <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-primary-50 dark:bg-primary-950/60 border border-primary-100 dark:border-primary-900/60 rounded-full text-xs font-semibold text-primary-700 dark:text-primary-300 mb-2">
-                <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-                <span>การจัดการระบบ (System Administration)</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                ตั้งค่าระบบ (System Settings)
-              </h1>
-              <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1">
-                กำหนดค่าทั่วไป ธีม รูปแบบบัตร สิทธิ์ผู้ใช้งาน ตัวเลือกข้อมูล หน่วยงาน และการสำรองข้อมูล
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Horizontal Tab Navigation Bar (Scrollable on smaller screens) */}
-        <div 
-          role="tablist" 
-          aria-label="การตั้งค่าระบบตามหมวดหมู่"
-          className="relative z-10 px-4 sm:px-8 flex items-center gap-1 sm:gap-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/50 overflow-x-auto"
-        >
-          {tabsList.map(tab => {
-            const isActive = activeTab === tab.id || ((activeTab === 'line' || activeTab === 'mail') && tab.id === 'notifications');
-            return (
-              <button
-                key={tab.id}
-                role="tab"
-                id={`tab-${tab.id}`}
-                aria-controls={`tabpanel-${tab.id}`}
-                aria-selected={isActive}
-                type="button"
-                onClick={() => handleTabChange(tab.id)}
-                className={`py-3.5 px-4 font-bold text-xs sm:text-sm border-b-2 whitespace-nowrap transition-all flex items-center gap-2.5 shrink-0 ${
-                  isActive
-                    ? 'border-primary-500 text-primary-600 dark:text-primary-400 bg-white/70 dark:bg-slate-800/50'
-                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'
-                }`}
-              >
-                <i className={`fa-solid ${tab.icon} text-xs ${isActive ? 'text-primary-500' : 'text-slate-400'}`}></i>
-                <span>{tab.name}</span>
-              </button>
-            );
-          })}
-        </div>
+    <div className="space-y-6 pb-16">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">System Administration</p>
+        <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white">ตั้งค่าระบบ</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">เลือกจัดการแต่ละส่วนผ่าน module เจ้าของโดยตรง</p>
       </div>
-
-      {/* Main Tab Content Card */}
-      {isLoading ? (
-        <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-12 text-center text-slate-500 dark:text-slate-400">
-          <i className="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-primary-500"></i>
-          <p className="text-sm font-medium">กำลังโหลดการตั้งค่าระบบ...</p>
-        </div>
-      ) : (
-        <div 
-          role="tabpanel"
-          id={`tabpanel-${activeTab}`}
-          aria-labelledby={`tab-${activeTab}`}
-          className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm"
-        >
-          {activeTab === 'departments' ? (
-            <DepartmentsManager />
-          ) : activeTab === 'roles' ? (
-            <RoleSettings />
-          ) : (
-            <form onSubmit={handleSave} className="space-y-6">
-
-              {activeTab === 'system' && (
-                <SystemSettingsForm 
-                  settings={settings}
-                  setSettings={handleSetSettingsForSystem}
-                  handleChange={handleChange}
-                  handleLogoUpload={handleLogoUpload}
-                  fileInputRef={fileInputRef}
-                  autoSaveStatus={autoSaveStatus}
-                />
-              )}
-
-              {activeTab === 'badge' && (
-                <BadgeDesignSettings 
-                  settings={settings}
-                  setSettings={setSettings}
-                  handleChange={handleChange}
-                  previewSide={previewSide}
-                  setPreviewSide={setPreviewSide}
-                />
-              )}
-
-              {(activeTab === 'notifications' || activeTab === 'line' || activeTab === 'mail') && (
-                <NotificationSettings 
-                  settings={settings}
-                  handleChange={handleChange}
-                  testLineNotify={testLineNotify}
-                />
-              )}
-
-              {activeTab === 'dropdowns' && (
-                <DataCategorySettings 
-                  settings={settings}
-                  setSettings={setSettings}
-                />
-              )}
-
-              {activeTab === 'maintenance' && (
-                <BackupRestoreSettings 
-                  isRestoring={isRestoring}
-                  handleRestore={handleRestore}
-                  restoreFileInputRef={restoreFileInputRef}
-                />
-              )}
-
-              {/* Show manual Save Button only for tabs that need explicit form submission */}
-              {showManualSaveButton && (
-                <div className="flex justify-end pt-6 border-t border-slate-200 dark:border-slate-800">
-                  <button 
-                    type="submit" 
-                    disabled={isSaving} 
-                    className="px-6 py-2.5 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-primary-500/20 transition-all flex items-center gap-2"
-                  >
-                    {isSaving ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <i className="fa-solid fa-save"></i>}
-                    <span>บันทึกการตั้งค่า</span>
-                  </button>
-                </div>
-              )}
-
-            </form>
-          )}
-        </div>
-      )}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {settingsModules.map((item) => (
+          <Link key={item.href} href={item.href} className="group rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-primary-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+            <div className="flex items-start gap-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-600 dark:bg-primary-950/50 dark:text-primary-400">
+                <i className={`fa-solid ${item.icon}`} />
+              </span>
+              <span>
+                <span className="block font-semibold text-slate-900 group-hover:text-primary-600 dark:text-white dark:group-hover:text-primary-400">{item.title}</span>
+                <span className="mt-1 block text-xs leading-5 text-slate-500 dark:text-slate-400">{item.description}</span>
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

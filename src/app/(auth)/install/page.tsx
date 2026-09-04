@@ -26,7 +26,16 @@ export default function InstallPage() {
   // System & Admin Form
   const [formData, setFormData] = useState({
     systemName: 'ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)',
+    organizationName: 'กองบัญชาการ / หน่วยงานต้นสังกัด',
+    organizationAddress: 'ศูนย์ราชการเฉลิมพระเกียรติฯ อาคาร B ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร 10210',
+    organizationPhone: '02-123-4567',
+    contactPhoneSecondary: '02-123-4568 (ฝ่ายบริการ/สอบถาม)',
+    contactEmail: 'contact@eprofile.com',
+    contactEmailSupport: 'support@eprofile.com',
+    contactMapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.7142718131343!2d100.56209507567849!3d13.886121595166432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e28329ab59218d%3A0xc6cba4b4260dfa02!2sGovernment%20Complex!5e0!3m2!1sen!2sth!4v1709210214327!5m2!1sen!2sth',
+    contactMapLink: 'https://maps.google.com/?q=Government+Complex+Chaeng+Watthana',
     theme: 'dark',
+    installDemoData: true,
     firstName: '',
     lastName: '',
     citizenId: '',
@@ -94,7 +103,7 @@ export default function InstallPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     // Enforce numeric only for citizenId (13 digits) and badgeNo (10 digits)
     if (name === 'citizenId') {
@@ -156,6 +165,7 @@ export default function InstallPage() {
     try {
       const payload = {
         ...formData,
+        installDemoData: Boolean(formData.installDemoData),
         dbProvider: dbConfig.provider,
         dbConnectionString: dbConfig.provider !== 'sqlite' ? `${dbConfig.provider}://${dbConfig.user}:***@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}` : 'file:./dev.db',
       };
@@ -189,7 +199,7 @@ export default function InstallPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-200 font-prompt py-12 px-4 sm:px-6">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-prompt py-12 px-4 sm:px-6">
       <div className="glass-card max-w-2xl w-full p-6 sm:p-10 border border-slate-200 dark:border-slate-700/50 shadow-2xl rounded-2xl bg-white dark:bg-slate-900/90 backdrop-blur-xl transition-all">
         {/* Header */}
         <div className="text-center mb-8">
@@ -439,19 +449,128 @@ export default function InstallPage() {
                 </p>
               </div>
 
-              <div>
-                <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                  ชื่อระบบ (System Name) <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="systemName"
-                  value={formData.systemName}
-                  onChange={handleChange}
-                  required
-                  placeholder="เช่น ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์"
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    ชื่อระบบ (System Name) <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="systemName"
+                    value={formData.systemName}
+                    onChange={handleChange}
+                    required
+                    placeholder="เช่น ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    ชื่อหน่วยงาน (Organization Name)
+                  </label>
+                  <input
+                    type="text"
+                    name="organizationName"
+                    value={formData.organizationName}
+                    onChange={handleChange}
+                    placeholder="เช่น กองบัญชาการกองทัพไทย"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* ─── Contact Information Section (ข้อมูลการติดต่อเรา) ─── */}
+              <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-800/40 space-y-3">
+                <div className="flex items-center gap-2 text-slate-800 dark:text-white font-bold text-xs pb-1 border-b border-slate-200 dark:border-slate-700/60">
+                  <i className="fa-solid fa-address-book text-blue-500 text-sm"></i>
+                  <span>ข้อมูลการติดต่อเรา (Contact Information)</span>
+                </div>
+
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    ที่อยู่สำนักงาน / หน่วยงาน (Office Address)
+                  </label>
+                  <textarea
+                    name="organizationAddress"
+                    rows={2}
+                    value={formData.organizationAddress}
+                    onChange={handleChange}
+                    placeholder="ระบุที่อยู่สำนักงาน..."
+                    className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white resize-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      เบอร์โทรศัพท์หลัก (Main Phone)
+                    </label>
+                    <input
+                      type="text"
+                      name="organizationPhone"
+                      value={formData.organizationPhone}
+                      onChange={handleChange}
+                      placeholder="เช่น 02-123-4567"
+                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      เบอร์โทรศัพท์สายตรง / แผนก (Secondary Phone)
+                    </label>
+                    <input
+                      type="text"
+                      name="contactPhoneSecondary"
+                      value={formData.contactPhoneSecondary}
+                      onChange={handleChange}
+                      placeholder="เช่น 02-123-4568 (ฝ่ายบริการ)"
+                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      อีเมลหลัก (Contact Email)
+                    </label>
+                    <input
+                      type="email"
+                      name="contactEmail"
+                      value={formData.contactEmail}
+                      onChange={handleChange}
+                      placeholder="เช่น contact@eprofile.com"
+                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      อีเมลฝ่ายช่วยเหลือ/บริการ (Support Email)
+                    </label>
+                    <input
+                      type="email"
+                      name="contactEmailSupport"
+                      value={formData.contactEmailSupport}
+                      onChange={handleChange}
+                      placeholder="เช่น support@eprofile.com"
+                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    Google Maps Embed URL (ลิงก์แผนที่แบบฝังสำหรับแสดงบนหน้าเว็บ)
+                  </label>
+                  <input
+                    type="url"
+                    name="contactMapEmbedUrl"
+                    value={formData.contactMapEmbedUrl}
+                    onChange={handleChange}
+                    placeholder="https://www.google.com/maps/embed?pb=..."
+                    className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
               </div>
 
               <div>
@@ -467,6 +586,64 @@ export default function InstallPage() {
                   <option value="dark">Dark Theme (โหมดมืด - แนะนำ)</option>
                   <option value="light">Light Theme (โหมดสว่าง)</option>
                 </select>
+              </div>
+
+              {/* Demo / Sample Data Toggle Card */}
+              <div className={`p-4 rounded-2xl border-2 transition-all ${
+                formData.installDemoData 
+                  ? 'border-blue-500 bg-blue-500/10 shadow-md ring-2 ring-blue-500/20' 
+                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50'
+              }`}>
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={formData.installDemoData}
+                    onChange={(e) => setFormData(prev => ({ ...prev, installDemoData: e.target.checked }))}
+                    className="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-sm text-slate-900 dark:text-white">
+                        ติดตั้งข้อมูลตัวอย่างสำหรับทดสอบระบบ (Demo / Sample Data)
+                      </span>
+                      <span className="px-2 py-0.5 bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-bold border border-blue-500/30">
+                        แนะนำสำหรับการทดสอบ
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                      สร้างชุดข้อมูลจำลองครบวงจรเพื่อให้สามารถทดลองใช้งานฟังก์ชันทั้งหมดของระบบได้ทันทีหลังติดตั้ง
+                    </p>
+
+                    {formData.installDemoData && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-blue-500/20 text-[11px] text-slate-700 dark:text-slate-300">
+                        <div className="flex items-center gap-1.5">
+                          <i className="fa-solid fa-users text-blue-500 text-xs"></i>
+                          <span>10 กำลังพลครบ 5 ประเภท</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <i className="fa-solid fa-sitemap text-blue-500 text-xs"></i>
+                          <span>4 ฝ่าย 8 แผนกโครงสร้าง</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <i className="fa-solid fa-calendar-check text-blue-500 text-xs"></i>
+                          <span>ประวัติการลา 3 สถานะ</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <i className="fa-solid fa-car text-blue-500 text-xs"></i>
+                          <span>ยานพาหนะส่วนตัวและราชการ</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <i className="fa-solid fa-bullhorn text-blue-500 text-xs"></i>
+                          <span>ข่าวสารและประกาศตัวอย่าง</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <i className="fa-solid fa-calendar-days text-blue-500 text-xs"></i>
+                          <span>กิจกรรมและตารางฝึกอบรม</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </label>
               </div>
 
               <div className="p-3.5 rounded-xl bg-blue-500/5 border border-blue-500/20 text-xs text-blue-600 dark:text-blue-400 flex items-start gap-2.5">

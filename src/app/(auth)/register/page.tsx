@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   required
                   value={formData.citizenId}
                   onChange={(e) => setFormData({...formData, citizenId: e.target.value})}
-                  className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
+                  className="form-control"
                   placeholder="ใช้สำหรับเป็น Username ในการล็อกอิน"
                 />
               </div>
@@ -110,7 +110,7 @@ export default function RegisterPage() {
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
+                  className="form-control"
                   placeholder="ตั้งรหัสผ่านสำหรับเข้าสู่ระบบ"
                 />
               </div>
@@ -125,7 +125,7 @@ export default function RegisterPage() {
                     required
                     value={formData.firstName}
                     onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                    className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
+                    className="form-control"
                   />
                 </div>
                 <div>
@@ -137,7 +137,7 @@ export default function RegisterPage() {
                     required
                     value={formData.lastName}
                     onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                    className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
+                    className="form-control"
                   />
                 </div>
               </div>
@@ -151,14 +151,14 @@ export default function RegisterPage() {
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="block w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary-500 bg-slate-50 dark:bg-slate-900/50 text-slate-900 dark:text-white"
+                  className="form-control"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full flex justify-center mt-6 py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors disabled:opacity-70"
+                className="w-full ui-btn-primary py-3"
               >
                 {status === 'loading' ? (
                   <><i className="fa-solid fa-circle-notch fa-spin mr-2"></i> กำลังบันทึก...</>

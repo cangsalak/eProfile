@@ -1,13 +1,20 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import ProfileDropdown from './ProfileDropdown';
 import NotificationDropdown from './NotificationDropdown';
 import { Personnel } from '@/types/personnel';
+import { SunIcon, MoonIcon, MenuIcon, SearchIcon } from './icons';
+import { ThreeDots } from '@/components/common/sidebar/icon';
+import { cn } from '@/utils/cn';
 
 interface TopNavbarProps {
   isGuest: boolean;
   systemSettings: any;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  isSidebarCollapsed?: boolean;
+  setIsSidebarCollapsed?: (collapsed: boolean) => void;
   currentUser: Personnel | null;
   handleLogout: () => void;
   setIsLoginModalOpen: (isOpen: boolean) => void;
@@ -26,52 +33,130 @@ export default function TopNavbar({
   isDarkMode,
   toggleDarkMode,
 }: TopNavbarProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileInfoOpen, setIsMobileInfoOpen] = useState(false);
+
   return (
-    <header className={`h-16 bg-white dark:bg-slate-900/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-700/50 flex items-center justify-between px-6 z-40 print:hidden no-print ${isGuest ? 'w-full max-w-7xl mx-auto border-x' : ''}`}>
-      
-      {isGuest ? (
-        <div className="flex items-center">
-          {systemSettings?.systemLogo && (
-            <img src={systemSettings.systemLogo} alt="Logo" className="h-8 object-contain drop-shadow-md mr-3" />
-          )}
-          <h1 className="text-xl font-bold bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">
-            {systemSettings?.systemName || 'ระบบฐานข้อมูลบุคลากร'}
-          </h1>
-        </div>
-      ) : (
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="lg:hidden text-slate-500 dark:text-slate-400 hover:text-white transition-colors"
-        >
-          <i className="fa-solid fa-bars text-xl"></i>
-        </button>
-      )}
-
-      <div className="flex items-center space-x-3 sm:space-x-4 ml-auto">
-        <button 
-          onClick={toggleDarkMode}
-          className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
-          title={isDarkMode ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด'}
-        >
-          {isDarkMode ? <i className="fa-solid fa-moon"></i> : <i className="fa-solid fa-sun text-amber-400"></i>}
-        </button>
-
-        {currentUser ? (
-          <>
-            <NotificationDropdown currentUser={currentUser} />
-            <ProfileDropdown currentUser={currentUser} handleLogout={handleLogout} />
-          </>
+    <>
+      <header className="sticky top-0 z-40 w-full border-b-[0.5px] border-card-border bg-card-surface-area px-4 py-4 lg:px-6 shrink-0 flex items-center justify-between print:hidden no-print">
+        {isGuest ? (
+          <div className="flex items-center">
+            {systemSettings?.systemLogo && (
+              <img src={systemSettings.systemLogo} alt="Logo" className="h-8 object-contain drop-shadow-md mr-3" />
+            )}
+            <h1 className="text-xl font-bold text-text-primary">
+              {systemSettings?.systemName || 'ระบบฐานข้อมูลบุคลากร'}
+            </h1>
+          </div>
         ) : (
-          <button
-            onClick={() => setIsLoginModalOpen(true)}
-            className="px-4 py-2 rounded-lg bg-primary-500/10 text-primary-400 border border-primary-500/20 hover:bg-primary-500/20 transition-all text-sm font-medium shadow-[0_0_10px_rgba(99,102,241,0.1)] flex items-center shrink-0"
-          >
-            <i className="fa-solid fa-user-lock mr-2"></i>
-            <span className="hidden sm:inline">เข้าสู่ระบบสำหรับ Admin</span>
-            <span className="sm:hidden">เข้าสู่ระบบ</span>
-          </button>
+          <>
+            {/* Mobile layout (< lg) — 3-column: menu | title | dots */}
+            <div className="flex items-center lg:hidden w-full justify-between">
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="rounded-md p-1.5 text-icon-tertiary hover:text-text-primary transition-colors"
+                aria-label="Open sidebar menu"
+              >
+                <MenuIcon />
+              </button>
+
+              <span className="font-semibold text-text-primary text-base truncate max-w-45">
+                {systemSettings?.systemName || 'eProfile'}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setIsMobileInfoOpen(!isMobileInfoOpen)}
+                aria-label="Open quick access"
+                className={cn(
+                  'rounded-md p-1.5 transition-colors',
+                  isMobileInfoOpen
+                    ? 'bg-background-gray-secondary text-text-primary'
+                    : 'text-icon-tertiary hover:text-text-primary',
+                )}
+              >
+                <ThreeDots />
+              </button>
+            </div>
+
+            {/* Desktop layout (lg+) */}
+            <div className="hidden lg:flex items-center justify-between w-full">
+              {/* Left Side - Search */}
+              <div className="max-w-xs flex-1">
+                <div className="relative w-full">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-icon-tertiary">
+                    <SearchIcon />
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search pages..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-14 py-2 bg-card-background border border-card-border rounded-lg text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-input-primary-focus-border transition-all shadow-xs"
+                  />
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-card-border bg-background-gray-primary/50 px-1.5 py-0.5 text-xs text-text-tertiary pointer-events-none">
+                    <span className="font-medium">⌘</span> K
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side - Actions */}
+              <div className="flex items-center gap-2.5">
+                <button 
+                  type="button"
+                  onClick={toggleDarkMode}
+                  className="size-10 rounded-lg border border-card-border bg-card-background text-icon-primary shadow-xs flex items-center justify-center hover:bg-background-gray-primary transition-colors"
+                  title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                  aria-label={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                >
+                  {isDarkMode ? <MoonIcon /> : <SunIcon />}
+                </button>
+
+                {currentUser ? (
+                  <>
+                    <NotificationDropdown currentUser={currentUser} />
+                    <ProfileDropdown currentUser={currentUser} handleLogout={handleLogout} />
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold transition-all shadow-xs flex items-center shrink-0"
+                  >
+                    <i className="fa-solid fa-user-lock mr-2"></i>
+                    <span>Login</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </>
         )}
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile Quick Actions Bar (< lg) */}
+      {!isGuest && isMobileInfoOpen && (
+        <div className="lg:hidden border-b border-card-border bg-card-surface-area px-4 py-3 shadow-xs">
+          <div className="flex items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5">
+              <button 
+                type="button"
+                onClick={toggleDarkMode}
+                className="size-10 rounded-lg border border-card-border bg-card-background text-icon-primary shadow-xs flex items-center justify-center hover:bg-background-gray-primary transition-colors"
+                title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              >
+                {isDarkMode ? <MoonIcon /> : <SunIcon />}
+              </button>
+
+              {currentUser && <NotificationDropdown currentUser={currentUser} />}
+            </div>
+
+            {currentUser && (
+              <ProfileDropdown currentUser={currentUser} handleLogout={handleLogout} />
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

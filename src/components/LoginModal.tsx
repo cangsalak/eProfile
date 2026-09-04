@@ -72,7 +72,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <p className="text-xs text-slate-500 dark:text-slate-400">สำหรับบุคลากรและผู้ดูแลระบบ</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white">
+          <button type="button" onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white">
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>

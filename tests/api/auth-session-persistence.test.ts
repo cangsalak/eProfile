@@ -54,7 +54,7 @@ export async function runAuthSessionPersistenceTests() {
   assert.strictEqual(homeAccessRes.status, 200, 'Authenticated users should be able to view the public home page');
   console.log('✔ Authenticated navigation to / correctly renders public home page');
 
-  // 4. Authenticated Navigate to /login -> Middleware redirects to /dashboard
+  // 4. Authenticated Navigate to /login -> Middleware redirects to /modules/personnel
   const loginRedirectRes = await fetch(`${BASE_URL}/login`, {
     headers: {
       'Cookie': `auth_token=${validToken}`,
@@ -63,17 +63,17 @@ export async function runAuthSessionPersistenceTests() {
   });
   assert.ok(
     [307, 308, 302].includes(loginRedirectRes.status),
-    `Authenticated /login should redirect to /dashboard (got status ${loginRedirectRes.status})`
+    `Authenticated /login should redirect to /modules/personnel (got status ${loginRedirectRes.status})`
   );
-  console.log('✔ Authenticated navigation to /login correctly redirects to /dashboard');
+  console.log('✔ Authenticated navigation to /login correctly redirects to /modules/personnel');
 
-  // 5. Unauthenticated Navigate to /dashboard -> Middleware redirects to /login
-  const protectedRedirectRes = await fetch(`${BASE_URL}/dashboard`, {
+  // 5. Unauthenticated Navigate to /modules/personnel -> Middleware redirects to /login
+  const protectedRedirectRes = await fetch(`${BASE_URL}/modules/personnel`, {
     redirect: 'manual',
   });
   assert.ok(
     [307, 308, 302].includes(protectedRedirectRes.status),
-    `Unauthenticated /dashboard should redirect to /login (got status ${protectedRedirectRes.status})`
+    `Unauthenticated /modules/personnel should redirect to /login (got status ${protectedRedirectRes.status})`
   );
   const protectedLocation = protectedRedirectRes.headers.get('location');
   assert.ok(protectedLocation?.includes('/login'), `Location should point to /login (got ${protectedLocation})`);

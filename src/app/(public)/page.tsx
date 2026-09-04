@@ -19,7 +19,7 @@ export default async function PublicLandingPage() {
           
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-8 animate-fade-in-up animation-delay-100">
             ยกระดับการบริหาร <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600 dark:from-primary-400 dark:to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-300">
               ทรัพยากรบุคคล
             </span>
           </h1>
@@ -68,7 +68,7 @@ export default async function PublicLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+              <div className="w-14 h-14 bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                 <i className="fa-solid fa-users"></i>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">จัดการข้อมูลบุคลากร</h3>
@@ -76,7 +76,7 @@ export default async function PublicLandingPage() {
             </div>
 
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+              <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                 <i className="fa-solid fa-calendar-check"></i>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ระบบการลาออนไลน์</h3>
@@ -84,7 +84,7 @@ export default async function PublicLandingPage() {
             </div>
 
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                 <i className="fa-solid fa-shield-halved"></i>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ความปลอดภัยระดับสูง</h3>

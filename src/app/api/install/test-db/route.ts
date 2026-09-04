@@ -34,7 +34,7 @@ function isSafeConnectionString(cs: string): boolean {
 }
 
 export async function POST(req: Request) {
-  const response = NextResponse.next();
+  const response = new NextResponse(null);
 
   // ── Rate limit ───────────────────────────────────────────────────────────────
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? '127.0.0.1';

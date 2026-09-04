@@ -15,6 +15,8 @@ import { runUniversalBackupRestoreTests } from './api/universal-backup-restore.t
 import { runVulnerabilityFixesTests } from './security/vulnerability-fixes.test';
 import { runCommandDashboardTests } from './api/command-dashboard.test';
 import { runLeaveApprovalsTests } from './api/leave-approvals.test';
+import { runInstallDemoDataTests } from './installer/install-demo-data.test';
+import { runModuleInstallerTests } from './modules/module-installer.test';
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
@@ -24,7 +26,7 @@ async function main() {
 
   const startTime = Date.now();
   let passedSuites = 0;
-  let totalSuites = 17;
+  let totalSuites = 19;
 
   try {
     // 1. Unit Tests
@@ -93,6 +95,14 @@ async function main() {
 
     // 17. Leave Approvals Management Tests (v1.3.0)
     await runLeaveApprovalsTests();
+    passedSuites++;
+
+    // 18. Installer & Demo Dataset Seeder Tests (v1.3.0)
+    await runInstallDemoDataTests();
+    passedSuites++;
+
+    // 19. Module ZIP Uploader & Lifecycle Tests
+    await runModuleInstallerTests();
     passedSuites++;
 
     // Final Teardown: Clean up any test notifications, test posts, or test users
