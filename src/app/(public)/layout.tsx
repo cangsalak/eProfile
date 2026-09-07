@@ -13,7 +13,26 @@ export default async function PublicLayout({
   const user = await verifyAuth();
   const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN';
 
-  // Check Maintenance Mode from database
+  // 1. Check Installation Status from database
+  let isInstalled = true;
+  try {
+    const installedSetting = await prisma.systemSetting.findUnique({
+      where: { key: 'isInstalled' }
+    });
+    // If not found or not 'true', system requires installation wizard
+    if (!installedSetting || installedSetting.value !== 'true') {
+      isInstalled = false;
+    }
+  } catch {
+    // If table not initialized or error, proceed to install
+    isInstalled = false;
+  }
+
+  if (!isInstalled) {
+    redirect('/install');
+  }
+
+  // 2. Check Maintenance Mode from database
   let isMaintenance = false;
   try {
     const maintenanceSetting = await prisma.systemSetting.findUnique({

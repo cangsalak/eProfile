@@ -24,11 +24,10 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="file:/app/data/dev.db"
 
-# Setup schema & build initial seed database
+# Setup schema & build initial template database (uninstalled state)
 RUN mkdir -p /app/data /app/prisma
 RUN npx prisma generate
 RUN npx prisma db push --skip-generate || true
-RUN npx prisma db seed || true
 RUN cp /app/data/dev.db /app/prisma/dev.template.db 2>/dev/null || true
 
 # Build Next.js with standalone output
