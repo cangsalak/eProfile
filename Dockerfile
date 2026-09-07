@@ -1,5 +1,5 @@
 # Dockerfile for Next.js eProfile System with Prisma, SQLite, and OpenSSL support
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
@@ -9,11 +9,10 @@ COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
 # Configure npm with DNS & retry options for restricted/NAS environments
-RUN npm config set registry https://registry.npmjs.org/ && \
-    npm config set fetch-retries 5 && \
+RUN npm config set fetch-retries 5 && \
     npm config set fetch-retry-mintimeout 20000 && \
     npm config set fetch-retry-maxtimeout 120000 && \
-    (npm ci || npm install --legacy-peer-deps || true)
+    npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 # ── Stage 2: Builder ───────────────────────────────────────────
 FROM base AS builder
