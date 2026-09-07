@@ -32,6 +32,7 @@ interface DisplayMenuItem {
   moduleName: string;
   moduleId: string;
   isCore: boolean;
+  isModuleEnabled?: boolean;
   requiredRoles?: string[];
   requiredPermission?: string;
   subItems: { name: string; path: string }[];
@@ -160,7 +161,7 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
 
   // 1. System Module Menus
   modules.forEach((mod) => {
-    const isModEnabled = mod.isCore || enabledModuleIds.length === 0 || enabledModuleIds.includes(mod.id);
+    const isModEnabled = mod.isCore || enabledModuleIds.includes(mod.id);
     mod.menus.forEach((menu) => {
       const override = getOverride(menu.id);
       allDisplayItems.push({
@@ -174,6 +175,7 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
         moduleName: mod.name,
         moduleId: mod.id,
         isCore: mod.isCore,
+        isModuleEnabled: isModEnabled,
         requiredRoles: menu.requiredRoles,
         requiredPermission: menu.requiredPermission,
         subItems: override?.subItems || menu.subItems?.map((s) => ({ name: s.name, path: s.path })) || [],
@@ -356,7 +358,7 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
   };
 
   return (
-    <div className="pb-16 max-w-7xl mx-auto space-y-6 animate-fade-in font-prompt">
+    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
       {/* ─── Notification Alert Banner ─────────────────────────────────── */}
       {statusMessage && (
         <div
@@ -376,53 +378,10 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
         </div>
       )}
 
-      {/* ─── Header Banner ───────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-200/40 via-primary-100/10 to-transparent dark:from-primary-950/30 dark:via-primary-900/10 dark:to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="flex items-center space-x-4">
-            <div className="shrink-0 w-14 h-14 bg-gradient-to-br from-primary-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg shadow-primary-500/20">
-              <i className="fa-solid fa-compass"></i>
-            </div>
-            <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-primary-50 dark:bg-primary-950/60 border border-primary-100 dark:border-primary-900/60 rounded-full text-xs font-semibold text-primary-700 dark:text-primary-300 mb-2">
-                <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-                <span>ระบบจัดการเมนูและนำทาง (Menu & Navigation System)</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                จัดการเมนูและโครงสร้างระบบ
-              </h1>
-              <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1">
-                จัดการ เพิ่ม แก้ไข เปลี่ยนชื่อ ลำดับ ไอคอน และลบรายการเมนูปรับแต่งในแถบข้าง (Sidebar Navigation)
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleOpenAddModal}
-              className="px-4 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 shadow-md shadow-primary-600/25"
-            >
-              <i className="fa-solid fa-plus"></i>
-              <span>+ เพิ่มเมนูใหม่</span>
-            </button>
-
-            <button
-              onClick={loadMenuOverrides}
-              className="px-3.5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center gap-2"
-              title="รีเฟรชข้อมูล"
-            >
-              <i className="fa-solid fa-rotate"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── Metric & Filter Tabs ───────────────────────────────────── */}
+      {/* ─── Metric & Filter Tabs & Action Toolbar ─────────────────── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         {/* Tabs */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/60 overflow-x-auto">
+        <div className="flex items-center gap-1.5 p-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-x-auto">
           <button
             onClick={() => setSelectedTab('all')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
@@ -472,7 +431,7 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
           </button>
         </div>
 
-        {/* Module Filter Dropdown */}
+        {/* Module Filter Dropdown & Action Buttons */}
         <div className="flex items-center gap-2">
           <select
             value={selectedModuleFilter}
@@ -487,6 +446,22 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
               </option>
             ))}
           </select>
+
+          <button
+            onClick={handleOpenAddModal}
+            className="px-3.5 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+          >
+            <i className="fa-solid fa-plus"></i>
+            <span>เพิ่มเมนู</span>
+          </button>
+
+          <button
+            onClick={loadMenuOverrides}
+            className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center shadow-xs"
+            title="รีเฟรชข้อมูล"
+          >
+            <i className="fa-solid fa-rotate"></i>
+          </button>
         </div>
       </div>
 
@@ -602,7 +577,15 @@ export default function MenuManagerView({ settings }: MenuManagerViewProps) {
 
                         {/* Status Badge */}
                         <td className="py-3.5 px-4 text-center">
-                          {item.enabled ? (
+                          {item.isModuleEnabled === false ? (
+                            <span
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-200 dark:border-amber-800"
+                              title="โมดูลต้นสังกัดถูกปิดการใช้งานในหน้าจัดการโมดูล"
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                              ปิดตามโมดูล
+                            </span>
+                          ) : item.enabled ? (
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                               เปิดอยู่

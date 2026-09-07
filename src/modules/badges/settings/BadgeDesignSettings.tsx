@@ -13,6 +13,16 @@ interface BadgeDesignSettingsProps {
 }
 
 export default function BadgeDesignSettings({ settings, setSettings, handleChange, previewSide, setPreviewSide }: BadgeDesignSettingsProps) {
+  const parseConfig = (val: any) => {
+    if (!val) return undefined;
+    if (typeof val === 'object') return val;
+    try {
+      return JSON.parse(val);
+    } catch {
+      return undefined;
+    }
+  };
+
   return (
     <div className={`space-y-6 animate-fade-in flex flex-col ${settings.badgeTemplate === 'canvas' ? '' : 'xl:flex-row'} gap-8`}>
       <div className="flex-1 space-y-5">
@@ -34,13 +44,27 @@ export default function BadgeDesignSettings({ settings, setSettings, handleChang
             <label className={`cursor-pointer border rounded-xl p-3 flex flex-col items-center gap-2 transition-all ${settings.badgeTemplate === 'canvas' ? 'border-primary-500 bg-primary-500/10' : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
               <input type="radio" name="badgeTemplate" value="canvas" checked={settings.badgeTemplate === 'canvas'} onChange={handleChange} className="sr-only" />
               <i className="fa-solid fa-pen-ruler text-2xl text-slate-700 dark:text-slate-300"></i>
-              <span className="text-sm font-medium">ออกแบบอิสระ (Canvas)</span>
+              <span className="text-sm font-medium">ออกแบบอิสระ (Canva Style)</span>
             </label>
           </div>
         </div>
 
         {settings.badgeTemplate !== 'canvas' && (
           <>
+            <div>
+              <label htmlFor="badgeHeaderTitle" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ข้อความหัวบัตร (Header Title)</label>
+              <input
+                id="badgeHeaderTitle"
+                type="text"
+                name="badgeHeaderTitle"
+                aria-label="ข้อความหัวบัตร"
+                placeholder="บัตรประจำตัวข้าราชการ"
+                value={settings.badgeHeaderTitle ?? 'บัตรประจำตัวข้าราชการ'}
+                onChange={handleChange}
+                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+              />
+            </div>
+
             <div>
               <label htmlFor="badgeColorModeSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">รูปแบบสีของบัตร (Color Mode)</label>
               <select 
@@ -109,11 +133,11 @@ export default function BadgeDesignSettings({ settings, setSettings, handleChang
       </div>
 
       {settings.badgeTemplate === 'canvas' ? (
-        <div className="w-full bg-slate-100 dark:bg-slate-900/50 p-2 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col items-center">
+        <div className="w-full bg-slate-950 p-2 sm:p-4 rounded-3xl border border-slate-800 flex flex-col items-center">
           <div className="w-full">
             <BadgeCanvasEditor 
-              initialElements={settings.badgeCanvasConfig ? JSON.parse(settings.badgeCanvasConfig) : []}
-              initialBackElements={settings.badgeBackCanvasConfig ? JSON.parse(settings.badgeBackCanvasConfig) : []}
+              initialElements={parseConfig(settings.badgeCanvasConfig)}
+              initialBackElements={parseConfig(settings.badgeBackCanvasConfig)}
               onChange={(elements) => setSettings((prev: any) => ({ ...prev, badgeCanvasConfig: JSON.stringify(elements) }))}
               onBackChange={(elements) => setSettings((prev: any) => ({ ...prev, badgeBackCanvasConfig: JSON.stringify(elements) }))}
             />
@@ -156,7 +180,7 @@ export default function BadgeDesignSettings({ settings, setSettings, handleChang
                   phone: '0812345678',
                   role: 'USER',
                   status: 'ACTIVE',
-                  avatarColor: '#3b82f6'
+                  avatarColor: ''
                 } as any}
                 settings={settings}
                 isBack={false}
@@ -179,7 +203,7 @@ export default function BadgeDesignSettings({ settings, setSettings, handleChang
                   phone: '0812345678',
                   role: 'USER',
                   status: 'ACTIVE',
-                  avatarColor: '#3b82f6'
+                  avatarColor: ''
                 } as any}
                 settings={settings}
                 isBack={true}

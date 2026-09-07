@@ -291,23 +291,17 @@ export default function ManageAuditLogsPage() {
   const indexOfLastItem = indexOfFirstItem + logs.length;
 
   return (
-    <div className="pb-12 max-w-7xl mx-auto animate-fade-in space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-1">
-            <i className="fa-solid fa-shield-halved"></i>
-            <span>Security & Compliance</span>
-          </div>
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            บันทึกกิจกรรมระบบ (Audit Logs)
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            ติดตามและตรวจสอบประวัติการใช้งาน การเข้าสู่ระบบ และการแก้ไขข้อมูลในระบบ
-          </p>
+    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
+      {/* Action Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-primary-500 animate-pulse"></span>
+          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            Security & Compliance Audit Trail
+          </span>
         </div>
 
-        {/* Action Toolbar */}
+        {/* Action Toolbar Buttons */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           {/* ChatGPT AI Prompt Buttons */}
           <div className="flex items-center rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 p-0.5 shadow-md shadow-emerald-500/20">

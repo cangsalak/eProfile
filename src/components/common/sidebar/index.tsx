@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
-import { Logo, LogoWithText, LogoWithTextDark } from '@/utils/icon';
 import { 
   CloseIcon, 
   SidebarExpandedIcon, 
@@ -55,24 +54,55 @@ export default function Sidebar({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* NextAdmin Header */}
+      {/* System Brand Header */}
       <div
         className={cn(
-          'flex items-center px-4 pt-7 text-text-primary shrink-0',
+          'flex items-center px-4 pt-6 pb-2 text-text-primary shrink-0',
           isExpanded ? 'justify-between' : 'flex-col justify-center gap-4',
         )}
       >
-        <Link href="/" onClick={onItemClick}>
-          {isExpanded ? (
-            systemSettings?.systemLogo ? (
-              <img src={systemSettings.systemLogo} alt="Logo" className="h-8 object-contain" />
-            ) : isDarkMode ? (
-              <LogoWithTextDark />
-            ) : (
-              <LogoWithText />
-            )
+        <Link 
+          href="/" 
+          onClick={onItemClick}
+          className="flex items-center gap-3 group min-w-0"
+        >
+          {systemSettings?.systemLogo ? (
+            <img 
+              src={systemSettings.systemLogo} 
+              alt={systemSettings?.systemName || 'System Logo'} 
+              className={cn(
+                'object-contain transition-transform group-hover:scale-105 shrink-0',
+                isExpanded ? 'h-9 max-w-[170px]' : 'h-9 w-9'
+              )} 
+            />
           ) : (
-            <Logo />
+            <>
+              <div className="h-9 w-9 rounded-xl bg-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 transition-transform shrink-0">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+
+              {isExpanded && (
+                <div className="flex flex-col min-w-0">
+                  <span className="text-base font-extrabold text-text-primary tracking-tight truncate leading-tight">
+                    {systemSettings?.systemName || 'eProfile'}
+                  </span>
+                  <span className="text-[11px] font-medium text-text-tertiary truncate leading-tight mt-0.5">
+                    {systemSettings?.siteTitle || systemSettings?.organizationName || 'ระบบฐานข้อมูลบุคลากร'}
+                  </span>
+                </div>
+              )}
+            </>
           )}
         </Link>
 
@@ -95,16 +125,16 @@ export default function Sidebar({
       <nav
         className={cn(
           'scrollbar-thin flex-1 overflow-y-auto',
-          isExpanded ? 'mt-7 space-y-6 px-4' : 'mt-5 px-2',
+          isExpanded ? 'mt-5 space-y-6 px-4' : 'mt-4 px-2',
         )}
       >
         <div>
           {isExpanded ? (
-            <p className="mt-6 mb-4 text-xs text-text-tertiary uppercase font-medium tracking-wider">
+            <p className="mt-4 mb-4 text-xs text-text-tertiary uppercase font-semibold tracking-wider">
               MAIN MENU
             </p>
           ) : (
-            <span className="flex items-center justify-center pt-6 pb-4 text-icon-secondary">
+            <span className="flex items-center justify-center pt-4 pb-4 text-icon-secondary">
               <ThreeDots />
             </span>
           )}
@@ -126,24 +156,24 @@ export default function Sidebar({
         </div>
       </nav>
 
-      {/* NextAdmin Footer Card */}
+      {/* System Status / Organization Footer */}
       {isExpanded && (
-        <div className="px-4 py-4 shrink-0">
-          <div className="rounded-2xl bg-background-gray-primary px-4 py-5 text-center">
-            <p className="mb-2 leading-6 font-semibold text-text-primary">
-              Upgrade to Pro
-            </p>
-            <small className="text-sm leading-5 tracking-[-0.15px] text-text-tertiary">
-              Get all dashboard and 200+ essential UI elements
-            </small>
-            <Link
-              href="https://nextadmin.co/pricing"
-              className="mt-4 flex h-10 w-full items-center justify-center rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition-colors shadow-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Upgrade to Pro
-            </Link>
+        <div className="px-4 py-3 shrink-0">
+          <div className="rounded-xl border border-card-border bg-background-gray-primary/60 dark:bg-card-surface-area/40 px-3.5 py-3 flex items-center gap-3">
+            <div className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-text-primary truncate">
+                {systemSettings?.systemName || 'eProfile'}
+              </p>
+              <p className="text-[10px] text-text-tertiary truncate">
+                พร้อมใช้งาน • v2.5.0
+              </p>
+            </div>
           </div>
         </div>
       )}

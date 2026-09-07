@@ -11,13 +11,13 @@ export const SystemInspectorManifest: ModuleManifest = {
   category: 'system',
   isCore: false,
   defaultEnabled: true,
-  settingsPath: '/modules/system-inspector/categories',
+  settingsPath: '/inspector/categories',
   menus: [
     {
       id: 'system-inspector-view',
       title: 'ตรวจสอบระบบ (Inspector)',
       icon: 'fa-solid fa-shield-halved',
-      path: '/modules/system-inspector',
+      path: '/inspector',
       requiredRoles: ['SUPER_ADMIN'],
       order: 100
     },
@@ -25,19 +25,24 @@ export const SystemInspectorManifest: ModuleManifest = {
       id: 'api-docs',
       title: 'API Documentation',
       icon: 'fa-solid fa-book',
-      path: '/modules/system-inspector/api-docs',
+      path: '/inspector/api-docs',
       requiredRoles: ['SUPER_ADMIN'],
       order: 110
     }
   ],
   permissions: [], // SUPER_ADMIN only
   legacyRoutes: {
-    '/manage/inspector': '/modules/system-inspector',
-    '/manage/inspector/categories': '/modules/system-inspector/categories',
-    '/manage/audit-logs': '/modules/system-inspector/audit-logs',
-    '/api-documentation': '/modules/system-inspector/api-docs',
-    '/manage/api-docs': '/modules/system-inspector/api-docs',
-    '/manage/modules': '/modules/module-manager',
-    '/modules/system-inspector/manage': '/modules/module-manager',
+    '/manage/inspector': '/inspector',
+    '/manage/inspector/categories': '/inspector/categories',
+    '/manage/audit-logs': '/inspector/audit-logs',
+    '/api-documentation': '/inspector/api-docs',
+    '/manage/api-docs': '/inspector/api-docs',
+    '/manage/modules': '/module-manager',
+    '/modules/system-inspector/manage': '/module-manager',
+    '/modules/system-inspector': '/inspector',
+    '/modules/system-inspector/api-docs': '/inspector/api-docs',
+    '/modules/system-inspector/audit-logs': '/inspector/audit-logs',
+    '/modules/system-inspector/categories': '/inspector/categories',
+    '/modules/system-inspector/modules': '/inspector/modules',
   }
 };

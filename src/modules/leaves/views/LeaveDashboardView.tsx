@@ -21,16 +21,7 @@ export default function LeaveDashboardView() {
   if (!currentUser) return null;
 
   return (
-    <div className="animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-          ระบบจัดการการลา
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm">
-          จัดการประวัติการลา ยื่นขอลา และตรวจสอบสถานะการลาของคุณ
-        </p>
-      </div>
-
+    <div className="animate-fade-in pb-12">
       <Suspense fallback={<div className="text-center py-8">กำลังโหลดข้อมูล...</div>}>
         <LeaveList personnelId={currentUser.id} isAdmin={['ADMIN', 'SUPER_ADMIN'].includes(currentUser.role || '')} />
       </Suspense>

@@ -66,9 +66,11 @@ export default function PublicContactView() {
   return (
     <div className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-prompt">
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">ติดต่อเรา</h1>
+        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
+          {settings.contactTitle || 'ติดต่อเรา'}
+        </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400">
-          มีข้อสงสัยหรือต้องการความช่วยเหลือ? ติดต่อทีมงาน {settings.organizationName || 'eProfile'} ได้ทันที
+          {settings.contactSubtitle || `มีข้อสงสัยหรือต้องการความช่วยเหลือ? ติดต่อทีมงาน ${settings.organizationName || 'eProfile'} ได้ทันที`}
         </p>
       </div>
 
@@ -146,6 +148,21 @@ export default function PublicContactView() {
                 </div>
               </div>
             </div>
+
+            {/* Working Hours */}
+            {settings.contactWorkingHours && (
+              <div className="flex items-start">
+                <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center text-xl shrink-0">
+                  <i className="fa-solid fa-clock"></i>
+                </div>
+                <div className="ml-6">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">วันและเวลาทำการ</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {settings.contactWorkingHours}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Google Map Display */}

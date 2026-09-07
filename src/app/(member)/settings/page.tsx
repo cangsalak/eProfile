@@ -13,18 +13,20 @@ const legacyTabRoutes: Record<string, string> = {
   modules: '/modules/system-inspector/modules',
   menus: '/modules/menus',
   maintenance: '/modules/backup',
+  content: '/site-content',
 };
 
 const settingsModules = [
-  { href: '/modules/theme', icon: 'fa-palette', title: 'ระบบทั่วไปและธีม', description: 'ชื่อระบบ โลโก้ สี และรูปแบบการแสดงผล' },
-  { href: '/modules/badges/settings', icon: 'fa-id-card', title: 'ออกแบบบัตร', description: 'รูปแบบและข้อมูลบนบัตรประจำตัว' },
-  { href: '/modules/personnel/roles', icon: 'fa-user-shield', title: 'สิทธิ์การใช้งาน', description: 'บทบาทและสิทธิ์การเข้าถึงระบบ' },
-  { href: '/modules/personnel/departments', icon: 'fa-building', title: 'หน่วยงาน', description: 'โครงสร้างหน่วยงานและหน่วยย่อย' },
-  { href: '/modules/system-inspector/categories', icon: 'fa-tags', title: 'ข้อมูลพื้นฐาน', description: 'รายการตัวเลือกที่ใช้ในระบบ' },
-  { href: '/modules/news/settings', icon: 'fa-bell', title: 'การแจ้งเตือน', description: 'การแจ้งเตือน LINE และ Email' },
-  { href: '/modules/system-inspector/modules', icon: 'fa-puzzle-piece', title: 'จัดการโมดูล', description: 'เปิด ปิด ติดตั้ง และถอนการติดตั้งโมดูล' },
-  { href: '/modules/menus', icon: 'fa-compass', title: 'จัดการเมนู', description: 'ตรวจสอบโครงสร้างและเส้นทางเมนู' },
-  { href: '/modules/backup', icon: 'fa-database', title: 'สำรองและกู้คืนข้อมูล', description: 'จัดการ backup และ restore ระบบ' },
+  { href: '/theme', icon: 'fa-palette', title: 'ระบบทั่วไปและธีม', description: 'ชื่อระบบ โลโก้ สี และรูปแบบการแสดงผล' },
+  { href: '/site-content', icon: 'fa-window-maximize', title: 'เนื้อหาหน้าเว็บ (CMS)', description: 'แก้ไขข้อความ รูปภาพ หน้าแรก เกี่ยวกับเรา และติดต่อเรา' },
+  { href: '/badges/settings', icon: 'fa-id-card', title: 'ออกแบบบัตร', description: 'รูปแบบและข้อมูลบนบัตรประจำตัว' },
+  { href: '/personnel/roles', icon: 'fa-user-shield', title: 'สิทธิ์การใช้งาน', description: 'บทบาทและสิทธิ์การเข้าถึงระบบ' },
+  { href: '/personnel/departments', icon: 'fa-building', title: 'หน่วยงาน', description: 'โครงสร้างหน่วยงานและหน่วยย่อย' },
+  { href: '/inspector/categories', icon: 'fa-tags', title: 'ข้อมูลพื้นฐาน', description: 'รายการตัวเลือกที่ใช้ในระบบ' },
+  { href: '/news/settings', icon: 'fa-bell', title: 'การแจ้งเตือน', description: 'การแจ้งเตือน LINE และ Email' },
+  { href: '/inspector/modules', icon: 'fa-puzzle-piece', title: 'จัดการโมดูล', description: 'เปิด ปิด ติดตั้ง และถอนการติดตั้งโมดูล' },
+  { href: '/menus', icon: 'fa-compass', title: 'จัดการเมนู', description: 'ตรวจสอบโครงสร้างและเส้นทางเมนู' },
+  { href: '/backup', icon: 'fa-database', title: 'สำรองและกู้คืนข้อมูล', description: 'จัดการ backup และ restore ระบบ' },
 ];
 
 export default function SettingsPage({

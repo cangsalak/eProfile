@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { verifyAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
+import DeveloperCreditFooter from '@/components/DeveloperCreditFooter';
 
 export default async function PublicLayout({
   children,
@@ -151,6 +152,7 @@ export default async function PublicLayout({
           </div>
         </div>
       </footer>
+      <DeveloperCreditFooter />
     </div>
   );
 }

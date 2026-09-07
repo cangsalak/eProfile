@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { SearchIcon } from './icons';
-import { ALL_SYSTEM_MODULES } from '@/lib/modules/registry';
+import { ALL_SYSTEM_MODULES, ModuleRegistry } from '@/lib/modules/registry';
+import { Personnel } from '@/types/personnel';
 import { cn } from '@/utils/cn';
 
 interface SearchItem {
@@ -14,6 +15,7 @@ interface SearchItem {
   section: string;
   url: string;
   icon?: string;
+  requiredPermission?: string;
 }
 
 interface PersonnelResult {
@@ -31,7 +33,29 @@ interface PersonnelResult {
   personnelType?: string;
 }
 
-export default function SearchBar() {
+function toCleanUrl(path: string): string {
+  if (!path) return path;
+  if (path.startsWith('/modules/system-inspector')) {
+    return path.replace('/modules/system-inspector', '/inspector');
+  }
+  if (path === '/modules/personnel' || path === '/modules/personnel/directory') {
+    return '/personnel';
+  }
+  if (path.startsWith('/modules/personnel/')) {
+    return path.replace('/modules/personnel/', '/personnel/');
+  }
+  if (path.startsWith('/modules/')) {
+    return path.replace('/modules/', '/');
+  }
+  return path;
+}
+
+interface SearchBarProps {
+  currentUser?: Personnel | null;
+  systemSettings?: any;
+}
+
+export default function SearchBar({ currentUser, systemSettings }: SearchBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -67,75 +91,116 @@ export default function SearchBar() {
     }
   }, [isOpen]);
 
-  // Build searchable database of pages from modules & core routes
+  // Parse enabled modules from system settings
+  const enabledModuleIds: string[] = useMemo(() => {
+    try {
+      if (typeof systemSettings?.enabledModules === 'string') {
+        return JSON.parse(systemSettings.enabledModules);
+      }
+      if (Array.isArray(systemSettings?.enabledModules)) {
+        return systemSettings.enabledModules;
+      }
+    } catch {
+      // fallback
+    }
+    return [];
+  }, [systemSettings?.enabledModules]);
+
+  // Helper function to check if user has permission
+  const hasPermission = useCallback((requiredPerm?: string): boolean => {
+    if (!requiredPerm) return true;
+    if (!currentUser) return false;
+    if (currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') return true;
+    const userPerms = currentUser.permissions || [];
+    return userPerms.includes(requiredPerm);
+  }, [currentUser]);
+
+  // Build searchable database of pages from modules & core routes filtered by permission & enabled status
   const allSearchItems: SearchItem[] = useMemo(() => {
-    const items: SearchItem[] = [
-      {
-        id: 'dashboard',
-        title: 'หน้าหลัก (Dashboard)',
-        titleEn: 'Main Dashboard Overview',
-        section: 'ภาพรวมระบบ',
-        url: '/dashboard',
-        icon: 'fa-solid fa-chart-pie',
-      },
-      {
-        id: 'settings',
-        title: 'ตั้งค่าระบบทั่วไป',
-        titleEn: 'General System Settings',
-        section: 'การจัดการระบบ',
-        url: '/settings',
-        icon: 'fa-solid fa-gear',
-      },
-      {
-        id: 'profile',
-        title: 'โปรไฟล์ของฉัน',
-        titleEn: 'My User Profile',
-        section: 'ข้อมูลผู้ใช้',
-        url: '/profile',
-        icon: 'fa-solid fa-user',
-      },
-      {
-        id: 'notifications',
-        title: 'การแจ้งเตือนทั้งหมด',
-        titleEn: 'All Notifications Inbox',
-        section: 'ข้อมูลผู้ใช้',
-        url: '/notifications',
-        icon: 'fa-solid fa-bell',
-      },
-    ];
+    const items: SearchItem[] = [];
 
-    // Extract all items from module manifests
-    ALL_SYSTEM_MODULES.forEach((mod) => {
+    // Core routes for authenticated users
+    if (currentUser) {
+      items.push(
+        {
+          id: 'dashboard',
+          title: 'หน้าหลัก (Dashboard)',
+          titleEn: 'Main Dashboard Overview',
+          section: 'ภาพรวมระบบ',
+          url: '/dashboard',
+          icon: 'fa-solid fa-chart-pie',
+        },
+        {
+          id: 'profile',
+          title: 'โปรไฟล์ของฉัน',
+          titleEn: 'My User Profile',
+          section: 'ข้อมูลผู้ใช้',
+          url: '/profile',
+          icon: 'fa-solid fa-user',
+        },
+        {
+          id: 'notifications',
+          title: 'การแจ้งเตือนทั้งหมด',
+          titleEn: 'All Notifications Inbox',
+          section: 'ข้อมูลผู้ใช้',
+          url: '/notifications',
+          icon: 'fa-solid fa-bell',
+        }
+      );
+
+      // System Settings (Admin only)
+      if (currentUser.role === 'SUPER_ADMIN' || currentUser.role === 'ADMIN') {
+        items.push({
+          id: 'settings',
+          title: 'ตั้งค่าระบบทั่วไป',
+          titleEn: 'General System Settings',
+          section: 'การจัดการระบบ',
+          url: '/settings',
+          icon: 'fa-solid fa-gear',
+        });
+      }
+    }
+
+    // Extract items from enabled module manifests with permission checks
+    const activeModules = ModuleRegistry.getEnabledModules(enabledModuleIds);
+
+    activeModules.forEach((mod) => {
       const sectionLabel = mod.name;
+      const cleanModUrl = toCleanUrl(mod.id === 'system-inspector' ? '/inspector' : `/${mod.id}`);
 
-      // Module main page
+      // Module main page (if not strictly admin-only or if user has access)
       items.push({
         id: `mod-${mod.id}`,
         title: mod.name,
         titleEn: mod.nameEn || mod.description,
         section: sectionLabel,
-        url: `/modules/${mod.id}`,
+        url: cleanModUrl,
         icon: mod.icon ? (mod.icon.startsWith('fa-') ? mod.icon : `fa-solid ${mod.icon}`) : 'fa-solid fa-cube',
       });
 
-      // Module sub-menus
+      // Module menus (checked against requiredPermission)
       mod.menus.forEach((menu) => {
+        if (!hasPermission(menu.requiredPermission)) return;
+
         items.push({
           id: `menu-${menu.id}`,
           title: menu.title,
           section: sectionLabel,
-          url: menu.path,
+          url: toCleanUrl(menu.path),
           icon: menu.icon,
         });
 
+        // Sub-items
         if (menu.subItems) {
-          menu.subItems.forEach((sub, idx) => {
+          menu.subItems.forEach((sub: any, idx: number) => {
+            if (!hasPermission(sub.requiredPermission)) return;
+
             items.push({
               id: `sub-${menu.id}-${idx}`,
               title: sub.name,
               parentTitle: menu.title,
               section: sectionLabel,
-              url: sub.path,
+              url: toCleanUrl(sub.path),
               icon: menu.icon,
             });
           });
@@ -152,7 +217,7 @@ export default function SearchBar() {
     });
 
     return Array.from(uniqueMap.values());
-  }, []);
+  }, [currentUser, enabledModuleIds, hasPermission]);
 
   // Filter items matching query
   const filteredPageItems = useMemo(() => {
@@ -169,9 +234,9 @@ export default function SearchBar() {
     });
   }, [allSearchItems, query]);
 
-  // Debounced fetch for personnel search
+  // Debounced fetch for personnel search (only if logged in)
   const fetchPersonnel = useCallback(async (q: string) => {
-    if (!q || q.length < 1) {
+    if (!currentUser || !q || q.length < 1) {
       setPersonnelResults([]);
       setIsSearchingPersonnel(false);
       return;
@@ -203,7 +268,7 @@ export default function SearchBar() {
     } finally {
       setIsSearchingPersonnel(false);
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     const trimmed = query.trim();
@@ -226,7 +291,7 @@ export default function SearchBar() {
     personnelResults.forEach((person) => {
       items.push({
         type: 'personnel',
-        url: `/modules/personnel/directory?search=${encodeURIComponent(person.firstName)}`,
+        url: `/personnel?search=${encodeURIComponent(person.firstName)}`,
         data: person,
       });
     });
@@ -235,7 +300,7 @@ export default function SearchBar() {
     filteredPageItems.forEach((page) => {
       items.push({
         type: 'page',
-        url: page.url,
+        url: toCleanUrl(page.url),
         data: page,
       });
     });
@@ -245,7 +310,7 @@ export default function SearchBar() {
 
   const handleSelect = (url: string) => {
     setIsOpen(false);
-    router.push(url);
+    router.push(toCleanUrl(url));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -379,7 +444,7 @@ export default function SearchBar() {
                           );
                           const isSelected = itemIndex === selectedIndex;
                           const fullName = `${person.rank ? person.rank + ' ' : ''}${person.firstName} ${person.lastName}`;
-                          const url = `/modules/personnel/directory?search=${encodeURIComponent(person.firstName)}`;
+                          const url = `/personnel?search=${encodeURIComponent(person.firstName)}`;
 
                           return (
                             <div

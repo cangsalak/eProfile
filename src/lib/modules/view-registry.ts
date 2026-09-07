@@ -13,6 +13,8 @@ import { MenusModule } from '@/modules/menus';
 import { ThemeModule } from '@/modules/theme';
 import { BackupModule } from '@/modules/backup';
 import { ModuleManagerModule } from '@/modules/module-manager';
+import { SiteContentModule } from '@/modules/site-content';
+import { TestSlipModule } from '@/modules/test-slip';
 
 export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'personnel': PersonnelModule,
@@ -28,6 +30,8 @@ export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'theme': ThemeModule,
   'backup': BackupModule,
   'module-manager': ModuleManagerModule,
+  'site-content': SiteContentModule,
+  'test-slip': TestSlipModule,
 };
 
 export class ModuleViewRegistry {

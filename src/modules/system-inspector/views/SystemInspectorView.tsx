@@ -152,45 +152,40 @@ export default function SystemInspectorView() {
   const passCount = inspections.filter(i => i.overallResult === 'PASS').length;
 
   return (
-    <div className="pb-16 max-w-7xl mx-auto space-y-6">
+    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
       
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-              <i className="fa-solid fa-microscope text-purple-600"></i> ระบบตรวจสอบและวิเคราะห์คุณภาพระบบ (System Inspector)
-            </h2>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
-              SUPER_ADMIN ONLY
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            เครื่องมือวินิจฉัย DOM, Typography (คำผิดภาษาไทย), Broken Links, Accessibility และ Security Headers
-          </p>
+      {/* Top Action Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+            SUPER_ADMIN ONLY
+          </span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">
+            วินิจฉัย DOM, Broken Links, Accessibility และ Security Headers
+          </span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <Link
-            href="/modules/system-inspector/api-docs"
-            className="px-3.5 py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs shadow-xs flex items-center gap-2 transition-all"
+            href="/inspector/api-docs"
+            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-xs shadow-xs flex items-center gap-2 transition-all"
           >
             <i className="fa-solid fa-book text-purple-500"></i>
             <span>API Docs</span>
           </Link>
           <Link
-            href="/modules/system-inspector/audit-logs"
-            className="px-3.5 py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs shadow-xs flex items-center gap-2 transition-all"
+            href="/inspector/audit-logs"
+            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-xs shadow-xs flex items-center gap-2 transition-all"
           >
             <i className="fa-solid fa-list-check text-purple-500"></i>
             <span>Audit Logs</span>
           </Link>
           <button
             onClick={() => setIsLiveModalOpen(true)}
-            className="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-purple-600/20 flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
+            className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold text-xs shadow-sm flex items-center gap-2 transition-all"
           >
-            <i className="fa-solid fa-magnifying-glass-chart"></i>
-            <span>ตรวจสอบระบบเรียลไทม์ (Live Scan)</span>
+            <i className="fa-solid fa-play"></i>
+            <span>เริ่มต้นสแกนใหม่</span>
           </button>
         </div>
       </div>

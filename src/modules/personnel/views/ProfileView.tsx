@@ -192,7 +192,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="pb-20 space-y-6 max-w-7xl mx-auto font-prompt animate-fade-in">
+    <div className="pb-20 space-y-6 font-prompt animate-fade-in">
       
       {/* ======================================================== */}
       {/* 1. HERO PROFILE HEADER CARD */}

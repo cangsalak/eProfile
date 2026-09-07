@@ -69,3 +69,22 @@ export const installRequestSchema = z.object({
   theme: z.string().max(50).optional().default('dark'),
 });
 
+export const forgotPasswordLookupSchema = z.object({
+  username: z.string().trim().min(1, 'กรุณากรอกชื่อผู้ใช้, เลขประจำตัวประชาชน หรือเลขประจำตัว').max(100),
+});
+
+export const forgotPasswordVerifySchema = z.object({
+  username: z.string().trim().min(1, 'กรุณากรอกชื่อผู้ใช้').max(100),
+  citizenId: z.string().trim().optional(),
+  phone: z.string().trim().optional(),
+  email: z.string().trim().optional(),
+});
+
+export const resetPasswordWithTokenSchema = z.object({
+  token: z.string().trim().min(1, 'โทเค็นไม่ถูกต้อง'),
+  newPassword: passwordPolicySchema,
+  confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: 'รหัสผ่านใหม่ไม่ตรงกัน',
+  path: ['confirmPassword'],
+});

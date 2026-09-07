@@ -9,6 +9,8 @@ interface IDBadgeProps {
   personnel: Personnel;
   settings?: {
     badgeTemplate?: string;
+    badgeHeaderTitle?: string;
+    badgeSubHeaderTitle?: string;
     badgeColorMode?: string;
     badgeCustomColor?: string;
     badgeShowBloodType?: string;
@@ -40,22 +42,27 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
   const showBarcode = settings?.badgeShowBarcode !== 'false';
   const colorMode = settings?.badgeColorMode || 'auto';
   
-  const getTypeColor = (type?: string) => {
+  const getTypeColor = (type?: string, position?: string) => {
     if (colorMode === 'custom' && settings?.badgeCustomColor) {
       return settings.badgeCustomColor;
     }
     
-    switch (type) {
-      case 'นายทหารสัญญาบัตร': return settings?.colorCommissioned || '#dc2626'; // red-600
-      case 'นายทหารประทวน': 
-      case 'พนักงานราชการ': 
-      case 'ลูกจ้าง': return settings?.colorNonCommissioned || '#d97706'; // amber-600
-      case 'ทหารกองประจำการ': return settings?.colorConscript || '#16a34a'; // green-600
-      default: return '#334155'; // slate-700
+    const combined = `${type || ''} ${position || ''}`.trim();
+    if (!combined) return settings?.colorCommissioned || '#dc2626';
+
+    if (combined.includes('พนักงานราชการ') || combined.includes('ประทวน') || combined.includes('ลูกจ้าง')) {
+      return settings?.colorNonCommissioned || '#d97706'; // amber-600
     }
+    if (combined.includes('กองประจำการ') || combined.includes('พลทหาร')) {
+      return settings?.colorConscript || '#16a34a'; // green-600
+    }
+    if (combined.includes('สัญญาบัตร')) {
+      return settings?.colorCommissioned || '#dc2626'; // red-600
+    }
+    return settings?.colorCommissioned || '#dc2626';
   };
 
-  const headerBgColor = getTypeColor(personnel.personnelType);
+  const headerBgColor = getTypeColor(personnel.personnelType, personnel.position);
 
   // STANDARD BACK SIDE FOR ALL TEMPLATES
   if (isBack) {
@@ -281,12 +288,14 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         ></div>
 
         { settings?.systemLogo && (
-          <div className="absolute top-3 left-2 z-10 w-9 h-11">
+          <div className="absolute top-2.5 left-2.5 z-10 w-7 h-7">
             <img src={settings.systemLogo} alt="Logo" className="w-full h-full object-contain drop-shadow-sm" />
           </div>
         )}
-        <div className="absolute top-4 left-12 right-2 text-center z-10 flex flex-col items-center">
-          <div className="text-[10px] font-extrabold uppercase tracking-widest text-slate-800">{settings?.systemName || 'STAFF'}</div>
+        <div className={`absolute top-3.5 ${settings?.systemLogo ? 'left-10 right-2' : 'left-2 right-2'} text-center z-10 flex flex-col items-center`}>
+          <div className="text-[10.5px] font-extrabold tracking-wide text-slate-800 truncate max-w-full">
+            {settings?.badgeHeaderTitle || 'บัตรประจำตัวข้าราชการ'}
+          </div>
           <div className="w-8 h-1 mt-1 rounded-full" style={{ backgroundColor: headerBgColor }}></div>
         </div>
 
@@ -372,8 +381,12 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         className="absolute top-0 left-0 right-0 h-16 flex flex-col items-center justify-start pt-2 text-white"
         style={{ backgroundColor: headerBgColor }}
       >
-        <div className="text-[10px] font-bold uppercase tracking-wider text-white">บัตรประจำตัวเจ้าหน้าที่</div>
-        <div className="text-[8px] font-medium opacity-90 text-white truncate w-11/12 text-center">{settings?.systemName || personnel.department || 'STAFF'}</div>
+        <div className="text-[10px] font-bold tracking-wider text-white">
+          {settings?.badgeHeaderTitle || 'บัตรประจำตัวข้าราชการ'}
+        </div>
+        <div className="text-[8px] font-medium opacity-90 text-white truncate w-11/12 text-center">
+          {settings?.badgeSubHeaderTitle || settings?.organizationName || settings?.systemName || personnel.department || 'หน่วยงานต้นสังกัด'}
+        </div>
       </div>
 
       {/* Profile Image */}
@@ -383,7 +396,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         ) : (
           <div 
             className="w-full h-full flex items-center justify-center text-3xl font-bold text-white"
-            style={{ backgroundColor: personnel.avatarColor || '#3b82f6' }}
+            style={{ backgroundColor: headerBgColor }}
           >
             {personnel.firstName?.[0] || 'U'}
           </div>
@@ -398,7 +411,7 @@ export default function IDBadge({ personnel, settings, qrValue, isBack }: IDBadg
         <p className="text-[9px] font-semibold text-slate-700 mt-1 leading-tight">
           {personnel.position || '-'}
         </p>
-        <p className="text-[8px] font-medium text-white px-2 py-0.5 rounded-full mt-1" style={{ backgroundColor: '#475569' }}>
+        <p className="text-[8px] font-medium text-white px-2 py-0.5 rounded-full mt-1" style={{ backgroundColor: headerBgColor }}>
           {personnel.personnelType || 'นายทหารสัญญาบัตร'}
         </p>
         

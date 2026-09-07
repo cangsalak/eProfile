@@ -112,20 +112,32 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
   }
 
   const toggleModule = (mod: ModuleManifest) => {
-    if (mod.isCore) return; // Core modules cannot be disabled
+    if (mod.isCore) {
+      toast.error(`โมดูล "${mod.name}" เป็นโมดูลหลักของระบบ ไม่สามารถปิดการใช้งานได้`);
+      return;
+    }
 
     let nextEnabled: string[];
-    if (enabledModuleIds.includes(mod.id)) {
+    const isTurningOff = enabledModuleIds.includes(mod.id);
+    if (isTurningOff) {
       nextEnabled = enabledModuleIds.filter(id => id !== mod.id);
     } else {
       nextEnabled = [...enabledModuleIds, mod.id];
     }
 
-    setSettings({
+    const updated = {
       ...settings,
       enabledModules: JSON.stringify(nextEnabled),
-    });
+    };
+
+    setSettings(updated);
+    toast.success(
+      isTurningOff
+        ? `ปิดใช้งานโมดูล "${mod.name}" เรียบร้อยแล้ว`
+        : `เปิดใช้งานโมดูล "${mod.name}" เรียบร้อยแล้ว`
+    );
   };
+
 
   const handleInstallUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,31 +229,21 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
   const totalCount = allModules.length;
 
   return (
-    <div className="space-y-6">
-      {/* Top Header & Actions Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-primary-500/10 via-primary-500/5 to-transparent border border-primary-200/50 dark:border-primary-900/40 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        <div className="space-y-1.5 max-w-2xl">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-xs font-semibold text-primary-700 dark:text-primary-300 uppercase tracking-wider">
-              Modular Add-on Architecture
-            </span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-            <i className="fa-solid fa-puzzle-piece text-primary-500"></i>
-            <span>จัดการส่วนเสริมและโมดูล (Module Management)</span>
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            เปิด/ปิดการทำงานของแต่ละส่วนเสริมในระบบ หรือติดตั้งโมดูลใหม่ด้วยการอัปโหลดไฟล์ ZIP เมนูและสิทธิ์จะถูกรวมเข้าสู่ระบบโดยอัตโนมัติ
-          </p>
+    <div className="space-y-6 pb-12">
+      {/* Top Action Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            ระบบจัดการโมดูลและส่วนเสริม
+          </span>
         </div>
 
-        {/* Action Buttons & Counter */}
-        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+        <div className="flex flex-wrap items-center gap-3">
           <a
             href="/api/modules/template"
             download="sample-module-template.zip"
-            className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+            className="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-all shadow-xs flex items-center gap-2"
             title="ดาวน์โหลดไฟล์โครงสร้างตัวอย่างสำหรับพัฒนาโมดูลใหม่"
           >
             <i className="fa-solid fa-file-arrow-down text-primary-500"></i>
@@ -251,21 +253,21 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
           <button
             type="button"
             onClick={() => setIsUploadModalOpen(true)}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white text-xs font-bold transition-all shadow-md shadow-primary-500/25 flex items-center gap-2"
+            className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-500 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2"
           >
             <i className="fa-solid fa-cloud-arrow-up"></i>
             <span>ติดตั้งโมดูล (.ZIP)</span>
           </button>
 
           {/* Counter Widget */}
-          <div className="flex items-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-xl shadow-sm ml-auto lg:ml-0">
+          <div className="flex items-center gap-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-xl shadow-xs">
             <div className="text-right">
               <p className="text-[10px] text-slate-400 font-medium">เปิดใช้งาน</p>
-              <p className="text-sm font-bold text-primary-600 dark:text-primary-400">
+              <p className="text-xs font-bold text-primary-600 dark:text-primary-400">
                 {enabledCount} <span className="text-[10px] font-normal text-slate-400">/ {totalCount}</span>
               </p>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-950/60 flex items-center justify-center text-primary-600 dark:text-primary-400">
+            <div className="w-7 h-7 rounded-lg bg-primary-100 dark:bg-primary-950/60 flex items-center justify-center text-primary-600 dark:text-primary-400">
               <i className="fa-solid fa-cubes text-xs"></i>
             </div>
           </div>
@@ -712,7 +714,7 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
                           <Link href="/modules/personnel/departments" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
                             <i className="fa-solid fa-sitemap text-[10px]"></i> จัดการหน่วยงาน (Departments)
                           </Link>
-                          <Link href="/modules/system-inspector/categories" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
+                          <Link href="/inspector/categories" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
                             <i className="fa-solid fa-list-check text-[10px]"></i> ตัวเลือกข้อมูล (Categories)
                           </Link>
                         </div>
@@ -747,13 +749,13 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
                           เครื่องมือระบบ
                         </span>
                         <div className="flex flex-wrap gap-1.5">
-                          <Link href="/modules/system-inspector" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
+                          <Link href="/inspector" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
                             <i className="fa-solid fa-shield-halved text-[10px]"></i> ตรวจสอบความปลอดภัย
                           </Link>
-                          <Link href="/modules/system-inspector/api-docs" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
+                          <Link href="/inspector/api-docs" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
                             <i className="fa-solid fa-book text-[10px]"></i> API Documentation
                           </Link>
-                          <Link href="/modules/system-inspector/audit-logs" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
+                          <Link href="/inspector/audit-logs" className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 text-[11px] hover:bg-primary-100 transition-colors">
                             <i className="fa-solid fa-history text-[10px]"></i> ประวัติการใช้งาน (Audit Logs)
                           </Link>
                         </div>

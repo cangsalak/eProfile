@@ -11,6 +11,7 @@ import PageBreadcrumb from './layout/PageBreadcrumb';
 import InspectorFloatingButton from '@/modules/system-inspector/components/InspectorFloatingButton';
 import { MenuOverride, ModuleRegistry } from '@/lib/modules';
 import { cn } from '@/utils/cn';
+import DeveloperCreditFooter from './DeveloperCreditFooter';
 
 import { applyThemeSettings } from '@/lib/theme-manager';
 
@@ -157,8 +158,10 @@ export default function DashboardShell({ children }: DashboardShellProps) {
     };
 
     window.addEventListener('eprofile-theme-change', handleLiveThemeUpdate as EventListener);
+    window.addEventListener('eprofile-settings-change', handleLiveThemeUpdate as EventListener);
     return () => {
       window.removeEventListener('eprofile-theme-change', handleLiveThemeUpdate as EventListener);
+      window.removeEventListener('eprofile-settings-change', handleLiveThemeUpdate as EventListener);
     };
   }, [router, pathname]);
 
@@ -297,6 +300,10 @@ export default function DashboardShell({ children }: DashboardShellProps) {
               {children}
             </div>
           </main>
+          {/* ============================================================
+              ⚠️  DEVELOPER CREDIT FOOTER — DO NOT REMOVE OR MODIFY ⚠️
+              ============================================================ */}
+          <DeveloperCreditFooter />
         </div>
       </div>
 

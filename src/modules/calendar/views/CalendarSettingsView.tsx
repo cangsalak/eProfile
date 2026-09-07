@@ -62,7 +62,7 @@ export default function CalendarSettingsView() {
   const urls = settings?.googleCalendarUrls ? JSON.parse(settings.googleCalendarUrls) : [];
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-16 animate-fade-in font-prompt">
+    <div className="space-y-6 pb-16 animate-fade-in font-prompt">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">

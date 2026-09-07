@@ -1,0 +1,35 @@
+# Fast Standalone Production Dockerfile (No npm install / No internet download needed during docker build)
+# Requires running 'npm run build' locally before building this Docker image.
+FROM node:20-alpine
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV DATABASE_URL="file:/app/data/dev.db"
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy pre-built standalone files directly
+COPY public ./public
+COPY .next/standalone ./
+COPY .next/static ./.next/static
+COPY prisma ./prisma
+COPY node_modules/.prisma ./node_modules/.prisma
+COPY node_modules/@prisma ./node_modules/@prisma
+
+# Persistent storage directories
+RUN mkdir -p /app/data /app/public/uploads && \
+    chown -R nextjs:nodejs /app/data /app/public/uploads /app/prisma
+
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+USER nextjs
+EXPOSE 3000
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["node", "server.js"]

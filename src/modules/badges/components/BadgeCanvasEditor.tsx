@@ -53,19 +53,10 @@ export interface CanvasElement {
   opacity?: number; // 0-100
   zIndex: number;
   locked?: boolean;
+  hidden?: boolean;
   dynamicBg?: boolean;
   dynamicText?: boolean;
   dynamicBorder?: boolean;
-}
-
-export interface CanvasConfig {
-  orientation: 'portrait' | 'landscape';
-  backgroundColor: string;
-  backgroundGradient?: boolean;
-  backgroundGradientFrom?: string;
-  backgroundGradientTo?: string;
-  backgroundGradientDirection?: 'to-b' | 'to-r' | 'to-br' | 'to-tr';
-  elements: CanvasElement[];
 }
 
 // ─── Professional Prebuilt Template Presets ──────────────────────────────────
@@ -137,6 +128,8 @@ export const TEMPLATE_BACK_STANDARD: CanvasElement[] = [
   { id: 'b-addr', type: 'text', field: 'static', content: 'กรุณาส่งคืนตามที่อยู่หน่วยงานต้นสังกัด', x: 0, y: 92, width: 100, height: 4, fontSize: 7.5, color: '#64748b', textAlign: 'center', zIndex: 2 }
 ];
 
+type CanvaTab = 'templates' | 'text' | 'elements' | 'codes' | 'media' | 'layers';
+
 interface BadgeCanvasEditorProps {
   initialElements?: CanvasElement[];
   initialBackElements?: CanvasElement[];
@@ -150,26 +143,30 @@ export default function BadgeCanvasEditor({
   onChange,
   onBackChange 
 }: BadgeCanvasEditorProps) {
+  // Canva Left Sidebar State
+  const [activeTab, setActiveTab] = useState<CanvaTab>('templates');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+
   // Front / Back canvas side state
   const [activeSide, setActiveSide] = useState<'front' | 'back'>('front');
   const [orientation, setOrientation] = useState<'portrait' | 'landscape'>(() => {
     const list = initialElements && initialElements.length > 0 ? initialElements : TEMPLATE_MILITARY_OFFICIAL;
     return list.some(el => el.id.startsWith('ls-')) ? 'landscape' : 'portrait';
   });
+
   const [zoom, setZoom] = useState<number>(100);
   const [showGrid, setShowGrid] = useState<boolean>(true);
   const [snapToGrid, setSnapToGrid] = useState<boolean>(true);
+  const [useMockData, setUseMockData] = useState<boolean>(true);
 
-  // Front elements & history
+  // Elements & History
   const [frontElements, setFrontElements] = useState<CanvasElement[]>(
     initialElements && initialElements.length > 0 ? initialElements : TEMPLATE_MILITARY_OFFICIAL
   );
-  // Back elements & history
   const [backElements, setBackElements] = useState<CanvasElement[]>(
     initialBackElements && initialBackElements.length > 0 ? initialBackElements : TEMPLATE_BACK_STANDARD
   );
 
-  // History stack for Undo / Redo
   const [history, setHistory] = useState<{ front: CanvasElement[][]; back: CanvasElement[][] }>({
     front: [initialElements && initialElements.length > 0 ? initialElements : TEMPLATE_MILITARY_OFFICIAL],
     back: [initialBackElements && initialBackElements.length > 0 ? initialBackElements : TEMPLATE_BACK_STANDARD]
@@ -178,7 +175,10 @@ export default function BadgeCanvasEditor({
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // Modern Confirmation Modal state
+  // Smart Guides (horizontal & vertical center alignments)
+  const [guideLines, setGuideLines] = useState<{ x: boolean; y: boolean }>({ x: false, y: false });
+
+  // Confirmation Modal State
   const [confirmModal, setConfirmModal] = useState<{
     title: string;
     message: string;
@@ -196,7 +196,7 @@ export default function BadgeCanvasEditor({
 
   const currentElements = activeSide === 'front' ? frontElements : backElements;
 
-  // Push to history
+  // Push history
   const pushHistory = useCallback((newElements: CanvasElement[], side: 'front' | 'back') => {
     setHistory(prev => {
       const currentList = prev[side].slice(0, (historyIndex[side] || 0) + 1);
@@ -269,7 +269,7 @@ export default function BadgeCanvasEditor({
     updateCurrentElements(newElements, true);
   }, [selectedId, activeSide, frontElements, backElements, updateCurrentElements]);
 
-  // Keyboard shortcut listener for Undo/Redo & Delete
+  // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
@@ -285,18 +285,38 @@ export default function BadgeCanvasEditor({
         if (activeTag !== 'input' && activeTag !== 'textarea' && activeTag !== 'select') {
           deleteSelected();
         }
+      } else if (selectedId && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        const activeTag = document.activeElement?.tagName.toLowerCase();
+        if (activeTag !== 'input' && activeTag !== 'textarea' && activeTag !== 'select') {
+          e.preventDefault();
+          const step = e.shiftKey ? 2 : 0.5;
+          const targetElements = activeSide === 'front' ? frontElements : backElements;
+          const newElements = targetElements.map(el => {
+            if (el.id === selectedId && !el.locked) {
+              let nx = el.x;
+              let ny = el.y;
+              if (e.key === 'ArrowUp') ny = Math.max(0, el.y - step);
+              if (e.key === 'ArrowDown') ny = Math.min(100 - el.height, el.y + step);
+              if (e.key === 'ArrowLeft') nx = Math.max(0, el.x - step);
+              if (e.key === 'ArrowRight') nx = Math.min(100 - el.width, el.x + step);
+              return { ...el, x: nx, y: ny };
+            }
+            return el;
+          });
+          updateCurrentElements(newElements, true);
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedId, handleUndo, handleRedo, deleteSelected]);
+  }, [selectedId, handleUndo, handleRedo, deleteSelected, activeSide, frontElements, backElements, updateCurrentElements]);
 
-  // ─── Interaction Handlers (Drag & 8-Point Resize) ───────────────────────────
+  // ─── Drag & 8-Point Resize Engine with Smart Snapping ──────────────────────
   const handleElementMouseDown = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     setSelectedId(id);
     const elem = currentElements.find(el => el.id === id);
-    if (!elem || elem.locked) return;
+    if (!elem || elem.locked || elem.hidden) return;
 
     isInteracting.current = 'drag';
     hasMoved.current = false;
@@ -314,7 +334,7 @@ export default function BadgeCanvasEditor({
     e.stopPropagation();
     if (!selectedId) return;
     const elem = currentElements.find(el => el.id === selectedId);
-    if (!elem || elem.locked) return;
+    if (!elem || elem.locked || elem.hidden) return;
 
     isInteracting.current = 'resize';
     resizeHandle.current = handle;
@@ -345,19 +365,37 @@ export default function BadgeCanvasEditor({
     let dyPercent = (dy / canvasRect.height) * 100;
 
     if (snapToGrid) {
-      dxPercent = Math.round(dxPercent * 2) / 2; // snap to 0.5%
+      dxPercent = Math.round(dxPercent * 2) / 2; // snap 0.5%
       dyPercent = Math.round(dyPercent * 2) / 2;
     }
 
     if (isInteracting.current === 'drag') {
+      let snapX = false;
+      let snapY = false;
+
       const newElements = currentElements.map(el => {
         if (el.id === selectedId) {
-          const nextX = Math.max(0, Math.min(100 - el.width, dragStart.current.elemX + dxPercent));
-          const nextY = Math.max(0, Math.min(100 - el.height, dragStart.current.elemY + dyPercent));
+          let nextX = Math.max(0, Math.min(100 - el.width, dragStart.current.elemX + dxPercent));
+          let nextY = Math.max(0, Math.min(100 - el.height, dragStart.current.elemY + dyPercent));
+
+          // Center snap checking
+          const centerX = nextX + el.width / 2;
+          const centerY = nextY + el.height / 2;
+          if (Math.abs(centerX - 50) < 1.5) {
+            nextX = 50 - el.width / 2;
+            snapX = true;
+          }
+          if (Math.abs(centerY - 50) < 1.5) {
+            nextY = 50 - el.height / 2;
+            snapY = true;
+          }
+
           return { ...el, x: nextX, y: nextY };
         }
         return el;
       });
+
+      setGuideLines({ x: snapX, y: snapY });
       updateCurrentElements(newElements, false);
     } else if (isInteracting.current === 'resize' && resizeHandle.current) {
       const handle = resizeHandle.current;
@@ -396,6 +434,7 @@ export default function BadgeCanvasEditor({
   };
 
   const handleMouseUp = () => {
+    setGuideLines({ x: false, y: false });
     if (isInteracting.current) {
       const moved = hasMoved.current;
       isInteracting.current = null;
@@ -446,9 +485,6 @@ export default function BadgeCanvasEditor({
 
   const reorderLayer = (action: 'front' | 'back' | 'forward' | 'backward') => {
     if (!selectedId) return;
-    const elem = currentElements.find(el => el.id === selectedId);
-    if (!elem) return;
-
     let newElements = [...currentElements];
     if (action === 'front') {
       const maxZ = Math.max(...newElements.map(e => e.zIndex), 1);
@@ -472,9 +508,9 @@ export default function BadgeCanvasEditor({
       id,
       type,
       field: 'static',
-      x: 10,
-      y: 20,
-      width: 80,
+      x: 15,
+      y: 25,
+      width: 70,
       height: 10,
       zIndex: maxZ,
       ...customProps
@@ -484,7 +520,7 @@ export default function BadgeCanvasEditor({
       defaultEl = {
         ...defaultEl,
         content: 'ข้อความใหม่',
-        fontSize: 12,
+        fontSize: 13,
         color: '#0f172a',
         fontWeight: 'bold',
         textAlign: 'center'
@@ -492,17 +528,17 @@ export default function BadgeCanvasEditor({
     } else if (type === 'rect') {
       defaultEl = {
         ...defaultEl,
-        height: 20,
+        height: 18,
         backgroundColor: '#f1f5f9',
         borderWidth: 1,
         borderColor: '#cbd5e1',
-        borderRadius: 4
+        borderRadius: 6
       };
     } else if (type === 'circle') {
       defaultEl = {
         ...defaultEl,
-        width: 30,
-        height: 20,
+        width: 28,
+        height: 18,
         backgroundColor: '#e2e8f0',
         borderRadius: 100
       };
@@ -518,7 +554,7 @@ export default function BadgeCanvasEditor({
         height: 6,
         backgroundColor: '#1e3a8a',
         color: '#ffffff',
-        fontSize: 9,
+        fontSize: 9.5,
         fontWeight: 'bold',
         textAlign: 'center',
         borderRadius: 20,
@@ -534,8 +570,8 @@ export default function BadgeCanvasEditor({
       defaultEl = {
         ...defaultEl,
         field: 'badgeNo',
-        width: 30,
-        height: 20,
+        width: 28,
+        height: 18,
         backgroundColor: '#ffffff',
         borderRadius: 4,
         zIndex: 5
@@ -544,8 +580,8 @@ export default function BadgeCanvasEditor({
       defaultEl = {
         ...defaultEl,
         field: 'badgeNo',
-        width: 60,
-        height: 16,
+        width: 55,
+        height: 15,
         zIndex: 5
       };
     } else if (type === 'emblem') {
@@ -565,25 +601,34 @@ export default function BadgeCanvasEditor({
 
   const selectedElement = currentElements.find(el => el.id === selectedId);
 
-  // ─── Render Canvas Element Inside Visual Stage ─────────────────────────────
+  // ─── Render Canvas Element Inside Stage ─────────────────────────────────────
   const renderElement = (el: CanvasElement) => {
+    if (el.hidden) return null;
     const isSelected = selectedId === el.id;
 
-    // Field content mapping preview
+    // Content mapping for mock preview
     let content: React.ReactNode = el.content;
-    if (el.field === 'fullName') content = 'ยศ ชื่อ นามสกุล';
-    else if (el.field === 'firstName') content = 'ชื่อจริง';
-    else if (el.field === 'lastName') content = 'นามสกุล';
-    else if (el.field === 'prefix') content = 'ยศ/คำนำหน้า';
-    else if (el.field === 'position') content = 'ตำแหน่งหน้าที่';
-    else if (el.field === 'department') content = 'สำนัก/กอง/หน่วยงาน';
-    else if (el.field === 'subDepartment') content = 'แผนก/ฝ่าย';
-    else if (el.field === 'rank') content = 'นายทหารสัญญาบัตร';
-    else if (el.field === 'badgeNo') content = 'ID-12345678';
-    else if (el.field === 'citizenId') content = '1-2345-67890-12-3';
-    else if (el.field === 'bloodType') content = 'หมู่โลหิต O';
-    else if (el.field === 'issueDate') content = 'วันออกบัตร: 01 ม.ค. 67';
-    else if (el.field === 'expireDate') content = 'วันหมดอายุ: 31 ธ.ค. 70';
+    if (useMockData) {
+      if (el.field === 'fullName') content = 'พ.อ. สมชาย กล้าหาญ';
+      else if (el.field === 'firstName') content = 'สมชาย';
+      else if (el.field === 'lastName') content = 'กล้าหาญ';
+      else if (el.field === 'prefix') content = 'พ.อ.';
+      else if (el.field === 'position') content = 'นายทหารปฏิบัติการพิเศษ';
+      else if (el.field === 'department') content = 'กองบัญชาการกองทัพไทย';
+      else if (el.field === 'subDepartment') content = 'สำนักยุทธการ';
+      else if (el.field === 'rank') content = 'นายทหารสัญญาบัตร';
+      else if (el.field === 'badgeNo') content = 'ID-88492015';
+      else if (el.field === 'citizenId') content = '1-1002-34567-89-0';
+      else if (el.field === 'bloodType') content = 'หมู่โลหิต B';
+      else if (el.field === 'issueDate') content = '01 ม.ค. 2567';
+      else if (el.field === 'expireDate') content = '31 ธ.ค. 2570';
+    } else {
+      if (el.field === 'fullName') content = '{ชื่อ-นามสกุล}';
+      else if (el.field === 'position') content = '{ตำแหน่ง}';
+      else if (el.field === 'department') content = '{หน่วยงาน}';
+      else if (el.field === 'badgeNo') content = '{หมายเลขบัตร}';
+      else if (el.field !== 'static') content = `{${el.field}}`;
+    }
 
     const dynamicPreviewColor = '#1e3a8a';
     const bgColor = el.gradientEnabled 
@@ -648,7 +693,7 @@ export default function BadgeCanvasEditor({
     } else if (el.type === 'qr') {
       innerComponent = (
         <div className="w-full h-full p-1 bg-white flex items-center justify-center">
-          <QRCodeCanvas value="ID-12345678" size={100} style={{ width: '100%', height: '100%' }} />
+          <QRCodeCanvas value="ID-88492015" size={100} style={{ width: '100%', height: '100%' }} />
         </div>
       );
     } else if (el.type === 'barcode') {
@@ -659,7 +704,7 @@ export default function BadgeCanvasEditor({
               <span key={i} className="h-full bg-slate-900" style={{ width: `${w * 1.5}px` }} />
             ))}
           </div>
-          <span className="text-[7px] font-mono tracking-widest text-slate-800 font-bold mt-0.5">ID-12345678</span>
+          <span className="text-[7px] font-mono tracking-widest text-slate-800 font-bold mt-0.5">ID-88492015</span>
         </div>
       );
     }
@@ -677,392 +722,779 @@ export default function BadgeCanvasEditor({
       >
         {innerComponent}
 
-        {/* ─── 8 Direct Visual Resize Handles on Selection ─── */}
+        {/* ─── 8 Direct Visual Resize Handles ─── */}
         {isSelected && !el.locked && (
           <>
-            {/* Top-Left */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'tl')}
-              className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-nwse-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Top-Center */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 't')}
-              className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-ns-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Top-Right */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'tr')}
-              className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-nesw-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Right-Center */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'r')}
-              className="absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-ew-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Bottom-Right */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'br')}
-              className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-nwse-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Bottom-Center */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'b')}
-              className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-ns-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Bottom-Left */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'bl')}
-              className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-nesw-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
-            {/* Left-Center */}
-            <div 
-              onMouseDown={(e) => handleResizeHandleMouseDown(e, 'l')}
-              className="absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-white border-2 border-blue-600 rounded-xs cursor-ew-resize shadow z-50 hover:scale-125 transition-transform" 
-            />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'tl')} className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-nwse-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 't')} className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-ns-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'tr')} className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-nesw-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'r')} className="absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-ew-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'br')} className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-nwse-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'b')} className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-ns-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'bl')} className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-nesw-resize shadow z-50 hover:scale-125 transition-transform" />
+            <div onMouseDown={(e) => handleResizeHandleMouseDown(e, 'l')} className="absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-white border-2 border-primary-600 rounded-xs cursor-ew-resize shadow z-50 hover:scale-125 transition-transform" />
           </>
         )}
       </div>
     );
   };
 
-  const canvasWidth = orientation === 'landscape' ? 430 : 270;
-  const canvasHeight = orientation === 'landscape' ? 270 : 430;
+  const canvasWidth = orientation === 'landscape' ? 440 : 280;
+  const canvasHeight = orientation === 'landscape' ? 280 : 440;
 
   return (
     <div 
-      className="flex flex-col w-full bg-slate-100 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden font-prompt"
+      className="flex flex-col w-full bg-slate-900 text-slate-100 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden font-prompt select-none"
       onMouseMove={handleMouseMove} 
       onMouseUp={handleMouseUp} 
       onMouseLeave={handleMouseUp}
     >
-      {/* ─── Top Studio Toolbar ─────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-800/95 border-b border-slate-200 dark:border-slate-700 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 z-20">
+      {/* ============================================================ */}
+      {/* 1. CANVA TOP CONTROL & CONTEXTUAL ELEMENT TOOLBAR */}
+      {/* ============================================================ */}
+      <div className="bg-slate-950 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 z-30">
+        
+        {/* Left Side Controls: Front/Back & Orientation */}
         <div className="flex items-center gap-2">
-          {/* Side Switcher */}
-          <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+          {/* Side Switcher (Front/Back) */}
+          <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
             <button
               type="button"
               onClick={() => { setActiveSide('front'); setSelectedId(null); }}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                 activeSide === 'front' 
-                  ? 'bg-primary-600 text-white shadow-xs' 
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-primary-600 text-white shadow-sm' 
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              <i className="fa-solid fa-id-card"></i>
+              <i className="fa-solid fa-id-card" />
               <span>ด้านหน้าบัตร</span>
             </button>
             <button
               type="button"
               onClick={() => { setActiveSide('back'); setSelectedId(null); }}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                 activeSide === 'back' 
-                  ? 'bg-primary-600 text-white shadow-xs' 
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-primary-600 text-white shadow-sm' 
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              <i className="fa-solid fa-rotate"></i>
+              <i className="fa-solid fa-rotate" />
               <span>ด้านหลังบัตร</span>
             </button>
           </div>
 
           {/* Orientation Switcher */}
-          <div className="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+          <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
             <button
               type="button"
               onClick={() => setOrientation('portrait')}
-              title="แนวตั้ง (Standard Portrait 54x86mm)"
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                orientation === 'portrait' ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              title="แนวตั้ง CR80 (54 × 85.6 mm)"
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
+                orientation === 'portrait' ? 'bg-slate-800 text-primary-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <i className="fa-solid fa-mobile-screen mr-1"></i> แนวตั้ง
+              <i className="fa-solid fa-mobile-screen mr-1" /> แนวตั้ง
             </button>
             <button
               type="button"
               onClick={() => setOrientation('landscape')}
-              title="แนวนอน (Standard Landscape 86x54mm)"
-              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                orientation === 'landscape' ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+              title="แนวนอน CR80 (85.6 × 54 mm)"
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition ${
+                orientation === 'landscape' ? 'bg-slate-800 text-primary-400 shadow-sm' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <i className="fa-solid fa-tablet-screen-button rotate-90 mr-1"></i> แนวนอน
+              <i className="fa-solid fa-tablet-screen-button rotate-90 mr-1" /> แนวนอน
             </button>
           </div>
         </div>
 
-        {/* Center / Utility controls */}
+        {/* Middle Contextual Properties (Appears when element is selected) */}
+        {selectedElement ? (
+          <div className="flex items-center gap-1.5 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 animate-fade-in overflow-x-auto scrollbar-none">
+            {/* Typography if text/ribbon */}
+            {(selectedElement.type === 'text' || selectedElement.type === 'ribbon') && (
+              <>
+                {/* Font Family Dropdown */}
+                <select
+                  value={selectedElement.fontFamily || 'Prompt'}
+                  onChange={(e) => updateSelected({ fontFamily: e.target.value })}
+                  className="bg-slate-800 text-white text-xs px-2 py-1 rounded-lg border border-slate-700 outline-none cursor-pointer"
+                >
+                  <option value="Prompt">Prompt</option>
+                  <option value="Sarabun">Sarabun</option>
+                  <option value="Kanit">Kanit</option>
+                  <option value="Niramit">Niramit</option>
+                </select>
+
+                {/* Font Size Stepper */}
+                <div className="flex items-center bg-slate-800 rounded-lg border border-slate-700 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => updateSelected({ fontSize: Math.max(6, (selectedElement.fontSize || 12) - 1) })}
+                    className="px-2 py-1 text-slate-400 hover:text-white font-bold"
+                  >-</button>
+                  <span className="px-1 text-[11px] font-mono min-w-[24px] text-center">{selectedElement.fontSize || 12}</span>
+                  <button
+                    type="button"
+                    onClick={() => updateSelected({ fontSize: Math.min(64, (selectedElement.fontSize || 12) + 1) })}
+                    className="px-2 py-1 text-slate-400 hover:text-white font-bold"
+                  >+</button>
+                </div>
+
+                {/* Text Color */}
+                <div className="flex items-center gap-1">
+                  <input
+                    type="color"
+                    value={selectedElement.color || '#0f172a'}
+                    onChange={(e) => updateSelected({ color: e.target.value })}
+                    className="w-6 h-6 rounded-md border border-slate-700 cursor-pointer p-0"
+                    title="สีตัวอักษร"
+                  />
+                </div>
+
+                {/* Bold / Italic */}
+                <button
+                  type="button"
+                  onClick={() => updateSelected({ fontWeight: selectedElement.fontWeight === 'bold' ? 'normal' : 'bold' })}
+                  className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold ${selectedElement.fontWeight === 'bold' ? 'bg-primary-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                  title="ตัวหนา"
+                >B</button>
+
+                <button
+                  type="button"
+                  onClick={() => updateSelected({ fontStyle: selectedElement.fontStyle === 'italic' ? 'normal' : 'italic' })}
+                  className={`w-6 h-6 rounded flex items-center justify-center text-xs italic ${selectedElement.fontStyle === 'italic' ? 'bg-primary-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                  title="ตัวเอียง"
+                >I</button>
+
+                {/* Alignment Toggle */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = selectedElement.textAlign === 'left' ? 'center' : selectedElement.textAlign === 'center' ? 'right' : 'left';
+                    updateSelected({ textAlign: next });
+                  }}
+                  className="w-6 h-6 rounded bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs"
+                  title="จัดตำแหน่งข้อความ"
+                >
+                  <i className={`fa-solid fa-align-${selectedElement.textAlign || 'center'}`} />
+                </button>
+
+                <div className="h-4 w-px bg-slate-800 mx-0.5" />
+              </>
+            )}
+
+            {/* Background Fill Color */}
+            <div className="flex items-center gap-1" title="สีพื้นหลัง">
+              <span className="text-[10px] text-slate-500">Fill:</span>
+              <input
+                type="color"
+                value={selectedElement.backgroundColor || '#ffffff'}
+                onChange={(e) => updateSelected({ backgroundColor: e.target.value })}
+                className="w-6 h-6 rounded-md border border-slate-700 cursor-pointer p-0"
+              />
+            </div>
+
+            {/* Quick Actions for Selected Element */}
+            <button
+              type="button"
+              onClick={duplicateSelected}
+              title="ทำสำเนา (Duplicate)"
+              className="w-6 h-6 rounded bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-xs"
+            >
+              <i className="fa-regular fa-copy" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => updateSelected({ locked: !selectedElement.locked })}
+              title={selectedElement.locked ? 'ปลดล็อค' : 'ล็อคตำแหน่ง'}
+              className={`w-6 h-6 rounded flex items-center justify-center text-xs ${selectedElement.locked ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+            >
+              <i className={`fa-solid ${selectedElement.locked ? 'fa-lock' : 'fa-lock-open'}`} />
+            </button>
+
+            <button
+              type="button"
+              onClick={deleteSelected}
+              title="ลบ (Delete)"
+              className="w-6 h-6 rounded bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white flex items-center justify-center text-xs transition"
+            >
+              <i className="fa-solid fa-trash" />
+            </button>
+          </div>
+        ) : (
+          <div className="text-xs text-slate-500 font-medium">
+            <i className="fa-solid fa-hand-pointer mr-1.5 text-slate-600" />
+            คลิกที่ชิ้นส่วนบนบัตรเพื่อเปิดแถบเครื่องมือปรับแต่ง
+          </div>
+        )}
+
+        {/* Right Side Tools: Undo, Redo, Zoom, Grid, Mock Switch */}
         <div className="flex items-center gap-1.5">
+          {/* Mock Preview Switcher */}
+          <button
+            type="button"
+            onClick={() => setUseMockData(!useMockData)}
+            title="สลับโหมดพรีวิวข้อมูลตัวอย่างจริง"
+            className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+              useMockData ? 'bg-primary-950/80 border border-primary-800/80 text-primary-300' : 'bg-slate-900 border border-slate-800 text-slate-500'
+            }`}
+          >
+            <i className="fa-solid fa-eye text-[11px]" />
+            <span>พรีวิวข้อมูลจริง</span>
+          </button>
+
           {/* Undo / Redo */}
           <button
             type="button"
             onClick={handleUndo}
             disabled={historyIndex[activeSide] <= 0}
             title="ย้อนกลับ (Ctrl+Z)"
-            className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-40 flex items-center justify-center text-xs transition-colors"
+            className="w-7 h-7 rounded-lg bg-slate-900 text-slate-400 hover:text-white disabled:opacity-30 flex items-center justify-center text-xs transition"
           >
-            <i className="fa-solid fa-arrow-rotate-left"></i>
+            <i className="fa-solid fa-arrow-rotate-left" />
           </button>
           <button
             type="button"
             onClick={handleRedo}
             disabled={historyIndex[activeSide] >= history[activeSide].length - 1}
             title="ทำซ้ำ (Ctrl+Y)"
-            className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-40 flex items-center justify-center text-xs transition-colors"
+            className="w-7 h-7 rounded-lg bg-slate-900 text-slate-400 hover:text-white disabled:opacity-30 flex items-center justify-center text-xs transition"
           >
-            <i className="fa-solid fa-arrow-rotate-right"></i>
+            <i className="fa-solid fa-arrow-rotate-right" />
           </button>
 
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
-
-          {/* Grid & Snap */}
+          {/* Grid & Magnet */}
           <button
             type="button"
             onClick={() => setShowGrid(!showGrid)}
-            title="แสดง/ซ่อนเส้นตาราง Grid"
-            className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs transition-colors ${
-              showGrid ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/50 dark:text-primary-400 border border-primary-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-500'
+            title="เปิด/ปิดเส้นกริด"
+            className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs transition ${
+              showGrid ? 'bg-primary-950/80 text-primary-400 border border-primary-800' : 'bg-slate-900 text-slate-500'
             }`}
           >
-            <i className="fa-solid fa-border-all"></i>
+            <i className="fa-solid fa-border-all" />
           </button>
-          <button
-            type="button"
-            onClick={() => setSnapToGrid(!snapToGrid)}
-            title="ดูดติดเส้นตาราง (Snap to Grid)"
-            className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs transition-colors ${
-              snapToGrid ? 'bg-primary-50 text-primary-600 dark:bg-primary-950/50 dark:text-primary-400 border border-primary-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-500'
-            }`}
-          >
-            <i className="fa-solid fa-magnet"></i>
-          </button>
-
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
 
           {/* Zoom */}
-          <div className="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-lg">
-            <button 
-              type="button" 
-              onClick={() => setZoom(prev => Math.max(70, prev - 15))}
-              className="hover:text-primary-600 font-bold px-1"
-            >-</button>
-            <span className="font-mono text-[11px] min-w-[36px] text-center">{zoom}%</span>
-            <button 
-              type="button" 
-              onClick={() => setZoom(prev => Math.min(160, prev + 15))}
-              className="hover:text-primary-600 font-bold px-1"
-            >+</button>
+          <div className="flex items-center text-xs bg-slate-900 border border-slate-800 rounded-lg px-2 py-0.5">
+            <button type="button" onClick={() => setZoom(prev => Math.max(60, prev - 15))} className="hover:text-primary-400 font-bold px-1">-</button>
+            <span className="font-mono text-[10px] min-w-[32px] text-center text-slate-400">{zoom}%</span>
+            <button type="button" onClick={() => setZoom(prev => Math.min(160, prev + 15))} className="hover:text-primary-400 font-bold px-1">+</button>
           </div>
-        </div>
-
-        {/* Quick Presets Menu */}
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setConfirmModal({
-                title: 'ยืนยันการล้างกระดานออกแบบ?',
-                message: 'ชิ้นส่วนและรูปวาดทั้งหมดบนกระดานด้านนี้จะถูกล้างออก คุณสามารถกดย้อนกลับ (Undo) ได้หากต้องการกู้คืน',
-                icon: 'fa-solid fa-eraser text-rose-500',
-                confirmText: 'ยืนยันล้างกระดาน',
-                confirmColor: 'bg-rose-600 hover:bg-rose-500',
-                onConfirm: () => {
-                  updateCurrentElements([], true);
-                  setSelectedId(null);
-                  toast.success('ล้างกระดานเรียบร้อยแล้ว');
-                }
-              });
-            }}
-            className="px-2.5 py-1.5 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg border border-rose-200 dark:border-rose-900 transition-colors"
-          >
-            <i className="fa-solid fa-eraser mr-1"></i> ล้างกระดาน
-          </button>
         </div>
       </div>
 
-      {/* ─── Main Studio Area ──────────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row flex-1 min-h-[560px]">
+      {/* ============================================================ */}
+      {/* 2. CANVA WORKSPACE: LEFT RAIL + FLYOUT DRAWER + STAGE */}
+      {/* ============================================================ */}
+      <div className="flex flex-1 min-h-[580px] relative">
         
-        {/* Left Side: Element Toolbox */}
-        <div className="w-full lg:w-64 bg-white dark:bg-slate-800/90 border-r border-slate-200 dark:border-slate-700 p-4 space-y-4 shrink-0">
-          <div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">เพิ่มชิ้นส่วนวาดภาพ</span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => addElement('text', { content: 'หัวข้อใหม่', fontSize: 14, fontWeight: 'bold' })}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-font text-primary-500 group-hover:scale-110 transition-transform"></i>
-                <span>ข้อความ</span>
-              </button>
+        {/* ─── 2.1 Canva Left Icon Rail (68px) ─── */}
+        <div className="w-[68px] bg-slate-950 border-r border-slate-800 flex flex-col items-center py-3 space-y-2 shrink-0 z-20">
+          <button
+            type="button"
+            onClick={() => { setActiveTab('templates'); setIsDrawerOpen(true); }}
+            className={`w-14 py-2.5 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-semibold transition ${
+              activeTab === 'templates' && isDrawerOpen ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <i className="fa-solid fa-table-cells-large text-base" />
+            <span>แม่แบบ</span>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => addElement('rect')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-vector-square text-sky-500 group-hover:scale-110 transition-transform"></i>
-                <span>กล่อง/กรอบ</span>
-              </button>
+          <button
+            type="button"
+            onClick={() => { setActiveTab('text'); setIsDrawerOpen(true); }}
+            className={`w-14 py-2.5 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-semibold transition ${
+              activeTab === 'text' && isDrawerOpen ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <i className="fa-solid fa-font text-base" />
+            <span>ข้อความ</span>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => addElement('circle')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-circle text-emerald-500 group-hover:scale-110 transition-transform"></i>
-                <span>วงกลม/วงรี</span>
-              </button>
+          <button
+            type="button"
+            onClick={() => { setActiveTab('elements'); setIsDrawerOpen(true); }}
+            className={`w-14 py-2.5 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-semibold transition ${
+              activeTab === 'elements' && isDrawerOpen ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <i className="fa-solid fa-shapes text-base" />
+            <span>รูปทรง</span>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => addElement('line')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-minus text-amber-500 group-hover:scale-110 transition-transform"></i>
-                <span>เส้นคั่น</span>
-              </button>
+          <button
+            type="button"
+            onClick={() => { setActiveTab('codes'); setIsDrawerOpen(true); }}
+            className={`w-14 py-2.5 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-semibold transition ${
+              activeTab === 'codes' && isDrawerOpen ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <i className="fa-solid fa-qrcode text-base" />
+            <span>QR / โค้ด</span>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => addElement('ribbon')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-ribbon text-rose-500 group-hover:scale-110 transition-transform"></i>
-                <span>แถบป้ายมน</span>
-              </button>
+          <button
+            type="button"
+            onClick={() => { setActiveTab('media'); setIsDrawerOpen(true); }}
+            className={`w-14 py-2.5 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-semibold transition ${
+              activeTab === 'media' && isDrawerOpen ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <i className="fa-solid fa-image text-base" />
+            <span>รูปภาพ</span>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => addElement('image', { field: 'avatar', width: 40, height: 28, borderRadius: 8 })}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-image-portrait text-purple-500 group-hover:scale-110 transition-transform"></i>
-                <span>รูปถ่าย</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => addElement('emblem')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-shield-halved text-amber-500 group-hover:scale-110 transition-transform"></i>
-                <span>ตราสัญลักษณ์</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => addElement('hologram')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-wand-magic-sparkles text-cyan-500 group-hover:scale-110 transition-transform"></i>
-                <span>โฮโลแกรม</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => addElement('qr')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-qrcode text-indigo-500 group-hover:scale-110 transition-transform"></i>
-                <span>QR Code</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => addElement('barcode')}
-                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:border-primary-500 hover:text-primary-600 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all group"
-              >
-                <i className="fa-solid fa-barcode text-slate-600 dark:text-slate-400 group-hover:scale-110 transition-transform"></i>
-                <span>Barcode</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Quick Prebuilt Templates */}
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">ชุดเทมเพลตสำเร็จรูป</span>
-            <div className="space-y-1.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmModal({
-                    title: 'โหลดเทมเพลตข้าราชการ/ทหาร (Official Military)?',
-                    message: 'ระบบจะนำเข้าโครงสร้างบัตรมาตรฐานข้าราชการ/ทหาร พร้อมตราสัญลักษณ์และช่องข้อมูลครบถ้วน ชิ้นส่วนปัจจุบันจะถูกแทนที่ (สามารถกดย้อนกลับได้)',
-                    icon: 'fa-solid fa-medal text-primary-500',
-                    confirmText: 'โหลดเทมเพลตนี้',
-                    confirmColor: 'bg-primary-600 hover:bg-primary-500',
-                    onConfirm: () => {
-                      setOrientation('portrait');
-                      updateCurrentElements(TEMPLATE_MILITARY_OFFICIAL, true);
-                      setSelectedId(null);
-                      toast.success('โหลดเทมเพลตข้าราชการ/ทหารเรียบร้อย');
-                    }
-                  });
-                }}
-                className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">🎖️ ข้าราชการ/ทหาร (Standard)</span>
-                <i className="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmModal({
-                    title: 'โหลดเทมเพลตทันสมัย (Modern Hi-Tech)?',
-                    message: 'ระบบจะนำเข้าดีไซน์บัตรดิจิทัลแนวตั้งโทนโมเดิร์น พร้อมแถบ QR Code และโฮโลแกรม ชิ้นส่วนปัจจุบันจะถูกแทนที่ (สามารถกดย้อนกลับได้)',
-                    icon: 'fa-solid fa-gem text-indigo-500',
-                    confirmText: 'โหลดเทมเพลตนี้',
-                    confirmColor: 'bg-primary-600 hover:bg-primary-500',
-                    onConfirm: () => {
-                      setOrientation('portrait');
-                      updateCurrentElements(TEMPLATE_MODERN_TECH, true);
-                      setSelectedId(null);
-                      toast.success('โหลดเทมเพลตทันสมัยเรียบร้อย');
-                    }
-                  });
-                }}
-                className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">💎 ทันสมัย (Modern Hi-Tech)</span>
-                <i className="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmModal({
-                    title: 'โหลดเทมเพลตแนวนอน (Executive Landscape)?',
-                    message: 'ระบบจะเปลี่ยนขนาดกระดานเป็นแนวนอน 86×54mm พร้อมจัดวางรูปแบบบัตรผู้บริหาร ชิ้นส่วนปัจจุบันจะถูกแทนที่ (สามารถกดย้อนกลับได้)',
-                    icon: 'fa-solid fa-id-card text-sky-500',
-                    confirmText: 'โหลดเทมเพลตนี้',
-                    confirmColor: 'bg-primary-600 hover:bg-primary-500',
-                    onConfirm: () => {
-                      setOrientation('landscape');
-                      updateCurrentElements(TEMPLATE_LANDSCAPE_EXECUTIVE, true);
-                      setSelectedId(null);
-                      toast.success('โหลดเทมเพลตแนวนอนเรียบร้อย');
-                    }
-                  });
-                }}
-                className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">📇 บัตรแนวนอน (Landscape)</span>
-                <i className="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
-              </button>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={() => { setActiveTab('layers'); setIsDrawerOpen(true); }}
+            className={`w-14 py-2.5 rounded-2xl flex flex-col items-center gap-1 text-[10px] font-semibold transition ${
+              activeTab === 'layers' && isDrawerOpen ? 'bg-primary-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <i className="fa-solid fa-layer-group text-base" />
+            <span>เลเยอร์</span>
+          </button>
         </div>
 
-        {/* Center: Visual Interactive Studio Board */}
-        <div className="flex-1 flex flex-col items-center justify-center p-6 overflow-auto bg-slate-200/60 dark:bg-slate-950/60 relative">
+        {/* ─── 2.2 Canva Expandable Drawer (280px) ─── */}
+        {isDrawerOpen && (
+          <div className="w-72 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 z-10 animate-fade-in">
+            {/* Drawer Header */}
+            <div className="p-3.5 border-b border-slate-800 flex items-center justify-between">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                {activeTab === 'templates' && 'แม่แบบบัตรสำเร็จรูป (Templates)'}
+                {activeTab === 'text' && 'ข้อความ & ฟิลด์ข้อมูล (Text & Fields)'}
+                {activeTab === 'elements' && 'รูปทรง & สัญลักษณ์ (Elements)'}
+                {activeTab === 'codes' && 'รหัสบาร์โค้ด & QR (Codes)'}
+                {activeTab === 'media' && 'รูปถ่ายและตราประจำตัว (Media)'}
+                {activeTab === 'layers' && `จัดการเลเยอร์ (${currentElements.length})`}
+              </h4>
+              <button
+                type="button"
+                onClick={() => setIsDrawerOpen(false)}
+                className="w-6 h-6 rounded-lg hover:bg-slate-800 text-slate-500 hover:text-white flex items-center justify-center text-xs"
+              >
+                <i className="fa-solid fa-chevron-left" />
+              </button>
+            </div>
+
+            {/* Drawer Content */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+              {/* TAB 1: TEMPLATES */}
+              {activeTab === 'templates' && (
+                <div className="space-y-3">
+                  <p className="text-[11px] text-slate-400">เลือกเทมเพลตเพื่อเริ่มต้นการออกแบบได้ทันที</p>
+                  
+                  {/* Template Card 1 */}
+                  <div 
+                    onClick={() => {
+                      setConfirmModal({
+                        title: 'โหลดเทมเพลตมาตรฐานข้าราชการ/ทหาร?',
+                        message: 'การโหลดเทมเพลตจะจัดวางโครงสร้างและฟิลด์ข้อมูลมาตรฐาน ชิ้นส่วนปัจจุบันจะถูกแทนที่ (สามารถกดย้อนกลับ Undo ได้)',
+                        icon: 'fa-solid fa-medal text-primary-400',
+                        confirmText: 'โหลดเทมเพลตนี้',
+                        confirmColor: 'bg-primary-600 hover:bg-primary-500',
+                        onConfirm: () => {
+                          setOrientation('portrait');
+                          updateCurrentElements(TEMPLATE_MILITARY_OFFICIAL, true);
+                          setSelectedId(null);
+                          toast.success('โหลดเทมเพลตข้าราชการ/ทหารเรียบร้อย');
+                        }
+                      });
+                    }}
+                    className="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-primary-500/60 hover:bg-primary-950/20 cursor-pointer transition group"
+                  >
+                    <div className="h-24 rounded-xl bg-gradient-to-b from-blue-900 to-slate-900 flex items-center justify-center mb-2 border border-slate-700">
+                      <div className="text-center">
+                        <i className="fa-solid fa-shield-halved text-amber-400 text-xl mb-1" />
+                        <div className="text-[10px] font-bold text-white">บัตรข้าราชการ</div>
+                      </div>
+                    </div>
+                    <div className="font-bold text-xs text-white group-hover:text-primary-400">ข้าราชการ/ทหาร (Standard)</div>
+                    <div className="text-[10px] text-slate-500">แนวตั้ง CR80 พร้อมตราสัญลักษณ์</div>
+                  </div>
+
+                  {/* Template Card 2 */}
+                  <div 
+                    onClick={() => {
+                      setConfirmModal({
+                        title: 'โหลดเทมเพลตทันสมัย (Modern Hi-Tech)?',
+                        message: 'การโหลดเทมเพลตจะจัดวางดีไซน์บัตรดิจิทัลแนวตั้งโทนโมเดิร์น พร้อมแถบ QR และโฮโลแกรม (สามารถกดย้อนกลับ Undo ได้)',
+                        icon: 'fa-solid fa-gem text-indigo-400',
+                        confirmText: 'โหลดเทมเพลตนี้',
+                        confirmColor: 'bg-primary-600 hover:bg-primary-500',
+                        onConfirm: () => {
+                          setOrientation('portrait');
+                          updateCurrentElements(TEMPLATE_MODERN_TECH, true);
+                          setSelectedId(null);
+                          toast.success('โหลดเทมเพลตทันสมัยเรียบร้อย');
+                        }
+                      });
+                    }}
+                    className="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-primary-500/60 hover:bg-primary-950/20 cursor-pointer transition group"
+                  >
+                    <div className="h-24 rounded-xl bg-gradient-to-br from-indigo-600 via-purple-600 to-slate-900 flex items-center justify-center mb-2 border border-slate-700">
+                      <div className="text-center">
+                        <i className="fa-solid fa-id-card-clip text-cyan-300 text-xl mb-1" />
+                        <div className="text-[10px] font-bold text-white">DIGITAL SMART BADGE</div>
+                      </div>
+                    </div>
+                    <div className="font-bold text-xs text-white group-hover:text-primary-400">ทันสมัย (Modern Hi-Tech)</div>
+                    <div className="text-[10px] text-slate-500">แนวตั้ง โทนดิจิทัล พร้อมแถบความปลอดภัย</div>
+                  </div>
+
+                  {/* Template Card 3 */}
+                  <div 
+                    onClick={() => {
+                      setConfirmModal({
+                        title: 'โหลดเทมเพลตแนวนอน (Executive Landscape)?',
+                        message: 'ระบบจะเปลี่ยนขนาดกระดานเป็นแนวนอน CR80 86×54mm พร้อมจัดวางรูปแบบบัตรผู้บริหาร (สามารถกดย้อนกลับ Undo ได้)',
+                        icon: 'fa-solid fa-id-card text-sky-400',
+                        confirmText: 'โหลดเทมเพลตนี้',
+                        confirmColor: 'bg-primary-600 hover:bg-primary-500',
+                        onConfirm: () => {
+                          setOrientation('landscape');
+                          updateCurrentElements(TEMPLATE_LANDSCAPE_EXECUTIVE, true);
+                          setSelectedId(null);
+                          toast.success('โหลดเทมเพลตแนวนอนเรียบร้อย');
+                        }
+                      });
+                    }}
+                    className="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-primary-500/60 hover:bg-primary-950/20 cursor-pointer transition group"
+                  >
+                    <div className="h-20 rounded-xl bg-gradient-to-r from-slate-950 via-slate-850 to-slate-900 flex items-center justify-center mb-2 border border-slate-700">
+                      <div className="text-center">
+                        <div className="text-[10px] font-bold text-sky-400">EXECUTIVE LANDSCAPE</div>
+                      </div>
+                    </div>
+                    <div className="font-bold text-xs text-white group-hover:text-primary-400">บัตรแนวนอน (Executive)</div>
+                    <div className="text-[10px] text-slate-500">แนวนอน 86×54mm มาตรฐานสากล</div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: TEXT & DYNAMIC FIELDS */}
+              {activeTab === 'text' && (
+                <div className="space-y-4">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">ข้อความทั่วไป (Standard Text)</span>
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { content: 'หัวข้อหลัก', fontSize: 16, fontWeight: 'bold' })}
+                        className="w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:text-white transition"
+                      >
+                        <div className="text-base font-bold text-white">เพิ่มหัวเรื่อง (Heading)</div>
+                        <div className="text-[10px] text-slate-500">ขนาด 16px ตัวหนา</div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { content: 'หัวข้อย่อย', fontSize: 12, fontWeight: '500', color: '#64748b' })}
+                        className="w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:text-white transition"
+                      >
+                        <div className="text-sm font-semibold text-slate-300">เพิ่มหัวเรื่องย่อย (Subheading)</div>
+                        <div className="text-[10px] text-slate-500">ขนาด 12px</div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { content: 'ข้อความเนื้อหา...', fontSize: 9, fontWeight: 'normal', color: '#94a3b8' })}
+                        className="w-full text-left p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:text-white transition"
+                      >
+                        <div className="text-xs text-slate-400">เพิ่มเนื้อหาข้อความ (Body text)</div>
+                        <div className="text-[10px] text-slate-500">ขนาด 9px</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] font-bold text-primary-400 uppercase tracking-wider block mb-2">⚡ ฟิลด์ดึงข้อมูลบุคลากรอัตโนมัติ</span>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { field: 'fullName', fontSize: 14, fontWeight: 'bold' })}
+                        className="p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:bg-primary-950/30 text-left text-xs text-slate-300 transition"
+                      >
+                        <i className="fa-solid fa-user-tag text-primary-400 mr-1.5" />
+                        <span>ชื่อ-นามสกุล</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { field: 'position', fontSize: 10, color: '#64748b' })}
+                        className="p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:bg-primary-950/30 text-left text-xs text-slate-300 transition"
+                      >
+                        <i className="fa-solid fa-briefcase text-sky-400 mr-1.5" />
+                        <span>ตำแหน่ง</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { field: 'department', fontSize: 9, color: '#94a3b8' })}
+                        className="p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:bg-primary-950/30 text-left text-xs text-slate-300 transition"
+                      >
+                        <i className="fa-solid fa-building text-amber-400 mr-1.5" />
+                        <span>สังกัด/หน่วยงาน</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('ribbon', { field: 'rank', dynamicBg: true })}
+                        className="p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:bg-primary-950/30 text-left text-xs text-slate-300 transition"
+                      >
+                        <i className="fa-solid fa-medal text-rose-400 mr-1.5" />
+                        <span>ยศ/ประเภท</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { field: 'badgeNo', fontSize: 10, fontWeight: 'bold' })}
+                        className="p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:bg-primary-950/30 text-left text-xs text-slate-300 transition"
+                      >
+                        <i className="fa-solid fa-hashtag text-indigo-400 mr-1.5" />
+                        <span>เลขบัตร</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('text', { field: 'bloodType', fontSize: 9, color: '#dc2626' })}
+                        className="p-2 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 hover:bg-primary-950/30 text-left text-xs text-slate-300 transition"
+                      >
+                        <i className="fa-solid fa-droplet text-rose-500 mr-1.5" />
+                        <span>หมู่โลหิต</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: ELEMENTS & SHAPES */}
+              {activeTab === 'elements' && (
+                <div className="space-y-4">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">รูปทรงพื้นฐาน (Shapes)</span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => addElement('rect')}
+                        className="p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 flex flex-col items-center gap-1.5 text-xs text-slate-300 transition group"
+                      >
+                        <div className="w-8 h-6 rounded bg-slate-800 border border-slate-700 group-hover:border-primary-500" />
+                        <span>กล่องสี่เหลี่ยม</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('circle')}
+                        className="p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 flex flex-col items-center gap-1.5 text-xs text-slate-300 transition group"
+                      >
+                        <div className="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 group-hover:border-primary-500" />
+                        <span>วงกลม/วงรี</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('line')}
+                        className="p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 flex flex-col items-center gap-1.5 text-xs text-slate-300 transition group"
+                      >
+                        <div className="w-10 h-0.5 bg-slate-600 group-hover:bg-primary-500 my-3" />
+                        <span>เส้นคั่น</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('ribbon')}
+                        className="p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-primary-500 flex flex-col items-center gap-1.5 text-xs text-slate-300 transition group"
+                      >
+                        <div className="w-10 h-4 rounded-full bg-blue-900 border border-blue-700 group-hover:border-primary-500" />
+                        <span>แถบป้ายมน</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">องค์ประกอบความปลอดภัย</span>
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => addElement('hologram')}
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-cyan-500 text-left flex items-center gap-2.5 transition"
+                      >
+                        <i className="fa-solid fa-wand-magic-sparkles text-cyan-400 text-base" />
+                        <div>
+                          <div className="text-xs font-bold text-white">แถบโฮโลแกรม (Hologram)</div>
+                          <div className="text-[10px] text-slate-500">ป้องกันการปลอมแปลง</div>
+                        </div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => addElement('emblem')}
+                        className="w-full p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-amber-500 text-left flex items-center gap-2.5 transition"
+                      >
+                        <i className="fa-solid fa-shield-halved text-amber-400 text-base" />
+                        <div>
+                          <div className="text-xs font-bold text-white">ตราสัญลักษณ์ / ตราครุฑ</div>
+                          <div className="text-[10px] text-slate-500">สัญลักษณ์ทางราชการ</div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: CODES */}
+              {activeTab === 'codes' && (
+                <div className="space-y-3">
+                  <p className="text-[11px] text-slate-400">แทรกโค้ดสำหรับสแกนและตรวจสอบข้อมูลบัตร</p>
+                  
+                  <button
+                    type="button"
+                    onClick={() => addElement('qr')}
+                    className="w-full p-3 rounded-2xl border border-slate-800 bg-slate-950 hover:border-primary-500 text-left flex items-center gap-3 transition"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1">
+                      <QRCodeCanvas value="DEMO" size={32} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white">QR Code ดิจิทัล</div>
+                      <div className="text-[10px] text-slate-500">สแกนตรวจสอบความถูกต้องผ่านระบบ</div>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => addElement('barcode')}
+                    className="w-full p-3 rounded-2xl border border-slate-800 bg-slate-950 hover:border-primary-500 text-left flex items-center gap-3 transition"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1">
+                      <i className="fa-solid fa-barcode text-slate-900 text-xl" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white">Barcode 128</div>
+                      <div className="text-[10px] text-slate-500">สแกนรหัสประจำตัวพนักงาน</div>
+                    </div>
+                  </button>
+                </div>
+              )}
+
+              {/* TAB 5: MEDIA & PHOTOS */}
+              {activeTab === 'media' && (
+                <div className="space-y-3">
+                  <p className="text-[11px] text-slate-400">กรอบรูปถ่ายบุคลากร</p>
+                  
+                  <button
+                    type="button"
+                    onClick={() => addElement('image', { field: 'avatar', width: 44, height: 32, borderRadius: 8 })}
+                    className="w-full p-3 rounded-2xl border border-slate-800 bg-slate-950 hover:border-primary-500 text-left flex items-center gap-3 transition"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400">
+                      <i className="fa-solid fa-user-tie text-xl" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white">กรอบรูปถ่าย (สี่เหลี่ยมมน)</div>
+                      <div className="text-[10px] text-slate-500">ดึงรูปถ่ายประจำตัวอัตโนมัติ</div>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => addElement('image', { field: 'avatar', width: 34, height: 26, borderRadius: 100 })}
+                    className="w-full p-3 rounded-2xl border border-slate-800 bg-slate-950 hover:border-primary-500 text-left flex items-center gap-3 transition"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400">
+                      <i className="fa-solid fa-user-tie text-xl" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white">กรอบรูปถ่าย (วงกลม)</div>
+                      <div className="text-[10px] text-slate-500">สไตล์โมเดิร์น</div>
+                    </div>
+                  </button>
+                </div>
+              )}
+
+              {/* TAB 6: LAYERS */}
+              {activeTab === 'layers' && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                    <span>ลำดับบนกระดาน (บนสุด ➔ ล่างสุด)</span>
+                  </div>
+
+                  {currentElements.length === 0 ? (
+                    <div className="py-8 text-center text-xs text-slate-500">ยังไม่มีชิ้นส่วนบนกระดาน</div>
+                  ) : (
+                    [...currentElements].sort((a, b) => b.zIndex - a.zIndex).map((el, idx) => (
+                      <div
+                        key={el.id}
+                        onClick={() => setSelectedId(el.id)}
+                        className={`p-2.5 rounded-xl border flex items-center justify-between gap-2 cursor-pointer transition ${
+                          selectedId === el.id 
+                            ? 'border-primary-500 bg-primary-950/40 text-white' 
+                            : 'border-slate-800 bg-slate-950 text-slate-400 hover:text-slate-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <span className="text-[10px] font-mono text-slate-500 w-4">{idx + 1}</span>
+                          <i className={`text-xs ${
+                            el.type === 'text' ? 'fa-solid fa-font text-primary-400' :
+                            el.type === 'rect' ? 'fa-solid fa-vector-square text-sky-400' :
+                            el.type === 'circle' ? 'fa-solid fa-circle text-emerald-400' :
+                            el.type === 'image' ? 'fa-solid fa-image text-purple-400' :
+                            el.type === 'qr' ? 'fa-solid fa-qrcode text-indigo-400' :
+                            el.type === 'barcode' ? 'fa-solid fa-barcode text-slate-400' :
+                            el.type === 'hologram' ? 'fa-solid fa-wand-magic-sparkles text-cyan-400' : 'fa-solid fa-shapes text-amber-400'
+                          }`} />
+                          <span className="text-xs truncate font-medium">
+                            {el.content || el.field || el.type}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newEls = currentElements.map(item => item.id === el.id ? { ...item, hidden: !item.hidden } : item);
+                              updateCurrentElements(newEls, true);
+                            }}
+                            className="p-1 text-slate-500 hover:text-white text-xs"
+                            title={el.hidden ? 'เปิดแสดงผล' : 'ซ่อน'}
+                          >
+                            <i className={`fa-solid ${el.hidden ? 'fa-eye-slash text-slate-600' : 'fa-eye'}`} />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newEls = currentElements.map(item => item.id === el.id ? { ...item, locked: !item.locked } : item);
+                              updateCurrentElements(newEls, true);
+                            }}
+                            className="p-1 text-slate-500 hover:text-white text-xs"
+                            title={el.locked ? 'ปลดล็อค' : 'ล็อค'}
+                          >
+                            <i className={`fa-solid ${el.locked ? 'fa-lock text-amber-400' : 'fa-lock-open'}`} />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ─── 2.3 Canva Interactive Stage (Center Workspace) ─── */}
+        <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-auto bg-slate-950 relative">
           
-          {/* Real-time coordinates readout */}
+          {/* Coordinates readout */}
           {selectedElement && (
-            <div className="absolute top-3 left-4 text-[11px] font-mono bg-white/90 dark:bg-slate-800/90 backdrop-blur px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-xs flex items-center gap-2 text-slate-600 dark:text-slate-300 z-10">
+            <div className="absolute top-4 left-4 text-[11px] font-mono bg-slate-900/90 backdrop-blur px-3 py-1 rounded-xl border border-slate-800 text-slate-300 z-10 flex items-center gap-3">
               <span>X: <b>{Math.round(selectedElement.x)}%</b></span>
               <span>Y: <b>{Math.round(selectedElement.y)}%</b></span>
               <span>W: <b>{Math.round(selectedElement.width)}%</b></span>
@@ -1070,20 +1502,28 @@ export default function BadgeCanvasEditor({
             </div>
           )}
 
-          {/* Canvas Wrapper */}
+          {/* Canvas Wrapper with Zoom Transform */}
           <div 
             style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center', transition: 'transform 0.15s ease-out' }}
             className="relative"
           >
+            {/* Alignment Smart Guide Lines */}
+            {guideLines.x && (
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-primary-400 z-50 pointer-events-none" />
+            )}
+            {guideLines.y && (
+              <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-primary-400 z-50 pointer-events-none" />
+            )}
+
             {/* Outer ID Card Canvas Frame */}
             <div 
               ref={canvasRef}
-              className="relative bg-white shadow-2xl rounded-xl overflow-hidden border-2 border-slate-300 dark:border-slate-600 transition-all select-none"
+              className="relative bg-white shadow-2xl rounded-2xl overflow-hidden border border-slate-700 select-none transition-all"
               style={{
                 width: `${canvasWidth}px`,
                 height: `${canvasHeight}px`,
                 backgroundImage: showGrid 
-                  ? 'radial-gradient(circle, #cbd5e1 1px, transparent 1px)' 
+                  ? 'radial-gradient(circle, #cbd5e1 1.2px, transparent 1.2px)' 
                   : 'none',
                 backgroundSize: '16px 16px',
               }}
@@ -1094,76 +1534,47 @@ export default function BadgeCanvasEditor({
               {currentElements.map(renderElement)}
             </div>
 
-            {/* Print Dimensions Reference */}
-            <div className="text-center mt-2 text-[10px] text-slate-400 font-mono">
-              CR80 Standard {orientation === 'portrait' ? '54 × 86 mm' : '86 × 54 mm'} • 300 DPI Ready
+            {/* Print Dimensions & Spec Badge */}
+            <div className="text-center mt-3 text-[10px] text-slate-500 font-mono flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>CR80 Standard {orientation === 'portrait' ? '54 × 85.6 mm' : '85.6 × 54 mm'} • 300 DPI Vector Ready</span>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Properties & Styling Inspector */}
-        <div className="w-full lg:w-80 bg-white dark:bg-slate-800/95 border-l border-slate-200 dark:border-slate-700 p-4 shrink-0 overflow-y-auto max-h-[720px]">
+        {/* ─── 2.4 Canva Right Properties Inspector ─── */}
+        <div className="w-72 bg-slate-900 border-l border-slate-800 p-4 shrink-0 overflow-y-auto max-h-[720px] scrollbar-thin">
           {selectedElement ? (
-            <div className="space-y-4 animate-fade-in">
-              {/* Header & Delete/Duplicate */}
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-lg bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 flex items-center justify-center text-xs font-bold">
-                    <i className="fa-solid fa-sliders"></i>
-                  </span>
-                  <span className="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider">
-                    ปรับแต่ง ({selectedElement.type})
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={duplicateSelected}
-                    title="ทำซ้ำ (Duplicate)"
-                    className="w-7 h-7 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 text-xs flex items-center justify-center"
-                  >
-                    <i className="fa-regular fa-copy"></i>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => updateSelected({ locked: !selectedElement.locked })}
-                    title={selectedElement.locked ? 'ปลดล็อค' : 'ล็อคชิ้นส่วน'}
-                    className={`w-7 h-7 rounded text-xs flex items-center justify-center ${selectedElement.locked ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 dark:bg-slate-700 text-slate-600'}`}
-                  >
-                    <i className={`fa-solid ${selectedElement.locked ? 'fa-lock' : 'fa-lock-open'}`}></i>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={deleteSelected}
-                    title="ลบชิ้นส่วน (Delete)"
-                    className="w-7 h-7 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 hover:bg-rose-100 text-xs flex items-center justify-center"
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
-                </div>
+            <div className="space-y-4 animate-fade-in text-slate-200">
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span className="font-bold text-xs uppercase tracking-wider text-white">
+                  ปรับแต่งคุณสมบัติ ({selectedElement.type})
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">z-index: {selectedElement.zIndex}</span>
               </div>
 
-              {/* Data Binding / Content Field */}
+              {/* Data Binding Selector */}
               <div>
-                <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 block mb-1">
-                  ผูกข้อมูลอัตโนมัติ (Data Field)
+                <label className="text-[11px] font-bold text-slate-300 block mb-1">
+                  ⚡ ผูกข้อมูลอัตโนมัติ (Data Field)
                 </label>
                 <select
                   value={selectedElement.field}
                   onChange={(e) => updateSelected({ field: e.target.value as FieldMapping })}
-                  className="form-select text-xs py-1.5"
+                  className="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-primary-500 cursor-pointer"
                 >
-                  <option value="static">กำหนดข้อความ/รูปทรงเอง (Static)</option>
+                  <option value="static">กำหนดข้อความเอง (Static)</option>
                   <option value="fullName">ยศ ชื่อ นามสกุล (Full Name)</option>
                   <option value="firstName">ชื่อ (First Name)</option>
                   <option value="lastName">นามสกุล (Last Name)</option>
-                  <option value="prefix">ยศ / คำนำหน้า (Prefix / Rank)</option>
+                  <option value="prefix">ยศ / คำนำหน้า (Prefix)</option>
                   <option value="position">ตำแหน่งหน้าที่ (Position)</option>
                   <option value="department">หน่วยงาน / สังกัด (Department)</option>
                   <option value="subDepartment">แผนก / ฝ่าย (Sub-department)</option>
                   <option value="rank">ประเภทกำลังพล (Personnel Type)</option>
-                  <option value="badgeNo">หมายเลขประจำตัว/เลขบัตร (Badge No)</option>
-                  <option value="citizenId">เลขบัตรประชาชน 13 หลัก (Citizen ID)</option>
+                  <option value="badgeNo">หมายเลขประจำตัว (Badge No)</option>
+                  <option value="citizenId">เลขบัตรประชาชน 13 หลัก</option>
                   <option value="bloodType">หมู่โลหิต (Blood Group)</option>
                   <option value="avatar">รูปถ่ายประจำตัว (Profile Avatar)</option>
                   <option value="issueDate">วันออกบัตร (Issue Date)</option>
@@ -1171,308 +1582,132 @@ export default function BadgeCanvasEditor({
                 </select>
               </div>
 
-              {/* Static Text Content */}
+              {/* Static Text Input */}
               {selectedElement.field === 'static' && (selectedElement.type === 'text' || selectedElement.type === 'ribbon') && (
                 <div>
-                  <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 block mb-1">ข้อความ</label>
+                  <label className="text-[11px] font-bold text-slate-300 block mb-1">ข้อความ</label>
                   <input
                     type="text"
                     value={selectedElement.content || ''}
                     onChange={(e) => updateSelected({ content: e.target.value })}
-                    className="form-input text-xs py-1.5"
-                    placeholder="พิมพ์ข้อความที่ต้องการแสดง"
+                    className="w-full px-2.5 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-primary-500"
+                    placeholder="พิมพ์ข้อความ..."
                   />
                 </div>
               )}
 
-              {/* Quick Alignment Grid */}
+              {/* Alignment Grid */}
               <div>
-                <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 block mb-1.5">จัดตำแหน่งด่วน (Align)</label>
-                <div className="grid grid-cols-6 gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
-                  <button type="button" onClick={() => alignSelected('left')} title="ชิดซ้าย" className="py-1 rounded text-xs hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"><i className="fa-solid fa-align-left"></i></button>
-                  <button type="button" onClick={() => alignSelected('center')} title="กึ่งกลางแนวนอน" className="py-1 rounded text-xs hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"><i className="fa-solid fa-align-center"></i></button>
-                  <button type="button" onClick={() => alignSelected('right')} title="ชิดขวา" className="py-1 rounded text-xs hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"><i className="fa-solid fa-align-right"></i></button>
-                  <button type="button" onClick={() => alignSelected('top')} title="ชิดบน" className="py-1 rounded text-xs hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"><i className="fa-solid fa-arrow-up-to-line"></i></button>
-                  <button type="button" onClick={() => alignSelected('middle')} title="กึ่งกลางแนวตั้ง" className="py-1 rounded text-xs hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"><i className="fa-solid fa-arrows-up-down"></i></button>
-                  <button type="button" onClick={() => alignSelected('bottom')} title="ชิดล่าง" className="py-1 rounded text-xs hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"><i className="fa-solid fa-arrow-down-to-line"></i></button>
+                <label className="text-[11px] font-bold text-slate-300 block mb-1.5">จัดตำแหน่งชิดขอบ (Align to Canvas)</label>
+                <div className="grid grid-cols-6 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                  <button type="button" onClick={() => alignSelected('left')} title="ชิดซ้าย" className="py-1 rounded text-xs hover:bg-slate-800 text-slate-400 hover:text-white"><i className="fa-solid fa-align-left" /></button>
+                  <button type="button" onClick={() => alignSelected('center')} title="กึ่งกลางแนวนอน" className="py-1 rounded text-xs hover:bg-slate-800 text-slate-400 hover:text-white"><i className="fa-solid fa-align-center" /></button>
+                  <button type="button" onClick={() => alignSelected('right')} title="ชิดขวา" className="py-1 rounded text-xs hover:bg-slate-800 text-slate-400 hover:text-white"><i className="fa-solid fa-align-right" /></button>
+                  <button type="button" onClick={() => alignSelected('top')} title="ชิดบน" className="py-1 rounded text-xs hover:bg-slate-800 text-slate-400 hover:text-white"><i className="fa-solid fa-arrow-up-to-line" /></button>
+                  <button type="button" onClick={() => alignSelected('middle')} title="กึ่งกลางแนวตั้ง" className="py-1 rounded text-xs hover:bg-slate-800 text-slate-400 hover:text-white"><i className="fa-solid fa-arrows-up-down" /></button>
+                  <button type="button" onClick={() => alignSelected('bottom')} title="ชิดล่าง" className="py-1 rounded text-xs hover:bg-slate-800 text-slate-400 hover:text-white"><i className="fa-solid fa-arrow-down-to-line" /></button>
                 </div>
               </div>
 
               {/* Layer Ordering */}
               <div>
-                <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 block mb-1.5">ลำดับชั้นเลเยอร์ (Layer Depth)</label>
+                <label className="text-[11px] font-bold text-slate-300 block mb-1.5">ลำดับเลเยอร์ (Layer Order)</label>
                 <div className="grid grid-cols-4 gap-1">
-                  <button type="button" onClick={() => reorderLayer('front')} title="ย้ายไปหน้าสุด" className="p-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 rounded text-[11px] font-medium text-slate-700 dark:text-slate-200 flex flex-col items-center gap-0.5">
-                    <i className="fa-solid fa-layer-group text-xs"></i><span>หน้าสุด</span>
+                  <button type="button" onClick={() => reorderLayer('front')} title="หน้าสุด" className="p-1.5 bg-slate-950 hover:bg-slate-800 rounded-lg text-[10px] text-slate-300 flex flex-col items-center gap-0.5 border border-slate-800">
+                    <i className="fa-solid fa-layer-group text-xs" /><span>หน้าสุด</span>
                   </button>
-                  <button type="button" onClick={() => reorderLayer('forward')} title="ย้ายขึ้น 1 ชั้น" className="p-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 rounded text-[11px] font-medium text-slate-700 dark:text-slate-200 flex flex-col items-center gap-0.5">
-                    <i className="fa-solid fa-arrow-up text-xs"></i><span>ขึ้น 1</span>
+                  <button type="button" onClick={() => reorderLayer('forward')} title="ขึ้น 1 ชั้น" className="p-1.5 bg-slate-950 hover:bg-slate-800 rounded-lg text-[10px] text-slate-300 flex flex-col items-center gap-0.5 border border-slate-800">
+                    <i className="fa-solid fa-arrow-up text-xs" /><span>ขึ้น 1</span>
                   </button>
-                  <button type="button" onClick={() => reorderLayer('backward')} title="ย้ายลง 1 ชั้น" className="p-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 rounded text-[11px] font-medium text-slate-700 dark:text-slate-200 flex flex-col items-center gap-0.5">
-                    <i className="fa-solid fa-arrow-down text-xs"></i><span>ลง 1</span>
+                  <button type="button" onClick={() => reorderLayer('backward')} title="ลง 1 ชั้น" className="p-1.5 bg-slate-950 hover:bg-slate-800 rounded-lg text-[10px] text-slate-300 flex flex-col items-center gap-0.5 border border-slate-800">
+                    <i className="fa-solid fa-arrow-down text-xs" /><span>ลง 1</span>
                   </button>
-                  <button type="button" onClick={() => reorderLayer('back')} title="ย้ายไปหลังสุด" className="p-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 rounded text-[11px] font-medium text-slate-700 dark:text-slate-200 flex flex-col items-center gap-0.5">
-                    <i className="fa-solid fa-bars-staggered text-xs"></i><span>หลังสุด</span>
+                  <button type="button" onClick={() => reorderLayer('back')} title="หลังสุด" className="p-1.5 bg-slate-950 hover:bg-slate-800 rounded-lg text-[10px] text-slate-300 flex flex-col items-center gap-0.5 border border-slate-800">
+                    <i className="fa-solid fa-bars-staggered text-xs" /><span>หลังสุด</span>
                   </button>
                 </div>
               </div>
 
-              {/* Typography Settings (if text/ribbon) */}
-              {(selectedElement.type === 'text' || selectedElement.type === 'ribbon') && (
-                <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">ตัวอักษร (Typography)</span>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">ขนาด (px)</label>
-                      <input
-                        type="number"
-                        min="6"
-                        max="64"
-                        value={selectedElement.fontSize || 12}
-                        onChange={(e) => updateSelected({ fontSize: Number(e.target.value) })}
-                        className="form-input text-xs py-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">ความหนา</label>
-                      <select
-                        value={selectedElement.fontWeight || 'normal'}
-                        onChange={(e) => updateSelected({ fontWeight: e.target.value })}
-                        className="form-select text-xs py-1"
-                      >
-                        <option value="normal">ปกติ (Regular)</option>
-                        <option value="500">ปานกลาง (Medium)</option>
-                        <option value="bold">หนา (Bold)</option>
-                        <option value="900">หนาพิเศษ (Black)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">การจัดข้อความ</label>
-                      <div className="flex bg-slate-100 dark:bg-slate-900 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <button type="button" onClick={() => updateSelected({ textAlign: 'left' })} className={`flex-1 py-1 rounded text-xs ${selectedElement.textAlign === 'left' ? 'bg-white dark:bg-slate-700 text-primary-600' : 'text-slate-500'}`}><i className="fa-solid fa-align-left"></i></button>
-                        <button type="button" onClick={() => updateSelected({ textAlign: 'center' })} className={`flex-1 py-1 rounded text-xs ${selectedElement.textAlign === 'center' ? 'bg-white dark:bg-slate-700 text-primary-600' : 'text-slate-500'}`}><i className="fa-solid fa-align-center"></i></button>
-                        <button type="button" onClick={() => updateSelected({ textAlign: 'right' })} className={`flex-1 py-1 rounded text-xs ${selectedElement.textAlign === 'right' ? 'bg-white dark:bg-slate-700 text-primary-600' : 'text-slate-500'}`}><i className="fa-solid fa-align-right"></i></button>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">สีตัวอักษร</label>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="color"
-                          value={selectedElement.color || '#0f172a'}
-                          onChange={(e) => updateSelected({ color: e.target.value })}
-                          className="w-8 h-8 rounded-lg border border-slate-300 p-0 cursor-pointer shrink-0"
-                        />
-                        <input
-                          type="text"
-                          value={selectedElement.color || '#0f172a'}
-                          onChange={(e) => updateSelected({ color: e.target.value })}
-                          className="form-input font-mono text-[10px] py-1 px-1.5 uppercase"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Color, Gradient & Background Fills */}
-              <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">สีและพื้นหลัง (Fill & Gradient)</span>
-                
-                <div>
-                  <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer mb-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedElement.gradientEnabled || false}
-                      onChange={(e) => updateSelected({ gradientEnabled: e.target.checked })}
-                      className="rounded text-primary-600"
-                    />
-                    <span>เปิดใช้การไล่เฉดสี (Linear Gradient)</span>
-                  </label>
-
-                  {selectedElement.gradientEnabled ? (
-                    <div className="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                      <div>
-                        <label className="text-[10px] text-slate-500 block mb-1">สีเริ่มต้น</label>
-                        <input
-                          type="color"
-                          value={selectedElement.gradientFrom || '#3b82f6'}
-                          onChange={(e) => updateSelected({ gradientFrom: e.target.value })}
-                          className="w-full h-7 rounded border border-slate-300 p-0 cursor-pointer"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] text-slate-500 block mb-1">สีปลายทาง</label>
-                        <input
-                          type="color"
-                          value={selectedElement.gradientTo || '#1e3a8a'}
-                          onChange={(e) => updateSelected({ gradientTo: e.target.value })}
-                          className="w-full h-7 rounded border border-slate-300 p-0 cursor-pointer"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="color"
-                        value={selectedElement.backgroundColor || '#f1f5f9'}
-                        onChange={(e) => updateSelected({ backgroundColor: e.target.value })}
-                        className="w-8 h-8 rounded-lg border border-slate-300 p-0 cursor-pointer shrink-0"
-                      />
-                      <input
-                        type="text"
-                        value={selectedElement.backgroundColor || '#f1f5f9'}
-                        onChange={(e) => updateSelected({ backgroundColor: e.target.value })}
-                        className="form-input font-mono text-[10px] py-1 px-2 uppercase"
-                        placeholder="Transparent"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Dynamic Rank Color Binding */}
-                <div className="bg-primary-50/60 dark:bg-primary-950/30 p-2.5 rounded-xl border border-primary-100 dark:border-primary-900/50 space-y-1.5">
-                  <span className="text-[10px] font-bold text-primary-700 dark:text-primary-300 block">สีอัตโนมัติตามกลุ่มกำลังพล (Dynamic Rank Colors)</span>
-                  <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedElement.dynamicBg || false}
-                      onChange={(e) => updateSelected({ dynamicBg: e.target.checked })}
-                      className="rounded text-primary-600"
-                    />
-                    <span>ใช้สีตามยศเป็นพื้นหลัง (Background)</span>
-                  </label>
-                  <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedElement.dynamicText || false}
-                      onChange={(e) => updateSelected({ dynamicText: e.target.checked })}
-                      className="rounded text-primary-600"
-                    />
-                    <span>ใช้สีตามยศเป็นตัวอักษร (Text)</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Borders & Corners */}
-              <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">เส้นขอบและความมน (Borders & Radius)</span>
-                
+              {/* Borders & Radius */}
+              <div className="space-y-3 pt-2 border-t border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">เส้นขอบ & ความโค้งมน (Borders)</span>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">ความหนาเส้น (px)</label>
+                    <label className="text-[10px] text-slate-400 block mb-1">ความหนาเส้น (px)</label>
                     <input
                       type="number"
                       min="0"
-                      max="12"
+                      max="16"
                       value={selectedElement.borderWidth || 0}
                       onChange={(e) => updateSelected({ borderWidth: Number(e.target.value) })}
-                      className="form-input text-xs py-1"
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">ขอบมน (px)</label>
+                    <label className="text-[10px] text-slate-400 block mb-1">ความโค้งมน (px)</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={selectedElement.borderRadius || 0}
                       onChange={(e) => updateSelected({ borderRadius: Number(e.target.value) })}
-                      className="form-input text-xs py-1"
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white"
                     />
                   </div>
                 </div>
-
-                {selectedElement.borderWidth && selectedElement.borderWidth > 0 ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={selectedElement.borderColor || '#cbd5e1'}
-                      onChange={(e) => updateSelected({ borderColor: e.target.value })}
-                      className="w-8 h-8 rounded-lg border border-slate-300 p-0 cursor-pointer shrink-0"
-                    />
-                    <select
-                      value={selectedElement.borderStyle || 'solid'}
-                      onChange={(e) => updateSelected({ borderStyle: e.target.value as any })}
-                      className="form-select text-xs py-1"
-                    >
-                      <option value="solid">เส้นทึบ (Solid)</option>
-                      <option value="dashed">เส้นประ (Dashed)</option>
-                      <option value="dotted">จุดไข่ปลา (Dotted)</option>
-                    </select>
-                  </div>
-                ) : null}
               </div>
 
               {/* Effects & Opacity */}
-              <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-700">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">เงาและความโปร่งแสง (Effects)</span>
-                
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">เงา (Shadow)</label>
-                    <select
-                      value={selectedElement.boxShadow || 'none'}
-                      onChange={(e) => updateSelected({ boxShadow: e.target.value as any })}
-                      className="form-select text-xs py-1"
-                    >
-                      <option value="none">ไม่มีเงา</option>
-                      <option value="sm">เงานุ่มนวล (Soft)</option>
-                      <option value="md">เงาปกติ (Medium)</option>
-                      <option value="lg">เงาลึก (Deep)</option>
-                      <option value="glow">เรืองแสง (Glow)</option>
-                    </select>
+              <div className="space-y-3 pt-2 border-t border-slate-800">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">เงาและความโปร่งแสง (Opacity)</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>ความทึบแสง</span>
+                    <span className="font-mono">{selectedElement.opacity ?? 100}%</span>
                   </div>
-                  <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">ความทึบแสง ({selectedElement.opacity ?? 100}%)</label>
-                    <input
-                      type="range"
-                      min="10"
-                      max="100"
-                      value={selectedElement.opacity ?? 100}
-                      onChange={(e) => updateSelected({ opacity: Number(e.target.value) })}
-                      className="w-full accent-primary-600 mt-2"
-                    />
-                  </div>
+                  <input
+                    type="range"
+                    min="10"
+                    max="100"
+                    value={selectedElement.opacity ?? 100}
+                    onChange={(e) => updateSelected({ opacity: Number(e.target.value) })}
+                    className="w-full accent-primary-500"
+                  />
                 </div>
               </div>
             </div>
           ) : (
-            <div className="py-16 text-center text-slate-400 space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto text-2xl">
-                <i className="fa-solid fa-arrow-pointer"></i>
+            <div className="py-16 text-center text-slate-500 space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-slate-950 text-slate-600 flex items-center justify-center mx-auto text-xl border border-slate-800">
+                <i className="fa-solid fa-arrow-pointer" />
               </div>
-              <h5 className="font-bold text-slate-700 dark:text-slate-300 text-sm">เลือกชิ้นส่วนบนบัตร</h5>
-              <p className="text-xs text-slate-500 max-w-[200px] mx-auto leading-relaxed">
-                คลิกที่ตัวอักษร รูปถ่าย หรือรูปทรงบนบัตร เพื่อปรับขนาด สี ฟอนต์ และจัดวางได้อย่างอิสระ
+              <h5 className="font-bold text-slate-400 text-xs">เลือกชิ้นส่วนบนบัตร</h5>
+              <p className="text-[11px] text-slate-500 max-w-[180px] mx-auto leading-relaxed">
+                คลิกที่ตัวอักษร กรอบรูป หรือรูปทรง เพื่อปรับแต่งค่าในแถบนี้
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* ─── Premium Glassmorphism Confirmation Modal ─── */}
+      {/* ─── Confirmation Modal ─── */}
       {confirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-scale-up">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xl shrink-0">
-                <i className={confirmModal.icon || 'fa-solid fa-triangle-exclamation text-amber-500'}></i>
+              <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">
+                <i className={confirmModal.icon || 'fa-solid fa-triangle-exclamation text-amber-400'} />
               </div>
               <div className="flex-1">
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">{confirmModal.title}</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{confirmModal.message}</p>
+                <h4 className="text-sm font-bold text-white">{confirmModal.title}</h4>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{confirmModal.message}</p>
               </div>
             </div>
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
               <button
                 type="button"
                 onClick={() => setConfirmModal(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
               >
                 ยกเลิก
               </button>
@@ -1482,7 +1717,7 @@ export default function BadgeCanvasEditor({
                   confirmModal.onConfirm();
                   setConfirmModal(null);
                 }}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-sm transition-colors ${confirmModal.confirmColor || 'bg-primary-600 hover:bg-primary-500'}`}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-sm transition ${confirmModal.confirmColor || 'bg-primary-600 hover:bg-primary-500'}`}
               >
                 {confirmModal.confirmText || 'ยืนยัน'}
               </button>

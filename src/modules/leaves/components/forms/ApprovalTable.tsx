@@ -2,7 +2,7 @@ import React from 'react';
 
 export const ApprovalTable = ({ toPerson }: { toPerson: string | null }) => (
   <div className="w-full h-full bg-white relative pt-8">
-    <table className="w-full border-collapse border border-black text-[12pt] text-black">
+    <table className="w-full border-collapse border border-black text-[11pt] text-black">
       <thead>
         <tr>
           <th className="border border-black font-normal py-3" rowSpan={2}>นำเสนอ</th>

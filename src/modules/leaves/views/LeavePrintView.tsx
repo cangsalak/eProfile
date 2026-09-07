@@ -94,32 +94,26 @@ export default async function PrintLeavePage({ params }: { params: { id: string 
     pastSickLeaveDays,
   };
 
-  if (leave.leaveType === 'ลากิจ') {
+  if (leave.leaveType === 'ลากิจ' || leave.leaveType === 'ลากิจส่วนตัว' || leave.leaveType === 'ไปช่วยราชการ') {
     return <PersonalLeavePrintForm {...props} />;
   }
 
-  if (leave.leaveType === 'ลาป่วย') {
+  if (leave.leaveType === 'ลาป่วย' || leave.leaveType?.includes('ป่วย')) {
     return <SickLeavePrintForm {...props} />;
   }
 
-  if (leave.leaveType === 'ลาพักผ่อนประจำปี') {
+  if (leave.leaveType === 'ลาพักผ่อน' || leave.leaveType === 'ลาพักผ่อนประจำปี' || leave.leaveType?.includes('พักผ่อน')) {
     return <AnnualLeavePrintForm {...props} />;
   }
 
-  if (leave.leaveType === 'ลาอุปสมบท' || leave.leaveType === 'ลาไปบวช') {
+  if (leave.leaveType === 'ลาอุปสมบท' || leave.leaveType === 'ลาไปบวช' || leave.leaveType?.includes('อุปสมบท')) {
     return <OrdinationLeavePrintForm {...props} />;
   }
 
-  if (leave.leaveType === 'ลาคลอดบุตร') {
+  if (leave.leaveType === 'ลาคลอดบุตร' || leave.leaveType === 'ลาคลอด' || leave.leaveType?.includes('คลอด')) {
     return <MaternityLeavePrintForm {...props} />;
   }
 
-  // Fallback for other leave types not implemented yet
-  return (
-    <div className="a4-page flex items-center justify-center h-full bg-slate-200 min-h-screen">
-      <div className="text-center text-xl text-slate-500">
-        ระบบยังไม่รองรับแบบฟอร์มการพิมพ์สำหรับ: {leave.leaveType}
-      </div>
-    </div>
-  );
+  // Fallback for other leave types — use general official leave request form
+  return <PersonalLeavePrintForm {...props} />;
 }

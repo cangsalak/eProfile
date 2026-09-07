@@ -13,16 +13,18 @@ export const PrintFormLayout: React.FC<PrintFormLayoutProps> = ({
   children,
 }) => {
   return (
-    <div className="bg-slate-200 min-h-screen py-8 print:bg-white print:py-0">
-      <div className="a4-page relative leading-relaxed">
+    <div className="bg-slate-200 min-h-screen py-8 print:bg-white print:py-0 font-['Sarabun','TH_Sarabun_New',sans-serif]">
+      {/* Page 1: Official Army Leave Form */}
+      <div className="a4-page relative text-black">
         {formNumber && (
-          <div className="absolute top-8 right-8 text-sm text-right leading-tight font-bold">
-            <div>{formNumber}</div>
+          <div className="form-number text-right leading-tight font-bold">
+            <div>({formNumber})</div>
           </div>
         )}
         {children}
       </div>
 
+      {/* Page 2: Military Chain of Command Routing Table */}
       <div className="a4-page break-before-page relative leading-relaxed mt-8 print:mt-0">
         <ApprovalTable toPerson={toPerson ?? null} />
       </div>

@@ -313,39 +313,37 @@ export default function ManagePersonnelView() {
   const indexOfLastItem = Math.min(currentPage * pageSize, totalItems);
 
   return (
-    <div className="pb-12 max-w-7xl mx-auto space-y-6">
-      {/* Header Actions */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-            <i className="fa-solid fa-users-gear text-primary-500"></i> จัดการข้อมูลบุคลากร (Personnel)
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            กำลังพลในระบบทั้งหมด {totalItems.toLocaleString()} นาย • ระบบแบ่งหน้าประมวลผลผ่าน Server-side
-          </p>
+    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
+      {/* Top Action Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            กำลังพลในระบบทั้งหมด {totalItems.toLocaleString()} นาย
+          </span>
         </div>
         
-        <div className="flex flex-wrap gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={downloadPersonnelTemplate}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700"
+            className="px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700 shadow-xs"
           >
-            <i className="fa-solid fa-file-excel mr-2 text-green-600 text-sm"></i> โหลดฟอร์ม
+            <i className="fa-solid fa-file-excel mr-1.5 text-green-600 text-xs"></i> โหลดฟอร์ม
           </button>
           
           <button
             onClick={() => setIsImportModalOpen(true)}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700"
+            className="px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700 shadow-xs"
           >
-            <i className="fa-solid fa-file-import mr-2 text-blue-600 text-sm"></i> นำเข้า Excel
+            <i className="fa-solid fa-file-import mr-1.5 text-blue-600 text-xs"></i> นำเข้า Excel
           </button>
 
           <button
             onClick={() => zipInputRef.current?.click()}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700"
+            className="px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700 shadow-xs"
             title="อัปโหลดไฟล์ ZIP ที่ตั้งชื่อรูปภาพตามรหัสบัตร/เลขบัตรประชาชน"
           >
-            <i className="fa-solid fa-file-image mr-2 text-purple-600 text-sm"></i> นำเข้ารูป (ZIP)
+            <i className="fa-solid fa-file-image mr-1.5 text-purple-600 text-xs"></i> นำเข้ารูป (ZIP)
           </button>
           <input 
             id="personnelZipUploadInput"

@@ -7,15 +7,21 @@ services:
       dockerfile: Dockerfile
     container_name: tactic_eprofile_app
     restart: always
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+      - 8.8.4.4
     ports:
       - "8085:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - DATABASE_URL=file:/app/prisma/dev.db
+      - DATABASE_URL=file:/app/data/dev.db
     volumes:
-      - eprofile_db:/app/prisma
-    mem_limit: 512m
+      - eprofile_data:/app/data
+      - eprofile_uploads:/app/public/uploads
+    mem_limit: 1024m
 
 volumes:
-  eprofile_db:
+  eprofile_data:
+  eprofile_uploads:

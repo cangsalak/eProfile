@@ -17,6 +17,7 @@ import { runCommandDashboardTests } from './api/command-dashboard.test';
 import { runLeaveApprovalsTests } from './api/leave-approvals.test';
 import { runInstallDemoDataTests } from './installer/install-demo-data.test';
 import { runModuleInstallerTests } from './modules/module-installer.test';
+import { runForgotPasswordFlowTests } from './auth/forgot-password-flow.test';
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
@@ -26,7 +27,7 @@ async function main() {
 
   const startTime = Date.now();
   let passedSuites = 0;
-  let totalSuites = 19;
+  let totalSuites = 20;
 
   try {
     // 1. Unit Tests
@@ -103,6 +104,10 @@ async function main() {
 
     // 19. Module ZIP Uploader & Lifecycle Tests
     await runModuleInstallerTests();
+    passedSuites++;
+
+    // 20. Self-Service Forgot & Reset Password Flow Tests (v1.3.0)
+    await runForgotPasswordFlowTests();
     passedSuites++;
 
     // Final Teardown: Clean up any test notifications, test posts, or test users

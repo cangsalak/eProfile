@@ -34,7 +34,18 @@ export default function ManageModulesPage() {
         body: JSON.stringify(newSettings),
       });
       if (res.ok) {
-        toast.success('บันทึกการตั้งค่าโมดูลเรียบร้อยแล้ว');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent('eprofile-theme-change', {
+              detail: newSettings,
+            })
+          );
+          window.dispatchEvent(
+            new CustomEvent('eprofile-settings-change', {
+              detail: newSettings,
+            })
+          );
+        }
       } else {
         toast.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
       }
@@ -52,7 +63,7 @@ export default function ManageModulesPage() {
   }
 
   return (
-    <div className="pb-16 max-w-7xl mx-auto space-y-6 animate-fade-in font-prompt">
+    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
       <ModuleManagerSettings settings={settings} setSettings={handleUpdateSettings} />
     </div>
   );

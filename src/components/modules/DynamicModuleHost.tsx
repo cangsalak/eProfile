@@ -27,7 +27,9 @@ export default function DynamicModuleHost({ moduleId, slug = [] }: DynamicModule
         }
         if (setData.enabledModules) {
           try {
-            const parsed = JSON.parse(setData.enabledModules);
+            const parsed = typeof setData.enabledModules === 'string'
+              ? JSON.parse(setData.enabledModules)
+              : setData.enabledModules;
             if (Array.isArray(parsed)) setEnabledModuleIds(parsed);
           } catch {
             // default fallback
@@ -41,6 +43,29 @@ export default function DynamicModuleHost({ moduleId, slug = [] }: DynamicModule
     }
 
     loadModuleStatus();
+
+    const handleSettingsUpdate = (e: CustomEvent) => {
+      const detail = e.detail;
+      if (detail && detail.enabledModules !== undefined) {
+        try {
+          const parsed = typeof detail.enabledModules === 'string'
+            ? JSON.parse(detail.enabledModules)
+            : detail.enabledModules;
+          if (Array.isArray(parsed)) {
+            setEnabledModuleIds(parsed);
+          }
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    window.addEventListener('eprofile-settings-change', handleSettingsUpdate as EventListener);
+    window.addEventListener('eprofile-theme-change', handleSettingsUpdate as EventListener);
+    return () => {
+      window.removeEventListener('eprofile-settings-change', handleSettingsUpdate as EventListener);
+      window.removeEventListener('eprofile-theme-change', handleSettingsUpdate as EventListener);
+    };
   }, [moduleId]);
 
   if (isLoading) {
@@ -86,7 +111,7 @@ export default function DynamicModuleHost({ moduleId, slug = [] }: DynamicModule
   }
 
   // 2. Module is disabled
-  const isEnabled = currentModule.isCore || enabledModuleIds.length === 0 || enabledModuleIds.includes(moduleId);
+  const isEnabled = currentModule.isCore || enabledModuleIds.includes(moduleId);
   if (!isEnabled) {
     return (
       <div className="max-w-2xl mx-auto my-12 p-8 bg-white dark:bg-slate-900 rounded-2xl border border-amber-200 dark:border-amber-900/40 text-center shadow-sm font-prompt">

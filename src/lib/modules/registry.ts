@@ -27,6 +27,8 @@ import { MenusManifest } from '@/modules/menus/manifest';
 import { themeManifest } from '@/modules/theme/manifest';
 import { backupManifest } from '@/modules/backup/manifest';
 import { ModuleManagerManifest } from '@/modules/module-manager/manifest';
+import { SiteContentManifest } from '@/modules/site-content/manifest';
+import { TestSlipManifest } from '@/modules/test-slip/manifest';
 
 export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   PersonnelManifest,
@@ -42,6 +44,8 @@ export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   themeManifest,
   backupManifest,
   ModuleManagerManifest,
+  SiteContentManifest,
+  TestSlipManifest,
 ];
 
 export class ModuleRegistry {

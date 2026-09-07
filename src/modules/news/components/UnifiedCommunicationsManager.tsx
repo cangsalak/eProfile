@@ -366,63 +366,37 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
 
   return (
     <div className="pb-16 space-y-6 animate-fade-in font-prompt">
-      
-      {/* Header Banner - Dashboard Style Theme */}
-      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-200/50 via-primary-100/30 to-transparent dark:from-primary-950/40 dark:via-primary-900/20 dark:to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none"></div>
+      {/* Tab Navigation Bar */}
+      <div className="flex items-center gap-2 p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-x-auto">
+        <button
+          onClick={() => setActiveTab('notifications')}
+          className={`py-2.5 px-4 font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center gap-2.5 whitespace-nowrap ${
+            activeTab === 'notifications'
+              ? 'bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+          }`}
+        >
+          <i className="fa-solid fa-bell text-xs"></i>
+          <span>ประกาศแจ้งเตือนในระบบ (Broadcast)</span>
+          <span className="ml-1 px-2 py-0.5 text-[10px] rounded-full bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-mono">
+            {notifTotalItems}
+          </span>
+        </button>
 
-        <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="flex items-start space-x-5">
-            <div className="hidden sm:flex shrink-0 w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl items-center justify-center shadow-lg shadow-primary-500/20 text-white text-2xl font-bold">
-              <i className="fa-solid fa-bullhorn"></i>
-            </div>
-            <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 mb-3">
-                <span className="w-2 h-2 rounded-full bg-primary-500"></span>
-                <span>ศูนย์จัดการข่าวสารและการแจ้งเตือน (Communications & Broadcast Hub)</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                จัดการข่าวสารและการแจ้งเตือน
-              </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">
-                รวมศูนย์ควบคุมการส่งข้อความแจ้งเตือนด่วน (Broadcast Notifications) และการเผยแพร่ข่าวสาร ประชาสัมพันธ์องค์กร (News & Articles) ไว้ในที่เดียว
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Tab Navigation Switcher */}
-        <div className="relative z-10 px-6 sm:px-8 flex items-center gap-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
-          <button
-            onClick={() => setActiveTab('notifications')}
-            className={`py-3.5 px-4 font-bold text-xs sm:text-sm border-b-2 transition-all flex items-center gap-2.5 ${
-              activeTab === 'notifications'
-                ? 'border-primary-500 text-primary-600 dark:text-primary-400 bg-white/60 dark:bg-slate-800/40'
-                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            <i className="fa-solid fa-bell text-xs"></i>
-            <span>📢 ประกาศแจ้งเตือนในระบบ (Broadcast)</span>
-            <span className="ml-1 px-2 py-0.5 text-[10px] rounded-full bg-primary-50 dark:bg-primary-950 text-primary-600 dark:text-primary-400 font-mono">
-              {notifTotalItems}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('posts')}
-            className={`py-3.5 px-4 font-bold text-xs sm:text-sm border-b-2 transition-all flex items-center gap-2.5 ${
-              activeTab === 'posts'
-                ? 'border-primary-500 text-primary-600 dark:text-primary-400 bg-white/60 dark:bg-slate-800/40'
-                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            <i className="fa-solid fa-newspaper text-xs"></i>
-            <span>📰 ข่าวสารและบทความประชาสัมพันธ์ (News & Articles)</span>
-            <span className="ml-1 px-2 py-0.5 text-[10px] rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-mono">
-              {posts.length}
-            </span>
-          </button>
-        </div>
+        <button
+          onClick={() => setActiveTab('posts')}
+          className={`py-2.5 px-4 font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center gap-2.5 whitespace-nowrap ${
+            activeTab === 'posts'
+              ? 'bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800 shadow-xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+          }`}
+        >
+          <i className="fa-solid fa-newspaper text-xs"></i>
+          <span>ข่าวสารและบทความประชาสัมพันธ์ (News)</span>
+          <span className="ml-1 px-2 py-0.5 text-[10px] rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono">
+            {posts.length}
+          </span>
+        </button>
       </div>
 
       {/* ======================================================== */}

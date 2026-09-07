@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'บริการของเรา - eProfile',
   description: 'บริการและโซลูชันต่างๆ ที่เรามีให้',
@@ -9,16 +11,31 @@ export const metadata = {
 
 // Next.js Server Component
 export default async function ServicesPage() {
-  const services = await prisma.service.findMany({
-    where: { published: true },
-    orderBy: { order: 'asc' }
+  const [services, settingsList] = await Promise.all([
+    prisma.service.findMany({
+      where: { published: true },
+      orderBy: { order: 'asc' },
+    }),
+    prisma.systemSetting.findMany({
+      where: {
+        key: { in: ['servicesTitle', 'servicesSubtitle'] },
+      },
+    }).catch(() => []),
+  ]);
+
+  const s: Record<string, string> = {};
+  settingsList.forEach(({ key, value }) => {
+    s[key] = value;
   });
 
+  const servicesTitle = s.servicesTitle || 'บริการของเรา';
+  const servicesSubtitle = s.servicesSubtitle || 'เลือกบริการที่เหมาะสมกับองค์กรของคุณ';
+
   return (
-    <div className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-prompt">
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">บริการของเรา</h1>
-        <p className="text-xl text-slate-600 dark:text-slate-400">เลือกบริการที่เหมาะสมกับองค์กรของคุณ</p>
+        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">{servicesTitle}</h1>
+        <p className="text-xl text-slate-600 dark:text-slate-400">{servicesSubtitle}</p>
       </div>
       
       {services.length > 0 ? (
@@ -37,7 +54,7 @@ export default async function ServicesPage() {
               
               <div className="p-8 flex-1 flex flex-col">
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">{service.title}</h3>
-                <p className="text-slate-600 dark:text-slate-400 mb-6 flex-1">{service.description}</p>
+                <p className="text-slate-600 dark:text-slate-400 mb-6 flex-1 whitespace-pre-line">{service.description}</p>
                 
                 {service.price && (
                   <div className="text-xl font-bold text-primary-600 dark:text-primary-400 mb-6">

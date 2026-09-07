@@ -49,3 +49,28 @@ export async function requirePermission(req: Request, permission: string) {
 
   return { error: NextResponse.json({ error: 'Forbidden: Insufficient permissions' }, { status: 403 }) };
 }
+
+
+export async function requireModuleEnabled(moduleId: string) {
+  const { prisma } = await import('@/lib/prisma');
+  const modSetting = await prisma.systemSetting.findUnique({
+    where: { key: 'enabledModules' },
+  });
+  if (modSetting && modSetting.value) {
+    try {
+      const enabled: string[] = JSON.parse(modSetting.value);
+      if (Array.isArray(enabled) && !enabled.includes(moduleId)) {
+        return {
+          error: NextResponse.json(
+            { error: `โมดูล ${moduleId} ถูกปิดใช้งานในระบบ`, moduleDisabled: true },
+            { status: 403 }
+          ),
+        };
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return { enabled: true };
+}
+

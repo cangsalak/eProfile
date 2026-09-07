@@ -212,49 +212,34 @@ export default function ApiDocumentationPage() {
 
   return (
     <div className="space-y-6 pb-16 animate-fade-in font-prompt">
-      
-      {/* Header Banner - Unified Theme */}
-      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-100/60 via-primary-50/40 to-transparent dark:from-primary-950/40 dark:via-primary-900/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-80 pointer-events-none"></div>
+      {/* Top Action Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-primary-500 animate-pulse"></span>
+          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            eProfile Interactive API Reference & Explorer
+          </span>
+        </div>
 
-        <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="flex items-start space-x-5">
-            <div className="hidden sm:flex shrink-0 w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl items-center justify-center shadow-lg shadow-primary-500/25 text-white text-2xl font-bold">
-              <i className="fa-solid fa-code-fork"></i>
-            </div>
-            <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-primary-50 dark:bg-primary-950/60 border border-primary-100 dark:border-primary-900/60 rounded-full text-xs font-semibold text-primary-700 dark:text-primary-300 mb-3">
-                <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-                <span>eProfile API Reference (DocuSeal-style Interactive Docs)</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                API Documentation & Integration
-              </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">
-                เอกสารอ้างอิง API สมบูรณ์แบบ ค้นหา Endpoint ตรวจสอบ Role Access Matrix และตัวอย่าง Code สำหรับนำไปเชื่อมต่อใช้งานจริง (cURL, JavaScript, TypeScript, Python, PHP)
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            <button
-              onClick={handleRescan}
-              disabled={isScanning || isLoading}
-              className="flex-1 md:flex-none px-4 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-primary-600/20 flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              <i className={`fa-solid fa-rotate ${isScanning ? 'animate-spin' : ''}`}></i>
-              <span>{isScanning ? 'กำลังสแกน...' : 'สแกน API ใหม่'}</span>
-            </button>
-            <button
-              onClick={handleExportJson}
-              disabled={!report}
-              className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5"
-              title="ดาวน์โหลดเป็น JSON"
-            >
-              <i className="fa-solid fa-file-code text-primary-600 dark:text-primary-400"></i>
-              <span>JSON</span>
-            </button>
-            <button
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            onClick={handleRescan}
+            disabled={isScanning || isLoading}
+            className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            <i className={`fa-solid fa-rotate ${isScanning ? 'animate-spin' : ''}`}></i>
+            <span>{isScanning ? 'กำลังสแกน...' : 'สแกน API ใหม่'}</span>
+          </button>
+          <button
+            onClick={handleExportJson}
+            disabled={!report}
+            className="px-3.5 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5"
+            title="ดาวน์โหลดเป็น JSON"
+          >
+            <i className="fa-solid fa-file-code text-primary-600 dark:text-primary-400"></i>
+            <span>JSON</span>
+          </button>
+          <button
               onClick={handleExportMarkdown}
               disabled={!report}
               className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5"
@@ -265,7 +250,6 @@ export default function ApiDocumentationPage() {
             </button>
           </div>
         </div>
-      </div>
 
       {/* KPI Stats Cards */}
       {report && (

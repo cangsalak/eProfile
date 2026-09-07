@@ -64,7 +64,9 @@ export default function Sidebar({
               <span className="text-base font-extrabold text-slate-900 dark:text-white tracking-wide truncate max-w-[130px]">
                 {systemSettings?.systemName || 'eProfile'}
               </span>
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase">NextAdmin v2</span>
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wider truncate max-w-[130px]">
+                {systemSettings?.siteTitle || systemSettings?.organizationName || 'ระบบฐานข้อมูลบุคลากร'}
+              </span>
             </div>
           )}
         </Link>

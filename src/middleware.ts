@@ -33,15 +33,31 @@ const publicApiPaths = [
   '/api/install/test-db',
   '/api/health',
   '/api/auth/forgot-password',
+  '/api/auth/reset-password',
   '/api/auth/me',
 ];
 const publicApiPrefixes = ['/api/verify/'];
 
-// Protected member page prefixes — all modules live under /modules
+// Protected member page prefixes — all modules live under /modules, plus clean URL aliases
 const protectedPagePrefixes = [
   '/modules',
   '/print',
   '/manage',
+  // Clean URL aliases (rewrites point to /modules/... internally)
+  '/personnel',
+  '/leaves',
+  '/vehicles',
+  '/badges',
+  '/calendar',
+  '/news-inbox',
+  '/contacts',
+  '/command-dashboard',
+  '/inspector',
+  '/menus',
+  '/theme',
+  '/backup',
+  '/module-manager',
+  '/test-slip',
 ];
 
 export async function middleware(request: NextRequest) {
@@ -99,9 +115,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // 2. For protected member page routes, require authentication
-  const isProtectedPage = protectedPagePrefixes.some(
-    prefix => pathname === prefix || pathname.startsWith(prefix + '/')
-  );
+  const isProtectedPage =
+    protectedPagePrefixes.some(
+      prefix => pathname === prefix || pathname.startsWith(prefix + '/')
+    ) ||
+    ModuleRegistry.getAllModules().some(
+      m => pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
+    );
 
   if (isProtectedPage && !isAuthenticated) {
     const loginUrl = new URL('/login', request.url);
@@ -121,8 +141,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Exception: Allow GET /api/settings & GET /api/modules for basic non-sensitive metadata
-    if ((pathname === '/api/settings' || pathname === '/api/modules') && request.method === 'GET') {
+    // Exception: Allow GET /api/settings, GET /api/modules & GET /api/services for basic non-sensitive metadata
+    if ((pathname === '/api/settings' || pathname === '/api/modules' || pathname === '/api/services') && request.method === 'GET') {
       return NextResponse.next();
     }
 

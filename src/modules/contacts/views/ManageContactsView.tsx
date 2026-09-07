@@ -207,41 +207,16 @@ export default function ManageContactsView() {
 
   return (
     <div className="pb-16 space-y-6 animate-fade-in font-prompt">
-      
-      {/* Header Banner - Dashboard Style Theme */}
-      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-100/60 via-indigo-100/40 to-purple-100/30 dark:from-primary-950/40 dark:via-indigo-950/20 dark:to-purple-950/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none"></div>
-
-        <div className="relative z-10 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="flex items-start space-x-5">
-            <div className="hidden sm:flex shrink-0 w-16 h-16 bg-gradient-to-br from-primary-500 via-indigo-600 to-purple-600 rounded-2xl items-center justify-center shadow-lg shadow-primary-500/20 text-white text-2xl font-bold">
-              <i className="fa-solid fa-envelope-open-text"></i>
-            </div>
-            <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 mb-3">
-                <span className="w-2 h-2 rounded-full bg-primary-500"></span>
-                <span>ศูนย์จัดการข้อความติดต่อ (Contact Inquiries Management)</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                ข้อความติดต่อ (Contact Messages)
-              </h1>
-              <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">
-                จัดการข้อความและข้อซักถามที่ส่งมาจากหน้าแบบฟอร์มติดต่อเรา พร้อมระบบตอบกลับและบันทึกสถานะ
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 self-end md:self-center">
-            <button
-              onClick={fetchMessages}
-              disabled={isLoading}
-              className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-colors flex items-center gap-2"
-            >
-              <i className={`fa-solid fa-rotate-right text-xs ${isLoading ? 'animate-spin' : ''}`}></i>
-              <span>รีเฟรชข้อมูล</span>
-            </button>
-          </div>
-        </div>
+      {/* Action Toolbar */}
+      <div className="flex justify-end items-center">
+        <button
+          onClick={fetchMessages}
+          disabled={isLoading}
+          className="bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-3.5 py-2 rounded-xl font-semibold text-xs transition-colors flex items-center gap-2 shadow-xs"
+        >
+          <i className={`fa-solid fa-rotate-right text-xs ${isLoading ? 'animate-spin' : ''}`}></i>
+          <span>รีเฟรชข้อมูล</span>
+        </button>
       </div>
 
       {/* 4 KPI Stat Cards */}

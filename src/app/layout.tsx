@@ -2,12 +2,6 @@ import './globals.css';
 import React from 'react';
 import ToastProvider from '../components/ToastProvider';
 import { Metadata } from 'next';
-/*
- * ============================================================
- * ⚠️  DEVELOPER CREDIT IMPORT — DO NOT REMOVE ⚠️
- * ============================================================
- */
-import DeveloperCreditFooter from '@/components/DeveloperCreditFooter';
 
 export const metadata: Metadata = {
   title: 'ระบบฐานข้อมูลบุคลากร',
@@ -26,16 +20,24 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('error', function(e) {
+                if (e.message && (e.message.includes('Loading chunk') || e.message.includes('ChunkLoadError') || e.message.includes('CSS_CHUNK_LOAD_FAILED'))) {
+                  if (!window.sessionStorage.getItem('chunk_reload_lock')) {
+                    window.sessionStorage.setItem('chunk_reload_lock', Date.now().toString());
+                    window.location.reload();
+                  }
+                }
+              });
+            `,
+          }}
+        />
       </head>
       <body className="flex flex-col min-h-screen">
         <ToastProvider />
         <div className="flex-1">{children}</div>
-        {/* ============================================================
-            ⚠️  DEVELOPER CREDIT FOOTER — DO NOT REMOVE OR MODIFY ⚠️
-            ผู้พัฒนา: นายเยาวรัตน์ ช่างสลัก | 089-016-7912
-            การลบส่วนนี้จะทำให้ระบบตรวจสอบความสมบูรณ์ล้มเหลว
-            ============================================================ */}
-        <DeveloperCreditFooter />
       </body>
     </html>
   );

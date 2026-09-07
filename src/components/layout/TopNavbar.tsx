@@ -84,7 +84,7 @@ export default function TopNavbar({
             <div className="hidden lg:flex items-center justify-between w-full">
               {/* Left Side - Search */}
               <div className="max-w-xs flex-1">
-                <SearchBar />
+                <SearchBar currentUser={currentUser} systemSettings={systemSettings} />
               </div>
 
               {/* Right Side - Actions */}
@@ -125,7 +125,7 @@ export default function TopNavbar({
         <div className="lg:hidden border-b border-card-border bg-card-surface-area px-4 py-3 shadow-xs animate-slide-down">
           <div className="flex items-center justify-between gap-2.5">
             <div className="flex items-center gap-2.5">
-              <SearchBar />
+              <SearchBar currentUser={currentUser} systemSettings={systemSettings} />
 
               <button 
                 type="button"

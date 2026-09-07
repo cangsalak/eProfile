@@ -59,7 +59,7 @@ export default function EProfilePage() {
   // Load settings
   const fetchSettings = async () => {
     try {
-      const res = await fetch('/api/settings');
+      const res = await fetch('/api/settings', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setSettings(data);
@@ -72,6 +72,14 @@ export default function EProfilePage() {
   useEffect(() => {
     fetchPersonnel();
     fetchSettings();
+
+    const handleSettingsChange = () => {
+      fetchSettings();
+    };
+    window.addEventListener('eprofile-settings-change', handleSettingsChange);
+    return () => {
+      window.removeEventListener('eprofile-settings-change', handleSettingsChange);
+    };
   }, []);
 
   // Infinite Scroll Observer
@@ -134,10 +142,8 @@ export default function EProfilePage() {
   };
 
   return (
-    <div className="pb-12">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 no-print">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">ทำเนียบบุคลากร</h1>
-        <div className="flex gap-3">
+    <div className="pb-12 space-y-6">
+      <div className="flex justify-end items-center gap-3 no-print">
           <button
             onClick={() => setIsScannerOpen(true)}
             className="px-4 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 transition-all font-medium flex items-center"
@@ -156,7 +162,6 @@ export default function EProfilePage() {
             </button>
           )}
         </div>
-      </div>
 
       <main className="no-print">
         <BannerSummary

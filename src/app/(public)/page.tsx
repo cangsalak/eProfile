@@ -1,12 +1,68 @@
 import React from 'react';
 import Link from 'next/link';
 import { verifyAuth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export default async function PublicLandingPage() {
   const user = await verifyAuth();
 
+  const settingsList = await prisma.systemSetting.findMany({
+    where: {
+      key: {
+        in: [
+          'homeBadgeText',
+          'homeTitleLine1',
+          'homeTitleLine2',
+          'homeSubtitle',
+          'homeCtaPrimaryText',
+          'homeCtaSecondaryText',
+          'homeFeaturesTitle',
+          'homeFeaturesSubtitle',
+          'homeFeature1Icon',
+          'homeFeature1Title',
+          'homeFeature1Desc',
+          'homeFeature2Icon',
+          'homeFeature2Title',
+          'homeFeature2Desc',
+          'homeFeature3Icon',
+          'homeFeature3Title',
+          'homeFeature3Desc',
+        ],
+      },
+    },
+  }).catch(() => []);
+
+  const s: Record<string, string> = {};
+  settingsList.forEach(({ key, value }) => {
+    s[key] = value;
+  });
+
+  const badgeText = s.homeBadgeText || 'ระบบจัดการบุคลากรรุ่นใหม่';
+  const titleLine1 = s.homeTitleLine1 || 'ยกระดับการบริหาร';
+  const titleLine2 = s.homeTitleLine2 || 'ทรัพยากรบุคคล';
+  const subtitle = s.homeSubtitle || 'แพลตฟอร์มที่รวมทุกฟีเจอร์ที่คุณต้องการ สำหรับการบริหารจัดการบุคลากร การลา ยานพาหนะ และการสื่อสารภายในองค์กร';
+  const ctaPrimary = s.homeCtaPrimaryText || 'เริ่มต้นใช้งานฟรี';
+  const ctaSecondary = s.homeCtaSecondaryText || 'เข้าสู่ระบบสมาชิก';
+
+  const featuresTitle = s.homeFeaturesTitle || 'จุดเด่นของระบบ eProfile';
+  const featuresSubtitle = s.homeFeaturesSubtitle || 'ครบจบในที่เดียว ด้วยโมดูลที่ออกแบบมาเพื่อลดเวลาทำงานของฝ่าย HR และเพิ่มความสะดวกสบายให้กับบุคลากร';
+
+  const f1Icon = s.homeFeature1Icon || 'fa-solid fa-users';
+  const f1Title = s.homeFeature1Title || 'จัดการข้อมูลบุคลากร';
+  const f1Desc = s.homeFeature1Desc || 'จัดเก็บข้อมูลประวัติอย่างเป็นระบบ ค้นหาง่าย สร้างบัตรประจำตัวพนักงานได้ทันที';
+
+  const f2Icon = s.homeFeature2Icon || 'fa-solid fa-calendar-check';
+  const f2Title = s.homeFeature2Title || 'ระบบการลาออนไลน์';
+  const f2Desc = s.homeFeature2Desc || 'ยื่นใบลาและอนุมัติผ่านระบบได้ทุกที่ พร้อมพิมพ์ใบลาตามแบบฟอร์มราชการ';
+
+  const f3Icon = s.homeFeature3Icon || 'fa-solid fa-shield-halved';
+  const f3Title = s.homeFeature3Title || 'ความปลอดภัยระดับสูง';
+  const f3Desc = s.homeFeature3Desc || 'เข้ารหัสข้อมูลตามมาตรฐานความปลอดภัย พร้อมระบบกำหนดสิทธิ์การเข้าถึงแบบละเอียด';
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col font-prompt">
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-100 via-slate-50 to-white dark:from-primary-900/20 dark:via-slate-900 dark:to-slate-950"></div>
@@ -14,18 +70,18 @@ export default async function PublicLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-sm font-semibold mb-8 animate-fade-in-up">
             <span className="flex h-2 w-2 rounded-full bg-primary-600 dark:bg-primary-500"></span>
-            ระบบจัดการบุคลากรรุ่นใหม่
+            {badgeText}
           </div>
           
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-8 animate-fade-in-up animation-delay-100">
-            ยกระดับการบริหาร <br className="hidden md:block" />
+            {titleLine1} <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-300">
-              ทรัพยากรบุคคล
+              {titleLine2}
             </span>
           </h1>
           
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 animate-fade-in-up animation-delay-200">
-            แพลตฟอร์มที่รวมทุกฟีเจอร์ที่คุณต้องการ สำหรับการบริหารจัดการบุคลากร การลา ยานพาหนะ และการสื่อสารภายในองค์กร
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 animate-fade-in-up animation-delay-200 whitespace-pre-line">
+            {subtitle}
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-300">
@@ -44,13 +100,13 @@ export default async function PublicLandingPage() {
                   href="/login" 
                   className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-bold shadow-lg shadow-primary-600/30 transition-all hover:-translate-y-1"
                 >
-                  เข้าสู่ระบบสมาชิก
+                  {ctaSecondary}
                 </Link>
                 <Link 
                   href="/register" 
                   className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl font-bold transition-all hover:-translate-y-1"
                 >
-                  เริ่มต้นใช้งานฟรี
+                  {ctaPrimary}
                 </Link>
               </>
             )}
@@ -62,33 +118,33 @@ export default async function PublicLandingPage() {
       <section className="py-24 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">จุดเด่นของระบบ eProfile</h2>
-            <p className="text-slate-600 dark:text-slate-400">ครบจบในที่เดียว ด้วยโมดูลที่ออกแบบมาเพื่อลดเวลาทำงานของฝ่าย HR และเพิ่มความสะดวกสบายให้กับบุคลากร</p>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">{featuresTitle}</h2>
+            <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{featuresSubtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
               <div className="w-14 h-14 bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                <i className="fa-solid fa-users"></i>
+                <i className={f1Icon}></i>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">จัดการข้อมูลบุคลากร</h3>
-              <p className="text-slate-600 dark:text-slate-400">จัดเก็บข้อมูลประวัติอย่างเป็นระบบ ค้นหาง่าย สร้างบัตรประจำตัวพนักงานได้ทันที</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{f1Title}</h3>
+              <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{f1Desc}</p>
             </div>
 
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
               <div className="w-14 h-14 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                <i className="fa-solid fa-calendar-check"></i>
+                <i className={f2Icon}></i>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ระบบการลาออนไลน์</h3>
-              <p className="text-slate-600 dark:text-slate-400">ยื่นใบลาและอนุมัติผ่านระบบได้ทุกที่ พร้อมพิมพ์ใบลาตามแบบฟอร์มราชการ</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{f2Title}</h3>
+              <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{f2Desc}</p>
             </div>
 
             <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
               <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                <i className="fa-solid fa-shield-halved"></i>
+                <i className={f3Icon}></i>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">ความปลอดภัยระดับสูง</h3>
-              <p className="text-slate-600 dark:text-slate-400">เข้ารหัสข้อมูลตามมาตรฐานความปลอดภัย พร้อมระบบกำหนดสิทธิ์การเข้าถึงแบบละเอียด</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{f3Title}</h3>
+              <p className="text-slate-600 dark:text-slate-400 whitespace-pre-line">{f3Desc}</p>
             </div>
           </div>
         </div>
