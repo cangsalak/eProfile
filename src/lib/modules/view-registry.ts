@@ -15,6 +15,7 @@ import { BackupModule } from '@/modules/backup';
 import { ModuleManagerModule } from '@/modules/module-manager';
 import { SiteContentModule } from '@/modules/site-content';
 import { TestSlipModule } from '@/modules/test-slip';
+import { Rpb1Module } from '@/modules/rpb1';
 
 export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'personnel': PersonnelModule,
@@ -32,6 +33,7 @@ export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'module-manager': ModuleManagerModule,
   'site-content': SiteContentModule,
   'test-slip': TestSlipModule,
+  'rpb1': Rpb1Module,
 };
 
 export class ModuleViewRegistry {

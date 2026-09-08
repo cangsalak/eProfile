@@ -61,6 +61,7 @@ model Personnel {
   passwordResetTokens    PasswordResetToken[]
   documents              PersonnelDocument[]
   inspections            Inspection[]
+  rpb1Records            Rpb1Record[]
   
   // Security Fields
   mustChangePassword     Boolean  @default(true)
@@ -360,5 +361,182 @@ model InspectionFinding {
   @@index([category])
   @@index([status])
 }
+
+model Rpb1Record {
+  id                        String      @id @default(cuid())
+  personnelId               String
+  personnel                 Personnel   @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  status                    String      @default("DRAFT") // DRAFT, COMPLETED, APPROVED, ARCHIVED
+  version                   Int         @default(1)
+  classification            String      @default("ลับ") // ชั้นความลับ
+  photoUrl                  String?     // รูปถ่าย 4.5 x 6 ซม.
+
+  // --- หน้า 1 (หมวด 1 - 7) ---
+  titleRank                 String?     // ยศ/คำนำหน้า
+  firstName                 String?     // ชื่อตัว
+  middleName                String?     // ชื่อรอง
+  lastName                  String?     // ชื่อสกุล
+  gender                    String?     // เพศ
+  age                       Int?        // อายุ (ปี)
+  formerFirstName           String?     // ชื่อตัวเดิม
+  nameChangeDoc             String?     // หลักฐานการเปลี่ยนชื่อ
+  formerLastName            String?     // ชื่อสกุลเดิม
+  lastNameChangeDoc         String?     // หลักฐานการเปลี่ยนชื่อสกุล
+  nickname                  String?     // ชื่อเล่นหรือชื่ออื่น ๆ
+  citizenId                 String?     // เลขประจำตัวประชาชน 13 หลัก
+  dateOfBirth               String?     // วัน เดือน ปี เกิด
+  birthPlaceHospital        String?     // สถานที่จดทะเบียนเกิด/โรงพยาบาลที่เกิด
+  race                      String?     // เชื้อชาติ
+  nationality               String?     // สัญชาติ
+  formerNationality         String?     // สัญชาติเดิม
+  naturalizationDoc         String?     // หลักฐานการแปลงสัญชาติ
+  religion                  String?     // ศาสนา
+  formerReligion            String?     // ศาสนาเดิม
+  // ที่อยู่ตามทะเบียนบ้าน
+  registeredHouseNo         String?
+  registeredVillage         String?
+  registeredMoo             String?
+  registeredSoi             String?
+  registeredRoad            String?
+  registeredSubdistrict     String?
+  registeredDistrict        String?
+  registeredProvince        String?
+  registeredPhone           String?
+  // ที่อยู่ปัจจุบัน
+  currentHouseNo            String?
+  currentVillage            String?
+  currentMoo                String?
+  currentSoi                String?
+  currentRoad               String?
+  currentSubdistrict        String?
+  currentDistrict           String?
+  currentProvince           String?
+  currentPhone              String?
+  // ช่องทางติดต่อ
+  phoneLandline             String?
+  phoneMobile               String?
+  email                     String?
+  lineId                    String?
+  facebook                  String?
+  instagram                 String?
+  otherContact              String?
+  // ต่างด้าว/พื้นที่สูง
+  alienCardNo               String?
+  alienCardDate             String?
+  alienCardIssuedAt         String?
+  alienResidenceDocNo       String?
+  alienResidenceDocDate     String?
+  alienResidenceIssuedAt    String?
+  alienIdInThailand         String?
+  birthCountry              String?
+  entryDateToThailand       String?
+  workPermitNo              String?
+  workPermitIssuedBy        String?
+  workPermitIssueDate       String?
+  workPermitExpiryDate      String?
+
+  // --- หน้า 2 (หมวด 8 - 11) ---
+  height                    Float?      // ส่วนสูง (ซม.)
+  weight                    Float?      // น้ำหนัก (กก.)
+  scarsDistinguishingMarks  String?     // ตำหนิ
+  bloodGroup                String?     // กลุ่มเลือด
+  addressesPast15Years      String      @default("[]") // JSON: [{fromYear, toYear, houseNo, soi, road, subdistrict, district, province, country}]
+  educations                String      @default("[]") // JSON: [{fromYear, toYear, schoolName, degree, major, gpa}]
+  specialActivities         String      @default("[]") // JSON: [{fromYear, toYear, schoolName, positionRole}]
+
+  // --- หน้า 3 (หมวด 12 - 15) ---
+  languages                 String      @default("[]") // JSON: [{language, readLevel, listenLevel, writeLevel, speakLevel}]
+  workHistory               String      @default("[]") // JSON: [{fromYear, toYear, employerOrAgency, position, reasonForLeaving, locationPhone}]
+  specialOccupationsHobbies String?     // อาชีพพิเศษอื่น ๆ และงานอดิเรก
+  // การรับราชการทหาร
+  militaryStatus            String?     // ประจำการ / กองหนุน / กำลังพลสำรอง
+  militaryRank              String?     // ยศ
+  militaryRegNumber         String?     // เครื่องหมายทะเบียนทหาร
+  militaryBranchUnit        String?     // เหล่าและสังกัด
+  militaryUnitLocation      String?     // ที่ตั้งของหน่วย
+  militaryServiceFrom       String?     // เข้าประจำการเมื่อ
+  militaryServiceTo         String?     // ถึง
+  militaryYearsServed       String?     // จำนวนปีที่รับราชการ
+  militaryDischargeReason   String?     // เหตุที่ออก
+  militaryLastCommander     String?     // ผู้บังคับบัญชาโดยตรงคนสุดท้าย
+  militarySpecialOperations String?     // เคยไปปฏิบัติราชการพิเศษที่
+  militarySpecialOpDate     String?     // เมื่อ
+  militarySpecialOpDuration String?     // ระยะเวลา
+  militaryExemptionReason   String?     // ได้รับการยกเว้น โดย
+
+  // --- หน้า 4 (หมวด 16 - 18) ---
+  writerDetails             String?     // การเป็นนักเขียน, นามปากกา, หนังสือ, สื่อสังคมออนไลน์
+  politicalSocialMemberships String     @default("[]") // JSON: [{fromYear, toYear, organizationName, location, memberNo}]
+  foreignTravels            String      @default("[]") // JSON: [{fromYear, toYear, cityCountry, purposeAndSponsorship}]
+
+  // --- หน้า 5 (หมวด 19 - 21) ---
+  identificationDocuments   String      @default("[]") // JSON: [{docType, docNumber, issuedAt, issueAndExpiryDate}]
+  legalCases                String      @default("[]") // JSON: [{date, crimeScene, charge, caseResult}]
+  disciplinaryPunishments   String?     // กรณีเคยถูกลงโทษทางวินัย
+  fatherDetails             String?     // JSON: {titleName, dob, birthPlace, citizenId, race, religion, nationalityOriginal, nationalityCurrent, addressPhone, occupation, workplacePhone}
+  motherDetails             String?     // JSON: {titleName, dob, birthPlace, citizenId, race, religion, nationalityOriginal, nationalityCurrent, addressPhone, occupation, workplacePhone}
+
+  // --- หน้า 6 (หมวด 22 - 23) ---
+  maritalStatus             String?     // โสด, หมั้น, สมรส, หม้าย, แยกกันอยู่, หย่า
+  spouseFormerDetails       String?     // JSON: {titleNameOriginal, dob, birthPlace, race, religion, nationalityOriginal, nationalityCurrent, occupation, workplacePhone, marriageDate, marriagePlace, currentAddressPhone, divorceDate, divorcePlace, divorceReason, lastAddress}
+  spouseCurrentDetails      String?     // JSON: {titleNameOriginal, dob, birthPlace, race, religion, nationalityOriginal, nationalityCurrent, occupation, workplacePhone, marriageDate, marriagePlace, currentAddressPhone}
+  children                  String      @default("[]") // JSON: [{order, titleName, dob, race, nationality, religion, currentAddress, occupation, schoolWorkplace, phone}]
+
+  // --- หน้า 7 (หมวด 24 - 26) ---
+  siblings                  String      @default("[]") // JSON: [{order, titleName, dob, race, nationality, religion, citizenId, currentAddress, occupation, schoolWorkplace, phone, spouseNameOriginal, spouseRaceNationalityReligion, spouseOccupation, spouseSchoolWorkplace, spousePhone}]
+  relativesInGovernment     String      @default("[]") // JSON: [{order, titleName, relation, raceNationalityReligion, occupation, workplacePhone, currentAddressPhone}]
+  overseasContacts          String      @default("[]") // JSON: [{order, titleName, relation, raceNationalityReligion, occupation, schoolWorkplace, currentAddress, reasonLivingAbroad}]
+
+  // --- หน้า 8 (หมวด 27 - 30) ---
+  cohabitants               String      @default("[]") // JSON: [{order, titleName, relation}]
+  closeFriendsRef           String      @default("[]") // JSON: [{titleName, yearsKnown, raceNationalityReligion, addressPhone, workplacePhone}]
+  supporters                String      @default("[]") // JSON: [{titleName, raceNationalityReligion, addressPhone, workplacePhone}]
+  additionalExplanations    String?     // ประวัติคำชี้แจงอื่น ๆ
+  // ลายมือชื่อ
+  ownerSignatureDate        String?     // วันที่ลงนามเจ้าของประวัติ
+  inspectorRankName         String?     // ยศ ชื่อ เจ้าหน้าที่ควบคุม
+  inspectorPosition         String?     // ตำแหน่งเจ้าหน้าที่ควบคุม
+  inspectorSignatureDate    String?     // วันที่เจ้าหน้าที่ควบคุมลงนาม
+
+  // --- หน้า 9: แผนที่สังเขป & ผู้ติดต่อเร่งด่วน ---
+  sketchMapImage            String?     // Data URL หรือ Image Path ของแผนที่สังเขป
+  mapHouseNo                String?
+  mapVillage                String?
+  mapMoo                    String?
+  mapSoi                    String?
+  mapRoad                   String?
+  mapSubdistrict            String?
+  mapDistrict               String?
+  mapProvince               String?
+  mapPhone                  String?
+  mapHouseOwnerName         String?
+  mapHouseOwnerPhone        String?
+  emergencyContactRankName  String?     // ยศ ชื่อ บุคคลติดต่อเร่งด่วน
+  emergencyContactRelation  String?     // เกี่ยวข้องเป็น
+  emergencyContactAddress   String?     // ที่อยู่และหมายเลขโทรศัพท์
+
+  // --- หน้า 10: บันทึกประวัติบุคคลเพิ่มเติม ---
+  extraTitleName            String?
+  extraGender               String?
+  extraBloodGroup           String?
+  extraRegisteredAddress    String?
+  extraCurrentAddress       String?
+  extraIsSameAddress        Boolean     @default(true)
+  extraMobilePhone          String?
+  extraHomePhone            String?
+  extraOfficePhone          String?
+  extraEmail                String?
+  extraOwnerSignatureDate   String?
+  extraOfficerName          String?
+  extraOfficerPosition      String?
+  extraOfficerSignatureDate String?
+
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+
+  @@index([personnelId])
+  @@index([status])
+}
+
 
 

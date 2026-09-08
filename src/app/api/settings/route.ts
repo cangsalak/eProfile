@@ -37,6 +37,7 @@ const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'toastPosition',
   'toastTheme',
   'googleCalendarUrls',
+  'calendarDutyRoles',
   'badgeTemplate',
   'badgeHeaderTitle',
   'badgeSubHeaderTitle',
@@ -50,8 +51,18 @@ const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'badgeCanvasConfig',
   'badgeBackCanvasConfig',
   'enableLineNotify',
+  'lineTargetId',
   'enableEmailNotify',
   'notifyEmailTo',
+  'notifyEmailFromName',
+  'notifyEmailFromAddress',
+  'notifyDutyDaily',
+  'notifyDutyUpcoming',
+  'notifyDutyChange',
+  'notifyLeaveSubmit',
+  'notifyLeaveStatus',
+  'notifyNewsUrgent',
+  'notifySecurityAlert',
   'dbProvider',
   'hasDemoData',
   // Dropdown options needed by public-facing pages
@@ -134,7 +145,33 @@ const PUBLIC_DEFAULTS: Record<string, string> = {
   vehicleTypes:    JSON.stringify(['รถยนต์ส่วนบุคคล', 'รถจักรยานยนต์', 'รถยนต์ราชการ', 'รถจักรยานยนต์ราชการ']),
   bloodGroups:     JSON.stringify(['A', 'B', 'AB', 'O']),
   educationLevels: JSON.stringify(['มัธยมศึกษาตอนต้น', 'มัธยมศึกษาตอนปลาย / ปวช.', 'อนุปริญญา / ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก']),
-  enabledModules:  JSON.stringify(['personnel', 'leaves', 'vehicles', 'badges', 'calendar', 'news', 'contacts', 'command-dashboard', 'system-inspector', 'site-content', 'test-slip']),
+  enabledModules:  JSON.stringify(['personnel', 'leaves', 'vehicles', 'badges', 'calendar', 'news', 'contacts', 'command-dashboard', 'system-inspector', 'site-content', 'test-slip', 'rpb1']),
+  calendarDutyRoles: JSON.stringify([
+    'นายทหารเวรผู้ใหญ่',
+    'นายทหารเวร',
+    'ผบ.กองรักษาการณ์',
+    'ผช.ผบ.กองรักษาการณ์ (1)',
+    'ผช.ผบ.กองรักษาการณ์ (2)',
+    'สิบเวร ร้อย.บร.',
+    'สิบเวร ฝขส.ฯ',
+    'สิบเวร กคค./กตส.ปม.ฯ',
+    'สิบเวรโรงเลี้ยง',
+    'เสมียนเวร',
+  ]),
+  // Notification Defaults
+  enableLineNotify: 'false',
+  lineTargetId: '',
+  enableEmailNotify: 'false',
+  notifyEmailTo: '',
+  notifyEmailFromName: 'ระบบ eProfile',
+  notifyEmailFromAddress: 'noreply@eprofile.com',
+  notifyDutyDaily: 'true',
+  notifyDutyUpcoming: 'true',
+  notifyDutyChange: 'true',
+  notifyLeaveSubmit: 'true',
+  notifyLeaveStatus: 'true',
+  notifyNewsUrgent: 'true',
+  notifySecurityAlert: 'true',
   // CMS Defaults
   homeBadgeText: 'ระบบจัดการบุคลากรรุ่นใหม่',
   homeTitleLine1: 'ยกระดับการบริหาร',
@@ -197,6 +234,18 @@ export async function GET() {
       if (!(key in settingsObj)) {
         settingsObj[key] = defaultValue;
       }
+    }
+
+    // If no real admin user exists yet, ensure isInstalled is 'false' so setup wizard opens
+    const adminCount = await prisma.personnel.count({
+      where: {
+        role: { in: ['SUPER_ADMIN', 'ADMIN'] },
+        id: { notIn: ['ALL', 'ADMIN'] },
+      }
+    }).catch(() => 0);
+
+    if (adminCount === 0) {
+      settingsObj.isInstalled = 'false';
     }
 
     return NextResponse.json(settingsObj);

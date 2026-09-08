@@ -66,6 +66,12 @@ export function applyThemeSettings(settings: Partial<ThemeSettings>) {
       root.style.setProperty('--color-primary-950', `${Math.max(0, r - 140)} ${Math.max(0, g - 140)} ${Math.max(0, b - 140)}`);
     }
   } else {
+    const primaryVars = [
+      '--color-primary-50', '--color-primary-100', '--color-primary-200', '--color-primary-300',
+      '--color-primary-400', '--color-primary-500', '--color-primary-600', '--color-primary-700',
+      '--color-primary-800', '--color-primary-900', '--color-primary-950'
+    ];
+    primaryVars.forEach(v => root.style.removeProperty(v));
     root.setAttribute('data-theme', activeColor);
     localStorage.setItem('theme', activeColor);
   }

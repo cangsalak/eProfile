@@ -5,9 +5,9 @@
 **v1.3.0**
 
 - Release channel: `stable`
-- Release date: 2026-09-01
+- Release date: 2026-09-08
 - Baseline: `v1.2.0`
-- Purpose: Multi-Database Support (SQLite, PostgreSQL, MySQL) & Modern 3-Step Installation Wizard with Connection Testing and Strict Digits Validation
+- Purpose: Complete Google Calendar Duty Roster with Live 24h Timeline, Notification Event Triggers, Multi-Database Universal Engine & Hardened Security Matrix
 
 ## Versioning Policy
 
@@ -24,14 +24,18 @@
 3. เพิ่มรายการใน `CHANGELOG.md`
 4. รัน TypeScript และ Production Build
 5. ทดสอบ Security/Authorization ที่เกี่ยวข้อง
-6. บันทึก Git commit และ tag เช่น `v1.2.0`
+6. บันทึก Git commit และ tag เช่น `v1.3.0`
 7. อัปเดต Release Record ใน `DEV.md`
 
-## Current Release Gate Status (v1.2.0)
+## Current Release Gate Status (v1.3.0)
 
-- TypeScript: 🟢 PASS
-- ESLint: 🟢 PASS
-- Production Build: 🟢 PASS
-- Server-side Pagination & Search: 🟢 PASS
-- Automated Test Suite (6 Suites): 🟢 PASS
-- Production Release Status: 🟢 **VERIFIED (v1.2.0)**
+- TypeScript: 🟢 PASS (`npx tsc --noEmit` 0 errors)
+- ESLint: 🟢 PASS (`npm run lint` 0 errors)
+- Automated Test Suite: 🟢 PASS (21/21 Test Suites 100% Passed)
+- Google Calendar 4-View Engine: 🟢 PASS
+- Military Duty Personnel Tagging & Print Roster: 🟢 PASS
+- Notification Triggers & Line/Email Test API: 🟢 PASS
+- Universal Multi-Database Backup & Restore: 🟢 PASS
+- Official RPB-1 Security Profile (รปภ. ๑ ๑๐ หน้า ๓๐ หมวดหมู่): 🟢 PASS
+- Production Release Status: 🟢 **VERIFIED (v1.3.0)**
+

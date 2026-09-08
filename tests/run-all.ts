@@ -18,6 +18,7 @@ import { runLeaveApprovalsTests } from './api/leave-approvals.test';
 import { runInstallDemoDataTests } from './installer/install-demo-data.test';
 import { runModuleInstallerTests } from './modules/module-installer.test';
 import { runForgotPasswordFlowTests } from './auth/forgot-password-flow.test';
+import { runRpb1Tests } from './api/rpb1.test';
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
@@ -27,7 +28,7 @@ async function main() {
 
   const startTime = Date.now();
   let passedSuites = 0;
-  let totalSuites = 20;
+  let totalSuites = 21;
 
   try {
     // 1. Unit Tests
@@ -108,6 +109,10 @@ async function main() {
 
     // 20. Self-Service Forgot & Reset Password Flow Tests (v1.3.0)
     await runForgotPasswordFlowTests();
+    passedSuites++;
+
+    // 21. RPB-1 Security Profile Form Tests (v1.3.0)
+    await runRpb1Tests();
     passedSuites++;
 
     // Final Teardown: Clean up any test notifications, test posts, or test users

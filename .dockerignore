@@ -1,7 +1,15 @@
 node_modules
-.next
+!node_modules/.prisma
+!node_modules/@prisma
 .git
 @eaDir
 */@eaDir
 **/@eaDir
 *.log
+prisma/dev.db
+prisma/dev.db-journal
+prisma/*.tmp
+!prisma/dev.template.db
+data/*.db
+
+

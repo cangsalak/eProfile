@@ -23,11 +23,14 @@ export async function POST(req: Request) {
     const response = NextResponse.json({ success: true, message: 'ออกจากระบบสำเร็จ' });
 
     // Clear the auth cookie
+    const forwardedProto = req.headers.get('x-forwarded-proto');
+    const isHttps = forwardedProto ? forwardedProto === 'https' : req.url.startsWith('https://');
+
     response.cookies.set({
       name: 'auth_token',
       value: '',
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isHttps,
       sameSite: 'lax',
       maxAge: 0,
       path: '/',

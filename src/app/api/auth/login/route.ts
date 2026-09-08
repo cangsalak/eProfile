@@ -150,12 +150,15 @@ export async function POST(req: Request) {
       },
     });
 
-    // Set HttpOnly cookie
+    // Set HttpOnly cookie (only set secure: true if accessed over HTTPS, allowing LAN IP/HTTP deployments)
+    const forwardedProto = req.headers.get('x-forwarded-proto');
+    const isHttps = forwardedProto ? forwardedProto === 'https' : req.url.startsWith('https://');
+
     response.cookies.set({
       name: 'auth_token',
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isHttps,
       sameSite: 'lax',
       maxAge: 60 * 60 * 24, // 24 hours
       path: '/',

@@ -1,621 +1,588 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   format,
   addMonths,
   subMonths,
+  addWeeks,
+  subWeeks,
+  addDays,
+  subDays,
   startOfMonth,
   endOfMonth,
   startOfWeek,
   endOfWeek,
   isSameMonth,
   isSameDay,
-  addDays,
-  parseISO
+  parseISO,
 } from 'date-fns';
 import { th } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Info, Edit2, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Calendar as CalendarIcon,
+  Search,
+  RefreshCw,
+  Clock,
+  Layers,
+  Sparkles,
+  ChevronDown,
+  Printer,
+  Radio,
+  Settings,
+} from 'lucide-react';
+import Link from 'next/link';
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  description: string | null;
-  startDate: string;
-  endDate: string;
-  type: string;
-  status: string;
-  originalData?: any;
-}
+import {
+  CalendarViewMode,
+  CalendarEventItem,
+  CalendarFilterState,
+  CALENDAR_CATEGORY_CONFIG,
+} from '../types';
+import toast from 'react-hot-toast';
+import { CalendarSidebar } from './CalendarSidebar';
+import { WeekTimeGrid } from './WeekTimeGrid';
+import { DayTimeGrid } from './DayTimeGrid';
+import { AgendaView } from './AgendaView';
+import { EventModal } from './EventModal';
+import { DutyRosterPrintModal } from './DutyRosterPrintModal';
+import { CalendarSubscribeModal } from './CalendarSubscribeModal';
 
 export function CalendarView() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [viewMode, setViewMode] = useState<CalendarViewMode>('month');
+  const [events, setEvents] = useState<CalendarEventItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Category filter state
+  const [filterState, setFilterState] = useState<CalendarFilterState>({
+    operation: true,
+    leave: true,
+    meeting: true,
+    notification: true,
+    google: true,
+    general: true,
+  });
 
   // Modal states
-  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
-  // New event form state
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    type: 'operation',
-    status: ''
-  });
-  const [editingEventId, setEditingEventId] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [expandedEvents, setExpandedEvents] = useState<Record<string, boolean>>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isSubscribeModalOpen, setIsSubscribeModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEventItem | null>(null);
+  const [slotDate, setSlotDate] = useState<Date | undefined>(undefined);
+  const [slotHour, setSlotHour] = useState<number | undefined>(undefined);
 
-  useEffect(() => {
-    const userStr = localStorage.getItem('currentUser');
-    if (userStr) {
-      setCurrentUser(JSON.parse(userStr));
-    }
-  }, []);
-
-  const fetchEvents = async (date: Date) => {
+  // Fetch events from API
+  const fetchEvents = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Fetch events for the month (we'll fetch +/- 1 month to cover overflow days)
-      const start = startOfWeek(startOfMonth(subMonths(date, 1)));
-      const end = endOfWeek(endOfMonth(addMonths(date, 1)));
-      
+      const start = startOfWeek(startOfMonth(subMonths(currentDate, 1)));
+      const end = endOfWeek(endOfMonth(addMonths(currentDate, 1)));
+
       const res = await fetch(`/api/calendar?start=${start.toISOString()}&end=${end.toISOString()}`);
       if (res.ok) {
-        const data = await res.json();
+        const data: CalendarEventItem[] = await res.json();
         setEvents(data);
       }
     } catch (err) {
-      console.error('Failed to fetch events', err);
+      console.error('Failed to fetch calendar events', err);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchEvents(currentDate);
   }, [currentDate]);
 
-  const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
-  const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
 
-  const handleAddEvent = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/calendar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, type: formData.type || 'operation' })
-      });
-      if (res.ok) {
-        setIsAddModalOpen(false);
-        setFormData({ title: '', description: '', startDate: '', endDate: '', type: 'operation', status: '' });
-        fetchEvents(currentDate);
-      }
-    } catch (error) {
-      console.error('Failed to add event', error);
+  // Navigation handlers
+  const handlePrev = () => {
+    if (viewMode === 'month' || viewMode === 'agenda') {
+      setCurrentDate((d) => subMonths(d, 1));
+    } else if (viewMode === 'week') {
+      setCurrentDate((d) => subWeeks(d, 1));
+    } else if (viewMode === 'day') {
+      setCurrentDate((d) => subDays(d, 1));
     }
   };
 
-  const handleEditEvent = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingEventId) return;
-    
-    try {
-      const isLeave = editingEventId.startsWith('leave-');
-      const url = isLeave 
-        ? `/api/leaves/${editingEventId.replace('leave-', '')}` 
-        : `/api/calendar/${editingEventId}`;
-        
-      const payload = isLeave 
-        ? { startDate: formData.startDate, endDate: formData.endDate, reason: formData.description, status: formData.status }
-        : { title: formData.title, description: formData.description, startDate: formData.startDate, endDate: formData.endDate, type: formData.type };
-
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      if (res.ok) {
-        setIsEditModalOpen(false);
-        setEditingEventId(null);
-        setFormData({ title: '', description: '', startDate: '', endDate: '', type: 'operation', status: '' });
-        fetchEvents(currentDate);
-      }
-    } catch (error) {
-      console.error('Failed to update event', error);
+  const handleNext = () => {
+    if (viewMode === 'month' || viewMode === 'agenda') {
+      setCurrentDate((d) => addMonths(d, 1));
+    } else if (viewMode === 'week') {
+      setCurrentDate((d) => addWeeks(d, 1));
+    } else if (viewMode === 'day') {
+      setCurrentDate((d) => addDays(d, 1));
     }
   };
 
-  const getEventsForDay = (day: Date) => {
-    return events.filter(event => {
-      const start = new Date(event.startDate);
-      const end = new Date(event.endDate);
-      // Strip times for comparison
-      const dayStr = format(day, 'yyyy-MM-dd');
-      const startStr = format(start, 'yyyy-MM-dd');
-      const endStr = format(end, 'yyyy-MM-dd');
-      return dayStr >= startStr && dayStr <= endStr;
+  const handleToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const handleToggleFilter = (cat: keyof CalendarFilterState) => {
+    setFilterState((prev) => ({ ...prev, [cat]: !prev[cat] }));
+  };
+
+  // Filtered and searched events
+  const filteredEvents = useMemo(() => {
+    return events.filter((ev) => {
+      // Category filter check
+      const typeKey = (ev.type in filterState ? ev.type : 'general') as keyof CalendarFilterState;
+      if (!filterState[typeKey]) return false;
+
+      // Search query filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchTitle = ev.title?.toLowerCase().includes(q);
+        const matchDesc = ev.description?.toLowerCase().includes(q);
+        const matchLoc = ev.location?.toLowerCase().includes(q);
+        return matchTitle || matchDesc || matchLoc;
+      }
+
+      return true;
     });
+  }, [events, filterState, searchQuery]);
+
+  // Handle slot clicking (Quick Add)
+  const handleSlotClick = (date: Date, hour: number) => {
+    setSelectedEvent(null);
+    setSlotDate(date);
+    setSlotHour(hour);
+    setIsModalOpen(true);
   };
 
-  const getEventStyle = (type: string, status: string) => {
-    if (type === 'leave') {
-      if (status === 'อนุมัติแล้ว') return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
-      if (status === 'รออนุมัติ') return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800';
-      return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
+  // Open Create Event
+  const handleOpenCreateModal = () => {
+    setSelectedEvent(null);
+    setSlotDate(currentDate);
+    setSlotHour(9);
+    setIsModalOpen(true);
+  };
+
+  // Select existing event to view/edit
+  const handleSelectEvent = (event: CalendarEventItem) => {
+    setSelectedEvent(event);
+    setSlotDate(undefined);
+    setSlotHour(undefined);
+    setIsModalOpen(true);
+  };
+
+  // Save event (Create or Update)
+  const handleSaveEvent = async (eventData: Partial<CalendarEventItem>) => {
+    try {
+      if (eventData.id) {
+        // Edit
+        const res = await fetch(`/api/calendar/${eventData.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData),
+        });
+        if (!res.ok) {
+          const error = await res.json();
+          toast.error(error.error || 'ไม่สามารถแก้ไขกิจกรรมได้');
+          return;
+        }
+        toast.success('แก้ไขกิจกรรมเรียบร้อยแล้ว');
+      } else {
+        // Create
+        const res = await fetch('/api/calendar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData),
+        });
+        if (!res.ok) {
+          const error = await res.json();
+          toast.error(error.error || 'ไม่สามารถสร้างกิจกรรมได้');
+          return;
+        }
+        toast.success('สร้างกิจกรรมเรียบร้อยแล้ว');
+      }
+      await fetchEvents();
+    } catch (err) {
+      console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
     }
-    if (type === 'google') return 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800';
-    
-    switch (type) {
-      case 'operation': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
-      case 'notification': return 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800';
-      case 'meeting': return 'bg-pink-100 text-pink-700 border-pink-200 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-800';
-      default: return 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700';
+  };
+
+  // Delete event
+  const handleDeleteEvent = async (eventId: string) => {
+    try {
+      const res = await fetch(`/api/calendar/${eventId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        toast.error(error.error || 'ไม่สามารถลบกิจกรรมได้');
+        return;
+      }
+      toast.success('ลบกิจกรรมเรียบร้อยแล้ว');
+      await fetchEvents();
+    } catch (err) {
+      console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการลบกิจกรรม');
     }
   };
 
-  const renderHeader = () => {
-    return (
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <button onClick={prevMonth} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            <ChevronLeft className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-          </button>
-          <h2 className="text-xl font-semibold text-slate-800 dark:text-white min-w-[200px] text-center">
-            {format(currentDate, 'MMMM yyyy', { locale: th })}
-          </h2>
-          <button onClick={nextMonth} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            <ChevronRight className="w-5 h-5 text-slate-600 dark:text-slate-400" />
-          </button>
-        </div>
-        
-        <div className="flex gap-2">
-          <button 
-            onClick={() => {
-              setCurrentDate(new Date());
-            }}
-            className="px-4 py-2 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-          >
-            วันนี้
-          </button>
-          <button 
-            onClick={() => {
-              setFormData(prev => ({ ...prev, startDate: format(new Date(), 'yyyy-MM-dd'), endDate: format(new Date(), 'yyyy-MM-dd') }));
-              setIsAddModalOpen(true);
-            }}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary-600/20"
-          >
-            <Plus className="w-4 h-4" />
-            เพิ่มกิจกรรม
-          </button>
-        </div>
-      </div>
-    );
-  };
+  // Export to .ics format
+  const handleExportIcal = () => {
+    try {
+      let icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//eProfile//Duty Calendar//TH',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+      ];
 
-  const renderDays = () => {
-    const days = [];
-    const startDate = startOfWeek(currentDate);
+      filteredEvents.forEach((ev) => {
+        const s = new Date(ev.startDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        const e = new Date(ev.endDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        icsContent.push('BEGIN:VEVENT');
+        icsContent.push(`UID:${ev.id}@eprofile.local`);
+        icsContent.push(`DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z`);
+        icsContent.push(`DTSTART:${s}`);
+        icsContent.push(`DTEND:${e}`);
+        icsContent.push(`SUMMARY:${ev.title.replace(/,/g, '\\,')}`);
+        if (ev.description) icsContent.push(`DESCRIPTION:${ev.description.replace(/,/g, '\\,')}`);
+        if (ev.location) icsContent.push(`LOCATION:${ev.location.replace(/,/g, '\\,')}`);
+        icsContent.push('END:VEVENT');
+      });
 
-    for (let i = 0; i < 7; i++) {
-      days.push(
-        <div key={i} className="text-center font-medium text-sm text-slate-500 dark:text-slate-400 py-2">
-          {format(addDays(startDate, i), 'EEEE', { locale: th })}
-        </div>
-      );
+      icsContent.push('END:VCALENDAR');
+      const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', `eprofile-calendar-${format(new Date(), 'yyyy-MM-dd')}.ics`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success('ส่งออกไฟล์ปฏิทิน (.ics) เรียบร้อยแล้ว');
+    } catch (err) {
+      console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการส่งออกไฟล์ iCal');
     }
-    return <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-700">{days}</div>;
   };
 
-  const renderCells = () => {
+  // Format Header Title based on view mode
+  const headerTitle = useMemo(() => {
+    if (viewMode === 'month' || viewMode === 'agenda') {
+      return format(currentDate, 'MMMM yyyy', { locale: th });
+    }
+    if (viewMode === 'week') {
+      const start = startOfWeek(currentDate);
+      const end = endOfWeek(currentDate);
+      return `${format(start, 'd MMM', { locale: th })} - ${format(end, 'd MMM yyyy', { locale: th })}`;
+    }
+    if (viewMode === 'day') {
+      return format(currentDate, 'd MMMM yyyy', { locale: th });
+    }
+    return '';
+  }, [currentDate, viewMode]);
+
+  // Generate Month Grid Days
+  const monthDays = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
     const endDate = endOfWeek(monthEnd);
 
-    const dateFormat = 'd';
-    const rows = [];
-    let days = [];
+    const days: Date[] = [];
     let day = startDate;
-    let formattedDate = '';
-
     while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        formattedDate = format(day, dateFormat);
-        const cloneDay = day;
-        const dayEvents = getEventsForDay(day);
-
-        days.push(
-          <div
-            key={day.toString()}
-            className={`min-h-[120px] p-2 border-b border-r border-slate-200 dark:border-slate-700 transition-colors
-              ${!isSameMonth(day, monthStart) ? 'bg-slate-50/50 dark:bg-slate-800/20' : 'bg-white dark:bg-slate-900'}
-              hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer
-            `}
-            onClick={() => {
-              setSelectedDate(cloneDay);
-              setIsEventModalOpen(true);
-            }}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <span className={`text-sm font-medium w-7 h-7 flex items-center justify-center rounded-full
-                ${isSameDay(day, new Date()) 
-                  ? 'bg-primary-600 text-white' 
-                  : !isSameMonth(day, monthStart) 
-                    ? 'text-slate-400 dark:text-slate-600' 
-                    : 'text-slate-700 dark:text-slate-300'
-                }`}
-              >
-                {formattedDate}
-              </span>
-              
-              {dayEvents.length > 0 && (
-                <span className="text-[10px] bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 px-1.5 py-0.5 rounded-full font-medium">
-                  {dayEvents.length}
-                </span>
-              )}
-            </div>
-            
-            <div className="space-y-1 overflow-y-auto max-h-[80px] pr-1 scrollbar-hide">
-              {dayEvents.slice(0, 3).map((event, idx) => (
-                <div 
-                  key={`${event.id}-${idx}`}
-                  className={`text-xs px-1.5 py-1 rounded truncate border ${getEventStyle(event.type, event.status)}`}
-                  title={event.title}
-                >
-                  {event.title}
-                </div>
-              ))}
-              {dayEvents.length > 3 && (
-                <div className="text-xs text-center text-slate-500 dark:text-slate-400 font-medium">
-                  +{dayEvents.length - 3} เพิ่มเติม
-                </div>
-              )}
-            </div>
-          </div>
-        );
-        day = addDays(day, 1);
-      }
-      rows.push(
-        <div className="grid grid-cols-7" key={day.toString()}>
-          {days}
-        </div>
-      );
-      days = [];
+      days.push(day);
+      day = addDays(day, 1);
     }
+    return days;
+  }, [currentDate]);
 
-    return <div className="border-l border-t border-slate-200 dark:border-slate-700">{rows}</div>;
-  };
+  return (
+    <div className="flex flex-col gap-5 max-w-full">
+      {/* ── Top Google Calendar Navigation Bar ── */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs">
+        {/* Left: Today, Prev/Next, Month/Year Label */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button
+            type="button"
+            onClick={handleToday}
+            className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-2xs transition-colors"
+          >
+            วันนี้
+          </button>
 
-  const renderEventModal = () => {
-    if (!isEventModalOpen || !selectedDate) return null;
-    const dayEvents = getEventsForDay(selectedDate);
-    
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <CalendarIcon className="w-5 h-5 text-primary-500" />
-              กิจกรรมวันที่ {format(selectedDate, 'd MMMM yyyy', { locale: th })}
-            </h3>
-            <button 
-              onClick={() => setIsEventModalOpen(false)}
-              className="text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"
+          <div className="flex items-center rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-2xs">
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+              title="ก่อนหน้า"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="w-px h-4 bg-slate-200 dark:bg-slate-700" />
+            <button
+              type="button"
+              onClick={handleNext}
+              className="p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+              title="ถัดไป"
+            >
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-          
-          <div className="p-4 overflow-y-auto">
-            {dayEvents.length === 0 ? (
-              <div className="text-center py-8 text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
-                ไม่มีกิจกรรมในวันนี้
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {dayEvents.map(event => {
-                  const canEdit = event.type !== 'google' && (currentUser?.role === 'ADMIN' || currentUser?.role === 'SUPER_ADMIN' || (currentUser?.permissions && currentUser.permissions.includes('MANAGE_SYSTEM')) || (event.id.startsWith('leave-') && event.originalData?.personnelId === currentUser?.id));
-                  const isExpanded = !!expandedEvents[event.id];
-                  
-                  return (
-                  <div key={event.id} className={`p-4 rounded-xl border shadow-sm relative group transition-all duration-200 ${getEventStyle(event.type, event.status)}`}>
-                    <div 
-                      className="flex justify-between items-start cursor-pointer select-none"
-                      onClick={() => setExpandedEvents(prev => ({...prev, [event.id]: !prev[event.id]}))}
-                    >
-                      <div className="font-semibold mb-1 pr-6 flex items-center gap-2">
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-                        {event.title}
-                      </div>
-                      {canEdit && (
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingEventId(event.id);
-                            setFormData({
-                              title: event.title,
-                              description: event.description || '',
-                              startDate: format(new Date(event.startDate), 'yyyy-MM-dd'),
-                              endDate: format(new Date(event.endDate), 'yyyy-MM-dd'),
-                              type: event.type,
-                              status: event.status
-                            });
-                            setIsEditModalOpen(true);
-                          }}
-                          className="absolute top-4 right-4 p-1.5 opacity-0 group-hover:opacity-100 bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition-all"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                    
-                    {isExpanded && (
-                      <div className="mt-3 pt-3 border-t border-slate-200/50 dark:border-slate-700/50 animate-fade-in">
-                        {event.description && <div className="text-sm opacity-80 mb-2">{event.description}</div>}
-                        <div className="text-xs opacity-75 mt-2 flex flex-col gap-1.5">
-                          <div className="flex items-center gap-1">
-                            <Info className="w-3 h-3" />
-                            {event.type === 'leave' ? `สถานะ: ${event.status}` : 
-                             event.type === 'google' ? 'Google Calendar' :
-                             `ประเภท: ${event.type === 'operation' ? 'การปฏิบัติงาน' : event.type === 'meeting' ? 'การประชุม' : event.type === 'notification' ? 'การแจ้งเตือน' : 'ทั่วไป'}`}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <CalendarIcon className="w-3 h-3" />
-                            {format(new Date(event.startDate), 'd MMM yyyy', { locale: th })} 
-                            {event.startDate !== event.endDate && ` - ${format(new Date(event.endDate), 'd MMM yyyy', { locale: th })}`}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )})}
-              </div>
-            )}
+
+          <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white capitalize ml-1">
+            {headerTitle}
+          </h1>
+
+          {isLoading && (
+            <RefreshCw className="w-4 h-4 text-primary-500 animate-spin ml-1" />
+          )}
+        </div>
+
+        {/* Center: Search input */}
+        <div className="relative flex-1 max-w-md">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ..."
+            className="form-input text-xs w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-750"
+          />
+        </div>
+
+        {/* Right: Print Button & View Mode Group */}
+        <div className="flex items-center gap-2 self-start md:self-auto flex-wrap">
+          <button
+            type="button"
+            onClick={() => setIsPrintModalOpen(true)}
+            className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700 shadow-2xs"
+            title="พิมพ์ตารางเวรประจำเดือน A4"
+          >
+            <Printer className="w-3.5 h-3.5 text-primary-500" />
+            <span className="hidden sm:inline">พิมพ์ตารางเวร (A4)</span>
+          </button>
+
+          <Link
+            href="/modules/calendar/settings"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-700 shadow-2xs"
+            title="ตั้งค่าปฏิทินและตำแหน่งหน้าที่"
+          >
+            <Settings className="w-4 h-4 text-slate-500 hover:text-primary-500 transition-colors" />
+          </Link>
+
+          <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+            {[
+              { id: 'month', label: 'เดือน' },
+              { id: 'week', label: 'สัปดาห์' },
+              { id: 'day', label: 'วัน' },
+              { id: 'agenda', label: 'กำหนดการ' },
+            ].map((mode) => (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => setViewMode(mode.id as CalendarViewMode)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                  viewMode === mode.id
+                    ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                }`}
+              >
+                {mode.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
-    );
-  };
 
-  return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
-      {renderHeader()}
-      
-      {isLoading ? (
-        <div className="h-[600px] flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-        </div>
-      ) : (
-        <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-          {renderDays()}
-          {renderCells()}
-        </div>
-      )}
+      {/* ── Main Layout: Sidebar + Active View ── */}
+      <div className="flex flex-col lg:flex-row gap-5 items-start">
+        {/* Left Sidebar */}
+        <CalendarSidebar
+          currentDate={currentDate}
+          onDateSelect={(d) => {
+            setCurrentDate(d);
+          }}
+          onCreateEvent={handleOpenCreateModal}
+          filterState={filterState}
+          onToggleFilter={handleToggleFilter}
+          onExportIcal={handleExportIcal}
+          onSubscribeFeed={() => setIsSubscribeModalOpen(true)}
+          onSyncGoogle={fetchEvents}
+          isSyncing={isLoading}
+        />
 
-      {renderEventModal()}
+        {/* Right Calendar Viewport */}
+        <div className="flex-1 w-full min-w-0">
+          {/* 1. Month View */}
+          {viewMode === 'month' && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-xs">
+              {/* Day names header */}
+              <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 divide-x divide-slate-200 dark:divide-slate-800 text-center py-2.5">
+                {['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'].map(
+                  (dayName, i) => (
+                    <div
+                      key={dayName}
+                      className={`text-xs font-bold uppercase tracking-wider ${
+                        i === 0
+                          ? 'text-rose-500'
+                          : i === 6
+                          ? 'text-blue-500'
+                          : 'text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
+                      {dayName}
+                    </div>
+                  )
+                )}
+              </div>
 
-      {/* Add Event Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-md overflow-hidden">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white">เพิ่มกิจกรรมใหม่</h3>
+              {/* Month Grid Cells */}
+              <div className="grid grid-cols-7 divide-x divide-y divide-slate-100 dark:divide-slate-800/70 border-b border-slate-200 dark:border-slate-800">
+                {monthDays.map((day) => {
+                  const isCurrentMonth = isSameMonth(day, currentDate);
+                  const isToday = isSameDay(day, new Date());
+                  const dayStr = format(day, 'yyyy-MM-dd');
+
+                  // Filter events on this day
+                  const dayEvents = filteredEvents.filter((ev) => {
+                    const sStr = format(new Date(ev.startDate), 'yyyy-MM-dd');
+                    const eStr = format(new Date(ev.endDate), 'yyyy-MM-dd');
+                    return dayStr >= sStr && dayStr <= eStr;
+                  });
+
+                  return (
+                    <div
+                      key={day.toISOString()}
+                      onClick={() => handleSlotClick(day, 9)}
+                      className={`min-h-[110px] sm:min-h-[130px] p-1.5 transition-colors flex flex-col justify-between group cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-850/50 ${
+                        !isCurrentMonth
+                          ? 'bg-slate-50/30 dark:bg-slate-950/20 text-slate-300 dark:text-slate-600'
+                          : 'bg-white dark:bg-slate-900'
+                      } ${isToday ? 'ring-2 ring-primary-500/20 bg-primary-50/10' : ''}`}
+                    >
+                      {/* Top Day Number Row */}
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                            isToday
+                              ? 'bg-primary-600 text-white shadow-xs'
+                              : isCurrentMonth
+                              ? 'text-slate-700 dark:text-slate-300'
+                              : 'text-slate-400 dark:text-slate-600'
+                          }`}
+                        >
+                          {format(day, 'd')}
+                        </span>
+
+                        {dayEvents.length > 0 && (
+                          <span className="text-[10px] font-semibold text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {dayEvents.length} รายการ
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Event Chips List */}
+                      <div className="space-y-1 my-1 flex-1 overflow-hidden">
+                        {dayEvents.slice(0, 3).map((ev) => {
+                          const cat =
+                            CALENDAR_CATEGORY_CONFIG[ev.type] || CALENDAR_CATEGORY_CONFIG.general;
+                          return (
+                            <button
+                              key={`month-ev-${ev.id}`}
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectEvent(ev);
+                              }}
+                              className={`w-full text-left px-1.5 py-0.5 rounded-sm text-[11px] font-medium truncate border shadow-2xs transition-all hover:scale-[1.01] hover:opacity-90 block ${cat.bgLight} ${cat.bgDark}`}
+                              title={ev.title}
+                            >
+                              <span className="truncate">{ev.title}</span>
+                            </button>
+                          );
+                        })}
+
+                        {dayEvents.length > 3 && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentDate(day);
+                              setViewMode('day');
+                            }}
+                            className="text-[10px] font-semibold text-primary-600 dark:text-primary-400 hover:underline px-1 block"
+                          >
+                            +{dayEvents.length - 3} รายการเพิ่มเติม
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            
-            <form onSubmit={handleAddEvent} className="p-4 space-y-4">
-              <div>
-                <label htmlFor="calendarAddTitle" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">หัวข้อกิจกรรม <span className="text-rose-500">*</span></label>
-                <input
-                  id="calendarAddTitle"
-                  aria-label="หัวข้อกิจกรรม"
-                  required
-                  type="text"
-                  value={formData.title}
-                  onChange={e => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                  placeholder="เช่น ประชุมประจำเดือน, วันหยุดพิเศษ"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="calendarAddDesc" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">รายละเอียด (ไม่บังคับ)</label>
-                <textarea
-                  id="calendarAddDesc"
-                  aria-label="รายละเอียดกิจกรรม"
-                  value={formData.description}
-                  onChange={e => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all resize-none"
-                  rows={3}
-                />
-              </div>
+          )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="calendarAddStartDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่เริ่ม <span className="text-rose-500">*</span></label>
-                  <input
-                    id="calendarAddStartDate"
-                    aria-label="วันที่เริ่ม"
-                    required
-                    type="date"
-                    value={formData.startDate}
-                    onChange={e => setFormData({...formData, startDate: e.target.value})}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="calendarAddEndDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่สิ้นสุด <span className="text-rose-500">*</span></label>
-                  <input
-                    id="calendarAddEndDate"
-                    aria-label="วันที่สิ้นสุด"
-                    required
-                    type="date"
-                    value={formData.endDate}
-                    onChange={e => setFormData({...formData, endDate: e.target.value})}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label htmlFor="calendarAddTypeSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ประเภท</label>
-                <select
-                  id="calendarAddTypeSelect"
-                  aria-label="ประเภทกิจกรรม"
-                  value={formData.type}
-                  onChange={e => setFormData({...formData, type: e.target.value})}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
-                >
-                  <option value="operation">การปฏิบัติงาน</option>
-                  <option value="meeting">การประชุม</option>
-                  <option value="notification">การแจ้งเตือน</option>
-                  <option value="general">ทั่วไป</option>
-                </select>
-              </div>
+          {/* 2. Week View */}
+          {viewMode === 'week' && (
+            <WeekTimeGrid
+              currentDate={currentDate}
+              events={filteredEvents}
+              onSelectEvent={handleSelectEvent}
+              onSlotClick={handleSlotClick}
+            />
+          )}
 
-              <div className="pt-4 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                >
-                  ยกเลิก
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-primary-600 text-white font-medium hover:bg-primary-700 rounded-lg transition-colors shadow-sm shadow-primary-600/20"
-                >
-                  บันทึกกิจกรรม
-                </button>
-              </div>
-            </form>
-          </div>
+          {/* 3. Day View */}
+          {viewMode === 'day' && (
+            <DayTimeGrid
+              currentDate={currentDate}
+              events={filteredEvents}
+              onSelectEvent={handleSelectEvent}
+              onSlotClick={handleSlotClick}
+            />
+          )}
+
+          {/* 4. Agenda View */}
+          {viewMode === 'agenda' && (
+            <AgendaView
+              currentDate={currentDate}
+              events={filteredEvents}
+              onSelectEvent={handleSelectEvent}
+              onSlotClick={handleSlotClick}
+            />
+          )}
         </div>
-      )}
+      </div>
 
-      {/* Edit Modal */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-md overflow-hidden">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white">แก้ไขข้อมูล</h3>
-            </div>
-            
-            <form onSubmit={handleEditEvent} className="p-4 space-y-4">
-              {!editingEventId?.startsWith('leave-') && (
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">หัวข้อ</label>
-                  <input
-                    required
-                    type="text"
-                    value={formData.title}
-                    onChange={e => setFormData({...formData, title: e.target.value})}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm focus:border-primary-500 focus:outline-none"
-                  />
-                </div>
-              )}
-              
-              <div>
-                <label htmlFor="calendarEditDesc" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">รายละเอียด / เหตุผล</label>
-                <textarea
-                  id="calendarEditDesc"
-                  aria-label="รายละเอียด หรือเหตุผล"
-                  value={formData.description}
-                  onChange={e => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all resize-none"
-                  rows={3}
-                />
-              </div>
+      {/* ── Event Details / Create / Edit Modal ── */}
+      <EventModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        event={selectedEvent}
+        initialDate={slotDate}
+        initialHour={slotHour}
+        onSave={handleSaveEvent}
+        onDelete={handleDeleteEvent}
+      />
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="calendarEditStartDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่เริ่ม <span className="text-rose-500">*</span></label>
-                  <input
-                    id="calendarEditStartDate"
-                    aria-label="วันที่เริ่ม"
-                    required
-                    type="date"
-                    value={formData.startDate}
-                    onChange={e => setFormData({...formData, startDate: e.target.value})}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="calendarEditEndDate" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">วันที่สิ้นสุด <span className="text-rose-500">*</span></label>
-                  <input
-                    id="calendarEditEndDate"
-                    aria-label="วันที่สิ้นสุด"
-                    required
-                    type="date"
-                    value={formData.endDate}
-                    onChange={e => setFormData({...formData, endDate: e.target.value})}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                  />
-                </div>
-              </div>
-              
-              {!editingEventId?.startsWith('leave-') ? (
-                <div>
-                  <label htmlFor="calendarEditTypeSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ประเภท</label>
-                  <select
-                    id="calendarEditTypeSelect"
-                    aria-label="ประเภทกิจกรรม"
-                    value={formData.type}
-                    onChange={e => setFormData({...formData, type: e.target.value})}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
-                  >
-                    <option value="operation">การปฏิบัติงาน</option>
-                    <option value="meeting">การประชุม</option>
-                    <option value="notification">การแจ้งเตือน</option>
-                    <option value="general">ทั่วไป</option>
-                  </select>
-                </div>
-              ) : (
-                <div>
-                  <label htmlFor="calendarEditStatusSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">สถานะ</label>
-                  <select
-                    id="calendarEditStatusSelect"
-                    aria-label="สถานะการลา"
-                    value={formData.status}
-                    onChange={e => setFormData({...formData, status: e.target.value})}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
-                  >
-                    <option value="รออนุมัติ">รออนุมัติ</option>
-                    <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
-                    <option value="ไม่อนุมัติ">ไม่อนุมัติ</option>
-                  </select>
-                </div>
-              )}
+      {/* ── Official A4 Duty Roster Print Modal ── */}
+      <DutyRosterPrintModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        currentDate={currentDate}
+        events={filteredEvents}
+      />
 
-              <div className="pt-4 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                >
-                  ยกเลิก
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-primary-600 text-white font-medium hover:bg-primary-700 rounded-lg transition-colors shadow-sm shadow-primary-600/20"
-                >
-                  บันทึก
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* ── Live Webcal Subscription Modal ── */}
+      <CalendarSubscribeModal
+        isOpen={isSubscribeModalOpen}
+        onClose={() => setIsSubscribeModalOpen(false)}
+      />
     </div>
   );
 }

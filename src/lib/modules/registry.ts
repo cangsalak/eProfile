@@ -29,6 +29,7 @@ import { backupManifest } from '@/modules/backup/manifest';
 import { ModuleManagerManifest } from '@/modules/module-manager/manifest';
 import { SiteContentManifest } from '@/modules/site-content/manifest';
 import { TestSlipManifest } from '@/modules/test-slip/manifest';
+import { Rpb1Manifest } from '@/modules/rpb1/manifest';
 
 export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   PersonnelManifest,
@@ -46,6 +47,7 @@ export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   ModuleManagerManifest,
   SiteContentManifest,
   TestSlipManifest,
+  Rpb1Manifest,
 ];
 
 export class ModuleRegistry {

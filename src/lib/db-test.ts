@@ -60,20 +60,31 @@ const BLOCKED_CIDR4: Cidr4[] = [
   '255.255.255.255/32', // broadcast
 ].map(parseCidr4);
 
+const DANGEROUS_METADATA_CIDR4: Cidr4[] = [
+  '169.254.0.0/16', // link-local / cloud metadata services (AWS/GCP/Azure)
+  '0.0.0.0/8',      // "This" network
+  '255.255.255.255/32', // broadcast
+].map(parseCidr4);
+
 /**
  * Returns true if an IPv4 address falls within any blocked range.
  */
-function isBlockedIPv4(ip: string): boolean {
+function isBlockedIPv4(ip: string, allowPrivate = false): boolean {
   if (!net.isIPv4(ip)) return false;
-  return BLOCKED_CIDR4.some(cidr => inCidr4(ip, cidr));
+  const list = allowPrivate ? DANGEROUS_METADATA_CIDR4 : BLOCKED_CIDR4;
+  return list.some(cidr => inCidr4(ip, cidr));
 }
 
 /**
  * Returns true if an IPv6 address is loopback, link-local, or unique-local.
  */
-function isBlockedIPv6(ip: string): boolean {
+function isBlockedIPv6(ip: string, allowPrivate = false): boolean {
   // Normalise: strip brackets
   const h = ip.replace(/^\[|\]$/g, '').toLowerCase();
+  if (allowPrivate) {
+    if (h.startsWith('fe80:')) return true; // link-local
+    return false;
+  }
   if (h === '::1') return true;                  // loopback
   if (h === '::') return true;                   // unspecified
   if (h.startsWith('fe80:')) return true;        // link-local
@@ -85,14 +96,15 @@ function isBlockedIPv6(ip: string): boolean {
  * Returns true if a raw hostname string (before DNS lookup) is obviously private.
  * This is a fast pre-filter; the real check happens after DNS resolution.
  */
-function isPrivateHostByName(host: string): boolean {
+function isPrivateHostByName(host: string, allowPrivate = false): boolean {
+  if (allowPrivate) return false;
   const h = host.toLowerCase().trim();
   if (h === 'localhost') return true;
   // Numeric IPv4 in decimal notation bypass (e.g. 2130706433 → 127.0.0.1)
   if (/^\d+$/.test(h)) return true;            // pure integer — block immediately
   if (/^0x[0-9a-f]+$/i.test(h)) return true;  // hex notation
-  if (net.isIPv4(h)) return isBlockedIPv4(h);
-  if (net.isIPv6(h)) return isBlockedIPv6(h);
+  if (net.isIPv4(h)) return isBlockedIPv4(h, false);
+  if (net.isIPv6(h)) return isBlockedIPv6(h, false);
   return false;
 }
 
@@ -103,16 +115,16 @@ function isPrivateHostByName(host: string): boolean {
  * Returns the first safe IPv4 (or IPv6) address to use for the actual
  * TCP connection, preventing DNS rebinding between validation and connect.
  */
-export async function resolveAndValidateHost(host: string): Promise<string> {
+export async function resolveAndValidateHost(host: string, allowPrivate = false): Promise<string> {
   // Fast path: if the host is already an IP, validate directly
   if (net.isIPv4(host)) {
-    if (isBlockedIPv4(host)) {
+    if (isBlockedIPv4(host, allowPrivate)) {
       throw new Error(`Host ${host} resolves to a private/reserved address.`);
     }
     return host;
   }
   if (net.isIPv6(host)) {
-    if (isBlockedIPv6(host)) {
+    if (isBlockedIPv6(host, allowPrivate)) {
       throw new Error(`Host ${host} resolves to a private/reserved IPv6 address.`);
     }
     return host;
@@ -132,12 +144,12 @@ export async function resolveAndValidateHost(host: string): Promise<string> {
 
   // Validate every resolved address
   for (const { address, family } of addresses) {
-    if (family === 4 && isBlockedIPv4(address)) {
+    if (family === 4 && isBlockedIPv4(address, allowPrivate)) {
       throw new Error(
         `Host "${host}" resolves to a private/reserved address (${address}) and is not allowed.`
       );
     }
-    if (family === 6 && isBlockedIPv6(address)) {
+    if (family === 6 && isBlockedIPv6(address, allowPrivate)) {
       throw new Error(
         `Host "${host}" resolves to a private/reserved IPv6 address (${address}) and is not allowed.`
       );
@@ -244,7 +256,7 @@ function testTcpConnection(
  * 2. Resolves ALL DNS addresses and validates each — no private IPs allowed.
  * 3. Connects using the resolved numeric IP to prevent DNS rebinding.
  */
-export async function testDatabaseConnection(params: DbConnectionParams): Promise<DbTestResult> {
+export async function testDatabaseConnection(params: DbConnectionParams, allowPrivate = true): Promise<DbTestResult> {
   const startTime     = Date.now();
   const connectionUrl = buildConnectionUrl(params);
 
@@ -279,7 +291,7 @@ export async function testDatabaseConnection(params: DbConnectionParams): Promis
   const port        = params.port || defaultPort;
 
   // Step 1: quick name-based pre-filter
-  if (isPrivateHostByName(rawHost)) {
+  if (isPrivateHostByName(rawHost, allowPrivate)) {
     return {
       success: false,
       message: `การเชื่อมต่อไปยัง "${rawHost}" ไม่ได้รับอนุญาต (private/local address)`,
@@ -290,7 +302,7 @@ export async function testDatabaseConnection(params: DbConnectionParams): Promis
   // Step 2: resolve DNS + validate every returned IP
   let resolvedIp: string;
   try {
-    resolvedIp = await resolveAndValidateHost(rawHost);
+    resolvedIp = await resolveAndValidateHost(rawHost, allowPrivate);
   } catch (err: unknown) {
     return {
       success: false,

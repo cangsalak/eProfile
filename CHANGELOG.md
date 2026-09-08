@@ -2,14 +2,34 @@
 
 รูปแบบตาม Semantic Versioning (SemVer)
 
-## [1.3.0] — 2026-09-01
+## [1.3.0] — 2026-09-08
 
 ### Added
-- **Multi-Database Provider Support**: รองรับระบบฐานข้อมูลหลัก 3 รูปแบบสำหรับระดับองค์กร ได้แก่ **SQLite** (Embedded/Zero-config), **PostgreSQL** (Enterprise/Cloud SQL/Supabase/Neon), และ **MySQL / MariaDB** (Web Hosting Standard)
-- **Modern 3-Step Installation Wizard (`/install`)**: หน้าจอติดตั้งระบบแบบ 3 ขั้นตอน พร้อมการเลือก Database Provider, กรอกค่า Host/Port/User/Password, และปุ่ม **"ทดสอบการเชื่อมต่อ (Test Connection)"** แบบ Real-Time พร้อมแสดง Latency
-- **Real-Time Database Test Endpoint (`POST /api/install/test-db`)**: ทดสอบ Socket TCP และความถูกต้องของ Database Parameters พร้อมจำกัด Rate Limit ป้องกัน Brute-force
-- **Strict Digits-Only Validation**: บังคับให้เลขประจำตัวประชาชน (13 หลัก) และหมายเลขประจำตัวทหาร/เจ้าหน้าที่ (10 หลัก) ต้องเป็นตัวเลขล้วนเท่านั้น ทั้งในหน้าบ้าน (`inputMode="numeric"`, `replace(/\D/g, '')`) และหลังบ้าน (`/^\d{13}$/`, `/^\d{10}$/`)
-- **Automated Test Suite (v1.3.0)**: เพิ่มชุดทดสอบ `tests/api/database-config.test.ts` ทดสอบ Connection String Builders, Local SQLite Permissions, API Endpoint, และ Strict Digits Validation (รวม 11 Suites ผ่าน 100%)
+- **Google Calendar Duty & Operational Roster System (ระบบปฏิทินปฏิบัติงานและเข้าเวรยาม)**:
+  - **4 Interactive View Modes**: รองรับมุมมอง ปฏิทินรายเดือน (Month), ปฏิทินรายสัปดาห์แบบ 24 ชั่วโมงพร้อมเส้นบอกเวลาปัจจุบันสีแดงสด (Week Grid), ปฏิทินรายวัน (Day Grid), และกำหนดการเรียงตามลำดับเวลา (Agenda)
+  - **Left Sidebar Controls**: ปุ่มสร้างกิจกรรมด่วน (+ สร้างกิจกรรม), ปฏิทินย่อเลือกวัน (MiniCalendar), สวิตช์เปิด/ปิดเลเยอร์แสดงผลตามหมวดหมู่ (เวรยาม, การฝึก, ภารกิจ, การลา, ประชุม, อื่นๆ), ระบบสมัครสมาชิกปฏิทินสด (Live Webcal Feed URL) และส่งออกไฟล์ iCal (.ics)
+  - **Military Duty Personnel Tagging**: กำหนดและระบุกำลังพลเข้าเวรตาม 10 ตำแหน่งหน้าที่ราชการทหาร (`นายทหารเวรผู้ใหญ่`, `นายทหารเวร`, `ผบ.กองรักษาการณ์`, `ผช.ผบ.กองรักษาการณ์ 1-2`, `สิบเวร ร้อย.บร.`, `สิบเวร ฝขส.ฯ`, `สิบเวร กคค./กตส.ปม.ฯ`, `สิบเวรโรงเลี้ยง`, `เสมียนเวร`)
+  - **Printable Official Duty Roster (A4 Landscape)**: พิมพ์ตารางเวรประจำเดือนราชการ พร้อมช่องลงนามตรวจเวรและผู้บังคับบัญชาตามแบบฟอร์มมาตรฐาน
+  - **Dynamic Duty Roles Configuration**: ระบบจัดการเพิ่ม/ลด/แก้ไขรายชื่อตำแหน่งหน้าที่เวรยามในระบบตั้งค่าปฏิทิน (`/manage/calendar/settings`)
+- **Notification Settings & Event Triggers (ระบบแจ้งเตือน LINE Messaging API & Email SMTP)**:
+  - **Event Trigger Matrix**: กำหนดเงื่อนไขเปิด-ปิดการแจ้งเตือนอัตโนมัติ 4 หมวด (ตารางเวรประจำวัน 07:00 น., แจ้งเตือนเวรล่วงหน้า 1 วัน, แจ้งเตือนสลับเวร, แจ้งเตือนยื่นและอนุมัติใบลา, ประกาศข่าวด่วน, แจ้งเตือนความปลอดภัย)
+  - **LINE Group & Target Configuration**: รองรับการส่งแจ้งเตือนเข้ากลุ่มไลน์เวรยามของหน่วยงาน และปุ่มทดสอบส่งข้อความจริง
+  - **Email SMTP Configuration**: รองรับการตั้งค่าชื่อผู้ส่ง อีเมลผู้ส่ง และปุ่มทดสอบส่งอีเมล
+  - **Test Notification API (`POST /api/notifications/test`)**: ตรวจสอบการส่งข้อความจริงแบบ Real-time
+- **Executive Command Dashboard & Readiness Analysis**:
+  - แดชบอร์ดสรุปความพร้อมรบ อัตรากำลังพล ยอดกำลังพลปฏิบัติงานปกติ และโควตาวันลา แยกตามสังกัดกอง/ฝ่าย
+- **Self-Service Password Reset Workflow**:
+  - ระบบกู้คืนรหัสผ่านด้วยตนเองผ่านการยืนยันตัวตน พร้อมระบบ Token แบบใช้ครั้งเดียวและ Rate Limit
+- **Universal Multi-Database Backup & Restore**:
+  - ระบบสำรองและกู้คืนข้อมูลแบบ Universal JSON รองรับการย้ายข้อมูลข้ามฐานข้อมูล (SQLite, PostgreSQL, MySQL) ได้อย่างไร้รอยต่อ
+- **Multi-Database Provider Support & Modern 3-Step Installer Wizard**:
+  - รองรับ SQLite, PostgreSQL, และ MySQL พร้อมระบบทดสอบการเชื่อมต่อแบบ Real-Time และการตรวจสอบเลข 13 หลัก/10 หลักอย่างเข้มงวด
+- **Layout & Design Cleanup**:
+  - ลบ Sub-header Cards ที่ซ้ำซ้อนในทุกโมดูล ปรับดีไซน์ตามมาตรฐาน Single Design System รองรับ Dynamic Themes (`indigo`, `emerald`, `rose`, `ocean`) และ Dark/Light Mode
+
+### Security & Quality
+- **Automated Test Suite (20/20 Test Suites Passed - 100%)**:
+  - ครอบคลุม Authentication, Authorization RBAC, SSRF Protection, XSS Sanitization, SQL/Prisma Injection resistance, Rate Limiting, Command Dashboard Scopes, Database Config & Reset Security, และ Module Lifecycle
 
 ---
 

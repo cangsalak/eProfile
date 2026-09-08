@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     // If already authenticated via HttpOnly cookie, redirect to dashboard
-    fetch('/api/auth/me')
+    fetch('/api/auth/me?silent=true')
       .then(res => {
         if (res.ok) return res.json();
         return null;
@@ -23,7 +23,7 @@ export default function LoginPage() {
       .then(data => {
         if (data?.user) {
           localStorage.setItem('currentUser', JSON.stringify(data.user));
-          router.replace('/dashboard');
+          window.location.href = '/dashboard';
         }
       })
       .catch(() => {});
@@ -55,7 +55,11 @@ export default function LoginPage() {
       const data = await res.json();
       localStorage.setItem('currentUser', JSON.stringify(data.user));
       toast.success('เข้าสู่ระบบสำเร็จ');
-      router.push('/dashboard');
+
+      // Use window.location.href to guarantee full reload with the new auth cookie
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectTarget = urlParams.get('from') || '/dashboard';
+      window.location.href = redirectTarget;
     } catch (err: any) {
       toast.error(err.message);
     } finally {

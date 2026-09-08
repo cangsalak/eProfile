@@ -6,9 +6,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const isSilent = url.searchParams.get('silent') === 'true';
+
     const authUser = await verifyAuth(req);
     if (!authUser) {
-      return NextResponse.json({ user: null }, { status: 401 });
+      return NextResponse.json({ user: null }, { status: isSilent ? 200 : 401 });
     }
 
     const person = await prisma.personnel.findUnique({
@@ -16,7 +19,7 @@ export async function GET(req: Request) {
     });
 
     if (!person) {
-      return NextResponse.json({ user: null }, { status: 401 });
+      return NextResponse.json({ user: null }, { status: isSilent ? 200 : 401 });
     }
 
     // Exclude password
