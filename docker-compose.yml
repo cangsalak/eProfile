@@ -4,7 +4,7 @@ services:
   eprofile-app:
     build:
       context: .
-      dockerfile: Dockerfile.standalone
+      dockerfile: Dockerfile
     container_name: tactic_eprofile_app
     restart: always
     dns:
