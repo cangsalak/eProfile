@@ -28,29 +28,40 @@
 
 ### 3. 📝 ระบบการลางานและการอนุมัติ (Leave Management & Approvals)
 - **ฟอร์มใบลาตามระเบียบราชการ:** ใบลาพักผ่อน, ลากิจ, ลาป่วย พร้อมคำนวณวันลาและโควตาอัตโนมัติ
-- **ระบบอนุมัติการลาตามสายการบังคับบัญชา (Leave Approvals Workflow):** Scope-based แยกตามกอง/ฝ่าย พร้อม Audit Trail และป้องกันการอนุมัติตัวเอง
+- **ระบบอนุมัติการลาตามสายการบังคับบัญชา (Leave Approvals Workflow):** Scope-based แยกตามกอง/ฝ่าย พร้อม Audit Trail และป้องกันการอนุมัติตัวเอง (Anti-Self Approval)
 - **แดชบอร์ดความพร้อมรบและกำลังพล (Command Dashboard):** แสดงสถานะความพร้อมรบ อัตรากำลังพลปฏิบัติงาน และการลาข้ามปีแบบ Real-time
 
 ### 4. 📋 แบบฟอร์ม ทบ.100-009 (RPB-1) และประวัติส่วนตัว (Security Profile Form)
 - **ฟอร์ม RPB-1 แบบ 10 หน้า:** บันทึกประวัติส่วนตัว, ประวัติครอบครัว, ภูมิลำเนา, ประวัติอาชญากรรม, ข้อมูลการเดินทางต่างประเทศ และข้อมูลความมั่นคง
 - **ระบบ Auto-Fill:** ดึงข้อมูลพื้นฐานจากทำเนียบบุคลากรมาเติมโดยอัตโนมัติ
-- **RBAC เข้มงวด:** บุคลากรเห็นได้เฉพาะข้อมูลของตนเอง / ADMIN อ่านได้อย่างเดียว / SUPER_ADMIN แก้ไขได้ทุกระเบียน
+- **RBAC เข้มงวด:** บุคลากรเห็นได้เฉพาะข้อมูลของตนเอง / `ADMIN` อ่านได้อย่างเดียว / `SUPER_ADMIN` จัดการได้ทุกระเบียน
 
-### 5. 📅 ปฏิทินปฏิบัติงานและข่าวสาร (Duty Calendar & Communications)
+### 5. 💵 สลิปเงินได้และเงินเดือน (Salary & Pay Slip Management)
+- **พิมพ์สลิปเงินได้รายเดือน:** ออกเอกสารและพิมพ์สลิปเงินได้ส่วนบุคคล พร้อมรายละเอียดเงินเดือน ค่าตอบแทน เงินเพิ่ม และรายการหัก
+- **การจัดการสลิปส่วนกลาง:** เจ้าหน้าที่สามารถสร้าง นำเข้า และตรวจสอบสลิปของกำลังพลในสังกัด
+- **การแยกสิทธิ์ (Role & Permission Isolation):** กำลังพลทั่วไปเข้าถึงได้เฉพาะสลิปของตนเอง (`VIEW_OWN_SLIP`)
+
+### 6. 📅 ปฏิทินปฏิบัติงานและข่าวสาร (Duty Calendar & Communications)
 - **ปฏิทินปฏิบัติงาน (Duty Calendar):** บันทึกการปฏิบัติงาน เวรยาม การประชุม วันหยุดราชการ และข้อมูลการลาแบบเชื่อมโยงอัตโนมัติ
 - **ระบบกระจายข่าวสารและการแจ้งเตือน (Notifications & News):** ประชาสัมพันธ์ข่าวสารภายในองค์กร พร้อมระบบแจ้งเตือนแบบ Per-User Isolation
 
-### 6. 🛡️ ความมั่นคงปลอดภัยและบันทึกกิจกรรม (Security, Forensics & Audit Logs)
+### 7. 🛡️ ความมั่นคงปลอดภัยและบันทึกกิจกรรม (Security, Forensics & Audit Logs)
 - **บันทึก IP Address แบบ Real-Time:** รองรับ Proxy, Cloudflare, Nginx
 - **Comprehensive Audit Logs:** บันทึกการเข้าสู่ระบบ, การใส่รหัสผิด, การสร้าง/แก้ไข/ลบข้อมูล, การกู้คืนฐานข้อมูล
 - **AI Prompt Generator สำหรับวิเคราะห์ Log:** สร้าง Prompt สำหรับ ChatGPT เพื่อตรวจจับภัยคุกคาม (Anomaly & Threat Detection)
 - **Account Lockout & Rate Limiting:** ระงับบัญชี 15 นาทีอัตโนมัติเมื่อใส่รหัสผ่านผิด 5 ครั้ง
 - **Security Response Headers:** HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 
-### 7. 🔍 เครื่องมือวินิจฉัยระบบและเอกสาร API (System Inspector & API Docs)
+### 8. 🔍 เครื่องมือวินิจฉัยระบบและเอกสาร API (System Inspector & API Docs)
 - **Super Admin System Inspector (`/manage/inspector`):** วินิจฉัย DOM, ลิงก์เสีย, Accessibility, Responsive Layout และ Security Headers
 - **Interactive API Documentation (`/manage/api-docs`):** แคตตาล็อกเอกสาร API 93 Endpoints อัตโนมัติ พร้อม Role Matrix และตัวสร้างโค้ดตัวอย่าง (cURL, JavaScript, TypeScript, Python, PHP)
 - **Module ZIP Uploader:** ติดตั้ง ถอดถอน และเปิด/ปิด โมดูลเสริมด้วยไฟล์ ZIP
+
+---
+
+## 🔐 สิทธิ์และการเข้าถึง (Permission Matrix)
+
+ดูรายละเอียดโครงสร้างสิทธิ์ทั้งหมด, นโยบายการตรวจสอบสิทธิ์, และ API Role Matrix ได้ที่ [PERMISSION_MATRIX.md](PERMISSION_MATRIX.md)
 
 ---
 
@@ -85,7 +96,7 @@ eprofile/
 │       ├── rpb1/                # โมดูลแบบฟอร์ม ทบ.100-009 (RPB-1) ประวัติส่วนตัว
 │       ├── site-content/        # โมดูลจัดการเนื้อหาหน้าเว็บไซต์
 │       ├── system-inspector/    # โมดูลวินิจฉัยระบบและเอกสาร API
-│       ├── test-slip/           # โมดูลสลิปเงินเดือน
+│       ├── test-slip/           # โมดูลสลิปเงินเดือนและเงินได้
 │       ├── theme/               # โมดูลปรับแต่งธีม (NextAdmin HQ Tokens)
 │       └── vehicles/            # โมดูลจัดการยานพาหนะ
 ├── tests/                       # Automated Test Suite (21 Suites ครบถ้วน)
