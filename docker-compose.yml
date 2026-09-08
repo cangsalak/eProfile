@@ -17,6 +17,7 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - DATABASE_URL=file:/app/data/dev.db
+      - JWT_SECRET=${JWT_SECRET:-eprofile-jwt-secret-key-change-in-production-random-min-32-chars}
     volumes:
       - ./data:/app/data
       - ./public/uploads:/app/public/uploads

@@ -6,8 +6,7 @@ import { installRequestSchema } from '@/lib/validations';
 import { ROLE_DEFINITIONS } from '@/lib/role-definitions';
 import { seedDemoDataset } from '@/lib/installer/sample-data';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET is not configured');
+const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
 export async function POST(req: Request) {

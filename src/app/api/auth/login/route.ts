@@ -10,8 +10,7 @@ const limiter = rateLimit({
   uniqueTokenPerInterval: 500, // Max 500 users per second
 });
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET is not configured');
+const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
 export async function POST(req: Request) {

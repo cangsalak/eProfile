@@ -22,6 +22,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="file:/app/data/dev.db"
+ENV JWT_SECRET="eprofile-jwt-secret-key-change-in-production-random-min-32-chars"
 
 # Setup schema & build initial template database (uninstalled state)
 RUN mkdir -p /app/data /app/prisma
@@ -41,6 +42,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV DATABASE_URL="file:/app/data/dev.db"
+ENV JWT_SECRET="eprofile-jwt-secret-key-change-in-production-random-min-32-chars"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
