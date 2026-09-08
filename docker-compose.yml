@@ -21,5 +21,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./public/uploads:/app/public/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     mem_limit: 1024m
 
