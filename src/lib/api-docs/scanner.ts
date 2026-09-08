@@ -87,16 +87,30 @@ const PUBLIC_API_PREFIXES = [
 
 export function scanAllApiRoutes(): ApiInventorySummary {
   const startTime = Date.now();
-  const apiRootDir = path.join(process.cwd(), 'src/app/api');
+  // In standalone deployment, process.cwd() is .next/standalone — resolve project root
+  let projectRoot = process.cwd();
+  if (!fs.existsSync(path.join(projectRoot, 'src/app/api'))) {
+    // Walk up to find project root that has src/app/api
+    let dir = projectRoot;
+    for (let i = 0; i < 5; i++) {
+      const parent = path.dirname(dir);
+      if (fs.existsSync(path.join(parent, 'src/app/api'))) {
+        projectRoot = parent;
+        break;
+      }
+      dir = parent;
+    }
+  }
+  const apiRootDir = path.join(projectRoot, 'src/app/api');
   const routeFiles = findRouteFiles(apiRootDir);
 
   const apis: ApiEndpointDoc[] = [];
 
   for (const filePath of routeFiles) {
-    const relativePath = path.relative(process.cwd(), filePath);
+    const relativePath = path.relative(projectRoot, filePath);
     // Convert path to endpoint e.g. src/app/api/personnel/[id]/route.ts -> /api/personnel/[id]
     const dirOfRoute = path.dirname(filePath);
-    const endpointRelative = path.relative(path.join(process.cwd(), 'src/app'), dirOfRoute);
+    const endpointRelative = path.relative(path.join(projectRoot, 'src/app'), dirOfRoute);
     const endpoint = '/' + endpointRelative.replace(/\\/g, '/');
 
     try {

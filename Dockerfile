@@ -26,7 +26,7 @@ ENV JWT_SECRET="eprofile-jwt-secret-key-change-in-production-random-min-32-chars
 
 # Setup schema & build initial template database (uninstalled state)
 RUN mkdir -p /app/data /app/prisma
-RUN npx prisma generate
+RUN npm run prisma:generate
 RUN npx prisma db push --skip-generate || true
 RUN cp /app/data/dev.db /app/prisma/dev.template.db 2>/dev/null || true
 
@@ -52,8 +52,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+COPY --from=builder --chown=nextjs:nodejs /app/src/generated ./src/generated
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+RUN ln -s /app/node_modules/prisma/build/index.js /usr/local/bin/prisma || true
 
 # Setup persistent directory structure
 RUN mkdir -p /app/data /app/public/uploads && chown -R nextjs:nodejs /app/data /app/public/uploads /app/prisma

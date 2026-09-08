@@ -163,11 +163,17 @@ export default function InstallPage() {
 
     setLoading(true);
     try {
+      const encodedUser = encodeURIComponent(dbConfig.user || '');
+      const encodedPassword = encodeURIComponent(dbConfig.password || '');
+      const dbConnectionString = dbConfig.provider !== 'sqlite'
+        ? `${dbConfig.provider}://${encodedUser}:${encodedPassword}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`
+        : 'file:./dev.db';
+
       const payload = {
         ...formData,
         installDemoData: Boolean(formData.installDemoData),
         dbProvider: dbConfig.provider,
-        dbConnectionString: dbConfig.provider !== 'sqlite' ? `${dbConfig.provider}://${dbConfig.user}:***@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}` : 'file:./dev.db',
+        dbConnectionString,
       };
 
       const res = await fetch('/api/install', {

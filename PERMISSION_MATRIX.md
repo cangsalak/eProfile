@@ -1,6 +1,6 @@
 # Permission Matrix — eProfile System
 
-> อัปเดตล่าสุด: 2026-09-01
+> อัปเดตล่าสุด: 2026-09-08
 > ใช้เป็นเอกสารอ้างอิง Permission ที่กำหนดในระบบ
 
 ## Permission ที่มีในระบบ
@@ -10,7 +10,7 @@
 | `MANAGE_PERSONNEL` | เพิ่ม / แก้ไข / ลบข้อมูลบุคลากร |
 | `MANAGE_SYSTEM` | จัดการ Role, Department, Vehicle, Calendar, Settings |
 | `MANAGE_POSTS` | สร้าง / แก้ไข / ลบบทความ / ไฟล์มีเดีย |
-| `APPROVE_LEAVE` | อนุมัติ / ปฏิเสธใบลา |
+| `APPROVE_LEAVE` | อนุมัติ / ปฏิเสธใบลา (Scoped ตามกอง/ฝ่าย) |
 | `VIEW_AUDIT_LOGS` | ดูประวัติการทำงาน (Audit Log) |
 | `VIEW_COMMAND_DASHBOARD` | ดูแดชบอร์ดผู้บังคับบัญชาและรายงานความพร้อมกำลังพล |
 
@@ -29,11 +29,13 @@
 | `OFFICER` | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | `USER` | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
+> **หมายเหตุ:** `SUPER_ADMIN` มีสิทธิ์พิเศษเพิ่มเติมที่ Role อื่นไม่มี ได้แก่: Reset ฐานข้อมูล, จัดการโมดูล, ดู API Docs, ดู System Inspector, แก้ไขแบบฟอร์ม RPB-1 ของทุกคน
+
 ---
 
 ## API ↔ Permission Mapping
 
-| API Route | Method | Permission Required |
+| API Route | Method | Permission / Role Required |
 |---|---|---|
 | `/api/dashboard/command` | GET | `VIEW_COMMAND_DASHBOARD` (Scoped by department/subDepartment) |
 | `/api/personnel` | POST | `MANAGE_PERSONNEL` |
@@ -49,14 +51,20 @@
 | `/api/calendar/[id]` | PUT, DELETE | `MANAGE_SYSTEM` |
 | `/api/settings` | PUT | `MANAGE_SYSTEM` |
 | `/api/leaves/approvals` | GET | `APPROVE_LEAVE` (Scoped by department/subDepartment) |
-| `/api/leaves/[id]/approve` | POST | `APPROVE_LEAVE` (Atomic concurrency, scoped, self-approval blocked) |
-| `/api/leaves/[id]/reject` | POST | `APPROVE_LEAVE` (Atomic concurrency, scoped, self-approval blocked) |
+| `/api/leaves/[id]/approve` | POST | `APPROVE_LEAVE` (Atomic, Scoped, Self-approval blocked) |
+| `/api/leaves/[id]/reject` | POST | `APPROVE_LEAVE` (Atomic, Scoped, Self-approval blocked) |
 | `/api/media` | GET, POST | `MANAGE_POSTS` |
 | `/api/media/[id]` | DELETE | `MANAGE_POSTS` |
 | `/api/audit-logs` | GET | `VIEW_AUDIT_LOGS` |
-| `/api/backup` | GET | Role: SUPER_ADMIN, ADMIN |
-| `/api/restore` | POST | Role: SUPER_ADMIN, ADMIN |
-| `/api/install` | POST | Admin Secret Header |
+| `/api/backup` | GET | Role: `SUPER_ADMIN`, `ADMIN` |
+| `/api/restore` | POST | Role: `SUPER_ADMIN`, `ADMIN` |
+| `/api/admin/database-reset` | POST | Role: `SUPER_ADMIN` + Password Re-auth |
+| `/api/admin/api-docs` | GET | Role: `SUPER_ADMIN` only |
+| `/api/admin/inspector` | GET, POST, PUT, DELETE | Role: `SUPER_ADMIN` only |
+| `/api/modules` | GET, POST, DELETE | Role: `SUPER_ADMIN` only |
+| `/api/rpb1/[personnelId]` | GET | เจ้าของ / `ADMIN` (Read-only) / `SUPER_ADMIN` |
+| `/api/rpb1/[personnelId]` | POST | เจ้าของ / `SUPER_ADMIN` (ADMIN ทำไม่ได้) |
+| `/api/install` | POST | Admin Secret Header (ใช้ครั้งเดียว) |
 
 ---
 
@@ -77,3 +85,14 @@
 - Cookie เป็นแบบ `HttpOnly`, `SameSite=Lax`
 - `Secure=true` เฉพาะ Production (HTTPS เท่านั้น)
 - การ Logout จะล้าง Cookie และบันทึก Audit Log ทันที
+
+---
+
+## RPB-1 (ทบ.100-009) Access Policy
+
+| Action | USER / OFFICER | EDITOR | ADMIN | SUPER_ADMIN |
+|---|:---:|:---:|:---:|:---:|
+| GET (ข้อมูลตนเอง) | ✅ | ✅ | ✅ | ✅ |
+| GET (ข้อมูลคนอื่น) | ❌ | ❌ | ✅ | ✅ |
+| POST/UPDATE (ข้อมูลตนเอง) | ✅ | ✅ | ❌ | ✅ |
+| POST/UPDATE (ข้อมูลคนอื่น) | ❌ | ❌ | ❌ | ✅ |

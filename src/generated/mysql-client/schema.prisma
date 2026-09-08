@@ -1,0 +1,539 @@
+// Prisma Schema for eProfile System with Alpine OpenSSL support
+generator client {
+  output        = "../src/generated/mysql-client"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Personnel {
+  id                       String               @id @default(cuid())
+  badgeNo                  String               @unique
+  username                 String               @unique
+  password                 String
+  role                     String               @default("USER")
+  prefix                   String
+  firstName                String
+  lastName                 String
+  position                 String
+  department               String
+  subDepartment            String
+  personnelType            String               @default("นายทหารสัญญาบัตร") // Commissioned, NCO, Employee, Conscript, etc.
+  phone                    String
+  mobile                   String
+  email                    String
+  status                   String               @default("ปฏิบัติงานปกติ")
+  avatarColor              String               @default("#3b82f6")
+  skills                   String               @default("[]") @db.Text
+  education                String               @default("") @db.Text
+  experience               String               @default("") @db.Text
+  notes                    String?
+  citizenId                String               @default("")
+  dateOfBirth              String               @default("")
+  bloodType                String               @default("")
+  religion                 String               @default("")
+  officialId               String               @default("")
+  militaryBranch           String               @default("")
+  commissionDate           String               @default("")
+  currentAddress           String               @default("")
+  currentTambon            String               @default("")
+  currentAmphoe            String               @default("")
+  currentProvince          String               @default("")
+  currentZipcode           String               @default("")
+  emergencyContactName     String               @default("")
+  emergencyContactPhone    String               @default("")
+  emergencyContactRelation String               @default("")
+  royalDecorations         String               @default("") @db.Text
+  trainingHistory          String               @default("") @db.Text
+  coverPhoto               String               @default("") @db.Text
+  profileTheme             String               @default("indigo")
+  vehicles                 Vehicle[]
+  leaves                   LeaveRecord[]
+  approvedLeaves           LeaveRecord[]        @relation("LeaveApprover")
+  notifications            Notification[]
+  notificationReads        NotificationRead[]
+  posts                    Post[]
+  auditLogs                AuditLog[]
+  mediaFiles               MediaFile[]
+  passwordResetTokens      PasswordResetToken[]
+  documents                PersonnelDocument[]
+  inspections              Inspection[]
+  rpb1Records              Rpb1Record[]
+
+  // Security Fields
+  mustChangePassword  Boolean   @default(true)
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Performance indexes
+  @@index([department])
+  @@index([subDepartment])
+  @@index([status])
+  @@index([personnelType])
+  @@index([role])
+  @@index([createdAt])
+  @@index([firstName, lastName])
+}
+
+model Vehicle {
+  id           String    @id @default(cuid())
+  personnelId  String
+  personnel    Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  type         String // e.g. รถยนต์, รถจักรยานยนต์
+  licensePlate String
+  brand        String
+  model        String
+  color        String
+  photoFront   String?
+  photoBack    String?
+  photoSide    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model LeaveRecord {
+  id              String    @id @default(cuid())
+  personnelId     String
+  personnel       Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  leaveType       String // ลากิจ, ลาป่วย, ลาไปบวช, ลาพักผ่อนประจำปี, อื่นๆ
+  startDate       DateTime
+  endDate         DateTime
+  reason          String?
+  writtenAt       String?   @default("ที่ว่าการอำเภอ/ค่าย/หน่วยงาน")
+  toPerson        String? // เรียนใคร
+  contactAddress  String? // บ้านเลขที่, หมู่, ถนน
+  contactTambon   String? // ตำบล/แขวง
+  contactAmphoe   String? // อำเภอ/เขต
+  contactProvince String? // จังหวัด
+  status          String    @default("รออนุมัติ") // รออนุมัติ, อนุมัติแล้ว, ไม่อนุมัติ, ยกเลิก
+
+  // Approval / Review Tracking Fields
+  approvedById    String?
+  approvedBy      Personnel? @relation("LeaveApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  approvedAt      DateTime?
+  rejectionReason String?
+  approvalNote    String?
+
+  // Fields specifically for Annual Leave (ลาพักผ่อน)
+  substitutePerson     String? // ชื่อผู้รับมอบหน้าที่
+  accumulatedLeaveDays Float? // วันลาพักผ่อนสะสม (ยกมา)
+  thisYearLeaveDays    Float? // วันลาพักผ่อนประจำปี
+  totalLeaveDays       Float? // รวมวันลา
+
+  // Fields specifically for Ordination Leave (ลาอุปสมบท)
+  ordainedBefore       Boolean?  @default(false)
+  ordainTempleName     String?
+  ordainTempleLocation String?
+  ordainDate           DateTime?
+  stayTempleName       String?
+  stayTempleLocation   String?
+
+  // Fields specifically for Maternity Leave (ลาคลอดบุตร)
+  maternityLeaveTimes Int?
+  maternityLeaveDays  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([personnelId])
+  @@index([status])
+  @@index([approvedById])
+  @@index([startDate, endDate])
+}
+
+model Department {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  shortName      String?  @default("")
+  subDepartments String   @default("[]") @db.Text // JSON Array: [{ name: string, shortName?: string }]
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.LongText
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  type        String   @default("general") // 'general', 'operation', 'notification', 'meeting'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id          String             @id @default(cuid())
+  personnelId String // Target user ID, or 'ALL' for all users, or 'ADMIN' for all admins
+  personnel   Personnel?         @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  type        String             @default("info") // 'info', 'success', 'warning', 'error'
+  // NOTE: isRead is DEPRECATED for global notifications (personnelId='ALL'/'ADMIN').
+  // Use the NotificationRead join table for per-user read state instead.
+  isRead      Boolean            @default(false)
+  link        String?
+  createdAt   DateTime           @default(now())
+  reads       NotificationRead[]
+
+  @@index([personnelId])
+  @@index([createdAt])
+}
+
+/// Per-user read-state for global (ALL/ADMIN) notifications.
+/// Personal notifications (personnelId = real user ID) still use Notification.isRead directly.
+model NotificationRead {
+  id             String       @id @default(cuid())
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  personnelId    String
+  personnel      Personnel    @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  readAt         DateTime     @default(now())
+
+  @@unique([notificationId, personnelId])
+  @@index([personnelId])
+}
+
+model Post {
+  id        String    @id @default(cuid())
+  title     String
+  content   String    @db.LongText
+  category  String?   @default("ข่าวทั่วไป")
+  image     String?
+  published Boolean   @default(true)
+  authorId  String
+  author    Personnel @relation(fields: [authorId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  status    String   @default("unread") // 'unread', 'read', 'replied'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String     @id @default(cuid())
+  personnelId String? // Who did the action
+  personnel   Personnel? @relation(fields: [personnelId], references: [id])
+  action      String // 'CREATE', 'UPDATE', 'DELETE', 'LOGIN'
+  entity      String // 'Personnel', 'LeaveRecord', 'Post', 'SystemSetting'
+  entityId    String? // ID of the affected record
+  details     String? // JSON string of changes
+  ipAddress   String?
+  createdAt   DateTime   @default(now())
+
+  @@index([action])
+  @@index([personnelId])
+  @@index([createdAt])
+}
+
+model MediaFile {
+  id           String     @id @default(cuid())
+  filename     String
+  url          String
+  size         Int
+  mimetype     String
+  uploadedById String?
+  uploadedBy   Personnel? @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime   @default(now())
+}
+
+model PasswordResetToken {
+  id          String    @id @default(cuid())
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  token       String    @unique
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       String?
+  image       String?
+  icon        String?  @default("fa-layer-group")
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SystemRole {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g. ADMIN, USER, HR_MANAGER
+  displayName String // e.g. ผู้ดูแลระบบ, ผู้ใช้งานทั่วไป, เจ้าหน้าที่บุคคล
+  description String?
+  permissions String   @default("[]") @db.Text // JSON string of permissions like ["MANAGE_PERSONNEL", "APPROVE_LEAVE", "MANAGE_SYSTEM"]
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PersonnelDocument {
+  id          String    @id @default(cuid())
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  category    String // คำสั่ง, บัตรประจำตัว, วุฒิการศึกษา, ใบประกาศ, ทะเบียนประวัติ, อื่นๆ
+  filename    String
+  mimeType    String
+  size        Int
+  storagePath String
+  uploadedBy  String    @default("")
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expiresAt   DateTime?
+
+  @@index([personnelId])
+  @@index([category])
+  @@index([createdAt])
+}
+
+model Inspection {
+  id            String              @id @default(cuid())
+  page          String
+  url           String
+  scanMode      String              @default("STANDARD") // QUICK, STANDARD, FULL
+  userId        String
+  user          Personnel           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt     DateTime            @default(now())
+  completedAt   DateTime            @default(now())
+  durationMs    Int                 @default(0)
+  status        String              @default("COMPLETED") // COMPLETED, FAILED, RUNNING
+  overallResult String              @default("PASS") // PASS, NEEDS_REVIEW, CRITICAL_ISSUES
+  criticalCount Int                 @default(0)
+  highCount     Int                 @default(0)
+  mediumCount   Int                 @default(0)
+  lowCount      Int                 @default(0)
+  infoCount     Int                 @default(0)
+  totalFindings Int                 @default(0)
+  findings      InspectionFinding[]
+  createdAt     DateTime            @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([page])
+}
+
+model InspectionFinding {
+  id             String     @id @default(cuid())
+  inspectionId   String
+  inspection     Inspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  findingCode    String // e.g. UI-001, TX-002, AX-003
+  category       String // Typography, Accessibility, UI, Links, Images, Console, Form, SecurityHeaders, Performance
+  severity       String // CRITICAL, HIGH, MEDIUM, LOW, INFO
+  title          String
+  description    String
+  expected       String?
+  actual         String?
+  element        String?
+  selector       String?
+  recommendation String
+  status         String     @default("OPEN") // OPEN, REVIEWED, IGNORED, FIXED, FALSE_POSITIVE
+  notes          String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([inspectionId])
+  @@index([severity])
+  @@index([category])
+  @@index([status])
+}
+
+model Rpb1Record {
+  id             String    @id @default(cuid())
+  personnelId    String
+  personnel      Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  status         String    @default("DRAFT") // DRAFT, COMPLETED, APPROVED, ARCHIVED
+  version        Int       @default(1)
+  classification String    @default("ลับ") // ชั้นความลับ
+  photoUrl       String? // รูปถ่าย 4.5 x 6 ซม.
+
+  // --- หน้า 1 (หมวด 1 - 7) ---
+  titleRank              String? // ยศ/คำนำหน้า
+  firstName              String? // ชื่อตัว
+  middleName             String? // ชื่อรอง
+  lastName               String? // ชื่อสกุล
+  gender                 String? // เพศ
+  age                    Int? // อายุ (ปี)
+  formerFirstName        String? // ชื่อตัวเดิม
+  nameChangeDoc          String? // หลักฐานการเปลี่ยนชื่อ
+  formerLastName         String? // ชื่อสกุลเดิม
+  lastNameChangeDoc      String? // หลักฐานการเปลี่ยนชื่อสกุล
+  nickname               String? // ชื่อเล่นหรือชื่ออื่น ๆ
+  citizenId              String? // เลขประจำตัวประชาชน 13 หลัก
+  dateOfBirth            String? // วัน เดือน ปี เกิด
+  birthPlaceHospital     String? // สถานที่จดทะเบียนเกิด/โรงพยาบาลที่เกิด
+  race                   String? // เชื้อชาติ
+  nationality            String? // สัญชาติ
+  formerNationality      String? // สัญชาติเดิม
+  naturalizationDoc      String? // หลักฐานการแปลงสัญชาติ
+  religion               String? // ศาสนา
+  formerReligion         String? // ศาสนาเดิม
+  // ที่อยู่ตามทะเบียนบ้าน
+  registeredHouseNo      String?
+  registeredVillage      String?
+  registeredMoo          String?
+  registeredSoi          String?
+  registeredRoad         String?
+  registeredSubdistrict  String?
+  registeredDistrict     String?
+  registeredProvince     String?
+  registeredPhone        String?
+  // ที่อยู่ปัจจุบัน
+  currentHouseNo         String?
+  currentVillage         String?
+  currentMoo             String?
+  currentSoi             String?
+  currentRoad            String?
+  currentSubdistrict     String?
+  currentDistrict        String?
+  currentProvince        String?
+  currentPhone           String?
+  // ช่องทางติดต่อ
+  phoneLandline          String?
+  phoneMobile            String?
+  email                  String?
+  lineId                 String?
+  facebook               String?
+  instagram              String?
+  otherContact           String?
+  // ต่างด้าว/พื้นที่สูง
+  alienCardNo            String?
+  alienCardDate          String?
+  alienCardIssuedAt      String?
+  alienResidenceDocNo    String?
+  alienResidenceDocDate  String?
+  alienResidenceIssuedAt String?
+  alienIdInThailand      String?
+  birthCountry           String?
+  entryDateToThailand    String?
+  workPermitNo           String?
+  workPermitIssuedBy     String?
+  workPermitIssueDate    String?
+  workPermitExpiryDate   String?
+
+  // --- หน้า 2 (หมวด 8 - 11) ---
+  height                   Float? // ส่วนสูง (ซม.)
+  weight                   Float? // น้ำหนัก (กก.)
+  scarsDistinguishingMarks String? // ตำหนิ
+  bloodGroup               String? // กลุ่มเลือด
+  addressesPast15Years     String  @default("[]") // JSON: [{fromYear, toYear, houseNo, soi, road, subdistrict, district, province, country}]
+  educations               String  @default("[]") // JSON: [{fromYear, toYear, schoolName, degree, major, gpa}]
+  specialActivities        String  @default("[]") // JSON: [{fromYear, toYear, schoolName, positionRole}]
+
+  // --- หน้า 3 (หมวด 12 - 15) ---
+  languages                 String  @default("[]") // JSON: [{language, readLevel, listenLevel, writeLevel, speakLevel}]
+  workHistory               String  @default("[]") // JSON: [{fromYear, toYear, employerOrAgency, position, reasonForLeaving, locationPhone}]
+  specialOccupationsHobbies String? // อาชีพพิเศษอื่น ๆ และงานอดิเรก
+  // การรับราชการทหาร
+  militaryStatus            String? // ประจำการ / กองหนุน / กำลังพลสำรอง
+  militaryRank              String? // ยศ
+  militaryRegNumber         String? // เครื่องหมายทะเบียนทหาร
+  militaryBranchUnit        String? // เหล่าและสังกัด
+  militaryUnitLocation      String? // ที่ตั้งของหน่วย
+  militaryServiceFrom       String? // เข้าประจำการเมื่อ
+  militaryServiceTo         String? // ถึง
+  militaryYearsServed       String? // จำนวนปีที่รับราชการ
+  militaryDischargeReason   String? // เหตุที่ออก
+  militaryLastCommander     String? // ผู้บังคับบัญชาโดยตรงคนสุดท้าย
+  militarySpecialOperations String? // เคยไปปฏิบัติราชการพิเศษที่
+  militarySpecialOpDate     String? // เมื่อ
+  militarySpecialOpDuration String? // ระยะเวลา
+  militaryExemptionReason   String? // ได้รับการยกเว้น โดย
+
+  // --- หน้า 4 (หมวด 16 - 18) ---
+  writerDetails              String? // การเป็นนักเขียน, นามปากกา, หนังสือ, สื่อสังคมออนไลน์
+  politicalSocialMemberships String  @default("[]") // JSON: [{fromYear, toYear, organizationName, location, memberNo}]
+  foreignTravels             String  @default("[]") // JSON: [{fromYear, toYear, cityCountry, purposeAndSponsorship}]
+
+  // --- หน้า 5 (หมวด 19 - 21) ---
+  identificationDocuments String  @default("[]") // JSON: [{docType, docNumber, issuedAt, issueAndExpiryDate}]
+  legalCases              String  @default("[]") // JSON: [{date, crimeScene, charge, caseResult}]
+  disciplinaryPunishments String? // กรณีเคยถูกลงโทษทางวินัย
+  fatherDetails           String? // JSON: {titleName, dob, birthPlace, citizenId, race, religion, nationalityOriginal, nationalityCurrent, addressPhone, occupation, workplacePhone}
+  motherDetails           String? // JSON: {titleName, dob, birthPlace, citizenId, race, religion, nationalityOriginal, nationalityCurrent, addressPhone, occupation, workplacePhone}
+
+  // --- หน้า 6 (หมวด 22 - 23) ---
+  maritalStatus        String? // โสด, หมั้น, สมรส, หม้าย, แยกกันอยู่, หย่า
+  spouseFormerDetails  String? // JSON: {titleNameOriginal, dob, birthPlace, race, religion, nationalityOriginal, nationalityCurrent, occupation, workplacePhone, marriageDate, marriagePlace, currentAddressPhone, divorceDate, divorcePlace, divorceReason, lastAddress}
+  spouseCurrentDetails String? // JSON: {titleNameOriginal, dob, birthPlace, race, religion, nationalityOriginal, nationalityCurrent, occupation, workplacePhone, marriageDate, marriagePlace, currentAddressPhone}
+  children             String  @default("[]") // JSON: [{order, titleName, dob, race, nationality, religion, currentAddress, occupation, schoolWorkplace, phone}]
+
+  // --- หน้า 7 (หมวด 24 - 26) ---
+  siblings              String @default("[]") // JSON: [{order, titleName, dob, race, nationality, religion, citizenId, currentAddress, occupation, schoolWorkplace, phone, spouseNameOriginal, spouseRaceNationalityReligion, spouseOccupation, spouseSchoolWorkplace, spousePhone}]
+  relativesInGovernment String @default("[]") // JSON: [{order, titleName, relation, raceNationalityReligion, occupation, workplacePhone, currentAddressPhone}]
+  overseasContacts      String @default("[]") // JSON: [{order, titleName, relation, raceNationalityReligion, occupation, schoolWorkplace, currentAddress, reasonLivingAbroad}]
+
+  // --- หน้า 8 (หมวด 27 - 30) ---
+  cohabitants            String  @default("[]") // JSON: [{order, titleName, relation}]
+  closeFriendsRef        String  @default("[]") // JSON: [{titleName, yearsKnown, raceNationalityReligion, addressPhone, workplacePhone}]
+  supporters             String  @default("[]") // JSON: [{titleName, raceNationalityReligion, addressPhone, workplacePhone}]
+  additionalExplanations String? // ประวัติคำชี้แจงอื่น ๆ
+  // ลายมือชื่อ
+  ownerSignatureDate     String? // วันที่ลงนามเจ้าของประวัติ
+  inspectorRankName      String? // ยศ ชื่อ เจ้าหน้าที่ควบคุม
+  inspectorPosition      String? // ตำแหน่งเจ้าหน้าที่ควบคุม
+  inspectorSignatureDate String? // วันที่เจ้าหน้าที่ควบคุมลงนาม
+
+  // --- หน้า 9: แผนที่สังเขป & ผู้ติดต่อเร่งด่วน ---
+  sketchMapImage           String? // Data URL หรือ Image Path ของแผนที่สังเขป
+  mapHouseNo               String?
+  mapVillage               String?
+  mapMoo                   String?
+  mapSoi                   String?
+  mapRoad                  String?
+  mapSubdistrict           String?
+  mapDistrict              String?
+  mapProvince              String?
+  mapPhone                 String?
+  mapHouseOwnerName        String?
+  mapHouseOwnerPhone       String?
+  emergencyContactRankName String? // ยศ ชื่อ บุคคลติดต่อเร่งด่วน
+  emergencyContactRelation String? // เกี่ยวข้องเป็น
+  emergencyContactAddress  String? // ที่อยู่และหมายเลขโทรศัพท์
+
+  // --- หน้า 10: บันทึกประวัติบุคคลเพิ่มเติม ---
+  extraTitleName            String?
+  extraGender               String?
+  extraBloodGroup           String?
+  extraRegisteredAddress    String?
+  extraCurrentAddress       String?
+  extraIsSameAddress        Boolean @default(true)
+  extraMobilePhone          String?
+  extraHomePhone            String?
+  extraOfficePhone          String?
+  extraEmail                String?
+  extraOwnerSignatureDate   String?
+  extraOfficerName          String?
+  extraOfficerPosition      String?
+  extraOfficerSignatureDate String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([personnelId])
+  @@index([status])
+}

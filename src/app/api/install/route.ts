@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma, resetPrismaClient } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import { installRequestSchema } from '@/lib/validations';
 import { ROLE_DEFINITIONS } from '@/lib/role-definitions';
 import { seedDemoDataset } from '@/lib/installer/sample-data';
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
@@ -121,6 +124,75 @@ export async function POST(req: Request) {
       badgeShowLogo: 'true',
       badgeShowQr: 'true',
     };
+
+    // 4.5. Initialize target database schema & switch connection if MySQL or PostgreSQL
+    if (dbProvider !== 'sqlite' && dbConnectionString) {
+      const schemaFile = dbProvider === 'mysql'
+        ? path.join(process.cwd(), 'prisma', 'schema.mysql.prisma')
+        : path.join(process.cwd(), 'prisma', 'schema.postgresql.prisma');
+
+      // Ensure multi-database schemas exist
+      if (!fs.existsSync(schemaFile)) {
+        try {
+          const genScript = path.join(process.cwd(), 'scripts', 'generate-schemas.js');
+          if (fs.existsSync(genScript)) {
+            require(genScript);
+          }
+        } catch (e) {
+          console.error('Failed to run generate-schemas.js:', e);
+        }
+      }
+
+      // Execute schema push to create tables in the target database
+      try {
+        const prismaBin = path.join(process.cwd(), 'node_modules', 'prisma', 'build', 'index.js');
+        const cmd = fs.existsSync(prismaBin)
+          ? `node "${prismaBin}" db push --schema="${schemaFile}" --accept-data-loss --skip-generate`
+          : `npx prisma db push --schema="${schemaFile}" --accept-data-loss --skip-generate`;
+
+        console.log(`[Install] Pushing schema to ${dbProvider}...`);
+        execSync(cmd, {
+          env: {
+            ...process.env,
+            DATABASE_URL: dbConnectionString,
+          },
+          timeout: 60000,
+          stdio: 'pipe',
+        });
+        console.log(`[Install] Schema push to ${dbProvider} succeeded.`);
+      } catch (err: any) {
+        console.error(`[Install] Schema push failed:`, err.message || err);
+        return NextResponse.json({
+          error: `ไม่สามารถสร้างโครงสร้างตารางในฐานข้อมูล ${dbProvider} ได้: ${err.message || String(err)}`
+        }, { status: 500 });
+      }
+
+      // Persist DATABASE_URL to .env
+      try {
+        const envPaths = [
+          path.join(process.cwd(), '.env'),
+          '/app/.env',
+          '/app/data/.env',
+        ];
+        for (const envPath of envPaths) {
+          try {
+            let envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
+            if (envContent.includes('DATABASE_URL=')) {
+              envContent = envContent.replace(/DATABASE_URL=.*/, `DATABASE_URL="${dbConnectionString}"`);
+            } else {
+              envContent += `\nDATABASE_URL="${dbConnectionString}"\n`;
+            }
+            fs.writeFileSync(envPath, envContent, 'utf8');
+          } catch {}
+        }
+      } catch (e) {
+        console.warn('Could not write DATABASE_URL to .env:', e);
+      }
+
+      // Update active environment variable & reset Prisma client
+      process.env.DATABASE_URL = dbConnectionString;
+      resetPrismaClient(dbConnectionString);
+    }
 
     // 5. Execute Installation in Atomic Transaction (Rollback on Any Failure & Prevent Race Condition)
     const result = await prisma.$transaction(async (tx) => {
