@@ -62,8 +62,6 @@ RUN mkdir -p /app/data /app/public/uploads && chown -R nextjs:nodejs /app/data /
 COPY --chown=nextjs:nodejs docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
-USER nextjs
-
 EXPOSE 3000
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
