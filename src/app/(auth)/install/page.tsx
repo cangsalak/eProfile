@@ -26,23 +26,23 @@ export default function InstallPage() {
   // System & Admin Form
   const [formData, setFormData] = useState({
     systemName: 'ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)',
-    organizationName: 'กองบัญชาการ / หน่วยงานต้นสังกัด',
-    organizationAddress: 'ศูนย์ราชการเฉลิมพระเกียรติฯ อาคาร B ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร 10210',
-    organizationPhone: '02-123-4567',
-    contactPhoneSecondary: '02-123-4568 (ฝ่ายบริการ/สอบถาม)',
-    contactEmail: 'contact@eprofile.com',
-    contactEmailSupport: 'support@eprofile.com',
+    organizationName: 'ศูนย์ฝึกทางยุทธวิธีกองทัพบก',
+    organizationAddress: 'ศูนย์ฝึกทางยุทธวิธีกองทัพบก บ้านเลขที่ 153 หมู่ 3 ต.ชัยนารายณ์ อ.ชัยบาดาล จ.ลพบุรี 15130',
+    organizationPhone: '036791444',
+    contactPhoneSecondary: '036791455 (ฝ่ายบริการ/สอบถาม)',
+    contactEmail: 'attc.atc@gmail.com',
+    contactEmailSupport: 'cangsalak@gmail.com',
     contactMapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.7142718131343!2d100.56209507567849!3d13.886121595166432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e28329ab59218d%3A0xc6cba4b4260dfa02!2sGovernment%20Complex!5e0!3m2!1sen!2sth!4v1709210214327!5m2!1sen!2sth',
     contactMapLink: 'https://maps.google.com/?q=Government+Complex+Chaeng+Watthana',
     theme: 'dark',
     installDemoData: true,
-    firstName: '',
-    lastName: '',
+    firstName: 'เยาวรัตน์',
+    lastName: 'ช่างสลัก',
     citizenId: '',
-    badgeNo: '',
+    badgeNo: '1111111111',
     password: '',
     confirmPassword: '',
-    setupSecret: '',
+    setupSecret: '[PASSWORD]',
   });
 
   const handleDbProviderChange = (provider: DbProvider) => {
@@ -274,11 +274,10 @@ export default function InstallPage() {
                 {/* SQLite */}
                 <div
                   onClick={() => handleDbProviderChange('sqlite')}
-                  className={`cursor-pointer p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-between ${
-                    dbConfig.provider === 'sqlite'
-                      ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-500/20 ring-2 ring-blue-500/30'
-                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-600'
-                  }`}
+                  className={`cursor-pointer p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-between ${dbConfig.provider === 'sqlite'
+                    ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-500/20 ring-2 ring-blue-500/30'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-600'
+                    }`}
                 >
                   <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-2">
                     <i className="fa-solid fa-file-shield text-lg"></i>
@@ -295,11 +294,10 @@ export default function InstallPage() {
                 {/* PostgreSQL */}
                 <div
                   onClick={() => handleDbProviderChange('postgresql')}
-                  className={`cursor-pointer p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-between ${
-                    dbConfig.provider === 'postgresql'
-                      ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-500/20 ring-2 ring-blue-500/30'
-                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-600'
-                  }`}
+                  className={`cursor-pointer p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-between ${dbConfig.provider === 'postgresql'
+                    ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-500/20 ring-2 ring-blue-500/30'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-600'
+                    }`}
                 >
                   <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-2">
                     <i className="fa-solid fa-elephant text-lg"></i>
@@ -316,11 +314,10 @@ export default function InstallPage() {
                 {/* MySQL */}
                 <div
                   onClick={() => handleDbProviderChange('mysql')}
-                  className={`cursor-pointer p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-between ${
-                    dbConfig.provider === 'mysql'
-                      ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-500/20 ring-2 ring-blue-500/30'
-                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-600'
-                  }`}
+                  className={`cursor-pointer p-4 rounded-xl border transition-all text-center flex flex-col items-center justify-between ${dbConfig.provider === 'mysql'
+                    ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-500/20 ring-2 ring-blue-500/30'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-400 dark:hover:border-slate-600'
+                    }`}
                 >
                   <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-2">
                     <i className="fa-solid fa-server text-lg"></i>
@@ -442,11 +439,10 @@ export default function InstallPage() {
                 </button>
 
                 {dbTestResult && (
-                  <div className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-medium ${
-                    dbTestResult.success
-                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
-                      : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
-                  }`}>
+                  <div className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-medium ${dbTestResult.success
+                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                    : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                    }`}>
                     <i className={`fa-solid ${dbTestResult.success ? 'fa-circle-check' : 'fa-triangle-exclamation'}`}></i>
                     <span>{dbTestResult.message}</span>
                   </div>
@@ -608,11 +604,10 @@ export default function InstallPage() {
               </div>
 
               {/* Demo / Sample Data Toggle Card */}
-              <div className={`p-4 rounded-2xl border-2 transition-all ${
-                formData.installDemoData 
-                  ? 'border-blue-500 bg-blue-500/10 shadow-md ring-2 ring-blue-500/20' 
-                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50'
-              }`}>
+              <div className={`p-4 rounded-2xl border-2 transition-all ${formData.installDemoData
+                ? 'border-blue-500 bg-blue-500/10 shadow-md ring-2 ring-blue-500/20'
+                : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50'
+                }`}>
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <input
                     type="checkbox"
