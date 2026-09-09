@@ -125,74 +125,92 @@ export async function POST(req: Request) {
       badgeShowQr: 'true',
     };
 
-    // 4.5. Initialize target database schema & switch connection if MySQL or PostgreSQL
-    if (dbProvider !== 'sqlite' && dbConnectionString) {
-      const schemaFile = dbProvider === 'mysql'
-        ? path.join(process.cwd(), 'prisma', 'schema.mysql.prisma')
-        : path.join(process.cwd(), 'prisma', 'schema.postgresql.prisma');
+    // 4.5. Initialize target database schema & switch connection for any provider (sqlite, mysql, postgresql)
+    const schemaFile = dbProvider === 'mysql'
+      ? path.join(process.cwd(), 'prisma', 'schema.mysql.prisma')
+      : dbProvider === 'postgresql'
+      ? path.join(process.cwd(), 'prisma', 'schema.postgresql.prisma')
+      : path.join(process.cwd(), 'prisma', 'schema.prisma');
 
-      // Ensure multi-database schemas exist
-      if (!fs.existsSync(schemaFile)) {
-        try {
-          const genScript = path.join(process.cwd(), 'scripts', 'generate-schemas.js');
-          if (fs.existsSync(genScript)) {
-            require(genScript);
-          }
-        } catch (e) {
-          console.error('Failed to run generate-schemas.js:', e);
-        }
-      }
-
-      // Execute schema push to create tables in the target database
+    // Ensure multi-database schemas exist
+    if (!fs.existsSync(schemaFile)) {
       try {
-        const prismaBin = path.join(process.cwd(), 'node_modules', 'prisma', 'build', 'index.js');
-        const cmd = fs.existsSync(prismaBin)
-          ? `node "${prismaBin}" db push --schema="${schemaFile}" --accept-data-loss --skip-generate`
-          : `npx prisma db push --schema="${schemaFile}" --accept-data-loss --skip-generate`;
+        const genScript = path.join(process.cwd(), 'scripts', 'generate-schemas.js');
+        if (fs.existsSync(genScript)) {
+          require(genScript);
+        }
+      } catch (e) {
+        console.error('Failed to run generate-schemas.js:', e);
+      }
+    }
 
-        console.log(`[Install] Pushing schema to ${dbProvider}...`);
-        execSync(cmd, {
-          env: {
-            ...process.env,
-            DATABASE_URL: dbConnectionString,
-          },
-          timeout: 60000,
-          stdio: 'pipe',
-        });
-        console.log(`[Install] Schema push to ${dbProvider} succeeded.`);
-      } catch (err: any) {
-        console.error(`[Install] Schema push failed:`, err.message || err);
+    // Determine target database URL
+    let targetDbUrl = (dbProvider !== 'sqlite' && dbConnectionString)
+      ? dbConnectionString
+      : (process.env.DATABASE_URL || 'file:./prisma/dev.db');
+
+    if (dbProvider === 'sqlite') {
+      if (!targetDbUrl || !targetDbUrl.startsWith('file:')) {
+        targetDbUrl = fs.existsSync('/app/data') ? 'file:/app/data/dev.db' : 'file:./prisma/dev.db';
+      }
+      const rawPath = targetDbUrl.replace(/^file:/, '');
+      const absDir = path.dirname(path.isAbsolute(rawPath) ? rawPath : path.join(process.cwd(), rawPath));
+      if (!fs.existsSync(absDir)) {
+        fs.mkdirSync(absDir, { recursive: true });
+      }
+    }
+
+    // Execute schema push to create tables in the target database
+    try {
+      const prismaBin = path.join(process.cwd(), 'node_modules', 'prisma', 'build', 'index.js');
+      const cmd = fs.existsSync(prismaBin)
+        ? `node "${prismaBin}" db push --schema="${schemaFile}" --accept-data-loss --skip-generate`
+        : `npx prisma db push --schema="${schemaFile}" --accept-data-loss --skip-generate`;
+
+      console.log(`[Install] Pushing schema to ${dbProvider}...`);
+      execSync(cmd, {
+        env: {
+          ...process.env,
+          DATABASE_URL: targetDbUrl,
+        },
+        timeout: 60000,
+        stdio: 'pipe',
+      });
+      console.log(`[Install] Schema push to ${dbProvider} succeeded.`);
+    } catch (err: any) {
+      console.error(`[Install] Schema push error:`, err.message || err);
+      if (dbProvider !== 'sqlite') {
         return NextResponse.json({
           error: `ไม่สามารถสร้างโครงสร้างตารางในฐานข้อมูล ${dbProvider} ได้: ${err.message || String(err)}`
         }, { status: 500 });
       }
-
-      // Persist DATABASE_URL to .env
-      try {
-        const envPaths = [
-          path.join(process.cwd(), '.env'),
-          '/app/.env',
-          '/app/data/.env',
-        ];
-        for (const envPath of envPaths) {
-          try {
-            let envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
-            if (envContent.includes('DATABASE_URL=')) {
-              envContent = envContent.replace(/DATABASE_URL=.*/, `DATABASE_URL="${dbConnectionString}"`);
-            } else {
-              envContent += `\nDATABASE_URL="${dbConnectionString}"\n`;
-            }
-            fs.writeFileSync(envPath, envContent, 'utf8');
-          } catch {}
-        }
-      } catch (e) {
-        console.warn('Could not write DATABASE_URL to .env:', e);
-      }
-
-      // Update active environment variable & reset Prisma client
-      process.env.DATABASE_URL = dbConnectionString;
-      resetPrismaClient(dbConnectionString);
     }
+
+    // Persist DATABASE_URL to .env
+    try {
+      const envPaths = [
+        path.join(process.cwd(), '.env'),
+        '/app/.env',
+        '/app/data/.env',
+      ];
+      for (const envPath of envPaths) {
+        try {
+          let envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
+          if (envContent.includes('DATABASE_URL=')) {
+            envContent = envContent.replace(/DATABASE_URL=.*/, `DATABASE_URL="${targetDbUrl}"`);
+          } else {
+            envContent += `\nDATABASE_URL="${targetDbUrl}"\n`;
+          }
+          fs.writeFileSync(envPath, envContent, 'utf8');
+        } catch {}
+      }
+    } catch (e) {
+      console.warn('Could not write DATABASE_URL to .env:', e);
+    }
+
+    // Update active environment variable & reset Prisma client
+    process.env.DATABASE_URL = targetDbUrl;
+    resetPrismaClient(targetDbUrl);
 
     // 5. Execute Installation in Atomic Transaction (Rollback on Any Failure & Prevent Race Condition)
     const result = await prisma.$transaction(async (tx) => {

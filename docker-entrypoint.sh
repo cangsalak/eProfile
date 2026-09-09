@@ -22,16 +22,16 @@ if [ -n "$DATABASE_URL" ] && echo "$DATABASE_URL" | grep -q "^file:"; then
   mkdir -p "$TARGET_DIR" 2>/dev/null || true
   chmod -R 777 "$TARGET_DIR" 2>/dev/null || true
   
-  # If DB file does not exist yet or is empty/corrupted (< 10KB), populate from template
-  FILE_SIZE=$(wc -c < "$TARGET_PATH" 2>/dev/null || echo 0)
-  if [ ! -f "$TARGET_PATH" ] || [ "$FILE_SIZE" -lt 10240 ]; then
-    if [ -f "/app/prisma/dev.template.db" ]; then
-      echo "📦 Initializing SQLite database from pre-seeded template to $TARGET_PATH..."
-      cp -f /app/prisma/dev.template.db "$TARGET_PATH" || true
-    elif [ -f "/app/prisma/dev.db" ]; then
-      echo "📦 Initializing SQLite database to $TARGET_PATH..."
-      cp -f /app/prisma/dev.db "$TARGET_PATH" || true
-    fi
+  # Always ensure SQLite schema tables are pushed if prisma CLI is available
+  if [ -f "/app/node_modules/prisma/build/index.js" ]; then
+    echo "📦 Ensuring SQLite tables exist in $TARGET_PATH..."
+    node /app/node_modules/prisma/build/index.js db push --schema=/app/prisma/schema.prisma --accept-data-loss --skip-generate 2>/dev/null || true
+  elif [ -f "/app/prisma/dev.template.db" ] && [ ! -f "$TARGET_PATH" ]; then
+    echo "📦 Initializing SQLite database from pre-seeded template to $TARGET_PATH..."
+    cp -f /app/prisma/dev.template.db "$TARGET_PATH" || true
+  elif [ -f "/app/prisma/dev.db" ] && [ ! -f "$TARGET_PATH" ]; then
+    echo "📦 Initializing SQLite database to $TARGET_PATH..."
+    cp -f /app/prisma/dev.db "$TARGET_PATH" || true
   fi
   chmod 666 "$TARGET_PATH" 2>/dev/null || true
 elif [ -n "$DATABASE_URL" ] && echo "$DATABASE_URL" | grep -qE "^(mysql|postgres|postgresql):"; then
