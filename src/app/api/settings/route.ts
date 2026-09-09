@@ -219,7 +219,7 @@ const PUBLIC_DEFAULTS: Record<string, string> = {
  */
 export async function GET() {
   try {
-    const allSettings = await prisma.systemSetting.findMany();
+    const allSettings = await prisma.systemSetting.findMany().catch(() => []);
 
     // Build output from allowlist only
     const settingsObj: Record<string, string> = {};
@@ -251,7 +251,11 @@ export async function GET() {
     return NextResponse.json(settingsObj);
   } catch (error) {
     console.error('Error fetching settings:', error);
-    return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
+    // Graceful fallback during installation
+    return NextResponse.json({
+      ...PUBLIC_DEFAULTS,
+      isInstalled: 'false',
+    });
   }
 }
 

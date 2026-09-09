@@ -404,6 +404,19 @@ export default function InstallPage() {
                       className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
+
+                  {/* Synology NAS & Docker Connection Tip */}
+                  <div className="p-3 bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40 rounded-lg text-xs text-slate-600 dark:text-slate-300 space-y-1">
+                    <div className="font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                      <i className="fa-solid fa-circle-info"></i>
+                      คำแนะนำการเชื่อมต่อสำหรับ Docker บน Synology NAS / Linux:
+                    </div>
+                    <ul className="list-disc list-inside space-y-0.5 text-[11px] text-slate-500 dark:text-slate-400 pl-1">
+                      <li><strong>กรณีใช้ MariaDB 10 บน Synology (Package Center):</strong> ระบุ Host เป็น <code>IP ของเครื่อง NAS</code> (เช่น <code>192.168.2.35</code>) และ Port เป็น <code>3307</code></li>
+                      <li><strong>กรณีใช้ MariaDB / MySQL เป็น Docker Container:</strong> ระบุ Host เป็นชื่อคอนเทนเนอร์ (เช่น <code>mariadb82</code> หรือ <code>mariadb</code>) และ Port <code>3306</code> หรือใช้ IP ของเครื่อง NAS</li>
+                      <li><span className="text-amber-600 dark:text-amber-400 font-medium">หลีกเลี่ยงการใช้ host.docker.internal</span> บน Linux/Synology เนื่องจากจะไม่สามารถชี้กลับมายัง Host ได้</li>
+                    </ul>
+                  </div>
                 </div>
               )}
 

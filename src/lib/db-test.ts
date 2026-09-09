@@ -315,9 +315,16 @@ export async function testDatabaseConnection(params: DbConnectionParams, allowPr
   const tcpTest = await testTcpConnection(resolvedIp, port);
 
   if (!tcpTest.ok) {
+    let hint = '';
+    if (rawHost.includes('host.docker.internal') || rawHost === 'localhost' || rawHost === '127.0.0.1') {
+      hint = ' 💡 ข้อแนะนำ: หากรันใน Docker บน Synology NAS หรือ Linux ให้ใช้ IP ของเครื่อง NAS โดยตรง (เช่น 192.168.x.x) หรือชื่อ Database Container (เช่น mariadb / postgres) แทน host.docker.internal';
+    } else if (params.provider === 'mysql' && port === 3306) {
+      hint = ' 💡 ข้อแนะนำ: หากใช้ MariaDB 10 ของ Synology NAS ให้ลองเปลี่ยนพอร์ตเป็น 3307';
+    }
+
     return {
       success:  false,
-      message:  `ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ ${params.provider.toUpperCase()} ที่ ${rawHost}:${port} (${tcpTest.error})`,
+      message:  `ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ ${params.provider.toUpperCase()} ที่ ${rawHost}:${port} (${tcpTest.error})${hint}`,
       connectionUrl,
     };
   }
