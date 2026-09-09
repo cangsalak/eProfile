@@ -18,12 +18,16 @@ COPY public ./public
 COPY .next/standalone ./
 COPY .next/static ./.next/static
 COPY prisma ./prisma
+COPY scripts ./scripts
+COPY src/generated ./src/generated
 COPY node_modules/.prisma ./node_modules/.prisma
 COPY node_modules/@prisma ./node_modules/@prisma
+COPY node_modules/prisma ./node_modules/prisma
+RUN ln -s /app/node_modules/prisma/build/index.js /usr/local/bin/prisma || true
 
 # Persistent storage directories
 RUN mkdir -p /app/data /app/public/uploads && \
-    chown -R nextjs:nodejs /app/data /app/public/uploads /app/prisma
+    chown -R nextjs:nodejs /app/data /app/public/uploads /app/prisma /app/scripts
 
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 EXPOSE 3000
