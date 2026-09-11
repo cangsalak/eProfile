@@ -199,10 +199,13 @@ export function scanAllApiRoutes(): ApiInventorySummary {
     }
   }
 
-  // Fallback: If filesystem scan yielded no items (e.g. packaged/standalone server without src files), populate from catalogue metadata
-  if (apis.length === 0 && Object.keys(API_CATALOGUE_METADATA).length > 0) {
+  // Merge remaining documented endpoints from catalogue metadata (e.g. modular APIs like /api/leaves, /api/backup, /api/calendar)
+  if (Object.keys(API_CATALOGUE_METADATA).length > 0) {
     for (const [endpoint, methodMap] of Object.entries(API_CATALOGUE_METADATA)) {
       for (const [method, metadata] of Object.entries(methodMap)) {
+        if (apis.some(a => a.endpoint === endpoint && a.method === method)) {
+          continue;
+        }
         const isPublic = PUBLIC_API_EXACT.includes(endpoint) || PUBLIC_API_PREFIXES.some(p => endpoint.startsWith(p));
         const pathParams = extractPathParams(endpoint, metadata.pathParamDescriptions);
         const hasBody = ['POST', 'PUT', 'PATCH'].includes(method);
@@ -240,7 +243,7 @@ export function scanAllApiRoutes(): ApiInventorySummary {
           rateLimit: metadata.rateLimit || 'Not configured',
           auditLogEnabled: false,
           sensitiveFieldsDetected: [],
-          sourceFile: `src/app${endpoint}/route.ts`,
+          sourceFile: `src/modules${endpoint.replace('/api', '')}/api`,
           status: 'COMPLETE',
         });
       }

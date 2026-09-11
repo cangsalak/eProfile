@@ -82,7 +82,6 @@ export async function runApiSecurityTests() {
       { url: `${BASE_URL}/api/personnel`, method: 'GET' },
       { url: `${BASE_URL}/api/roles`, method: 'GET' },
       { url: `${BASE_URL}/api/departments`, method: 'GET' },
-      { url: `${BASE_URL}/api/vehicles`, method: 'GET' },
       { url: `${BASE_URL}/api/settings`, method: 'PUT', body: JSON.stringify({ siteName: 'Test' }) },
       { url: `${BASE_URL}/api/backup`, method: 'GET' },
       { url: `${BASE_URL}/api/audit-logs`, method: 'GET' },

@@ -3,8 +3,8 @@ import { requireRole } from '@/lib/auth-guards';
 import { scanAllApiRoutes } from '../lib/scanner';
 
 export async function handleGetApiDocs(req: Request) {
-  // Allow SUPER_ADMIN and ADMIN to access API Documentation Reference
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  // Allow SUPER_ADMIN strictly to access API Documentation Reference
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   try {

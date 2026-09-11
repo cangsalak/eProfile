@@ -125,6 +125,70 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
+    // 3.0 Special rewrite for public /api/verify/:id -> /api/modules/badges/verify/:id
+    if (pathname.startsWith('/api/verify/')) {
+      const verifyId = pathname.substring('/api/verify/'.length);
+      const destinationUrl = new URL(`/api/modules/badges/verify/${verifyId}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    // Special rewrites for legacy /api endpoints
+    if (pathname === '/api/restore') {
+      const destinationUrl = new URL('/api/modules/backup/restore', request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/media' || pathname.startsWith('/api/media/')) {
+      const subPath = pathname.substring('/api/media'.length);
+      const destinationUrl = new URL(`/api/modules/upload${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/posts' || pathname.startsWith('/api/posts/')) {
+      const subPath = pathname.substring('/api/posts'.length);
+      const destinationUrl = new URL(`/api/modules/news/posts${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/notifications' || pathname.startsWith('/api/notifications/')) {
+      const subPath = pathname.substring('/api/notifications'.length);
+      const destinationUrl = new URL(`/api/modules/news/notifications${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/admin/api-docs' || pathname.startsWith('/api/admin/api-docs/')) {
+      const subPath = pathname.substring('/api/admin/api-docs'.length);
+      const destinationUrl = new URL(`/api/modules/api-docs${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/admin/api-tokens' || pathname.startsWith('/api/admin/api-tokens/')) {
+      const subPath = pathname.substring('/api/admin/api-tokens'.length);
+      const destinationUrl = new URL(`/api/modules/api-docs/tokens${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/api-docs' || pathname.startsWith('/api/api-docs/')) {
+      const subPath = pathname.substring('/api/api-docs'.length);
+      const destinationUrl = new URL(`/api/modules/api-docs${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
+    if (pathname === '/api/api-tokens' || pathname.startsWith('/api/api-tokens/')) {
+      const subPath = pathname.substring('/api/api-tokens'.length);
+      const destinationUrl = new URL(`/api/modules/api-docs/tokens${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
+
     // Allow public API prefixes
     if (publicApiPrefixes.some(prefix => pathname.startsWith(prefix))) {
       return NextResponse.next();

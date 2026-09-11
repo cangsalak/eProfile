@@ -140,53 +140,7 @@ export async function runApiCrudTests() {
     console.log('✔ Leave request creation and approval workflow verified');
   }
 
-  // 3. Vehicle Management Flow
-  let testVehicleId = '';
-  {
-    const vehicleRes = await fetch(`${BASE_URL}/api/vehicles`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `auth_token=${adminToken}`,
-      },
-      body: JSON.stringify({
-        personnelId: createdPersonnelId,
-        type: 'รถยนต์',
-        licensePlate: 'กข 9999 กทม',
-        brand: 'Toyota',
-        model: 'Camry',
-        color: 'ดำ',
-      }),
-    });
-    assert.ok(vehicleRes.status === 200 || vehicleRes.status === 201, `Vehicle creation should return 200 or 201 (got ${vehicleRes.status})`);
-    const vehicleData = await vehicleRes.json();
-    assert.ok(vehicleData.id, 'Vehicle should have an ID');
-    testVehicleId = vehicleData.id;
-
-    // Update vehicle
-    const updateVehicleRes = await fetch(`${BASE_URL}/api/vehicles/${testVehicleId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `auth_token=${adminToken}`,
-      },
-      body: JSON.stringify({ color: 'บรอนซ์เงิน' }),
-    });
-    assert.strictEqual(updateVehicleRes.status, 200, 'Vehicle update should return 200');
-    const updateVehicleData = await updateVehicleRes.json();
-    assert.strictEqual(updateVehicleData.color, 'บรอนซ์เงิน');
-
-    // Delete vehicle
-    const deleteVehicleRes = await fetch(`${BASE_URL}/api/vehicles/${testVehicleId}`, {
-      method: 'DELETE',
-      headers: { 'Cookie': `auth_token=${adminToken}` },
-    });
-    assert.strictEqual(deleteVehicleRes.status, 200, 'Vehicle deletion should return 200');
-
-    console.log('✔ Vehicle CRUD workflow verified');
-  }
-
-  // 4. Invalid Input Handling across Major APIs
+  // 3. Invalid Input Handling across Major APIs
   {
     // Personnel POST with missing fields
     const badPersonnel = await fetch(`${BASE_URL}/api/personnel`, {

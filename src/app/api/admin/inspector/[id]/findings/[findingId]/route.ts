@@ -15,7 +15,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: { id: string; findingId: string } }
 ) {
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   const { id, findingId } = params;

@@ -35,12 +35,13 @@ export async function handleUploadMedia(req: Request) {
       const results = [];
 
       for (const file of files) {
-        // Validate size (max 50MB)
-        if (file.size > 50 * 1024 * 1024) {
-          return NextResponse.json(
-            { error: `ไฟล์ "${file.name}" มีขนาดใหญ่เกินไป (สูงสุด 50MB)` },
-            { status: 400 }
-          );
+        const fileValidation = validateUploadedFile({
+          name: file.name,
+          size: file.size,
+          type: file.type || 'application/octet-stream',
+        });
+        if (!fileValidation.valid) {
+          return NextResponse.json({ error: fileValidation.error || 'ไฟล์ไม่ถูกต้อง' }, { status: 400 });
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
@@ -88,6 +89,15 @@ export async function handleUploadMedia(req: Request) {
     const { filename, url, size, mimetype } = body || {};
     if (!filename || typeof filename !== 'string' || !url || typeof url !== 'string') {
       return NextResponse.json({ error: 'ข้อมูลไฟล์ไม่ครบถ้วน' }, { status: 400 });
+    }
+
+    const fileValidation = validateUploadedFile({
+      name: filename,
+      size: Number(size) || 0,
+      type: mimetype || 'application/octet-stream',
+    });
+    if (!fileValidation.valid) {
+      return NextResponse.json({ error: fileValidation.error || 'ไฟล์ไม่ถูกต้อง' }, { status: 400 });
     }
 
     const record = await prisma.mediaFile.create({

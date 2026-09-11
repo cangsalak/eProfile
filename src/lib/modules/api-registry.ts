@@ -73,6 +73,10 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
     },
   },
   'upload': {
+    '': {
+      GET: UploadApi.handleListMedia as any,
+      POST: UploadApi.handleUploadMedia as any,
+    },
     'upload': {
       POST: UploadApi.handleUploadMedia as any,
     },

@@ -100,17 +100,38 @@ export async function handleGetCommandDashboard(req: Request) {
       }
     }
 
-    // 4. Parse Query Parameters
+    // 4. Parse & Validate Query Parameters
     const { searchParams } = new URL(req.url);
     const queryDept = searchParams.get('department') || '';
     const querySubDept = searchParams.get('subDepartment') || '';
     const dateParam = searchParams.get('date');
     const yearParam = searchParams.get('year');
-    const selectedLeaveType = searchParams.get('leaveType') || 'ลาพักผ่อน';
+    const leaveSummaryTypeParam = searchParams.get('leaveSummaryType') || searchParams.get('leaveType');
+
+    if (dateParam !== null && dateParam !== undefined) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateParam) || isNaN(Date.parse(dateParam))) {
+        return NextResponse.json({ error: 'รูปแบบวันที่ไม่ถูกต้อง (ต้องเป็น YYYY-MM-DD)' }, { status: 400 });
+      }
+    }
+
+    if (yearParam !== null && yearParam !== undefined) {
+      const parsedYear = parseInt(yearParam, 10);
+      if (isNaN(parsedYear) || parsedYear < 2000 || parsedYear > 2100) {
+        return NextResponse.json({ error: 'ปีไม่ถูกต้อง (ต้องอยู่ในช่วง 2000 - 2100)' }, { status: 400 });
+      }
+    }
+
+    if (leaveSummaryTypeParam) {
+      if (!allowedLeaveTypes.includes(leaveSummaryTypeParam)) {
+        return NextResponse.json({ error: `ประเภทการลา "${leaveSummaryTypeParam}" ไม่ถูกต้อง` }, { status: 400 });
+      }
+    }
+
+    const selectedLeaveType = leaveSummaryTypeParam || 'ลาพักผ่อน';
 
     // Target Date (default: today UTC)
     let targetDate = new Date();
-    if (dateParam && !isNaN(Date.parse(dateParam))) {
+    if (dateParam) {
       targetDate = new Date(dateParam);
     }
     const targetDateStart = new Date(Date.UTC(targetDate.getUTCFullYear(), targetDate.getUTCMonth(), targetDate.getUTCDate(), 0, 0, 0, 0));
@@ -118,7 +139,7 @@ export async function handleGetCommandDashboard(req: Request) {
 
     // Target Year (default: targetDate's year)
     let targetYear = targetDate.getUTCFullYear();
-    if (yearParam && !isNaN(parseInt(yearParam, 10))) {
+    if (yearParam) {
       targetYear = parseInt(yearParam, 10);
     }
 
@@ -379,6 +400,15 @@ export async function handleGetCommandDashboard(req: Request) {
         policyQuota,
         allowedLeaveTypes,
         items: formattedSummaryItems,
+        totals: {
+          policyQuota,
+          totalPersonnel: totalSummaryPersonnel,
+          totalUsedApproved: formattedSummaryItems.reduce((acc, i) => acc + i.usedApprovedDays, 0),
+          totalPending: formattedSummaryItems.reduce((acc, i) => acc + i.pendingDays, 0),
+          utilizationRate: totalSummaryPersonnel > 0 && policyQuota > 0
+            ? parseFloat(((formattedSummaryItems.reduce((acc, i) => acc + i.usedApprovedDays, 0) / (totalSummaryPersonnel * policyQuota)) * 100).toFixed(1))
+            : 0,
+        },
         pagination: {
           page: leaveSummaryPage,
           limit: leaveSummaryLimit,

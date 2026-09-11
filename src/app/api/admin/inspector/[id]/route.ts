@@ -9,7 +9,7 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   const { id } = params;
@@ -49,7 +49,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   const { id } = params;

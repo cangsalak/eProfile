@@ -4,7 +4,7 @@ import { requireRole } from '@/lib/auth-guards';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   const url = new URL(req.url);

@@ -94,7 +94,6 @@ export async function runApiDocumentationTests() {
   assert.ok(endpoints.includes('/api/personnel/[id]'), 'Must include /api/personnel/[id]');
   assert.ok(endpoints.includes('/api/departments'), 'Must include /api/departments');
   assert.ok(endpoints.includes('/api/leaves'), 'Must include /api/leaves');
-  assert.ok(endpoints.includes('/api/vehicles'), 'Must include /api/vehicles');
   assert.ok(endpoints.includes('/api/roles'), 'Must include /api/roles');
   assert.ok(endpoints.includes('/api/settings'), 'Must include /api/settings');
   assert.ok(endpoints.includes('/api/backup'), 'Must include /api/backup');

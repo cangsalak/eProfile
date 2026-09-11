@@ -35,7 +35,7 @@ const createInspectionSchema = z.object({
 });
 
 export async function GET(req: Request) {
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   const { searchParams } = new URL(req.url);
@@ -82,7 +82,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
+  const auth = await requireRole(req, ['SUPER_ADMIN']);
   if (auth.error) return auth.error;
 
   try {

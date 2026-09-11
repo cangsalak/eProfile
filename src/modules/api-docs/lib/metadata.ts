@@ -201,33 +201,6 @@ export const API_CATALOGUE_METADATA: Record<string, Record<string, ApiDocMetadat
     },
   },
 
-  // Vehicles
-  '/api/vehicles': {
-    GET: {
-      category: 'Vehicles',
-      description: 'ดึงรายการคำขอใช้ยานพาหนะ',
-      purpose: 'แสดงสถานะการจองยานพาหนะของหน่วยงาน',
-    },
-    POST: {
-      category: 'Vehicles',
-      description: 'ยื่นคำขอใช้ยานพาหนะใหม่',
-      purpose: 'ส่งคำขอใช้รถยนต์ส่วนกลางสำหรับปฏิบัติภารกิจราชการ',
-    },
-  },
-  '/api/vehicles/[id]': {
-    PUT: {
-      category: 'Vehicles',
-      description: 'อนุมัติหรือแก้ไขคำขอใช้ยานพาหนะ',
-      purpose: 'อัปเดตสถานะการอนุมัติหรือจัดสรรยานพาหนะ',
-      pathParamDescriptions: { id: 'Vehicle Booking ID' },
-    },
-    DELETE: {
-      category: 'Vehicles',
-      description: 'ยกเลิกคำขอใช้ยานพาหนะ',
-      purpose: 'ยกเลิกรายการจองยานพาหนะ',
-      pathParamDescriptions: { id: 'Vehicle Booking ID' },
-    },
-  },
 
   // Roles & Permissions
   '/api/roles': {
