@@ -75,8 +75,8 @@ export async function fetchDynamicProjectRoutes(): Promise<ProjectRouteItem[]> {
   }
   return [
     { path: '/dashboard', name: 'หน้าหลัก (Dashboard)', category: 'Core' },
-    { path: '/modules/personnel/directory', name: 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' },
-    { path: '/modules/personnel/manage', name: 'จัดการบุคลากร (Personnel Management)', category: 'Personnel' },
+    { path: '/modules/users/directory', name: 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' },
+    { path: '/modules/users/manage', name: 'จัดการบุคลากร (Personnel Management)', category: 'Personnel' },
     { path: '/modules/leaves', name: 'ระบบการลา (Leave Management)', category: 'Personnel' },
     { path: '/modules/vehicles', name: 'ระบบยานพาหนะ (Vehicle Management)', category: 'Management' },
     { path: '/modules/badges', name: 'พิมพ์บัตรประจำตัว (Badge Studio)', category: 'Management' },

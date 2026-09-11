@@ -14,7 +14,7 @@ export interface MenuOverride {
   subItems?: { name: string; path: string; requiredPermission?: string }[];
 }
 
-import { PersonnelManifest } from '@/modules/personnel/manifest';
+import { UsersManifest, PersonnelManifest } from '@/modules/users/manifest';
 import { LeavesManifest } from '@/modules/leaves/manifest';
 
 import { BadgesManifest } from '@/modules/badges/manifest';
@@ -34,7 +34,7 @@ import { UploadManifest } from '@/modules/upload/manifest';
 
 export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   DashboardManifest,
-  PersonnelManifest,
+  UsersManifest,
   LeavesManifest,
 
   BadgesManifest,

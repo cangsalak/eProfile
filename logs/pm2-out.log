@@ -83,3 +83,1139 @@
 2026-09-11 15:59:10: 
 2026-09-11 15:59:10:  ✓ Starting...
 2026-09-11 15:59:10:  ✓ Ready in 175ms
+2026-09-11 16:12:58:   ▲ Next.js 14.2.5
+2026-09-11 16:12:58:   - Local:        http://localhost:3000
+2026-09-11 16:12:58: 
+2026-09-11 16:12:58:  ✓ Starting...
+2026-09-11 16:12:58:  ✓ Ready in 228ms
+2026-09-11 16:14:22:   ▲ Next.js 14.2.5
+2026-09-11 16:14:22:   - Local:        http://localhost:3000
+2026-09-11 16:14:22: 
+2026-09-11 16:14:22:  ✓ Starting...
+2026-09-11 16:14:22:  ✓ Ready in 163ms
+2026-09-11 16:14:36: prisma:error 
+Invalid `prisma.mediaFile.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: [
+      {
+        mimetype: "application/pdf"
+      },
+      {
+        filename: {
+          endsWith: ".pdf",
+          mode: "insensitive"
+        }
+      }
+    ]
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:36: prisma:error 
+Invalid `prisma.mediaFile.findMany()` invocation:
+
+{
+  where: {
+    OR: [
+      {
+        mimetype: "application/pdf"
+      },
+      {
+        filename: {
+          endsWith: ".pdf",
+          mode: "insensitive"
+        }
+      }
+    ]
+  },
+  orderBy: {
+    createdAt: "desc"
+  },
+  skip: 0,
+  take: 30,
+  include: {
+    uploadedBy: {
+      select: {
+        firstName: true,
+        lastName: true,
+        role: true
+      }
+    }
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:37: prisma:error 
+Invalid `prisma.mediaFile.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: [
+      {
+        mimetype: {
+          contains: "word"
+        }
+      },
+      {
+        mimetype: {
+          contains: "excel"
+        }
+      },
+      {
+        mimetype: {
+          contains: "spreadsheet"
+        }
+      },
+      {
+        mimetype: {
+          contains: "presentation"
+        }
+      },
+      {
+        mimetype: {
+          contains: "text/"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".docx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".xlsx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".pptx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".txt",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".csv",
+          mode: "insensitive"
+        }
+      }
+    ]
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:37: prisma:error 
+Invalid `prisma.mediaFile.findMany()` invocation:
+
+{
+  where: {
+    OR: [
+      {
+        mimetype: {
+          contains: "word"
+        }
+      },
+      {
+        mimetype: {
+          contains: "excel"
+        }
+      },
+      {
+        mimetype: {
+          contains: "spreadsheet"
+        }
+      },
+      {
+        mimetype: {
+          contains: "presentation"
+        }
+      },
+      {
+        mimetype: {
+          contains: "text/"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".docx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".xlsx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".pptx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".txt",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".csv",
+          mode: "insensitive"
+        }
+      }
+    ]
+  },
+  orderBy: {
+    createdAt: "desc"
+  },
+  skip: 0,
+  take: 30,
+  include: {
+    uploadedBy: {
+      select: {
+        firstName: true,
+        lastName: true,
+        role: true
+      }
+    }
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:43: prisma:error 
+Invalid `prisma.mediaFile.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: [
+      {
+        mimetype: {
+          contains: "word"
+        }
+      },
+      {
+        mimetype: {
+          contains: "excel"
+        }
+      },
+      {
+        mimetype: {
+          contains: "spreadsheet"
+        }
+      },
+      {
+        mimetype: {
+          contains: "presentation"
+        }
+      },
+      {
+        mimetype: {
+          contains: "text/"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".docx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".xlsx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".pptx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".txt",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".csv",
+          mode: "insensitive"
+        }
+      }
+    ]
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:43: prisma:error 
+Invalid `prisma.mediaFile.findMany()` invocation:
+
+{
+  where: {
+    OR: [
+      {
+        mimetype: {
+          contains: "word"
+        }
+      },
+      {
+        mimetype: {
+          contains: "excel"
+        }
+      },
+      {
+        mimetype: {
+          contains: "spreadsheet"
+        }
+      },
+      {
+        mimetype: {
+          contains: "presentation"
+        }
+      },
+      {
+        mimetype: {
+          contains: "text/"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".docx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".xlsx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".pptx",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".txt",
+          mode: "insensitive"
+        }
+      },
+      {
+        filename: {
+          endsWith: ".csv",
+          mode: "insensitive"
+        }
+      }
+    ]
+  },
+  orderBy: {
+    createdAt: "desc"
+  },
+  skip: 0,
+  take: 30,
+  include: {
+    uploadedBy: {
+      select: {
+        firstName: true,
+        lastName: true,
+        role: true
+      }
+    }
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:44: prisma:error 
+Invalid `prisma.mediaFile.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: [
+      {
+        mimetype: "application/pdf"
+      },
+      {
+        filename: {
+          endsWith: ".pdf",
+          mode: "insensitive"
+        }
+      }
+    ]
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:14:44: prisma:error 
+Invalid `prisma.mediaFile.findMany()` invocation:
+
+{
+  where: {
+    OR: [
+      {
+        mimetype: "application/pdf"
+      },
+      {
+        filename: {
+          endsWith: ".pdf",
+          mode: "insensitive"
+        }
+      }
+    ]
+  },
+  orderBy: {
+    createdAt: "desc"
+  },
+  skip: 0,
+  take: 30,
+  include: {
+    uploadedBy: {
+      select: {
+        firstName: true,
+        lastName: true,
+        role: true
+      }
+    }
+  }
+}
+
+Unknown argument `mode`. Did you mean `lte`? Available options are marked with ?.
+2026-09-11 16:15:31:   ▲ Next.js 14.2.5
+2026-09-11 16:15:31:   - Local:        http://localhost:3000
+2026-09-11 16:15:31: 
+2026-09-11 16:15:31:  ✓ Starting...
+2026-09-11 16:15:31:  ✓ Ready in 176ms
+2026-09-11 16:15:41: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:16:51: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:18:12: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:19:18:   ▲ Next.js 14.2.5
+2026-09-11 16:19:18:   - Local:        http://localhost:3000
+2026-09-11 16:19:18: 
+2026-09-11 16:19:18:  ✓ Starting...
+2026-09-11 16:19:18:  ✓ Ready in 178ms
+2026-09-11 16:19:28: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:19:28: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "2012637948",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$KGvXwqAPP3Mx0wxeqQ/Q5uHVNlnLJoEa8Zu3Mycx51X6UQOXA9j/6",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:19:28: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "7345541585",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$SCGZERFad8z9yzChaI092.7em0qGPNe1a3iiZLCmHYNA/pYUIBWfi",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:20:22:   ▲ Next.js 14.2.5
+2026-09-11 16:20:22:   - Local:        http://localhost:3000
+2026-09-11 16:20:22: 
+2026-09-11 16:20:22:  ✓ Starting...
+2026-09-11 16:20:22:  ✓ Ready in 175ms
+2026-09-11 16:20:31: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:20:32: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "1991699626",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$4VdMCrfHi7QxwPG.zouhpe4j65JImKnJTS.sLcZyb4CtPp2pR2noW",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:20:32: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "7515230351",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$FkgklGafRIiRv.HPXpUUFe9Nl25mIvI/LDabmjXkMz1C7Cqgicb.i",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:21:37:   ▲ Next.js 14.2.5
+2026-09-11 16:21:37:   - Local:        http://localhost:3000
+2026-09-11 16:21:37: 
+2026-09-11 16:21:37:  ✓ Starting...
+2026-09-11 16:21:37:  ✓ Ready in 182ms
+2026-09-11 16:21:47: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:21:47: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "8495408425",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$nKP53eMSUvUyZxc5STJx9uvJu3EhUWUBLCQ9g//IXwYd7g.YJBG5.",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:21:48: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "1695741666",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$WFdzAPeVndcsBOXSqNW/rut58hGKAnmjKAopchUMChM1Wf/1uxD1i",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:22:54:   ▲ Next.js 14.2.5
+2026-09-11 16:22:54:   - Local:        http://localhost:3000
+2026-09-11 16:22:54: 
+2026-09-11 16:22:54:  ✓ Starting...
+2026-09-11 16:22:55:  ✓ Ready in 177ms
+2026-09-11 16:23:04: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:23:05: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "7832935609",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$6S77UmDRffbI0QjwVrqEU.Yx/OduAliSA/9DomL1ZIPorK7MzBVZK",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:23:05: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "5186158308",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$WmBLrzijiSa9kogjtXT1J.Wta7b647bcN5tx8az1KcpUu3rQvRWNK",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:24:16:   ▲ Next.js 14.2.5
+2026-09-11 16:24:16:   - Local:        http://localhost:3000
+2026-09-11 16:24:16: 
+2026-09-11 16:24:16:  ✓ Starting...
+2026-09-11 16:24:16:  ✓ Ready in 176ms
+2026-09-11 16:24:26: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:24:26: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "6661106477",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$L2UaQi/51VG7ic7UKM1NROuygykY3sewE0a2/lAH0QFdDp5tXGfni",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:24:26: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "7274208138",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$yOotD6vr1RZeWEE99laYT.URiGr9KCAof6j7EaRm5jN2yt8.xpq5C",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:24:27: prisma:error 
+Invalid `prisma.auditLog.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:25:18:   ▲ Next.js 14.2.5
+2026-09-11 16:25:18:   - Local:        http://localhost:3000
+2026-09-11 16:25:18: 
+2026-09-11 16:25:18:  ✓ Starting...
+2026-09-11 16:25:18:  ✓ Ready in 191ms
+2026-09-11 16:25:46: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:25:46: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "6557214275",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$Zk3IU4vGs5xJjgmH3sbNDu4clXboOJBOZtNW7DxzSpk3oEPv9n95q",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:25:46: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "2784444437",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$p9TxcQVBa5SBtPDv9qqiAOOOAiJpH4GwsljTprYU31WoLv9iBV5iS",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:25:47: prisma:error 
+Invalid `prisma.auditLog.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:26:51:   ▲ Next.js 14.2.5
+2026-09-11 16:26:51:   - Local:        http://localhost:3000
+2026-09-11 16:26:51: 
+2026-09-11 16:26:51:  ✓ Starting...
+2026-09-11 16:26:51:  ✓ Ready in 185ms
+2026-09-11 16:27:01: prisma:error 
+Invalid `prisma.notification.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:27:02: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "9356709200",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$/HxAAVL.jYTiiBg/LA92cORNnNv/PoDdJk76zXTT4D0ns5DlKXzYe",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:27:02: prisma:error 
+Invalid `prisma.personnel.create()` invocation:
+
+{
+  data: {
+    badgeNo: "4815421116",
+    citizenId: "1234567890123",
+    username: "1234567890123",
+    password: "$2a$10$pyPa5go/R1eqJ9IOx8dBUui4XskspTHeiuAD.816/GXCZDeTv2Fzq",
+    role: "OFFICER",
+    prefix: "นาย",
+    firstName: "Test",
+    lastName: "User",
+    department: "กองเทคโนโลยีสารสนเทศ",
+    subDepartment: "แผนกบริหารทั่วไป",
+    personnelType: "นายทหารสัญญาบัตร",
+    phone: "02-555-1234",
+    mobile: "080-000-0000",
+    email: "user@rta.mi.th",
+    status: "ปฏิบัติงานปกติ",
+    avatarColor: "#3b82f6",
+    skills: "[]",
+    education: "",
+    experience: "",
+    notes: "",
+    dateOfBirth: "",
+    bloodType: "",
+    religion: "",
+    officialId: "",
+    militaryBranch: "",
+    commissionDate: "",
+    currentAddress: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+    emergencyContactRelation: "",
+    royalDecorations: "",
+    trainingHistory: "",
++   position: String
+  }
+}
+
+Argument `position` is missing.
+2026-09-11 16:27:02: prisma:error 
+Invalid `prisma.auditLog.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+2026-09-11 16:27:03: prisma:error 
+Invalid `prisma.auditLog.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`

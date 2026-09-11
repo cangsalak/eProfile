@@ -38,8 +38,12 @@ function toCleanUrl(path: string): string {
   if (path.startsWith('/modules/system-inspector')) {
     return path.replace('/modules/system-inspector', '/inspector');
   }
-  if (path === '/modules/personnel' || path === '/modules/personnel/directory') {
+  if (path === '/modules/users' || path === '/modules/users/directory' ||
+      path === '/modules/personnel' || path === '/modules/personnel/directory') {
     return '/personnel';
+  }
+  if (path.startsWith('/modules/users/')) {
+    return path.replace('/modules/users/', '/personnel/');
   }
   if (path.startsWith('/modules/personnel/')) {
     return path.replace('/modules/personnel/', '/personnel/');

@@ -233,7 +233,7 @@ export default function DashboardView() {
                 สัดส่วนจำนวนกำลังพลในแต่ละแผนก / ฝ่าย
               </p>
             </div>
-            <Link href="/modules/personnel">
+            <Link href="/modules/users">
               <Button variant="outline" size="sm" icon="fa-solid fa-arrow-right">
                 ดูทั้งหมด
               </Button>
@@ -279,7 +279,7 @@ export default function DashboardView() {
 
           <div className="grid grid-cols-1 gap-2.5">
             <Link
-              href="/modules/personnel"
+              href="/modules/users"
               className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 hover:border-primary-400 transition-colors group"
             >
               <div className="flex items-center gap-3">

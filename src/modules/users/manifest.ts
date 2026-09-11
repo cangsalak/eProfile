@@ -1,9 +1,9 @@
 import { ModuleManifest } from '@/lib/modules/types';
 
-export const PersonnelManifest: ModuleManifest = {
-  id: 'personnel',
+export const UsersManifest: ModuleManifest = {
+  id: 'users',
   name: 'ระบบจัดการบุคลากร',
-  nameEn: 'Personnel Management',
+  nameEn: 'Users Management',
   description: 'ระบบฐานข้อมูลและประวัติบุคลากร (Core Module)',
   version: '1.0.0',
   author: 'System',
@@ -11,24 +11,24 @@ export const PersonnelManifest: ModuleManifest = {
   category: 'core',
   isCore: true,
   defaultEnabled: true,
-  settingsPath: '/modules/personnel/roles',
+  settingsPath: '/modules/users/roles',
   menus: [
     {
       id: 'directory',
       title: 'ทำเนียบบุคลากร (Directory)',
       icon: 'fa-solid fa-address-book',
-      path: '/modules/personnel/directory',
+      path: '/modules/users/directory',
       order: 30
     },
     {
       id: 'manage-personnel',
       title: 'จัดการบุคลากร',
       icon: 'fa-solid fa-users-gear',
-      path: '/modules/personnel/manage',
+      path: '/modules/users/manage',
       requiredPermission: 'MANAGE_PERSONNEL',
       order: 70,
       subItems: [
-        { name: 'ข้อมูลกำลังพล', path: '/modules/personnel/manage' },
+        { name: 'ข้อมูลกำลังพล', path: '/modules/users/manage' },
         { name: 'พิมพ์บัตรประจำตัว', path: '/modules/badges' },
       ]
     }
@@ -41,10 +41,20 @@ export const PersonnelManifest: ModuleManifest = {
     }
   ],
   legacyRoutes: {
-    '/dashboard': '/modules/personnel',
-    '/directory': '/modules/personnel/directory',
-    '/profile': '/modules/personnel/profile',
-    '/manage/personnel': '/modules/personnel/manage',
-    '/manage/roles': '/modules/personnel/roles',
+    '/dashboard': '/modules/users',
+    '/directory': '/modules/users/directory',
+    '/profile': '/modules/users/profile',
+    '/manage/personnel': '/modules/users/manage',
+    '/manage/roles': '/modules/users/roles',
+    // Backward compat: old /modules/personnel/* → /modules/users/*
+    '/modules/personnel': '/modules/users',
+    '/modules/personnel/directory': '/modules/users/directory',
+    '/modules/personnel/profile': '/modules/users/profile',
+    '/modules/personnel/manage': '/modules/users/manage',
+    '/modules/personnel/roles': '/modules/users/roles',
+    '/modules/personnel/departments': '/modules/users/departments',
   }
 };
+
+// Backward compat alias
+export const PersonnelManifest = UsersManifest;

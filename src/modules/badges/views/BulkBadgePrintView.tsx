@@ -139,7 +139,7 @@ export default function BulkBadgePrintView() {
               subtitle="เลือกรายชื่อกำลังพลที่ต้องการสั่งพิมพ์ หรือเลือกทั้งหมดเพื่อพิมพ์เป็นชุด"
               icon="fa-solid fa-id-card"
               action={
-                <Link href="/modules/personnel">
+                <Link href="/modules/users">
                   <Button
                     variant="outline"
                     size="xs"

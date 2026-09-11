@@ -93,9 +93,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // 1. If user is authenticated and tries to visit auth pages (/login, /register), redirect to /modules/personnel
+  // 1. If user is authenticated and tries to visit auth pages (/login, /register), redirect to /modules/users
   if (isAuthenticated && (pathname === '/login' || pathname === '/register')) {
-    return NextResponse.redirect(new URL('/modules/personnel', request.url));
+    return NextResponse.redirect(new URL('/modules/users', request.url));
   }
 
   // 2. For protected member page routes, require authentication

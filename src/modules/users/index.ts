@@ -1,5 +1,5 @@
 import { ModuleDefinition } from '@/lib/modules/types';
-import { PersonnelManifest } from './manifest';
+import { UsersManifest } from './manifest';
 import MainDashboardView from './views/MainDashboardView';
 import ManagePersonnelView from './views/ManagePersonnelView';
 import DirectoryView from './views/DirectoryView';
@@ -16,8 +16,8 @@ export { default as MainDashboardView } from './views/MainDashboardView';
 export { default as DepartmentsSettingsView } from './views/DepartmentsSettingsView';
 export { default as DepartmentsManager } from './settings/DepartmentsManager';
 
-export const PersonnelModule: ModuleDefinition = {
-  manifest: PersonnelManifest,
+export const UsersModule: ModuleDefinition = {
+  manifest: UsersManifest,
   views: {
     '': MainDashboardView,
     'manage': ManagePersonnelView,
@@ -27,3 +27,6 @@ export const PersonnelModule: ModuleDefinition = {
     'departments': DepartmentsSettingsView,
   },
 };
+
+// Backward compat alias
+export const PersonnelModule = UsersModule;

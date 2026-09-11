@@ -1,6 +1,6 @@
 import { ModuleDefinition } from './types';
 
-import { PersonnelModule } from '@/modules/personnel';
+import { UsersModule, PersonnelModule } from '@/modules/users';
 import { LeavesModule } from '@/modules/leaves';
 
 import { BadgesModule } from '@/modules/badges';
@@ -21,7 +21,8 @@ import { UploadModule } from '@/modules/upload';
 export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'dashboard': DashboardModule,
   'command-dashboard': DashboardModule,
-  'personnel': PersonnelModule,
+  'personnel': UsersModule,
+  'users': UsersModule,
   'leaves': LeavesModule,
 
   'badges': BadgesModule,
