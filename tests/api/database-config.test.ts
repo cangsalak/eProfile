@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { buildConnectionUrl, testDatabaseConnection } from '../../src/lib/db-test';
+import { buildConnectionUrl, testDatabaseConnection } from '../../src/modules/install/lib/db-test';
 import { POST as testDbHandler } from '../../src/app/api/install/test-db/route';
 import { POST as installHandler } from '../../src/app/api/install/route';
 

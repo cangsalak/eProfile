@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Plus, Check, Calendar, Download, RefreshCw, Layers, Radio } from 'lucide-react';
+import { Plus, Check, Download, RefreshCw, Layers, Radio } from 'lucide-react';
 import { MiniCalendar } from './MiniCalendar';
 import { CalendarFilterState, CALENDAR_CATEGORY_CONFIG } from '../types';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 
 interface CalendarSidebarProps {
   currentDate: Date;
@@ -38,18 +40,18 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
   ];
 
   return (
-    <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-5">
-      {/* ── Prominent Google Calendar Create Button ── */}
-      <button
+    <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-5 font-prompt">
+      {/* ── Prominent Create Button ── */}
+      <Button
         type="button"
+        variant="primary"
+        size="lg"
         onClick={onCreateEvent}
-        className="flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-md hover:shadow-lg hover:border-primary-400 dark:hover:border-primary-600 transition-all group font-semibold text-sm w-full sm:w-auto lg:w-full justify-center sm:justify-start"
+        icon="fa-solid fa-plus"
+        className="w-full justify-center shadow-md hover:shadow-lg py-3.5 rounded-2xl text-sm font-bold"
       >
-        <div className="w-8 h-8 rounded-full bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
-          <Plus className="w-5 h-5" />
-        </div>
-        <span>สร้างกิจกรรม / ลงเวร</span>
-      </button>
+        สร้างกิจกรรม / ลงเวร
+      </Button>
 
       {/* ── Mini Interactive Datepicker Calendar ── */}
       <div className="hidden sm:block">
@@ -61,11 +63,11 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
       </div>
 
       {/* ── My Calendars / Category Filters ── */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-xs space-y-3">
+      <Card className="p-4 space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-primary-500" />
-            <span>ปฏิทินของฉัน</span>
+            <span>หมวดหมู่ปฏิทิน</span>
           </h3>
           {onSyncGoogle && (
             <button
@@ -89,7 +91,7 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             return (
               <label
                 key={key}
-                className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors select-none text-xs font-medium text-slate-700 dark:text-slate-300"
+                className="flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors select-none text-xs font-medium text-slate-700 dark:text-slate-300"
               >
                 <div
                   onClick={() => onToggleFilter(key)}
@@ -106,30 +108,34 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             );
           })}
         </div>
-      </div>
+      </Card>
 
       {/* ── Export / Sync Options ── */}
       <div className="space-y-2">
         {onSubscribeFeed && (
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={onSubscribeFeed}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-950/40 hover:bg-primary-100 dark:hover:bg-primary-900/60 rounded-xl border border-primary-200 dark:border-primary-800 transition-colors shadow-2xs"
+            icon="fa-solid fa-rss"
+            className="w-full justify-center text-primary-600 dark:text-primary-400 border-primary-200 dark:border-primary-800/60 bg-primary-50/50 dark:bg-primary-950/30 hover:bg-primary-100"
           >
-            <Radio className="w-3.5 h-3.5 text-primary-500 animate-pulse" />
-            <span>สมัครรับปฏิทินสด (Live Sync)</span>
-          </button>
+            สมัครรับปฏิทินสด (Live Sync)
+          </Button>
         )}
 
         {onExportIcal && (
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={onExportIcal}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-800 transition-colors"
+            icon="fa-solid fa-download"
+            className="w-full justify-center"
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>ส่งออกไฟล์ iCal (.ics)</span>
-          </button>
+            ส่งออกไฟล์ iCal (.ics)
+          </Button>
         )}
       </div>
     </aside>

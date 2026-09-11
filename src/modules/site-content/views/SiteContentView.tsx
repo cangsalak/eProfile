@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 
 interface ServiceItem {
   id: string;
@@ -366,108 +367,73 @@ export default function SiteContentView() {
 
   return (
     <div className="space-y-6 animate-fade-in pb-16 font-prompt">
-      {/* Header Banner */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400">
-              <i className="fa-solid fa-window-maximize" />
-            </span>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">จัดการเนื้อหาหน้าเว็บ</h1>
-          </div>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            ปรับแต่งข้อความ หัวข้อ และองค์ประกอบต่างๆ ของหน้าแรก เกี่ยวกับเรา ติดต่อเรา และบริการ
-          </p>
-        </div>
-
-        {/* Quick links to live pages */}
+      {/* Sub-menu Tabs & Live View Link mounted in Theme Header (Yellow Box) */}
+      <PageHeaderExtra>
         <div className="flex flex-wrap items-center gap-2">
+          {/* Module Sub-menu Tabs */}
+          <div className="flex items-center gap-1 p-1 bg-slate-100/90 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
+            <button
+              type="button"
+              onClick={() => setActiveTab('home')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                activeTab === 'home'
+                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-xs border border-slate-200/80 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 border border-transparent'
+              }`}
+            >
+              <i className="fa-solid fa-house text-[11px]" />
+              <span>หน้าแรก (Home)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('about')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                activeTab === 'about'
+                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-xs border border-slate-200/80 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 border border-transparent'
+              }`}
+            >
+              <i className="fa-solid fa-building text-[11px]" />
+              <span>เกี่ยวกับเรา (About)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('services')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                activeTab === 'services'
+                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-xs border border-slate-200/80 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 border border-transparent'
+              }`}
+            >
+              <i className="fa-solid fa-layer-group text-[11px]" />
+              <span>บริการ (Services)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('contact')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                activeTab === 'contact'
+                  ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-xs border border-slate-200/80 dark:border-slate-700'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-700/50 border border-transparent'
+              }`}
+            >
+              <i className="fa-solid fa-phone text-[11px]" />
+              <span>ติดต่อเรา (Contact)</span>
+            </button>
+          </div>
+
+          {/* Quick link to live public website */}
           <Link
-            href="/"
+            href={activeTab === 'home' ? '/' : `/${activeTab}`}
             target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-xs transition"
+            title="เปิดดูหน้าเว็บไซต์จริง"
           >
-            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
-            <span>หน้าแรก</span>
-          </Link>
-          <Link
-            href="/about"
-            target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
-          >
-            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
-            <span>เกี่ยวกับเรา</span>
-          </Link>
-          <Link
-            href="/services"
-            target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
-          >
-            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
-            <span>บริการ</span>
-          </Link>
-          <Link
-            href="/contact"
-            target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
-          >
-            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
-            <span>ติดต่อเรา</span>
+            <i className="fa-solid fa-arrow-up-right-from-square text-[10px] text-primary-500" />
+            <span>ดูหน้าเว็บจริง</span>
           </Link>
         </div>
-      </div>
-
-      {/* Tabs Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2 overflow-x-auto scrollbar-none">
-        <button
-          type="button"
-          onClick={() => setActiveTab('home')}
-          className={`flex items-center gap-2 px-4 sm:px-5 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition ${
-            activeTab === 'home'
-              ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          <i className="fa-solid fa-house" />
-          <span>หน้าแรก (Home)</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('about')}
-          className={`flex items-center gap-2 px-4 sm:px-5 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition ${
-            activeTab === 'about'
-              ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          <i className="fa-solid fa-building" />
-          <span>เกี่ยวกับเรา (About)</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('services')}
-          className={`flex items-center gap-2 px-4 sm:px-5 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition ${
-            activeTab === 'services'
-              ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          <i className="fa-solid fa-layer-group" />
-          <span>บริการ (Services)</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('contact')}
-          className={`flex items-center gap-2 px-4 sm:px-5 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition ${
-            activeTab === 'contact'
-              ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
-          }`}
-        >
-          <i className="fa-solid fa-phone" />
-          <span>ติดต่อเรา (Contact)</span>
-        </button>
-      </div>
+      </PageHeaderExtra>
 
       {/* Main Form */}
       <form onSubmit={handleSave} className="space-y-6">

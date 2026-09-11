@@ -14,6 +14,7 @@ export const CalendarModule: ModuleDefinition = {
   manifest: CalendarManifest,
   views: {
     '': DutyCalendarView,
+    'duty': DutyCalendarView,
     'settings': CalendarSettingsView,
   },
 };

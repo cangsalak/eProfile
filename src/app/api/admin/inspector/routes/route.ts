@@ -5,8 +5,8 @@ import { scanProjectPageRoutes } from '@/lib/inspector/route-scanner';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
-  // STRICT RULE: Only SUPER_ADMIN can discover system routes for diagnostic inspection
-  const auth = await requireRole(req, ['SUPER_ADMIN']);
+  // Allow SUPER_ADMIN and ADMIN to discover system routes for diagnostic inspection
+  const auth = await requireRole(req, ['SUPER_ADMIN', 'ADMIN']);
   if (auth.error) return auth.error;
 
   try {

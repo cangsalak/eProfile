@@ -26,24 +26,76 @@ export default function InstallPage() {
   // System & Admin Form
   const [formData, setFormData] = useState({
     systemName: 'ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)',
-    organizationName: 'ศูนย์ฝึกทางยุทธวิธีกองทัพบก',
-    organizationAddress: 'ศูนย์ฝึกทางยุทธวิธีกองทัพบก บ้านเลขที่ 153 หมู่ 3 ต.ชัยนารายณ์ อ.ชัยบาดาล จ.ลพบุรี 15130',
-    organizationPhone: '036791444',
-    contactPhoneSecondary: '036791455 (ฝ่ายบริการ/สอบถาม)',
-    contactEmail: 'attc.atc@gmail.com',
-    contactEmailSupport: 'cangsalak@gmail.com',
-    contactMapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.7142718131343!2d100.56209507567849!3d13.886121595166432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e28329ab59218d%3A0xc6cba4b4260dfa02!2sGovernment%20Complex!5e0!3m2!1sen!2sth!4v1709210214327!5m2!1sen!2sth',
-    contactMapLink: 'https://maps.google.com/?q=Government+Complex+Chaeng+Watthana',
+    organizationName: '',
+    organizationAddress: '',
+    organizationPhone: '',
+    contactPhoneSecondary: '',
+    contactEmail: '',
+    contactEmailSupport: '',
+    contactMapEmbedUrl: '',
+    contactMapLink: '',
+    initialDepartments: 'กองบังคับการ, ฝ่ายอำนวยการ',
     theme: 'dark',
-    installDemoData: true,
-    firstName: 'เยาวรัตน์',
-    lastName: 'ช่างสลัก',
+    installDemoData: false,
+    prefix: 'นาย',
+    firstName: '',
+    lastName: '',
+    position: 'ผู้ดูแลระบบสูงสุด',
+    department: 'กองบังคับการ',
     citizenId: '',
-    badgeNo: '1111111111',
+    badgeNo: '',
     password: '',
     confirmPassword: '',
-    setupSecret: '[PASSWORD]',
+    setupSecret: '',
   });
+
+  const loadSampleData = () => {
+    setFormData((prev) => ({
+      ...prev,
+      installDemoData: true,
+      systemName: 'ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)',
+      organizationName: 'ศูนย์ฝึกทางยุทธวิธีกองทัพบก',
+      organizationAddress: 'ศูนย์ฝึกทางยุทธวิธีกองทัพบก บ้านเลขที่ 153 หมู่ 3 ต.ชัยนารายณ์ อ.ชัยบาดาล จ.ลพบุรี 15130',
+      organizationPhone: '036791444',
+      contactPhoneSecondary: '036791455 (ฝ่ายบริการ/สอบถาม)',
+      contactEmail: 'attc.atc@gmail.com',
+      contactEmailSupport: 'cangsalak@gmail.com',
+      contactMapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3873.7142718131343!2d100.56209507567849!3d13.886121595166432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e28329ab59218d%3A0xc6cba4b4260dfa02!2sGovernment%20Complex!5e0!3m2!1sen!2sth!4v1709210214327!5m2!1sen!2sth',
+      contactMapLink: 'https://maps.google.com/?q=Government+Complex+Chaeng+Watthana',
+      initialDepartments: 'กองบังคับการ, แผนกยุทธการและการข่าว, แผนกส่งกำลังบำรุง, แผนกธุรการและกำลังพล',
+      prefix: 'นาย',
+      firstName: 'เยาวรัตน์',
+      lastName: 'ช่างสลัก',
+      position: 'ผู้บังคับการ / ผู้ดูแลระบบสูงสุด',
+      department: 'กองบังคับการ',
+      badgeNo: '1111111111',
+    }));
+    toast.success('โหลดชุดข้อมูลตัวอย่างเรียบร้อยแล้ว');
+  };
+
+  const clearToCleanMode = () => {
+    setFormData((prev) => ({
+      ...prev,
+      installDemoData: false,
+      systemName: 'ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)',
+      organizationName: '',
+      organizationAddress: '',
+      organizationPhone: '',
+      contactPhoneSecondary: '',
+      contactEmail: '',
+      contactEmailSupport: '',
+      contactMapEmbedUrl: '',
+      contactMapLink: '',
+      initialDepartments: 'กองบังคับการ, ฝ่ายอำนวยการ',
+      prefix: 'นาย',
+      firstName: '',
+      lastName: '',
+      position: 'ผู้ดูแลระบบสูงสุด',
+      department: 'กองบังคับการ',
+      badgeNo: '',
+    }));
+    toast('เปลี่ยนเป็นโหมดติดตั้งระบบเปล่า (กรอกข้อมูลจริง)', { icon: '🏢' });
+  };
 
   const handleDbProviderChange = (provider: DbProvider) => {
     let port = 5432;
@@ -125,6 +177,10 @@ export default function InstallPage() {
     } else if (step === 2) {
       if (!formData.systemName.trim()) {
         toast.error('กรุณาระบุชื่อระบบ');
+        return;
+      }
+      if (!formData.organizationName.trim()) {
+        toast.error('กรุณาระบุชื่อหน่วยงาน / สังกัด');
         return;
       }
       setStep(3);
@@ -451,219 +507,308 @@ export default function InstallPage() {
             </div>
           )}
 
-          {/* ================= STEP 2: SYSTEM INFORMATION ================= */}
+          {/* ================= STEP 2: INSTALLATION MODE & SYSTEM INFORMATION ================= */}
           {step === 2 && (
-            <div className="space-y-4 animate-fade-in">
+            <div className="space-y-5 animate-fade-in">
               <div className="border-b border-slate-200 dark:border-slate-800 pb-2">
                 <h2 className="font-semibold text-lg text-slate-900 dark:text-white flex items-center gap-2">
                   <i className="fa-solid fa-sliders text-blue-500 text-base"></i>
-                  กำหนดข้อมูลและชื่อระบบ
+                  เลือกรูปแบบการติดตั้งและตั้งค่าองค์กร
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  ระบุชื่อระบบและธีมการแสดงผลเริ่มต้น
+                  เลือกว่าต้องการติดตั้งฐานข้อมูลเปล่าพร้อมใช้งานจริง หรือติดตั้งพร้อมชุดข้อมูลตัวอย่างสำหรับทดสอบ
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                    ชื่อระบบ (System Name) <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="systemName"
-                    value={formData.systemName}
-                    onChange={handleChange}
-                    required
-                    placeholder="เช่น ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์"
-                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                    ชื่อหน่วยงาน (Organization Name)
-                  </label>
-                  <input
-                    type="text"
-                    name="organizationName"
-                    value={formData.organizationName}
-                    onChange={handleChange}
-                    placeholder="เช่น กองบัญชาการกองทัพไทย"
-                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              {/* ─── Contact Information Section (ข้อมูลการติดต่อเรา) ─── */}
-              <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-800/40 space-y-3">
-                <div className="flex items-center gap-2 text-slate-800 dark:text-white font-bold text-xs pb-1 border-b border-slate-200 dark:border-slate-700/60">
-                  <i className="fa-solid fa-address-book text-blue-500 text-sm"></i>
-                  <span>ข้อมูลการติดต่อเรา (Contact Information)</span>
-                </div>
-
-                <div>
-                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                    ที่อยู่สำนักงาน / หน่วยงาน (Office Address)
-                  </label>
-                  <textarea
-                    name="organizationAddress"
-                    rows={2}
-                    value={formData.organizationAddress}
-                    onChange={handleChange}
-                    placeholder="ระบุที่อยู่สำนักงาน..."
-                    className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white resize-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                      เบอร์โทรศัพท์หลัก (Main Phone)
-                    </label>
-                    <input
-                      type="text"
-                      name="organizationPhone"
-                      value={formData.organizationPhone}
-                      onChange={handleChange}
-                      placeholder="เช่น 02-123-4567"
-                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                      เบอร์โทรศัพท์สายตรง / แผนก (Secondary Phone)
-                    </label>
-                    <input
-                      type="text"
-                      name="contactPhoneSecondary"
-                      value={formData.contactPhoneSecondary}
-                      onChange={handleChange}
-                      placeholder="เช่น 02-123-4568 (ฝ่ายบริการ)"
-                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                      อีเมลหลัก (Contact Email)
-                    </label>
-                    <input
-                      type="email"
-                      name="contactEmail"
-                      value={formData.contactEmail}
-                      onChange={handleChange}
-                      placeholder="เช่น contact@eprofile.com"
-                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                      อีเมลฝ่ายช่วยเหลือ/บริการ (Support Email)
-                    </label>
-                    <input
-                      type="email"
-                      name="contactEmailSupport"
-                      value={formData.contactEmailSupport}
-                      onChange={handleChange}
-                      placeholder="เช่น support@eprofile.com"
-                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                    Google Maps Embed URL (ลิงก์แผนที่แบบฝังสำหรับแสดงบนหน้าเว็บ)
-                  </label>
-                  <input
-                    type="url"
-                    name="contactMapEmbedUrl"
-                    value={formData.contactMapEmbedUrl}
-                    onChange={handleChange}
-                    placeholder="https://www.google.com/maps/embed?pb=..."
-                    className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
-                  ธีมเริ่มต้น (Default Theme)
+              {/* ─── Installation Mode Selection Cards ─── */}
+              <div className="space-y-2">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                  รูปแบบการติดตั้ง (Installation Mode) <span className="text-rose-500">*</span>
                 </label>
-                <select
-                  name="theme"
-                  value={formData.theme}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                >
-                  <option value="dark">Dark Theme (โหมดมืด - แนะนำ)</option>
-                  <option value="light">Light Theme (โหมดสว่าง)</option>
-                </select>
-              </div>
-
-              {/* Demo / Sample Data Toggle Card */}
-              <div className={`p-4 rounded-2xl border-2 transition-all ${formData.installDemoData
-                ? 'border-blue-500 bg-blue-500/10 shadow-md ring-2 ring-blue-500/20'
-                : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50'
-                }`}>
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={formData.installDemoData}
-                    onChange={(e) => setFormData(prev => ({ ...prev, installDemoData: e.target.checked }))}
-                    className="w-5 h-5 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-slate-900 dark:text-white">
-                        ติดตั้งข้อมูลตัวอย่างสำหรับทดสอบระบบ (Demo / Sample Data)
-                      </span>
-                      <span className="px-2 py-0.5 bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-bold border border-blue-500/30">
-                        แนะนำสำหรับการทดสอบ
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                      สร้างชุดข้อมูลจำลองครบวงจรเพื่อให้สามารถทดลองใช้งานฟังก์ชันทั้งหมดของระบบได้ทันทีหลังติดตั้ง
-                    </p>
-
-                    {formData.installDemoData && (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-blue-500/20 text-[11px] text-slate-700 dark:text-slate-300">
-                        <div className="flex items-center gap-1.5">
-                          <i className="fa-solid fa-users text-blue-500 text-xs"></i>
-                          <span>10 กำลังพลครบ 5 ประเภท</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Option 1: Clean / Production Setup */}
+                  <div
+                    onClick={clearToCleanMode}
+                    className={`cursor-pointer p-4 rounded-2xl border-2 transition-all flex flex-col justify-between ${!formData.installDemoData
+                        ? 'border-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/30 ring-2 ring-emerald-500/20 shadow-md'
+                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
+                      }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">
+                          <i className="fa-solid fa-building-shield"></i>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <i className="fa-solid fa-sitemap text-blue-500 text-xs"></i>
-                          <span>4 ฝ่าย 8 แผนกโครงสร้าง</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <i className="fa-solid fa-calendar-check text-blue-500 text-xs"></i>
-                          <span>ประวัติการลา 3 สถานะ</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <i className="fa-solid fa-car text-blue-500 text-xs"></i>
-                          <span>ยานพาหนะส่วนตัวและราชการ</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <i className="fa-solid fa-bullhorn text-blue-500 text-xs"></i>
-                          <span>ข่าวสารและประกาศตัวอย่าง</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <i className="fa-solid fa-calendar-days text-blue-500 text-xs"></i>
-                          <span>กิจกรรมและตารางฝึกอบรม</span>
-                        </div>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                          แนะนำสำหรับการใช้งานจริง
+                        </span>
                       </div>
-                    )}
+                      <div className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="installMode"
+                          checked={!formData.installDemoData}
+                          onChange={clearToCleanMode}
+                          className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                        />
+                        <span>ติดตั้งระบบเปล่า (ไม่ลงข้อมูลตัวอย่าง)</span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                        ฐานข้อมูลว่าง สะอาด ปราศจากข้อมูลจำลอง ให้ท่านกรอกข้อมูลหน่วยงานและเริ่มต้นใช้งานจริง
+                      </p>
+                    </div>
                   </div>
-                </label>
+
+                  {/* Option 2: Demo / Sample Data Setup */}
+                  <div
+                    onClick={loadSampleData}
+                    className={`cursor-pointer p-4 rounded-2xl border-2 transition-all flex flex-col justify-between ${formData.installDemoData
+                        ? 'border-blue-500 bg-blue-500/10 dark:bg-blue-950/30 ring-2 ring-blue-500/20 shadow-md'
+                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
+                      }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
+                          <i className="fa-solid fa-flask-vial"></i>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30">
+                          สำหรับการทดสอบระบบ
+                        </span>
+                      </div>
+                      <div className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="installMode"
+                          checked={formData.installDemoData}
+                          onChange={loadSampleData}
+                          className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span>ติดตั้งพร้อมชุดข้อมูลตัวอย่าง (Demo Data)</span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                        สร้างชุดข้อมูลจำลองครบวงจร (10 กำลังพล 5 ประเภท, 4 ฝ่าย 8 แผนก, ประวัติการลา, ยานพาหนะ, ข่าวสาร)
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-blue-500/5 border border-blue-500/20 text-xs text-blue-600 dark:text-blue-400 flex items-start gap-2.5">
-                <i className="fa-solid fa-circle-info mt-0.5 text-sm"></i>
+              {/* Demo Mode Details Badge */}
+              {formData.installDemoData && (
+                <div className="p-3.5 rounded-2xl border border-blue-500/20 bg-blue-500/5 text-xs text-slate-700 dark:text-slate-300 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                      <i className="fa-solid fa-circle-check"></i>
+                      รายการข้อมูลจำลองที่จะสร้างขึ้นอัตโนมัติ:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={loadSampleData}
+                      className="text-[11px] text-blue-600 dark:text-blue-400 underline hover:text-blue-700"
+                    >
+                      โหลดค่าเริ่มต้นแนะนำ
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
+                    <div className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-users text-blue-500 text-xs"></i>
+                      <span>10 กำลังพลครบ 5 ประเภท</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-sitemap text-blue-500 text-xs"></i>
+                      <span>4 ฝ่าย 8 แผนกโครงสร้าง</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-calendar-check text-blue-500 text-xs"></i>
+                      <span>ประวัติการลา 3 สถานะ</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-car text-blue-500 text-xs"></i>
+                      <span>ยานพาหนะส่วนตัวและราชการ</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-bullhorn text-blue-500 text-xs"></i>
+                      <span>ข่าวสารและประกาศตัวอย่าง</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-calendar-days text-blue-500 text-xs"></i>
+                      <span>กิจกรรมและตารางฝึกอบรม</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ─── Organization & System Details Section ─── */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
+                  <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                    <i className="fa-solid fa-building text-blue-500"></i>
+                    {!formData.installDemoData ? 'กรอกข้อมูลหน่วยงานและระบบ' : 'ข้อมูลหน่วยงานและระบบ (ปรับแต่งได้)'}
+                  </h3>
+                  {!formData.installDemoData && (
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                      กรอกข้อมูลจริงของหน่วยงานท่าน
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      ชื่อระบบ (System Name) <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="systemName"
+                      value={formData.systemName}
+                      onChange={handleChange}
+                      required
+                      placeholder="เช่น ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)"
+                      className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      ชื่อหน่วยงาน / สังกัด (Organization Name) <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="organizationName"
+                      value={formData.organizationName}
+                      onChange={handleChange}
+                      required
+                      placeholder="เช่น กองบัญชาการกองทัพไทย หรือ ศูนย์ฝึกทางยุทธวิธีกองทัพบก"
+                      className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+
+                {/* Initial Departments */}
                 <div>
-                  ระบบจะสร้างการตั้งค่าเริ่มต้น เช่น รายการสังกัด, ประเภทกำลังพล, หมวดหมู่การลา และสิทธิ์เริ่มต้น (SUPER_ADMIN, ADMIN, EDITOR, OFFICER, USER) ให้อัตโนมัติ
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    โครงสร้างฝ่าย / แผนกเริ่มต้น (Initial Departments - คั่นด้วยเครื่องหมายจุลภาค)
+                  </label>
+                  <input
+                    type="text"
+                    name="initialDepartments"
+                    value={formData.initialDepartments}
+                    onChange={handleChange}
+                    placeholder="เช่น กองบังคับการ, ฝ่ายอำนวยการ, ฝ่ายส่งกำลังบำรุง, ฝ่ายยุทธการ"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
+                    ระบุชื่อฝ่ายเริ่มต้นสำหรับสร้างโครงสร้างหน่วยงาน สามารถเพิ่ม/ลบ/แก้ไขภายหลังได้ในเมนูจัดการองค์กร
+                  </p>
+                </div>
+
+                {/* ─── Contact Information Section ─── */}
+                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-800/40 space-y-3">
+                  <div className="flex items-center gap-2 text-slate-800 dark:text-white font-bold text-xs pb-1 border-b border-slate-200 dark:border-slate-700/60">
+                    <i className="fa-solid fa-address-book text-blue-500 text-sm"></i>
+                    <span>ข้อมูลการติดต่อและที่ตั้งสำนักงาน (Contact Information)</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      ที่อยู่สำนักงาน / หน่วยงาน (Office Address)
+                    </label>
+                    <textarea
+                      name="organizationAddress"
+                      rows={2}
+                      value={formData.organizationAddress}
+                      onChange={handleChange}
+                      placeholder="ระบุที่อยู่สำนักงาน / ที่ตั้งหน่วยงาน..."
+                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white resize-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                        เบอร์โทรศัพท์หลัก (Main Phone)
+                      </label>
+                      <input
+                        type="text"
+                        name="organizationPhone"
+                        value={formData.organizationPhone}
+                        onChange={handleChange}
+                        placeholder="เช่น 02-123-4567 หรือ 036-791444"
+                        className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                        เบอร์โทรศัพท์สายตรง / แผนก (Secondary Phone)
+                      </label>
+                      <input
+                        type="text"
+                        name="contactPhoneSecondary"
+                        value={formData.contactPhoneSecondary}
+                        onChange={handleChange}
+                        placeholder="เช่น 02-123-4568 (ฝ่ายธุรการ)"
+                        className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                        อีเมลหลัก (Contact Email)
+                      </label>
+                      <input
+                        type="email"
+                        name="contactEmail"
+                        value={formData.contactEmail}
+                        onChange={handleChange}
+                        placeholder="เช่น contact@unit.mil หรือ admin@eprofile.com"
+                        className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                        อีเมลฝ่ายช่วยเหลือ/บริการ (Support Email)
+                      </label>
+                      <input
+                        type="email"
+                        name="contactEmailSupport"
+                        value={formData.contactEmailSupport}
+                        onChange={handleChange}
+                        placeholder="เช่น support@unit.mil"
+                        className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                      Google Maps Embed URL (ลิงก์แผนที่แบบฝังสำหรับแสดงบนหน้าเว็บ - ถ้ามี)
+                    </label>
+                    <input
+                      type="url"
+                      name="contactMapEmbedUrl"
+                      value={formData.contactMapEmbedUrl}
+                      onChange={handleChange}
+                      placeholder="https://www.google.com/maps/embed?pb=..."
+                      className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    ธีมเริ่มต้น (Default Theme)
+                  </label>
+                  <select
+                    name="theme"
+                    value={formData.theme}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  >
+                    <option value="dark">Dark Theme (โหมดมืด - แนะนำ)</option>
+                    <option value="light">Light Theme (โหมดสว่าง)</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -682,7 +827,43 @@ export default function InstallPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Prefix, First Name, Last Name */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    คำนำหน้า / ยศ (Rank / Prefix)
+                  </label>
+                  <input
+                    type="text"
+                    name="prefix"
+                    value={formData.prefix}
+                    onChange={handleChange}
+                    list="prefix-options"
+                    placeholder="เช่น นาย, พ.อ., ร.อ."
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                  <datalist id="prefix-options">
+                    <option value="นาย" />
+                    <option value="นาง" />
+                    <option value="นางสาว" />
+                    <option value="พล.อ." />
+                    <option value="พล.ท." />
+                    <option value="พล.ต." />
+                    <option value="พ.อ." />
+                    <option value="พ.ท." />
+                    <option value="พ.ต." />
+                    <option value="ร.อ." />
+                    <option value="ร.ท." />
+                    <option value="ร.ต." />
+                    <option value="จ.ส.อ." />
+                    <option value="จ.ส.ท." />
+                    <option value="จ.ส.ต." />
+                    <option value="ส.อ." />
+                    <option value="ส.ท." />
+                    <option value="ส.ต." />
+                  </datalist>
+                </div>
+
                 <div>
                   <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
                     ชื่อ (First Name) <span className="text-rose-500">*</span>
@@ -693,10 +874,11 @@ export default function InstallPage() {
                     value={formData.firstName}
                     onChange={handleChange}
                     required
-                    placeholder="เช่น แอดมิน"
+                    placeholder="เช่น สมชาย"
                     className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
                   />
                 </div>
+
                 <div>
                   <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
                     นามสกุล (Last Name) <span className="text-rose-500">*</span>
@@ -707,7 +889,37 @@ export default function InstallPage() {
                     value={formData.lastName}
                     onChange={handleChange}
                     required
-                    placeholder="เช่น ประจำระบบ"
+                    placeholder="เช่น มั่นคง"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              {/* Position & Department */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    ตำแหน่งในหน่วยงาน (Position)
+                  </label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={formData.position}
+                    onChange={handleChange}
+                    placeholder="เช่น ผู้ดูแลระบบสูงสุด หรือ หัวหน้าฝ่ายสารสนเทศ"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium mb-1">
+                    สังกัด / ฝ่าย (Department)
+                  </label>
+                  <input
+                    type="text"
+                    name="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    placeholder="เช่น กองบังคับการ หรือ ฝ่ายอำนวยการ"
                     className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
                   />
                 </div>
@@ -731,7 +943,7 @@ export default function InstallPage() {
                     value={formData.citizenId}
                     onChange={handleChange}
                     required
-                    placeholder="ตัวเลข 13 หลักเท่านั้น"
+                    placeholder="ตัวเลข 13 หลักเท่านั้น (ใช้เข้าสู่ระบบ)"
                     className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
                   />
                 </div>
@@ -739,7 +951,7 @@ export default function InstallPage() {
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <label className="block text-slate-600 dark:text-slate-400 text-xs font-medium">
-                      หมายเลขประจำตัวทหาร (10 หลัก) <span className="text-rose-500">*</span>
+                      หมายเลขประจำตัวทหาร / เจ้าหน้าที่ (10 หลัก) <span className="text-rose-500">*</span>
                     </label>
                     <span className="text-[10px] text-slate-400 font-mono">{formData.badgeNo.length}/10</span>
                   </div>

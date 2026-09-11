@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import BackupRestoreSettings from '../components/BackupRestoreSettings';
-import ConfirmModal from '@/components/common/ConfirmModal';
+import { Modal, Button } from '@/components/ui';
+import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 
 export default function BackupSettingsView() {
   const [settings, setSettings] = useState<any>({});
@@ -30,7 +31,7 @@ export default function BackupSettingsView() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch('/api/restore', {
+      const res = await fetch('/api/modules/backup/restore', {
         method: 'POST',
         body: formData,
       });
@@ -56,33 +57,72 @@ export default function BackupSettingsView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-16">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6">
-        <BackupRestoreSettings 
-          settings={settings}
-          isRestoring={isRestoring}
-          handleRestore={handleRestore}
-          restoreFileInputRef={restoreFileInputRef}
-        />
-      </div>
+    <div className="space-y-6 animate-fade-in pb-16 font-prompt">
+      <PageHeaderExtra>
+        <div className="flex items-center gap-1.5 p-1 bg-white/60 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-md">
+          <div className="px-3 py-1.5 rounded-lg text-xs font-bold bg-primary-600 text-white shadow-sm shadow-primary-500/30 flex items-center gap-2">
+            <i className="fa-solid fa-database text-xs"></i>
+            <span>สำรองและกู้คืนข้อมูล</span>
+          </div>
+        </div>
+      </PageHeaderExtra>
 
-      <ConfirmModal
+      <BackupRestoreSettings 
+        settings={settings}
+        isRestoring={isRestoring}
+        handleRestore={handleRestore}
+        restoreFileInputRef={restoreFileInputRef}
+      />
+
+      {/* Restore Confirmation Modal */}
+      <Modal
         isOpen={!!pendingRestoreFile}
-        title="ยืนยันการกู้คืนฐานข้อมูล (Restore Database)?"
-        message={`คำเตือน: การนำเข้าไฟล์ "${pendingRestoreFile?.name}" จะเขียนทับและแทนที่ข้อมูลทั้งหมดในระบบปัจจุบัน คุณแน่ใจหรือไม่ที่จะดำเนินการต่อ?`}
-        confirmText="ยืนยันการกู้คืน"
-        cancelText="ยกเลิก"
-        isDestructive={true}
-        onConfirm={() => {
-          if (pendingRestoreFile) {
-            executeRestore(pendingRestoreFile);
-          }
-        }}
-        onCancel={() => {
+        onClose={() => {
           setPendingRestoreFile(null);
           if (restoreFileInputRef.current) restoreFileInputRef.current.value = '';
         }}
-      />
+        title="ยืนยันการกู้คืนฐานข้อมูล (Restore Database)?"
+        icon="fa-solid fa-triangle-exclamation"
+        size="md"
+        footer={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setPendingRestoreFile(null);
+                if (restoreFileInputRef.current) restoreFileInputRef.current.value = '';
+              }}
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              icon="fa-solid fa-upload"
+              isLoading={isRestoring}
+              loadingText="กำลังกู้คืน..."
+              onClick={() => {
+                if (pendingRestoreFile) {
+                  executeRestore(pendingRestoreFile);
+                }
+              }}
+            >
+              ยืนยันการกู้คืน
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-3">
+          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            คำเตือน: การนำเข้าไฟล์ <code className="px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-mono font-bold text-xs">{pendingRestoreFile?.name}</code> จะเขียนทับและแทนที่ข้อมูลทั้งหมดในระบบปัจจุบัน คุณแน่ใจหรือไม่ที่จะดำเนินการต่อ?
+          </p>
+          <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/60 rounded-xl text-xs text-amber-800 dark:text-amber-400">
+            <i className="fa-solid fa-circle-info mr-1.5"></i>
+            ระบบจะเริ่มทำงานใหม่โดยอัตโนมัติทันทีหลังจากการกู้คืนข้อมูลเสร็จสิ้น
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

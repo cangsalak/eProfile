@@ -33,6 +33,7 @@ import {
   Settings,
 } from 'lucide-react';
 import Link from 'next/link';
+import { Card, Button } from '@/components/ui';
 
 import {
   CalendarViewMode,
@@ -302,22 +303,23 @@ export function CalendarView() {
   return (
     <div className="flex flex-col gap-5 max-w-full">
       {/* ── Top Google Calendar Navigation Bar ── */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs">
+      <Card className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 p-3 sm:p-4">
         {/* Left: Today, Prev/Next, Month/Year Label */}
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={handleToday}
-            className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-2xs transition-colors"
           >
             วันนี้
-          </button>
+          </Button>
 
           <div className="flex items-center rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-2xs">
             <button
               type="button"
               onClick={handlePrev}
-              className="p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+              className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
               title="ก่อนหน้า"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -326,7 +328,7 @@ export function CalendarView() {
             <button
               type="button"
               onClick={handleNext}
-              className="p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+              className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
               title="ถัดไป"
             >
               <ChevronRight className="w-4 h-4" />
@@ -344,27 +346,28 @@ export function CalendarView() {
 
         {/* Center: Search input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ..."
-            className="form-input text-xs w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-750"
+            className="form-input text-xs w-full pl-9 pr-4 py-2"
           />
         </div>
 
         {/* Right: Print Button & View Mode Group */}
         <div className="flex items-center gap-2 self-start md:self-auto flex-wrap">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => setIsPrintModalOpen(true)}
-            className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700 shadow-2xs"
+            icon="fa-solid fa-print"
             title="พิมพ์ตารางเวรประจำเดือน A4"
           >
-            <Printer className="w-3.5 h-3.5 text-primary-500" />
             <span className="hidden sm:inline">พิมพ์ตารางเวร (A4)</span>
-          </button>
+          </Button>
 
           <Link
             href="/modules/calendar/settings"
@@ -387,7 +390,7 @@ export function CalendarView() {
                 onClick={() => setViewMode(mode.id as CalendarViewMode)}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   viewMode === mode.id
-                    ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-2xs'
+                    ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-2xs font-bold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
@@ -396,7 +399,7 @@ export function CalendarView() {
             ))}
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* ── Main Layout: Sidebar + Active View ── */}
       <div className="flex flex-col lg:flex-row gap-5 items-start">

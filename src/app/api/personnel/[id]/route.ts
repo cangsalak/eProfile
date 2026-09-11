@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { sendLineNotify } from '@/lib/notifications';
+import { sendLineNotify } from '@/modules/news/lib/notification-sender';
 import { requireAuth, requirePermission } from '@/lib/auth-guards';
 import { apiError, apiSuccess } from '@/lib/api-response';
 import { isValidId } from '@/lib/validate-utils';

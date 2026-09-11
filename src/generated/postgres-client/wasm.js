@@ -122,6 +122,128 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.SystemSettingScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value'
+};
+
+exports.Prisma.SystemRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  displayName: 'displayName',
+  description: 'description',
+  permissions: 'permissions',
+  isSystem: 'isSystem',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  personnelId: 'personnelId',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  details: 'details',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  personnelId: 'personnelId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CalendarEventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LeaveRecordScalarFieldEnum = {
+  id: 'id',
+  personnelId: 'personnelId',
+  leaveType: 'leaveType',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  reason: 'reason',
+  writtenAt: 'writtenAt',
+  toPerson: 'toPerson',
+  contactAddress: 'contactAddress',
+  contactTambon: 'contactTambon',
+  contactAmphoe: 'contactAmphoe',
+  contactProvince: 'contactProvince',
+  status: 'status',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  rejectionReason: 'rejectionReason',
+  approvalNote: 'approvalNote',
+  substitutePerson: 'substitutePerson',
+  accumulatedLeaveDays: 'accumulatedLeaveDays',
+  thisYearLeaveDays: 'thisYearLeaveDays',
+  totalLeaveDays: 'totalLeaveDays',
+  ordainedBefore: 'ordainedBefore',
+  ordainTempleName: 'ordainTempleName',
+  ordainTempleLocation: 'ordainTempleLocation',
+  ordainDate: 'ordainDate',
+  stayTempleName: 'stayTempleName',
+  stayTempleLocation: 'stayTempleLocation',
+  maternityLeaveTimes: 'maternityLeaveTimes',
+  maternityLeaveDays: 'maternityLeaveDays',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  category: 'category',
+  image: 'image',
+  published: 'published',
+  authorId: 'authorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  personnelId: 'personnelId',
+  title: 'title',
+  message: 'message',
+  type: 'type',
+  isRead: 'isRead',
+  link: 'link',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationReadScalarFieldEnum = {
+  id: 'id',
+  notificationId: 'notificationId',
+  personnelId: 'personnelId',
+  readAt: 'readAt'
+};
+
 exports.Prisma.PersonnelScalarFieldEnum = {
   id: 'id',
   badgeNo: 'badgeNo',
@@ -170,172 +292,12 @@ exports.Prisma.PersonnelScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.VehicleScalarFieldEnum = {
-  id: 'id',
-  personnelId: 'personnelId',
-  type: 'type',
-  licensePlate: 'licensePlate',
-  brand: 'brand',
-  model: 'model',
-  color: 'color',
-  photoFront: 'photoFront',
-  photoBack: 'photoBack',
-  photoSide: 'photoSide',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.LeaveRecordScalarFieldEnum = {
-  id: 'id',
-  personnelId: 'personnelId',
-  leaveType: 'leaveType',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  reason: 'reason',
-  writtenAt: 'writtenAt',
-  toPerson: 'toPerson',
-  contactAddress: 'contactAddress',
-  contactTambon: 'contactTambon',
-  contactAmphoe: 'contactAmphoe',
-  contactProvince: 'contactProvince',
-  status: 'status',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
-  rejectionReason: 'rejectionReason',
-  approvalNote: 'approvalNote',
-  substitutePerson: 'substitutePerson',
-  accumulatedLeaveDays: 'accumulatedLeaveDays',
-  thisYearLeaveDays: 'thisYearLeaveDays',
-  totalLeaveDays: 'totalLeaveDays',
-  ordainedBefore: 'ordainedBefore',
-  ordainTempleName: 'ordainTempleName',
-  ordainTempleLocation: 'ordainTempleLocation',
-  ordainDate: 'ordainDate',
-  stayTempleName: 'stayTempleName',
-  stayTempleLocation: 'stayTempleLocation',
-  maternityLeaveTimes: 'maternityLeaveTimes',
-  maternityLeaveDays: 'maternityLeaveDays',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
   shortName: 'shortName',
   subDepartments: 'subDepartments',
   sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SystemSettingScalarFieldEnum = {
-  id: 'id',
-  key: 'key',
-  value: 'value'
-};
-
-exports.Prisma.CalendarEventScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  type: 'type',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.NotificationScalarFieldEnum = {
-  id: 'id',
-  personnelId: 'personnelId',
-  title: 'title',
-  message: 'message',
-  type: 'type',
-  isRead: 'isRead',
-  link: 'link',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.NotificationReadScalarFieldEnum = {
-  id: 'id',
-  notificationId: 'notificationId',
-  personnelId: 'personnelId',
-  readAt: 'readAt'
-};
-
-exports.Prisma.PostScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  category: 'category',
-  image: 'image',
-  published: 'published',
-  authorId: 'authorId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ContactMessageScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  phone: 'phone',
-  message: 'message',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AuditLogScalarFieldEnum = {
-  id: 'id',
-  personnelId: 'personnelId',
-  action: 'action',
-  entity: 'entity',
-  entityId: 'entityId',
-  details: 'details',
-  ipAddress: 'ipAddress',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.MediaFileScalarFieldEnum = {
-  id: 'id',
-  filename: 'filename',
-  url: 'url',
-  size: 'size',
-  mimetype: 'mimetype',
-  uploadedById: 'uploadedById',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.PasswordResetTokenScalarFieldEnum = {
-  id: 'id',
-  personnelId: 'personnelId',
-  token: 'token',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ServiceScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  price: 'price',
-  image: 'image',
-  icon: 'icon',
-  published: 'published',
-  order: 'order',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SystemRoleScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  displayName: 'displayName',
-  description: 'description',
-  permissions: 'permissions',
-  isSystem: 'isSystem',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -353,45 +315,6 @@ exports.Prisma.PersonnelDocumentScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   expiresAt: 'expiresAt'
-};
-
-exports.Prisma.InspectionScalarFieldEnum = {
-  id: 'id',
-  page: 'page',
-  url: 'url',
-  scanMode: 'scanMode',
-  userId: 'userId',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  durationMs: 'durationMs',
-  status: 'status',
-  overallResult: 'overallResult',
-  criticalCount: 'criticalCount',
-  highCount: 'highCount',
-  mediumCount: 'mediumCount',
-  lowCount: 'lowCount',
-  infoCount: 'infoCount',
-  totalFindings: 'totalFindings',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.InspectionFindingScalarFieldEnum = {
-  id: 'id',
-  inspectionId: 'inspectionId',
-  findingCode: 'findingCode',
-  category: 'category',
-  severity: 'severity',
-  title: 'title',
-  description: 'description',
-  expected: 'expected',
-  actual: 'actual',
-  element: 'element',
-  selector: 'selector',
-  recommendation: 'recommendation',
-  status: 'status',
-  notes: 'notes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.Rpb1RecordScalarFieldEnum = {
@@ -539,6 +462,68 @@ exports.Prisma.Rpb1RecordScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ServiceScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  price: 'price',
+  image: 'image',
+  icon: 'icon',
+  published: 'published',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InspectionScalarFieldEnum = {
+  id: 'id',
+  page: 'page',
+  url: 'url',
+  scanMode: 'scanMode',
+  userId: 'userId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  durationMs: 'durationMs',
+  status: 'status',
+  overallResult: 'overallResult',
+  criticalCount: 'criticalCount',
+  highCount: 'highCount',
+  mediumCount: 'mediumCount',
+  lowCount: 'lowCount',
+  infoCount: 'infoCount',
+  totalFindings: 'totalFindings',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InspectionFindingScalarFieldEnum = {
+  id: 'id',
+  inspectionId: 'inspectionId',
+  findingCode: 'findingCode',
+  category: 'category',
+  severity: 'severity',
+  title: 'title',
+  description: 'description',
+  expected: 'expected',
+  actual: 'actual',
+  element: 'element',
+  selector: 'selector',
+  recommendation: 'recommendation',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MediaFileScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  url: 'url',
+  size: 'size',
+  mimetype: 'mimetype',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -556,25 +541,24 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  Personnel: 'Personnel',
-  Vehicle: 'Vehicle',
-  LeaveRecord: 'LeaveRecord',
-  Department: 'Department',
   SystemSetting: 'SystemSetting',
+  SystemRole: 'SystemRole',
+  AuditLog: 'AuditLog',
+  PasswordResetToken: 'PasswordResetToken',
   CalendarEvent: 'CalendarEvent',
+  ContactMessage: 'ContactMessage',
+  LeaveRecord: 'LeaveRecord',
+  Post: 'Post',
   Notification: 'Notification',
   NotificationRead: 'NotificationRead',
-  Post: 'Post',
-  ContactMessage: 'ContactMessage',
-  AuditLog: 'AuditLog',
-  MediaFile: 'MediaFile',
-  PasswordResetToken: 'PasswordResetToken',
-  Service: 'Service',
-  SystemRole: 'SystemRole',
+  Personnel: 'Personnel',
+  Department: 'Department',
   PersonnelDocument: 'PersonnelDocument',
+  Rpb1Record: 'Rpb1Record',
+  Service: 'Service',
   Inspection: 'Inspection',
   InspectionFinding: 'InspectionFinding',
-  Rpb1Record: 'Rpb1Record'
+  MediaFile: 'MediaFile'
 };
 
 /**

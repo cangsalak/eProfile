@@ -18,7 +18,7 @@ export const SystemInspectorManifest: ModuleManifest = {
       title: 'ตรวจสอบระบบ (Inspector)',
       icon: 'fa-solid fa-shield-halved',
       path: '/inspector',
-      requiredRoles: ['SUPER_ADMIN'],
+      requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       order: 100
     },
     {
@@ -26,7 +26,7 @@ export const SystemInspectorManifest: ModuleManifest = {
       title: 'API Documentation',
       icon: 'fa-solid fa-book',
       path: '/inspector/api-docs',
-      requiredRoles: ['SUPER_ADMIN'],
+      requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       order: 110
     }
   ],
@@ -37,12 +37,9 @@ export const SystemInspectorManifest: ModuleManifest = {
     '/manage/audit-logs': '/inspector/audit-logs',
     '/api-documentation': '/inspector/api-docs',
     '/manage/api-docs': '/inspector/api-docs',
-    '/manage/modules': '/module-manager',
-    '/modules/system-inspector/manage': '/module-manager',
     '/modules/system-inspector': '/inspector',
     '/modules/system-inspector/api-docs': '/inspector/api-docs',
     '/modules/system-inspector/audit-logs': '/inspector/audit-logs',
     '/modules/system-inspector/categories': '/inspector/categories',
-    '/modules/system-inspector/modules': '/inspector/modules',
   }
 };

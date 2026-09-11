@@ -1,0 +1,54 @@
+// ================================================================
+// Leaves Module Schema
+// Contains: LeaveRecord
+// ================================================================
+
+model LeaveRecord {
+  id          String    @id @default(cuid())
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  leaveType   String    // ลากิจ, ลาป่วย, ลาไปบวช, ลาพักผ่อนประจำปี, อื่นๆ
+  startDate      DateTime
+  endDate        DateTime
+  reason         String?
+  writtenAt      String?   @default("ที่ว่าการอำเภอ/ค่าย/หน่วยงาน")
+  toPerson       String?   // เรียนใคร
+  contactAddress String?   // บ้านเลขที่, หมู่, ถนน
+  contactTambon  String?   // ตำบล/แขวง
+  contactAmphoe  String?   // อำเภอ/เขต
+  contactProvince String?  // จังหวัด
+  status         String    @default("รออนุมัติ") // รออนุมัติ, อนุมัติแล้ว, ไม่อนุมัติ, ยกเลิก
+
+  // Approval / Review Tracking Fields
+  approvedById    String?
+  approvedBy      Personnel? @relation("LeaveApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+  approvedAt      DateTime?
+  rejectionReason String?
+  approvalNote    String?
+
+  // Fields specifically for Annual Leave (ลาพักผ่อน)
+  substitutePerson     String?   // ชื่อผู้รับมอบหน้าที่
+  accumulatedLeaveDays Float?    // วันลาพักผ่อนสะสม (ยกมา)
+  thisYearLeaveDays    Float?    // วันลาพักผ่อนประจำปี
+  totalLeaveDays       Float?    // รวมวันลา
+
+  // Fields specifically for Ordination Leave (ลาอุปสมบท)
+  ordainedBefore       Boolean?  @default(false)
+  ordainTempleName     String?
+  ordainTempleLocation String?
+  ordainDate           DateTime?
+  stayTempleName       String?
+  stayTempleLocation   String?
+
+  // Fields specifically for Maternity Leave (ลาคลอดบุตร)
+  maternityLeaveTimes  Int?
+  maternityLeaveDays   Int?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([personnelId])
+  @@index([status])
+  @@index([approvedById])
+  @@index([startDate, endDate])
+}

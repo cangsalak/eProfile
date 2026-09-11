@@ -1,22 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { CalendarEventItem, CALENDAR_CATEGORY_CONFIG, DEFAULT_DUTY_ROLES } from '../types';
 import toast from 'react-hot-toast';
 import {
-  X,
-  Calendar,
-  Clock,
-  MapPin,
-  AlignLeft,
   Tag,
-  Trash2,
-  Save,
   CheckCircle2,
   AlertTriangle,
   Users,
 } from 'lucide-react';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Textarea';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -195,32 +193,90 @@ export const EventModal: React.FC<EventModalProps> = ({
   const catConfig = CALENDAR_CATEGORY_CONFIG[type] || CALENDAR_CATEGORY_CONFIG.general;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Modal Header */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/80 dark:bg-slate-900/80">
-          <div className="flex items-center gap-2">
-            <span className={`w-3 h-3 rounded-full ${catConfig.dotColor}`} />
-            <h3 className="font-bold text-slate-900 dark:text-white text-base">
-              {isReadOnly
-                ? 'รายละเอียดกิจกรรม'
-                : isEditing
-                ? 'แก้ไขกิจกรรม / เวรปฏิบัติการ'
-                : 'สร้างกิจกรรมใหม่'}
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={
+        <div className="flex items-center gap-2">
+          <span className={`w-3 h-3 rounded-full ${catConfig.dotColor}`} />
+          <span>
+            {isReadOnly
+              ? 'รายละเอียดกิจกรรม'
+              : isEditing
+              ? 'แก้ไขกิจกรรม / เวรปฏิบัติการ'
+              : 'สร้างกิจกรรมใหม่'}
+          </span>
         </div>
+      }
+      size="lg"
+      footer={
+        <div className="flex items-center justify-between w-full">
+          <div>
+            {isEditing && !isReadOnly && onDelete && (
+              <>
+                {!showDeleteConfirm ? (
+                  <Button
+                    type="button"
+                    variant="danger"
+                    size="sm"
+                    onClick={() => setShowDeleteConfirm(true)}
+                    icon="fa-solid fa-trash-can"
+                  >
+                    ลบกิจกรรม
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-rose-500 font-semibold flex items-center gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5" />
+                      <span>ยืนยันลบ?</span>
+                    </span>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      size="sm"
+                      onClick={handleDelete}
+                      isLoading={isDeleting}
+                    >
+                      ลบทันที
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowDeleteConfirm(false)}
+                    >
+                      ยกเลิก
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
 
+          <div className="flex items-center gap-2">
+            <Button type="button" variant="outline" size="sm" onClick={onClose}>
+              {isReadOnly ? 'ปิด' : 'ยกเลิก'}
+            </Button>
+            {!isReadOnly && (
+              <Button
+                type="submit"
+                form="event-form"
+                variant="primary"
+                size="sm"
+                isLoading={isSubmitting}
+                icon="fa-solid fa-floppy-disk"
+              >
+                {isEditing ? 'บันทึกการแก้ไข' : 'สร้างกิจกรรม'}
+              </Button>
+            )}
+          </div>
+        </div>
+      }
+    >
+      <div className="space-y-4 font-prompt">
         {/* Read-Only Notice for Leave & Google feeds */}
         {isReadOnly && (
-          <div className="bg-primary-50 dark:bg-primary-950/40 border-b border-primary-100 dark:border-primary-900/50 p-3 text-xs text-primary-800 dark:text-primary-300 flex items-center gap-2">
+          <div className="bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/50 rounded-xl p-3 text-xs text-primary-800 dark:text-primary-300 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-primary-600 dark:text-primary-400" />
             <span>
               {event?.type === 'leave'
@@ -230,32 +286,31 @@ export const EventModal: React.FC<EventModalProps> = ({
           </div>
         )}
 
-        {/* Form Content */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
+        <form id="event-form" onSubmit={handleSubmit} className="space-y-4">
           {/* Title input */}
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               ชื่อกิจกรรม / หัวข้อเวรปฏิบัติการ <span className="text-rose-500">*</span>
             </label>
-            <input
+            <Input
               type="text"
               required
               disabled={isReadOnly}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="เช่น เวรตรวจการประจำวัน, ประชุมฝ่ายปฏิบัติการ..."
-              className="form-input w-full font-medium"
+              className="text-xs font-medium w-full"
             />
           </div>
 
           {/* Category / Type Selector */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-1.5">
               <Tag className="w-3.5 h-3.5 text-slate-400" />
-              ประเภทกิจกรรม
+              <span>ประเภทกิจกรรม</span>
             </label>
             {isReadOnly ? (
-              <div className="text-sm font-medium text-slate-800 dark:text-slate-200 px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="text-xs font-medium text-slate-800 dark:text-slate-200 px-3 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                 {catConfig.label}
               </div>
             ) : (
@@ -286,7 +341,7 @@ export const EventModal: React.FC<EventModalProps> = ({
 
           {/* All Day Toggle */}
           <div className="flex items-center justify-between py-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer flex items-center gap-2">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 cursor-pointer flex items-center gap-2 select-none">
               <input
                 type="checkbox"
                 disabled={isReadOnly}
@@ -294,7 +349,7 @@ export const EventModal: React.FC<EventModalProps> = ({
                 onChange={(e) => setAllDay(e.target.checked)}
                 className="w-4 h-4 rounded-sm text-primary-600 border-slate-300 focus:ring-primary-500"
               />
-              ตลอดทั้งวัน (All Day)
+              <span>ตลอดทั้งวัน (All Day)</span>
             </label>
           </div>
 
@@ -306,21 +361,21 @@ export const EventModal: React.FC<EventModalProps> = ({
                 วันและเวลาเริ่มต้น
               </label>
               <div className="flex gap-2">
-                <input
+                <Input
                   type="date"
                   required
                   disabled={isReadOnly}
                   value={startDateStr}
                   onChange={(e) => setStartDateStr(e.target.value)}
-                  className="form-input text-xs flex-1"
+                  className="text-xs flex-1"
                 />
                 {!allDay && (
-                  <input
+                  <Input
                     type="time"
                     disabled={isReadOnly}
                     value={startTimeStr}
                     onChange={(e) => setStartTimeStr(e.target.value)}
-                    className="form-input text-xs w-24 font-mono"
+                    className="text-xs w-24 font-mono"
                   />
                 )}
               </div>
@@ -332,21 +387,21 @@ export const EventModal: React.FC<EventModalProps> = ({
                 วันและเวลาสิ้นสุด
               </label>
               <div className="flex gap-2">
-                <input
+                <Input
                   type="date"
                   required
                   disabled={isReadOnly}
                   value={endDateStr}
                   onChange={(e) => setEndDateStr(e.target.value)}
-                  className="form-input text-xs flex-1"
+                  className="text-xs flex-1"
                 />
                 {!allDay && (
-                  <input
+                  <Input
                     type="time"
                     disabled={isReadOnly}
                     value={endTimeStr}
                     onChange={(e) => setEndTimeStr(e.target.value)}
-                    className="form-input text-xs w-24 font-mono"
+                    className="text-xs w-24 font-mono"
                   />
                 )}
               </div>
@@ -355,30 +410,25 @@ export const EventModal: React.FC<EventModalProps> = ({
 
           {/* Duty Assignee & Role */}
           {!isReadOnly && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
               <div className="sm:col-span-1 space-y-1">
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1">
                   <Users className="w-3.5 h-3.5 text-primary-500" />
                   <span>ตำแหน่งหน้าที่</span>
                 </label>
-                <select
+                <Select
                   value={dutyRole}
                   onChange={(e) => setDutyRole(e.target.value)}
-                  className="form-select text-xs w-full"
-                >
-                  {dutyRoleOptions.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
-                  ))}
-                </select>
+                  options={dutyRoleOptions.map((r) => ({ value: r, label: r }))}
+                  className="text-xs w-full"
+                />
               </div>
 
               <div className="sm:col-span-2 space-y-1">
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
                   กำลังพลผู้ปฏิบัติหน้าที่ (Assignee)
                 </label>
-                <select
+                <Select
                   value={assigneeId}
                   onChange={(e) => {
                     const selectedId = e.target.value;
@@ -390,114 +440,50 @@ export const EventModal: React.FC<EventModalProps> = ({
                       setAssigneeName('');
                     }
                   }}
-                  className="form-select text-xs w-full"
-                >
-                  <option value="">-- ระบุหรือไม่ระบุก็ได้ --</option>
-                  {personnelList.map((p) => {
-                    const fullName = `${p.prefix || ''}${p.firstName} ${p.lastName}`.trim();
-                    return (
-                      <option key={p.id} value={p.id}>
-                        {fullName} {p.department ? `(${p.department})` : ''}
-                      </option>
-                    );
-                  })}
-                </select>
+                  options={[
+                    { value: '', label: '-- ระบุหรือไม่ระบุก็ได้ --' },
+                    ...personnelList.map((p) => ({
+                      value: p.id,
+                      label: `${p.prefix || ''}${p.firstName} ${p.lastName}${p.department ? ` (${p.department})` : ''}`.trim(),
+                    })),
+                  ]}
+                  className="text-xs w-full"
+                />
               </div>
             </div>
           )}
 
           {/* Location */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
-              สถานที่ / ห้องปฏิบัติการ
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              สถานที่ / ช่องทางประชุม
             </label>
-            <input
+            <Input
               type="text"
               disabled={isReadOnly}
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="เช่น ห้องประชุม 1, ศปก.บก.ทท."
-              className="form-input w-full text-xs"
+              placeholder="เช่น ห้องประชุม 1, อาคารกองบัญชาการ, Google Meet..."
+              className="text-xs w-full"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
-              <AlignLeft className="w-3.5 h-3.5 text-slate-400" />
-              รายละเอียดเพิ่มเติม / คำสั่ง
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              รายละเอียดเพิ่มเติม / คำสั่ง / บันทึก
             </label>
-            <textarea
+            <Textarea
               rows={3}
               disabled={isReadOnly}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="ระบุกำหนดการและรายละเอียดงาน..."
-              className="form-textarea w-full text-xs"
+              placeholder="ระบุข้อความหรือคำสั่งเพิ่มเติมสำหรับเวรหรือกิจกรรมนี้..."
+              className="text-xs w-full resize-none"
             />
           </div>
         </form>
-
-        {/* Modal Footer */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex items-center justify-between gap-2">
-          {isEditing && !isReadOnly && onDelete ? (
-            showDeleteConfirm ? (
-              <div className="flex items-center gap-2 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900 animate-in fade-in">
-                <span className="text-xs text-rose-700 dark:text-rose-300 font-medium">ยืนยันลบ?</span>
-                <button
-                  type="button"
-                  disabled={isDeleting}
-                  onClick={handleDelete}
-                  className="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-2xs transition-colors"
-                >
-                  {isDeleting ? 'กำลังลบ...' : 'ลบ'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="px-2 py-1 text-xs font-semibold rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  ยกเลิก
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => setShowDeleteConfirm(true)}
-                className="px-3 py-2 text-xs font-semibold rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 flex items-center gap-1.5 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>ลบกิจกรรม</span>
-              </button>
-            )
-          ) : (
-            <div />
-          )}
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
-            >
-              {isReadOnly ? 'ปิด' : 'ยกเลิก'}
-            </button>
-            {!isReadOnly && (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting || !title.trim()}
-                className="px-4 py-2 text-xs font-semibold rounded-lg bg-primary-600 hover:bg-primary-700 text-white shadow-xs flex items-center gap-1.5 transition-colors disabled:opacity-50"
-              >
-                <Save className="w-4 h-4" />
-                <span>{isSubmitting ? 'กำลังบันทึก...' : isEditing ? 'บันทึกการแก้ไข' : 'สร้างกิจกรรม'}</span>
-              </button>
-            )}
-          </div>
-        </div>
       </div>
-    </div>
+    </Modal>
   );
 };

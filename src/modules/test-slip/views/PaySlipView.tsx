@@ -79,6 +79,7 @@ export default function PaySlipView() {
       }
     }
     initData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Generate realistic slip calculation based on personnel profile

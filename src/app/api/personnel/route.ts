@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { sendLineNotify, sendEmailNotification } from '@/lib/notifications';
+import { sendLineNotify, sendEmailNotification } from '@/modules/news/lib/notification-sender';
 import rateLimit from '@/lib/rate-limit';
 import { personnelRegistrationSchema } from '@/lib/validations';
 import { requireAuth, requirePermission } from '@/lib/auth-guards';

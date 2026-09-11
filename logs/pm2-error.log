@@ -1,0 +1,221 @@
+2026-09-11 11:36:49: 2026-09-11 11:36:49: 2026-09-11 11:36:49:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 13:19:20: 2026-09-11 13:19:20: 2026-09-11 13:19:20:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 13:22:17: 2026-09-11 13:22:17: 2026-09-11 13:22:17:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 13:24:39: 2026-09-11 13:24:39: 2026-09-11 13:24:39:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 13:28:05: 2026-09-11 13:28:05: 2026-09-11 13:28:05:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 13:36:35: 2026-09-11 13:36:35: 2026-09-11 13:36:35:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 13:50:49: 2026-09-11 13:50:49: 2026-09-11 13:50:49:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 14:11:18:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/app/api/auth/logout/route.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 14:11:18:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/pages/_error.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:51:01:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/app/api/auth/logout/route.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:51:01:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/pages/_error.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:51:44:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/app/api/auth/logout/route.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:51:44:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/pages/_error.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:51:57:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/app/api/auth/logout/route.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:51:57:  ⨯ Error: Cannot find module '/Users/cangsalak/project/eprofile/.next/server/pages/_error.js'
+Require stack:
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js
+- /Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1564:15)
+    at <anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:51:34)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1674:12)
+    at Module.mod.require (/Users/cangsalak/project/eprofile/node_modules/next/src/server/require-hook.ts:70:26)
+    at require (node:internal/modules/helpers:157:16) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/require.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/next.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/server/lib/start-server.js',
+    '/Users/cangsalak/project/eprofile/node_modules/next/dist/cli/next-start.js'
+  ]
+}
+2026-09-11 15:52:21: 2026-09-11 15:52:21: 2026-09-11 15:52:21: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (/Users/cangsalak/project/eprofile/node_modules/next/src/server/lib/router-utils/filesystem.ts:157:13)
+    at async initialize (/Users/cangsalak/project/eprofile/node_modules/next/src/server/lib/router-server.ts:93:21)
+    at async Server.<anonymous> (/Users/cangsalak/project/eprofile/node_modules/next/src/server/lib/start-server.ts:293:28)
+2026-09-11 15:52:24: 2026-09-11 15:52:24: 2026-09-11 15:52:28: 2026-09-11 15:52:28: 2026-09-11 15:52:31: 2026-09-11 15:52:31: 2026-09-11 15:52:34: 2026-09-11 15:52:34: 2026-09-11 15:52:37: 2026-09-11 15:52:37: 2026-09-11 15:52:40: 2026-09-11 15:52:40: 2026-09-11 15:52:44: 2026-09-11 15:52:44: 2026-09-11 15:52:47: 2026-09-11 15:52:47: 2026-09-11 15:52:50: 2026-09-11 15:52:50: 2026-09-11 15:57:58: 2026-09-11 15:57:58: 2026-09-11 15:57:58:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2026-09-11 15:59:10: 2026-09-11 15:59:10: 2026-09-11 15:59:10:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.

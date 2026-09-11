@@ -25,13 +25,31 @@ export async function verifyAuth(req?: Request) {
       if (!token) {
         const authHeader = req.headers.get('authorization');
         if (authHeader?.startsWith('Bearer ')) {
-          token = authHeader.substring(7);
+          token = authHeader.substring(7).trim();
+        }
+      }
+
+      if (!token) {
+        const apiKeyHeader = req.headers.get('x-api-key');
+        if (apiKeyHeader) {
+          token = apiKeyHeader.trim();
         }
       }
     }
 
     if (!token) return null;
 
+    // Check if token is a Static/Scoped API Key (ep_live_...)
+    if (token.startsWith('ep_live_')) {
+      const { verifyApiKey } = await import('@/modules/api-docs/lib/api-keys');
+      const apiKeyResult = await verifyApiKey(token);
+      if (apiKeyResult.valid && apiKeyResult.user) {
+        return apiKeyResult.user;
+      }
+      return null;
+    }
+
+    // Default: Verify standard JWT Token
     const { payload } = await jwtVerify(token, encodedSecret);
     return payload as { id: string; role: string; username: string };
   } catch {

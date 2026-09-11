@@ -1,6 +1,6 @@
 import { strict as assert } from 'assert';
 import { prisma } from '../../src/lib/prisma';
-import { seedDemoDataset } from '../../src/lib/installer/sample-data';
+import { seedDemoDataset } from '../../src/modules/install/lib/sample-data';
 
 export async function runInstallDemoDataTests() {
   console.log('--- Running Installer & Demo Dataset Seeder Tests (v1.3.0) ---');
@@ -36,18 +36,12 @@ export async function runInstallDemoDataTests() {
   assert.ok(types.has('ทหารกองประจำการ'), 'Must include ทหารกองประจำการ');
   console.log(`✔ Demo Personnel (${demoPersonnel.length}) across all 5 personnel types verified`);
 
-  // 4. Verify Demo Leaves, Vehicles, Posts, Events & Documents
+  // 4. Verify Demo Leaves, Posts, Events & Documents
   const leaves = await prisma.leaveRecord.findMany({
     where: { personnelId: { startsWith: 'DEMO_' } },
   });
   assert.ok(leaves.length >= 3, `Expected at least 3 leaves, found ${leaves.length}`);
   console.log(`✔ Demo Leave Records (${leaves.length}) verified`);
-
-  const vehicles = await prisma.vehicle.findMany({
-    where: { personnelId: { startsWith: 'DEMO_' } },
-  });
-  assert.ok(vehicles.length >= 4, `Expected at least 4 vehicles, found ${vehicles.length}`);
-  console.log(`✔ Demo Vehicles (${vehicles.length}) verified`);
 
   const posts = await prisma.post.findMany({
     where: { authorId: { startsWith: 'DEMO_' } },
@@ -76,9 +70,6 @@ export async function runInstallDemoDataTests() {
   });
   await prisma.post.deleteMany({
     where: { authorId: { startsWith: 'DEMO_' } },
-  });
-  await prisma.vehicle.deleteMany({
-    where: { personnelId: { startsWith: 'DEMO_' } },
   });
   await prisma.leaveRecord.deleteMany({
     where: { personnelId: { startsWith: 'DEMO_' } },

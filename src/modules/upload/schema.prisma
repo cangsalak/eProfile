@@ -1,0 +1,15 @@
+// ================================================================
+// Upload Module Schema
+// Contains: MediaFile
+// ================================================================
+
+model MediaFile {
+  id           String     @id @default(cuid())
+  filename     String
+  url          String
+  size         Int
+  mimetype     String
+  uploadedById String?
+  uploadedBy   Personnel? @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime   @default(now())
+}

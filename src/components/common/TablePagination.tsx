@@ -54,10 +54,13 @@ export default function TablePagination({
               }}
               className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary-500 cursor-pointer text-slate-800 dark:text-slate-200"
             >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
+              {Array.from(new Set([pageSize, 10, 20, 50, 100]))
+                .sort((a, b) => a - b)
+                .map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
             </select>
           </div>
         )}

@@ -110,7 +110,7 @@ export async function runApiDocumentationTests() {
   console.log('✔ Role Access Matrix verified for endpoints');
 
   // 7. Test Code Example Generator (cURL, JavaScript, TypeScript, Python, PHP)
-  const { generateCodeExample } = await import('../../src/lib/api-docs/code-generator');
+  const { generateCodeExample } = await import('../../src/modules/api-docs/lib/code-generator');
   const curlCode = generateCodeExample(personnelGet, 'curl', 'https://example.com');
   const jsCode = generateCodeExample(personnelGet, 'javascript', 'https://example.com');
   const tsCode = generateCodeExample(personnelGet, 'typescript', 'https://example.com');

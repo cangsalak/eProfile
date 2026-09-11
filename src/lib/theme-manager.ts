@@ -11,6 +11,44 @@ export interface ThemeSettings {
   layoutDensity?: string;      // 'normal' | 'compact'
   toastPosition?: string;
   toastTheme?: string;
+  userExplicit?: boolean;
+}
+
+/**
+ * Gets the current resolved theme mode ('dark' | 'light').
+ * User explicit session/local choice takes precedence over system default from database.
+ */
+export function getResolvedThemeMode(systemDefaultTheme?: string): 'dark' | 'light' {
+  if (typeof window === 'undefined') {
+    return systemDefaultTheme === 'light' ? 'light' : 'dark';
+  }
+
+  try {
+    const sessionPref = sessionStorage.getItem('user_theme_preference');
+    if (sessionPref === 'dark' || sessionPref === 'light') {
+      return sessionPref;
+    }
+
+    const localPref = localStorage.getItem('user_theme_preference');
+    if (localPref === 'dark' || localPref === 'light') {
+      return localPref;
+    }
+
+    const localDarkMode = localStorage.getItem('darkMode');
+    if (localDarkMode === 'true') return 'dark';
+    if (localDarkMode === 'false') return 'light';
+
+    const localThemeMode = localStorage.getItem('theme_mode');
+    if (localThemeMode === 'dark' || localThemeMode === 'light') {
+      return localThemeMode;
+    }
+  } catch {}
+
+  if (systemDefaultTheme === 'dark' || systemDefaultTheme === 'light') {
+    return systemDefaultTheme;
+  }
+
+  return 'dark';
 }
 
 /**
@@ -18,22 +56,40 @@ export interface ThemeSettings {
  * Synchronously modifies DOM attributes, classes, and CSS variables so all theme
  * and visual changes are reflected INSTANTLY on the entire application without reload.
  */
-export function applyThemeSettings(settings: Partial<ThemeSettings>) {
+export function applyThemeSettings(settings: Partial<ThemeSettings> & { userExplicit?: boolean }) {
   if (typeof window === 'undefined') return;
 
   const root = document.documentElement;
 
-  // 1. Dark / Light Mode
-  const activeThemeMode = settings.theme || localStorage.getItem('darkMode') === 'false' ? 'light' : 'dark';
-  const isDark = (settings.theme ? settings.theme === 'dark' : (localStorage.getItem('darkMode') !== 'false'));
+  // 1. Dark / Light Mode with user preference protection
+  let isDark: boolean;
+
+  if (settings.userExplicit && (settings.theme === 'dark' || settings.theme === 'light')) {
+    // User explicitly changed theme in the UI
+    const chosenMode = settings.theme;
+    isDark = chosenMode === 'dark';
+    try {
+      sessionStorage.setItem('user_theme_preference', chosenMode);
+      localStorage.setItem('user_theme_preference', chosenMode);
+      localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+      localStorage.setItem('theme_mode', chosenMode);
+    } catch {}
+  } else {
+    // System setting sync or general apply: Respect existing user preference if present!
+    const resolvedMode = getResolvedThemeMode(settings.theme);
+    isDark = resolvedMode === 'dark';
+    try {
+      localStorage.setItem('darkMode', isDark ? 'true' : 'false');
+      localStorage.setItem('theme_mode', resolvedMode);
+    } catch {}
+  }
+
   if (isDark) {
     root.classList.add('dark');
-    localStorage.setItem('darkMode', 'true');
   } else {
     root.classList.remove('dark');
-    localStorage.setItem('darkMode', 'false');
   }
-  localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
+  root.setAttribute('data-color-scheme', isDark ? 'dark' : 'light');
 
   // 2. Primary Color Theme & Custom Hex Engine
   const activeColor = settings.systemColor || localStorage.getItem('theme') || 'nextadmin';

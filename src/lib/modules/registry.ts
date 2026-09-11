@@ -16,32 +16,34 @@ export interface MenuOverride {
 
 import { PersonnelManifest } from '@/modules/personnel/manifest';
 import { LeavesManifest } from '@/modules/leaves/manifest';
-import { VehiclesManifest } from '@/modules/vehicles/manifest';
+
 import { BadgesManifest } from '@/modules/badges/manifest';
 import { CalendarManifest } from '@/modules/calendar/manifest';
 import { NewsManifest } from '@/modules/news/manifest';
 import { ContactsManifest } from '@/modules/contacts/manifest';
-import { CommandDashboardManifest } from '@/modules/command-dashboard/manifest';
+import { DashboardManifest } from '@/modules/dashboard/manifest';
 import { SystemInspectorManifest } from '@/modules/system-inspector/manifest';
-import { MenusManifest } from '@/modules/menus/manifest';
 import { themeManifest } from '@/modules/theme/manifest';
 import { backupManifest } from '@/modules/backup/manifest';
 import { ModuleManagerManifest } from '@/modules/module-manager/manifest';
 import { SiteContentManifest } from '@/modules/site-content/manifest';
 import { TestSlipManifest } from '@/modules/test-slip/manifest';
 import { Rpb1Manifest } from '@/modules/rpb1/manifest';
+import { ApiDocsManifest } from '@/modules/api-docs/manifest';
+import { UploadManifest } from '@/modules/upload/manifest';
 
 export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
+  DashboardManifest,
   PersonnelManifest,
   LeavesManifest,
-  VehiclesManifest,
+
   BadgesManifest,
   CalendarManifest,
   NewsManifest,
   ContactsManifest,
-  CommandDashboardManifest,
+  UploadManifest,
   SystemInspectorManifest,
-  MenusManifest,
+  ApiDocsManifest,
   themeManifest,
   backupManifest,
   ModuleManagerManifest,
@@ -125,7 +127,7 @@ export class ModuleRegistry {
         // Check Permission Requirement with leadership role compatibility
         let hasPerm = true;
         if (menu.requiredPermission && !isAdmin) {
-          if (menu.id === 'command-dashboard-view' && isLeadership) {
+          if ((menu.id === 'dashboard-command' || menu.id === 'command-dashboard-view') && isLeadership) {
             hasPerm = true;
           } else if (menu.id === 'manage-leave-approvals' && isLeadership) {
             hasPerm = true;

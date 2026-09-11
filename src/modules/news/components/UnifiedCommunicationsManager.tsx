@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import TablePagination from '@/components/common/TablePagination';
@@ -78,6 +79,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isPostSubmitting, setIsPostSubmitting] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [viewingPost, setViewingPost] = useState<Post | null>(null);
   const [postFormData, setPostFormData] = useState({
     title: '',
     category: 'ข่าวทั่วไป',
@@ -132,7 +134,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
   const fetchHistory = useCallback(async () => {
     try {
       setIsNotifLoading(true);
-      const res = await fetch(`/api/notifications/history?page=${notifPage}&limit=${notifPageSize}`);
+      const res = await fetch(`/api/modules/news/notifications/history?page=${notifPage}&limit=${notifPageSize}`);
       if (res.ok) {
         const result = await res.json();
         if (result.data && result.pagination) {
@@ -172,7 +174,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
     setShowNotifConfirm(false);
     setIsNotifSubmitting(true);
     try {
-      const res = await fetch('/api/notifications', {
+      const res = await fetch('/api/modules/news/notifications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(notifFormData),
@@ -208,7 +210,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
   const fetchPosts = useCallback(async () => {
     try {
       setIsPostsLoading(true);
-      const res = await fetch('/api/posts');
+      const res = await fetch('/api/modules/news/posts');
       if (res.ok) {
         const data = await res.json();
         setPosts(Array.isArray(data) ? data : []);
@@ -254,7 +256,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
 
     try {
       setIsPostSubmitting(true);
-      const url = editingPostId ? `/api/posts/${editingPostId}` : '/api/posts';
+      const url = editingPostId ? `/api/modules/news/posts/${editingPostId}` : '/api/modules/news/posts';
       const method = editingPostId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -284,7 +286,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
   const handlePostDelete = async () => {
     if (!deletingPost) return;
     try {
-      const res = await fetch(`/api/posts/${deletingPost.id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/modules/news/posts/${deletingPost.id}`, { method: 'DELETE' });
       if (res.ok) {
         toast.success(`ลบข่าวสาร "${deletingPost.title}" เรียบร้อย`);
         fetchPosts();
@@ -756,11 +758,17 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                               {post.category || 'ข่าวทั่วไป'}
                             </span>
                           </div>
-                          <div className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                          <button
+                            type="button"
+                            onClick={() => setViewingPost(post)}
+                            className="text-left font-bold text-slate-900 dark:text-white text-xs sm:text-sm hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer"
+                            title="คลิกเพื่ออ่านเนื้อหาข่าวสารฉบับเต็ม"
+                          >
                             {post.title}
-                          </div>
+                          </button>
                           <div 
-                            className="text-slate-400 text-xs mt-0.5 line-clamp-1"
+                            className="text-slate-400 text-xs mt-0.5 line-clamp-1 cursor-pointer"
+                            onClick={() => setViewingPost(post)}
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content.replace(/<[^>]+>/g, '')) }}
                           ></div>
                         </td>
@@ -793,26 +801,38 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                           })}
                         </td>
                         <td className="py-3 px-4 text-right whitespace-nowrap">
-                          {canManagePosts ? (
-                            <div className="flex items-center justify-end gap-1.5">
-                              <button
-                                onClick={() => handleOpenPostEdit(post)}
-                                className="w-8 h-8 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center transition-colors"
-                                title="แก้ไขบทความ"
-                              >
-                                <i className="fa-solid fa-pen text-xs"></i>
-                              </button>
-                              <button
-                                onClick={() => setDeletingPost(post)}
-                                className="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center transition-colors"
-                                title="ลบบทความ"
-                              >
-                                <i className="fa-solid fa-trash text-xs"></i>
-                              </button>
-                            </div>
-                          ) : (
-                            <span className="text-slate-400 text-xs">-</span>
-                          )}
+                          <div className="flex items-center justify-end gap-1.5">
+                            {/* Read / View Full Post Button */}
+                            <button
+                              type="button"
+                              onClick={() => setViewingPost(post)}
+                              className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors"
+                              title="อ่านข่าวสาร / ดูบทความ"
+                            >
+                              <i className="fa-solid fa-eye text-xs"></i>
+                            </button>
+
+                            {canManagePosts && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenPostEdit(post)}
+                                  className="w-8 h-8 rounded-lg bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center transition-colors"
+                                  title="แก้ไขบทความ"
+                                >
+                                  <i className="fa-solid fa-pen text-xs"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setDeletingPost(post)}
+                                  className="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center transition-colors"
+                                  title="ลบบทความ"
+                                >
+                                  <i className="fa-solid fa-trash text-xs"></i>
+                                </button>
+                              </>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -843,32 +863,33 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
 
       {/* Post Modal Form */}
       {isPostModalOpen && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-scale-up">
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/80 dark:bg-slate-900/80 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm font-bold">
+        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden animate-scale-up">
+            <div className="px-6 py-4.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900/40 flex items-center justify-center text-sm font-bold shadow-xs">
                   <i className={editingPostId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}></i>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                     {editingPostId ? 'แก้ไขข่าวสาร/บทความ' : 'เพิ่มข่าวสาร/บทความใหม่'}
                   </h3>
-                  <p className="text-[11px] text-slate-400">ระบบจัดการเนื้อหาพร้อมเครื่องมือ Rich Text Tool Editor</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">ระบบจัดการเนื้อหาพร้อมเครื่องมือ Rich Text Tool Editor</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsPostModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                title="ปิด"
               >
-                ✕
+                <i className="fa-solid fa-xmark text-sm"></i>
               </button>
             </div>
 
             <form onSubmit={handlePostSubmit} className="p-6 space-y-4 text-xs overflow-y-auto flex-1">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-2">
-                  <label htmlFor="post-title-unified" className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label htmlFor="post-title-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
                     หัวข้อข่าวสาร <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -878,12 +899,12 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                     value={postFormData.title}
                     onChange={(e) => setPostFormData({ ...postFormData, title: e.target.value })}
                     placeholder="เช่น กำหนดการจัดกิจกรรมประจำปี 2569"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                    className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="post-category-unified" className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label htmlFor="post-category-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
                     หมวดหมู่/หัวข้อข่าว <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -894,7 +915,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                     value={postFormData.category}
                     onChange={(e) => setPostFormData({ ...postFormData, category: e.target.value })}
                     placeholder="เลือกหรือพิมพ์หมวดหมู่..."
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                    className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
                   />
                   <datalist id="post-category-presets">
                     <option value="ข่าวทั่วไป" />
@@ -908,17 +929,17 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
               </div>
 
               {/* Quick Category Selector Pills */}
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[11px] text-slate-400 font-medium mr-1">เลือกด่วน:</span>
+              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <span className="text-xs text-slate-400 font-medium mr-1">เลือกด่วน:</span>
                 {['ข่าวทั่วไป', 'ประกาศสำคัญ', 'ข่าวกิจกรรม', 'จัดซื้อจัดจ้าง', 'สาระน่ารู้', 'คำสั่งและระเบียบ'].map((cat) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setPostFormData({ ...postFormData, category: cat })}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
                       postFormData.category === cat
-                        ? 'bg-primary-600 text-white shadow-xs'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                        ? 'bg-primary-500 text-white border-primary-500 shadow-xs ring-2 ring-primary-500/20'
+                        : 'bg-white hover:bg-primary-50/60 text-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-700 hover:text-primary-600 dark:hover:text-primary-400'
                     }`}
                   >
                     {cat}
@@ -927,7 +948,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
               </div>
 
               <div>
-                <label htmlFor="post-image-unified" className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label htmlFor="post-image-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
                   ลิงก์รูปภาพหน้าปก / รูปภาพประกอบ <span className="text-slate-400 font-normal">(ไม่บังคับ)</span>
                 </label>
                 <div className="relative">
@@ -938,13 +959,13 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                     value={postFormData.image}
                     onChange={(e) => setPostFormData({ ...postFormData, image: e.target.value })}
                     placeholder="https://... หรือ /uploads/..."
-                    className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                    className="w-full pl-9 pr-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
                   เนื้อหาข่าวสาร/บทความ <span className="text-rose-500">*</span>
                 </label>
                 <RichTextEditor
@@ -955,7 +976,7 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                 />
               </div>
 
-              <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
                 <input
                   type="checkbox"
                   id="post-published-unified"
@@ -963,23 +984,23 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                   onChange={(e) => setPostFormData({ ...postFormData, published: e.target.checked })}
                   className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer"
                 />
-                <label htmlFor="post-published-unified" className="font-semibold text-slate-700 dark:text-slate-300 cursor-pointer">
+                <label htmlFor="post-published-unified" className="font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-200 cursor-pointer">
                   เผยแพร่ทันที (เปิดให้แสดงผลในหน้าข่าวสารและหน้าหลัก)
                 </label>
               </div>
 
-              <div className="pt-2 flex justify-end gap-2.5 border-t border-slate-100 dark:border-slate-800">
+              <div className="pt-3 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsPostModalOpen(false)}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold transition-colors"
+                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs sm:text-sm font-bold transition-colors"
                 >
                   ยกเลิก
                 </button>
                 <button
                   type="submit"
                   disabled={isPostSubmitting}
-                  className="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white rounded-xl font-bold shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
+                  className="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   {isPostSubmitting ? (
                     <>
@@ -995,6 +1016,129 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* View / Read Post Modal */}
+      {viewingPost && (
+        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden animate-scale-up">
+            {/* Modal Header */}
+            <div className="px-6 py-4.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 text-primary-700 border border-primary-200/80 dark:bg-primary-950/40 dark:text-primary-300 dark:border-primary-800/60">
+                  {viewingPost.category || 'ข่าวทั่วไป'}
+                </span>
+                {viewingPost.published ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> เผยแพร่แล้ว
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ฉบับร่าง
+                  </span>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setViewingPost(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                title="ปิด"
+              >
+                <i className="fa-solid fa-xmark text-sm"></i>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              {/* Cover Image if any */}
+              {viewingPost.image && (
+                <div className="w-full h-56 sm:h-72 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+                  <img
+                    src={viewingPost.image}
+                    alt={viewingPost.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Title & Metadata */}
+              <div className="space-y-3">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">
+                  {viewingPost.title}
+                </h2>
+                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
+                      style={{ backgroundColor: viewingPost.author?.avatarColor || '#3b82f6' }}
+                    >
+                      {viewingPost.author?.firstName?.[0] || 'U'}
+                    </div>
+                    <span className="font-medium text-slate-700 dark:text-slate-300">
+                      {viewingPost.author ? `${viewingPost.author.firstName} ${viewingPost.author.lastName}` : 'ผู้ดูแลระบบ'}
+                    </span>
+                  </div>
+                  <span>•</span>
+                  <div className="flex items-center gap-1.5">
+                    <i className="fa-regular fa-calendar text-xs"></i>
+                    <span>
+                      {new Date(viewingPost.createdAt).toLocaleDateString('th-TH', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Post Content */}
+              <div
+                className="prose dark:prose-invert prose-slate max-w-none text-sm sm:text-base leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(viewingPost.content) }}
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/news/${viewingPost.id}`}
+                  target="_blank"
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                >
+                  <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                  <span>เปิดดูหน้าเว็บสาธารณะ</span>
+                </Link>
+              </div>
+              <div className="flex items-center gap-2.5">
+                {canManagePosts && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const postToEdit = viewingPost;
+                      setViewingPost(null);
+                      handleOpenPostEdit(postToEdit);
+                    }}
+                    className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
+                  >
+                    <i className="fa-solid fa-pen"></i>
+                    <span>แก้ไขบทความนี้</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setViewingPost(null)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors"
+                >
+                  ปิด
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

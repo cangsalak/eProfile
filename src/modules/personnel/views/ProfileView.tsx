@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Personnel } from '@/types/personnel';
-import VehicleList from '@/modules/vehicles/components/VehicleList';
+
 import PersonalInfoForm from '../components/forms/PersonalInfoForm';
 import MilitaryInfoForm from '../components/forms/MilitaryInfoForm';
 import ContactInfoForm from '../components/forms/ContactInfoForm';
@@ -13,7 +13,7 @@ import Link from 'next/link';
 export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<Personnel | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'info' | 'official' | 'history' | 'vehicles' | 'security'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'official' | 'history' | 'security'>('info');
   
   const [formData, setFormData] = useState<Partial<Personnel>>({});
   const [password, setPassword] = useState('');
@@ -356,7 +356,6 @@ export default function ProfilePage() {
               { id: 'info', name: 'ข้อมูลส่วนบุคคล & การติดต่อ', icon: 'fa-solid fa-user' },
               { id: 'official', name: 'ข้อมูลตำแหน่ง & สังกัด', icon: 'fa-solid fa-sitemap' },
               { id: 'history', name: 'ประวัติและผลงาน', icon: 'fa-solid fa-award' },
-              { id: 'vehicles', name: 'ยานพาหนะที่ลงทะเบียน', icon: 'fa-solid fa-car' },
               { id: 'security', name: 'ความปลอดภัย & รหัสผ่าน', icon: 'fa-solid fa-shield-halved' },
             ].map((tab) => (
               <button
@@ -631,12 +630,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* TAB 4: Vehicles */}
-          {activeTab === 'vehicles' && (
-            <div className="animate-fade-in">
-              <VehicleList personnelId={currentUser.id} />
-            </div>
-          )}
+
 
           {/* TAB 5: Security & Account */}
           {activeTab === 'security' && (

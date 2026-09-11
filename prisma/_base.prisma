@@ -1,0 +1,63 @@
+// ================================================================
+// BASE SCHEMA — datasource, generator, and core system models
+// ================================================================
+// Edit this file for system-level changes only.
+// For module-specific models, edit src/modules/<module>/schema.prisma
+// ================================================================
+
+// Prisma Schema for eProfile System with Alpine OpenSSL support
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── System Settings ─────────────────────────────────────────────
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+// ── Role & Permission ────────────────────────────────────────────
+model SystemRole {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g. ADMIN, USER, HR_MANAGER
+  displayName String   // e.g. ผู้ดูแลระบบ, ผู้ใช้งานทั่วไป, เจ้าหน้าที่บุคคล
+  description String?
+  permissions String   @default("[]") // JSON string of permissions
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Audit Log ───────────────────────────────────────────────────
+model AuditLog {
+  id          String     @id @default(cuid())
+  personnelId String?    // Who did the action
+  personnel   Personnel? @relation(fields: [personnelId], references: [id])
+  action      String     // 'CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'MODULE_INSTALLED', etc.
+  entity      String     // 'Personnel', 'LeaveRecord', 'Post', 'SystemSetting', 'Module'
+  entityId    String?    // ID of the affected record
+  details     String?    // JSON string of changes
+  ipAddress   String?
+  createdAt   DateTime   @default(now())
+
+  @@index([action])
+  @@index([personnelId])
+  @@index([createdAt])
+}
+
+// ── Auth Tokens ─────────────────────────────────────────────────
+model PasswordResetToken {
+  id          String    @id @default(cuid())
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  token       String    @unique
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+}

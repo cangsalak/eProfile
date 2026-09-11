@@ -1,0 +1,55 @@
+// ================================================================
+// System Inspector Module Schema
+// Contains: Inspection, InspectionFinding
+// ================================================================
+
+model Inspection {
+  id             String              @id @default(cuid())
+  page           String
+  url            String
+  scanMode       String              @default("STANDARD") // QUICK, STANDARD, FULL
+  userId         String
+  user           Personnel           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt      DateTime            @default(now())
+  completedAt    DateTime            @default(now())
+  durationMs     Int                 @default(0)
+  status         String              @default("COMPLETED") // COMPLETED, FAILED, RUNNING
+  overallResult  String              @default("PASS")      // PASS, NEEDS_REVIEW, CRITICAL_ISSUES
+  criticalCount  Int                 @default(0)
+  highCount      Int                 @default(0)
+  mediumCount    Int                 @default(0)
+  lowCount       Int                 @default(0)
+  infoCount      Int                 @default(0)
+  totalFindings  Int                 @default(0)
+  findings       InspectionFinding[]
+  createdAt      DateTime            @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([page])
+}
+
+model InspectionFinding {
+  id             String     @id @default(cuid())
+  inspectionId   String
+  inspection     Inspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  findingCode    String     // e.g. UI-001, TX-002, AX-003
+  category       String     // Typography, Accessibility, UI, Links, Images, Console, Form, SecurityHeaders, Performance
+  severity       String     // CRITICAL, HIGH, MEDIUM, LOW, INFO
+  title          String
+  description    String
+  expected       String?
+  actual         String?
+  element        String?
+  selector       String?
+  recommendation String
+  status         String     @default("OPEN") // OPEN, REVIEWED, IGNORED, FIXED, FALSE_POSITIVE
+  notes          String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([inspectionId])
+  @@index([severity])
+  @@index([category])
+  @@index([status])
+}

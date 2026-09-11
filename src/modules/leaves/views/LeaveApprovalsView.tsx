@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import TablePagination from '@/components/common/TablePagination';
+import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 
 interface ApplicantInfo {
   id: string;
@@ -387,6 +388,26 @@ export default function LeaveApprovalsView() {
 
   return (
     <div className="space-y-6 pb-16 animate-fade-in font-prompt">
+      {/* ── Submenu Header Navigation ── */}
+      <PageHeaderExtra>
+        <div className="flex items-center gap-1.5 p-1 bg-white/60 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-md">
+          <Link
+            href="/modules/leaves"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/60"
+          >
+            <i className="fa-solid fa-calendar-alt text-xs text-slate-400"></i>
+            <span>ยื่นและประวัติการลา</span>
+          </Link>
+          <Link
+            href="/modules/leaves/approvals"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-primary-600 text-white shadow-sm shadow-primary-500/30"
+          >
+            <i className="fa-solid fa-clipboard-check text-xs"></i>
+            <span>อนุมัติการลา</span>
+          </Link>
+        </div>
+      </PageHeaderExtra>
+
       {/* Toast Notification */}
       {successToast && (
         <div className="fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-600 text-white shadow-xl shadow-emerald-600/30 text-xs font-semibold animate-slide-down">

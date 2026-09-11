@@ -16,7 +16,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
 
   const fetchNotifications = async () => {
     try {
-      const res = await fetch('/api/notifications');
+      const res = await fetch('/api/modules/news/notifications');
       if (res.ok) {
         const data = await res.json();
         setNotifications(data);
@@ -62,7 +62,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
 
   const markAllAsRead = async () => {
     try {
-      await fetch('/api/notifications', { method: 'PUT' });
+      await fetch('/api/modules/news/notifications', { method: 'PUT' });
       setNotifications(notifications.map(n => ({ ...n, isRead: true })));
       window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {
@@ -72,7 +72,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
 
   const markAsRead = async (id: string) => {
     try {
-      await fetch(`/api/notifications/${id}`, { method: 'PUT' });
+      await fetch(`/api/modules/news/notifications/${id}`, { method: 'PUT' });
       setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
       window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {

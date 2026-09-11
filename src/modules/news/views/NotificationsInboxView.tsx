@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 
 interface NotificationItem {
   id: string;
@@ -30,7 +31,7 @@ export default function NotificationsPage() {
     try {
       setIsLoading(true);
       const [res, resSettings] = await Promise.all([
-        fetch('/api/notifications'),
+        fetch('/api/modules/news/notifications'),
         fetch('/api/settings'),
       ]);
       if (res.ok) {
@@ -50,12 +51,12 @@ export default function NotificationsPage() {
   };
 
   const markAllAsRead = async () => {
-    if (notifications.filter(n => !n.isRead).length === 0) return;
+    if (notifications.filter((n) => !n.isRead).length === 0) return;
     setIsMarkingAll(true);
     try {
-      const res = await fetch('/api/notifications', { method: 'PUT' });
+      const res = await fetch('/api/modules/news/notifications', { method: 'PUT' });
       if (res.ok) {
-        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
         window.dispatchEvent(new CustomEvent('notifications-updated'));
         toast.success('ทำเครื่องหมายว่าอ่านแล้วทั้งหมด');
       }
@@ -69,8 +70,8 @@ export default function NotificationsPage() {
 
   const markAsRead = async (id: string) => {
     try {
-      await fetch(`/api/notifications/${id}`, { method: 'PUT' });
-      setNotifications(prev => prev.map(n => (n.id === id ? { ...n, isRead: true } : n)));
+      await fetch(`/api/modules/news/notifications/${id}`, { method: 'PUT' });
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
       window.dispatchEvent(new CustomEvent('notifications-updated'));
     } catch (err) {
       console.error('Failed to mark as read', err);
@@ -80,9 +81,9 @@ export default function NotificationsPage() {
   const deleteNotification = async (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     try {
-      const res = await fetch(`/api/notifications/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/modules/news/notifications/${id}`, { method: 'DELETE' });
       if (res.ok) {
-        setNotifications(prev => prev.filter(n => n.id !== id));
+        setNotifications((prev) => prev.filter((n) => n.id !== id));
         window.dispatchEvent(new CustomEvent('notifications-updated'));
         toast.success('ลบการแจ้งเตือนสำเร็จ');
       }
@@ -94,9 +95,9 @@ export default function NotificationsPage() {
 
   const formatRelativeTime = (dateStr: string) => {
     try {
-      const date = new Date(dateStr);
+      const d = new Date(dateStr);
       const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
+      const diffMs = now.getTime() - d.getTime();
       const diffMins = Math.floor(diffMs / (1000 * 60));
       const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -107,10 +108,10 @@ export default function NotificationsPage() {
       if (diffDays === 1) return 'เมื่อวานนี้';
       if (diffDays < 7) return `${diffDays} วันที่แล้ว`;
 
-      return date.toLocaleDateString('th-TH', {
+      return d.toLocaleDateString('th-TH', {
         day: 'numeric',
         month: 'short',
-        year: '2-digit',
+        year: 'numeric',
       });
     } catch {
       return dateStr;
@@ -177,6 +178,32 @@ export default function NotificationsPage() {
 
   return (
     <div className="pb-12 space-y-8 animate-fade-in font-prompt">
+      {/* ── Submenu Header Navigation ── */}
+      <PageHeaderExtra>
+        <div className="flex items-center gap-1.5 p-1 bg-white/60 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-md">
+          <Link
+            href="/modules/news"
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
+          >
+            <i className="fa-solid fa-newspaper text-xs"></i>
+            <span>ข่าวสารและประกาศ</span>
+          </Link>
+          <Link
+            href="/modules/news/inbox"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-primary-600 text-white shadow-sm shadow-primary-500/30"
+          >
+            <i className="fa-solid fa-bell text-xs"></i>
+            <span>กล่องการแจ้งเตือน</span>
+          </Link>
+          <Link
+            href="/modules/news/settings"
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
+          >
+            <i className="fa-solid fa-paper-plane text-xs"></i>
+            <span>ตั้งค่า LINE & Email</span>
+          </Link>
+        </div>
+      </PageHeaderExtra>
       
       {/* Action Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">

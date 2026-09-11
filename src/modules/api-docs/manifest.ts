@@ -1,0 +1,36 @@
+import { ModuleManifest } from '@/lib/modules/types';
+
+export const ApiDocsManifest: ModuleManifest = {
+  id: 'api-docs',
+  name: 'ระบบจัดการ API & เอกสาร',
+  nameEn: 'API & Developer Portal',
+  description: 'ศูนย์รวมเอกสารอ้างอิง API (API Reference) และระบบออก/จัดการ API Tokens สำหรับระบบภายนอก',
+  version: '1.0.0',
+  author: 'System',
+  icon: 'fa-code',
+  category: 'system',
+  isCore: false,
+  defaultEnabled: true,
+  settingsPath: '/modules/api-docs/tokens',
+  menus: [
+    {
+      id: 'api-reference-menu',
+      title: 'เอกสาร API (API Docs)',
+      icon: 'fa-solid fa-book',
+      path: '/modules/api-docs',
+      requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      order: 104,
+    },
+  ],
+  permissions: [],
+  legacyRoutes: {
+    '/manage/api-docs': '/modules/api-docs',
+    '/api-documentation': '/modules/api-docs',
+    '/inspector/api-docs': '/modules/api-docs',
+    '/modules/system-inspector/api-docs': '/modules/api-docs',
+    '/manage/api-tokens': '/modules/api-docs/tokens',
+    '/modules/api-tokens': '/modules/api-docs/tokens',
+    '/api-tokens': '/modules/api-docs/tokens',
+    '/inspector/api-tokens': '/modules/api-docs/tokens',
+  },
+};

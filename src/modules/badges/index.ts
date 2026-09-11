@@ -20,6 +20,7 @@ export const BadgesModule: ModuleDefinition = {
   manifest: BadgesManifest,
   views: {
     '': BulkBadgePrintView,
+    'print': BulkBadgePrintView,
     'my': MyBadgesView,
     'verify': MemberVerifyBadgeView,
     'settings': BadgeSettingsView,

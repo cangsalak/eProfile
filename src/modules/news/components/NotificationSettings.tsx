@@ -25,7 +25,7 @@ export default function NotificationSettings({ settings, handleChange }: Notific
   const handleTestLine = async () => {
     setIsTestingLine(true);
     try {
-      const res = await fetch('/api/notifications/test', {
+      const res = await fetch('/api/modules/news/notifications/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -54,7 +54,7 @@ export default function NotificationSettings({ settings, handleChange }: Notific
     }
     setIsTestingEmail(true);
     try {
-      const res = await fetch('/api/notifications/test', {
+      const res = await fetch('/api/modules/news/notifications/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

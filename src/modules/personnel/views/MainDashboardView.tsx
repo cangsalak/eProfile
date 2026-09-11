@@ -21,7 +21,7 @@ export default function DashboardOverviewPage() {
   const [activeLeavesToday, setActiveLeavesToday] = useState<any[]>([]);
   const [recentPosts, setRecentPosts] = useState<any[]>([]);
   const [recentNotifs, setRecentNotifs] = useState<any[]>([]);
-  const [vehiclesCount, setVehiclesCount] = useState(0);
+
 
   const router = useRouter();
 
@@ -77,9 +77,9 @@ export default function DashboardOverviewPage() {
         const [resStats, resSettings, resLeaves, resPosts, resNotifs] = await Promise.all([
           fetch('/api/personnel/stats').catch(() => null),
           fetch('/api/settings').catch(() => null),
-          fetch('/api/leaves').catch(() => null),
-          fetch('/api/posts?published=true').catch(() => null),
-          fetch('/api/notifications').catch(() => null),
+          fetch('/api/modules/leaves').catch(() => null),
+          fetch('/api/modules/news/posts?published=true').catch(() => null),
+          fetch('/api/modules/news/notifications').catch(() => null),
         ]);
 
         // Settings
@@ -139,14 +139,7 @@ export default function DashboardOverviewPage() {
     loadDashboardData();
   }, [router]);
 
-  useEffect(() => {
-    if (!currentUser?.id) return;
 
-    fetch(`/api/vehicles?personnelId=${encodeURIComponent(currentUser.id)}`)
-      .then((response) => response.ok ? response.json() : [])
-      .then((vehicles) => setVehiclesCount(Array.isArray(vehicles) ? vehicles.length : 0))
-      .catch(() => setVehiclesCount(0));
-  }, [currentUser?.id]);
 
   if (!currentUser) {
     return (
@@ -274,25 +267,6 @@ export default function DashboardOverviewPage() {
           </div>
         </div>
 
-        {/* Card 4: Registered Vehicles */}
-        <div className="p-6 rounded-2xl bg-white dark:bg-[#24303F] border border-slate-200 dark:border-[#2E3A47] shadow-sm flex flex-col justify-between space-y-4">
-          <div>
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-lg">
-              <i className="fa-solid fa-car-side"></i>
-            </div>
-          </div>
-          <div>
-            <div className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white font-mono">
-              {vehiclesCount}
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-1">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">ยานพาหนะลงทะเบียน (Vehicles)</span>
-            <span className="text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1">
-              -0.95% <i className="fa-solid fa-arrow-down text-[10px]"></i>
-            </span>
-          </div>
-        </div>
 
       </div>
 

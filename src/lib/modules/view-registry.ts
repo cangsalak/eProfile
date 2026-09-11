@@ -2,32 +2,35 @@ import { ModuleDefinition } from './types';
 
 import { PersonnelModule } from '@/modules/personnel';
 import { LeavesModule } from '@/modules/leaves';
-import { VehiclesModule } from '@/modules/vehicles';
+
 import { BadgesModule } from '@/modules/badges';
 import { CalendarModule } from '@/modules/calendar';
 import { NewsModule } from '@/modules/news';
 import { ContactsModule } from '@/modules/contacts';
-import { CommandDashboardModule } from '@/modules/command-dashboard';
+import { DashboardModule } from '@/modules/dashboard';
 import { SystemInspectorModule } from '@/modules/system-inspector';
-import { MenusModule } from '@/modules/menus';
 import { ThemeModule } from '@/modules/theme';
 import { BackupModule } from '@/modules/backup';
 import { ModuleManagerModule } from '@/modules/module-manager';
 import { SiteContentModule } from '@/modules/site-content';
 import { TestSlipModule } from '@/modules/test-slip';
 import { Rpb1Module } from '@/modules/rpb1';
+import { ApiDocsModule } from '@/modules/api-docs';
+import { UploadModule } from '@/modules/upload';
 
 export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
+  'dashboard': DashboardModule,
+  'command-dashboard': DashboardModule,
   'personnel': PersonnelModule,
   'leaves': LeavesModule,
-  'vehicles': VehiclesModule,
+
   'badges': BadgesModule,
   'calendar': CalendarModule,
   'news': NewsModule,
   'contacts': ContactsModule,
-  'command-dashboard': CommandDashboardModule,
+  'upload': UploadModule,
   'system-inspector': SystemInspectorModule,
-  'menus': MenusModule,
+  'api-docs': ApiDocsModule,
   'theme': ThemeModule,
   'backup': BackupModule,
   'module-manager': ModuleManagerModule,

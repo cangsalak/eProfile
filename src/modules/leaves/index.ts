@@ -8,14 +8,12 @@ export * from './manifest';
 export { default as LeaveApprovalsView } from './views/LeaveApprovalsView';
 export { default as LeaveDashboardView } from './views/LeaveDashboardView';
 export { default as LeavePrintView } from './views/LeavePrintView';
-export * from './views/LeaveApprovalsView';
-export * from './views/LeaveDashboardView';
-export * from './views/LeavePrintView';
 
 export const LeavesModule: ModuleDefinition = {
   manifest: LeavesManifest,
   views: {
     '': LeaveDashboardView,
+    'dashboard': LeaveDashboardView,
     'approvals': LeaveApprovalsView,
     'print': LeavePrintView,
   },

@@ -1,0 +1,111 @@
+// ================================================================
+// Personnel Module Schema
+// Contains: Personnel (core user model), Department, PersonnelDocument
+//
+// NOTE: Personnel holds back-references (relation fields) from other modules.
+// When adding a new module that has a FK to Personnel, add the back-reference
+// relation field here as well.
+// ================================================================
+
+model Personnel {
+  id            String   @id @default(cuid())
+  badgeNo       String   @unique
+  username      String   @unique
+  password      String
+  role          String   @default("USER")
+  prefix        String
+  firstName     String
+  lastName      String
+  position      String
+  department    String
+  subDepartment String
+  personnelType String   @default("นายทหารสัญญาบัตร") // Commissioned, NCO, Employee, Conscript, etc.
+  phone         String
+  mobile        String
+  email         String
+  status        String   @default("ปฏิบัติงานปกติ")
+  avatarColor   String   @default("#3b82f6")
+  skills        String   @default("[]")
+  education     String   @default("")
+  experience    String   @default("")
+  notes                  String?
+  citizenId              String   @default("")
+  dateOfBirth            String   @default("")
+  bloodType              String   @default("")
+  religion               String   @default("")
+  officialId             String   @default("")
+  militaryBranch         String   @default("")
+  commissionDate         String   @default("")
+  currentAddress         String   @default("")
+  currentTambon          String   @default("")
+  currentAmphoe          String   @default("")
+  currentProvince        String   @default("")
+  currentZipcode         String   @default("")
+  emergencyContactName   String   @default("")
+  emergencyContactPhone  String   @default("")
+  emergencyContactRelation String @default("")
+  royalDecorations       String   @default("")
+  trainingHistory        String   @default("")
+  coverPhoto             String   @default("")
+  profileTheme           String   @default("indigo")
+
+  // ── Relations from other modules (back-references) ──────────────
+  leaves                 LeaveRecord[]
+  approvedLeaves         LeaveRecord[]        @relation("LeaveApprover")
+  notifications          Notification[]
+  notificationReads      NotificationRead[]
+  posts                  Post[]
+  auditLogs              AuditLog[]
+  mediaFiles             MediaFile[]
+  passwordResetTokens    PasswordResetToken[]
+  documents              PersonnelDocument[]
+  inspections            Inspection[]
+  rpb1Records            Rpb1Record[]
+
+  // ── Security Fields ─────────────────────────────────────────────
+  mustChangePassword     Boolean  @default(true)
+  failedLoginAttempts    Int      @default(0)
+  lockedUntil            DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Performance indexes
+  @@index([department])
+  @@index([subDepartment])
+  @@index([status])
+  @@index([personnelType])
+  @@index([role])
+  @@index([createdAt])
+  @@index([firstName, lastName])
+}
+
+model Department {
+  id              String   @id @default(cuid())
+  name            String   @unique
+  shortName       String?  @default("")
+  subDepartments  String   @default("[]") // JSON Array: [{ name: string, shortName?: string }]
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PersonnelDocument {
+  id          String    @id @default(cuid())
+  personnelId String
+  personnel   Personnel @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  category    String    // คำสั่ง, บัตรประจำตัว, วุฒิการศึกษา, ใบประกาศ, ทะเบียนประวัติ, อื่นๆ
+  filename    String
+  mimeType    String
+  size        Int
+  storagePath String
+  uploadedBy  String    @default("")
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expiresAt   DateTime?
+
+  @@index([personnelId])
+  @@index([category])
+  @@index([createdAt])
+}

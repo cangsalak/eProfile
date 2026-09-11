@@ -7,12 +7,22 @@ export const backupManifest: ModuleManifest = {
   description: 'จัดการการสำรองข้อมูลฐานข้อมูลและกู้คืนระบบ',
   version: '1.0.0',
   author: 'eProfile System',
-  icon: 'fa-database',
+  icon: 'fa-solid fa-database',
   category: 'system',
   isCore: true,
   defaultEnabled: true,
   settingsPath: '/modules/backup',
-  menus: [],
+  menus: [
+    {
+      id: 'backup-main-menu',
+      title: 'สำรองและกู้คืนข้อมูล',
+      icon: 'fa-solid fa-database',
+      path: '/modules/backup',
+      requiredPermission: 'MANAGE_BACKUP',
+      requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      order: 80,
+    },
+  ],
   permissions: [
     {
       key: 'MANAGE_BACKUP',

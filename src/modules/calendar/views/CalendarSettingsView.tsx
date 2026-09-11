@@ -1,18 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 import {
   Calendar as CalendarIcon,
   Link as LinkIcon,
   Plus,
   Trash2,
-  Save,
-  RotateCcw,
   Users,
   Tag,
 } from 'lucide-react';
 import { DEFAULT_DUTY_ROLES } from '../types';
+import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
+import { Card, Button, Input } from '@/components/ui';
 
 export default function CalendarSettingsView() {
   const [settings, setSettings] = useState<any>(null);
@@ -105,10 +106,29 @@ export default function CalendarSettingsView() {
   };
 
   return (
-    <div className="space-y-6 pb-16 animate-fade-in">
+    <div className="space-y-6 pb-16 animate-fade-in font-prompt">
+      <PageHeaderExtra>
+        <div className="flex items-center gap-1.5 p-1 bg-white/60 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-md">
+          <Link
+            href="/modules/calendar"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700/60"
+          >
+            <i className="fa-solid fa-calendar-days text-xs text-slate-400"></i>
+            <span>ปฏิทินปฏิบัติงาน</span>
+          </Link>
+          <Link
+            href="/modules/calendar/settings"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-primary-600 text-white shadow-sm shadow-primary-500/30"
+          >
+            <i className="fa-solid fa-sliders text-xs"></i>
+            <span>ตั้งค่าปฏิทินและเวร</span>
+          </Link>
+        </div>
+      </PageHeaderExtra>
+
       <form onSubmit={handleSave} className="space-y-6">
         {/* ── Section 1: Duty Roles & Positions Management ── */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs space-y-5">
+        <Card className="p-5 sm:p-6 space-y-5">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -120,19 +140,20 @@ export default function CalendarSettingsView() {
               </p>
             </div>
 
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={handleResetDefaultRoles}
-              className="text-xs text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 font-semibold border border-slate-200 dark:border-slate-700 shrink-0"
+              icon="fa-solid fa-rotate-left"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>คืนค่าเริ่มต้น</span>
-            </button>
+              คืนค่าเริ่มต้น
+            </Button>
           </div>
 
           {/* Add Role Input Bar */}
           <div className="flex gap-2 max-w-lg">
-            <input
+            <Input
               type="text"
               value={newRoleInput}
               onChange={(e) => setNewRoleInput(e.target.value)}
@@ -143,16 +164,17 @@ export default function CalendarSettingsView() {
                 }
               }}
               placeholder="พิมพ์ชื่อตำแหน่งหน้าที่ใหม่ เช่น สารวัตรเวร, เวรยามตรวจการณ์..."
-              className="form-input text-xs flex-1"
+              className="text-xs flex-1"
             />
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="sm"
               onClick={handleAddRole}
-              className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs shrink-0"
+              icon="fa-solid fa-plus"
             >
-              <Plus className="w-4 h-4" />
-              <span>เพิ่มตำแหน่ง</span>
-            </button>
+              เพิ่มตำแหน่ง
+            </Button>
           </div>
 
           {/* Role Badges List */}
@@ -160,11 +182,11 @@ export default function CalendarSettingsView() {
             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
               ตำแหน่งหน้าที่ที่มีอยู่ในระบบ ({dutyRoles.length} ตำแหน่ง):
             </label>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2">
               {dutyRoles.map((role, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-2xs group hover:border-primary-400 transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-2xs group hover:border-primary-400 transition-colors"
                 >
                   <Tag className="w-3.5 h-3.5 text-primary-500" />
                   <span>{role}</span>
@@ -180,10 +202,10 @@ export default function CalendarSettingsView() {
               ))}
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* ── Section 2: Google Calendar iCal Integration ── */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xs space-y-5">
+        <Card className="p-5 sm:p-6 space-y-5">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -195,17 +217,18 @@ export default function CalendarSettingsView() {
               </p>
             </div>
 
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="sm"
               onClick={() => {
                 const currentUrls = settings?.googleCalendarUrls ? JSON.parse(settings.googleCalendarUrls) : [];
                 setSettings({ ...settings, googleCalendarUrls: JSON.stringify([...currentUrls, { name: '', url: '' }]) });
               }}
-              className="text-xs bg-primary-600 hover:bg-primary-500 text-white px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 font-semibold shadow-xs shrink-0"
+              icon="fa-solid fa-plus"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>เพิ่มปฏิทิน</span>
-            </button>
+              เพิ่มปฏิทิน
+            </Button>
           </div>
 
           <div className="space-y-3">
@@ -260,18 +283,18 @@ export default function CalendarSettingsView() {
               ))
             )}
           </div>
-        </div>
+        </Card>
 
         {/* ── Save Button Bar ── */}
         <div className="flex justify-end bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
-          <button
+          <Button
             type="submit"
-            disabled={isSaving}
-            className="px-6 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white text-xs font-bold flex items-center gap-2 shadow-xs transition-all"
+            variant="primary"
+            isLoading={isSaving}
+            icon="fa-solid fa-floppy-disk"
           >
-            <Save className="w-4 h-4" />
-            <span>{isSaving ? 'กำลังบันทึกการตั้งค่า...' : 'บันทึกการตั้งค่าปฏิทิน'}</span>
-          </button>
+            {isSaving ? 'กำลังบันทึกการตั้งค่า...' : 'บันทึกการตั้งค่าปฏิทิน'}
+          </Button>
         </div>
       </form>
     </div>

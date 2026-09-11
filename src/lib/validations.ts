@@ -50,6 +50,10 @@ export const contactSchema = z.object({
 export const installRequestSchema = z.object({
   firstName: z.string().trim().min(1, 'กรุณากรอกชื่อผู้ดูแลระบบ').max(100),
   lastName: z.string().trim().min(1, 'กรุณากรอกนามสกุลผู้ดูแลระบบ').max(100),
+  prefix: z.string().max(50).optional().default('คุณ'),
+  position: z.string().max(100).optional().default('ผู้ดูแลระบบสูงสุด'),
+  department: z.string().max(100).optional().default('กองบังคับการ'),
+  initialDepartments: z.string().max(500).optional().default(''),
   citizenId: z.string().trim().regex(/^\d{13}$/, 'เลขประจำตัวประชาชนต้องเป็นตัวเลข 13 หลักเท่านั้น'),
   badgeNo: z.string().trim().regex(/^\d{10}$/, 'หมายเลขประจำตัวทหาร/เจ้าหน้าที่ต้องเป็นตัวเลข 10 หลักเท่านั้น'),
   password: passwordPolicySchema,

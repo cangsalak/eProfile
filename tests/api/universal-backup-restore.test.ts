@@ -1,11 +1,10 @@
 import assert from 'assert';
-import { GET as getBackupHandler } from '../../src/app/api/backup/route';
-import { POST as postRestoreHandler } from '../../src/app/api/restore/route';
+import { handleGetBackup as getBackupHandler, handleRestoreDatabase as postRestoreHandler } from '../../src/modules/backup/api';
 import { SignJWT } from 'jose';
 import { prisma } from '../../src/lib/prisma';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-super-secret-jwt-key-2026-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
 async function makeToken(id: string, role: string, username: string): Promise<string> {

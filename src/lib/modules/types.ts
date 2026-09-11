@@ -34,7 +34,21 @@ export interface ModuleManifest {
   legacyRoutes?: Record<string, string>;
 }
 
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
+
+export type ApiRouteHandler = (
+  req: Request,
+  context: { params: Record<string, string | string[]> }
+) => Promise<Response> | Response;
+
+export type ModuleApiRouteMap = Record<
+  string,
+  Partial<Record<HttpMethod, ApiRouteHandler>>
+>;
+
 export interface ModuleDefinition {
   manifest: ModuleManifest;
   views: Record<string, React.ComponentType<any>>;
+  api?: ModuleApiRouteMap;
 }
+

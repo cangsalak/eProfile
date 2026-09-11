@@ -32,29 +32,16 @@ const publicApiPaths = [
   '/api/auth/forgot-password',
   '/api/auth/reset-password',
   '/api/auth/me',
+  '/api/calendar/feed',
+  '/api/modules/calendar/feed',
 ];
-const publicApiPrefixes = ['/api/verify/'];
+const publicApiPrefixes = ['/api/verify/', '/api/modules/badges/verify/'];
 
-// Protected member page prefixes — all modules live under /modules, plus clean URL aliases
+// Protected root page prefixes (core non-module routes)
 const protectedPagePrefixes = [
   '/modules',
   '/print',
   '/manage',
-  // Clean URL aliases (rewrites point to /modules/... internally)
-  '/personnel',
-  '/leaves',
-  '/vehicles',
-  '/badges',
-  '/calendar',
-  '/news-inbox',
-  '/contacts',
-  '/command-dashboard',
-  '/inspector',
-  '/menus',
-  '/theme',
-  '/backup',
-  '/module-manager',
-  '/test-slip',
 ];
 
 export async function middleware(request: NextRequest) {
@@ -126,7 +113,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 4. For API routes:
+  const DEDICATED_API_ROUTES = [
+    'admin', 'audit-logs', 'auth', 'contacts', 'departments', 'health',
+    'install', 'modules', 'personnel', 'roles', 'rpb1', 'services', 'settings'
+  ];
+
+  // 3. For API routes authentication:
   if (pathname.startsWith('/api/')) {
     // Allow exact public API paths
     if (publicApiPaths.includes(pathname)) {
@@ -152,7 +144,31 @@ export async function middleware(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized: Invalid or expired token' }, { status: 401 });
     }
 
+    // 3.1 Dynamic Module API rewriting for modules without dedicated top-level route folders
+    // (/api/<moduleId>/<path> -> /api/modules/<moduleId>/<path>)
+    const topApiFolder = pathname.replace(/^\/api\//, '').split('/')[0];
+    if (topApiFolder && !DEDICATED_API_ROUTES.includes(topApiFolder)) {
+      const apiModule = ModuleRegistry.getAllModules().find(m => m.id === topApiFolder);
+      if (apiModule) {
+        const subPath = pathname.substring(`/api/${apiModule.id}`.length);
+        const destinationUrl = new URL(`/api/modules/${apiModule.id}${subPath}`, request.url);
+        destinationUrl.search = request.nextUrl.search;
+        return NextResponse.rewrite(destinationUrl);
+      }
+    }
+
     return NextResponse.next();
+  }
+
+  // 4. Dynamic Module Page rewriting (/<moduleId>/<path> -> /modules/<moduleId>/<path>)
+  const matchingModule = ModuleRegistry.getAllModules().find(
+    m => pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
+  );
+  if (matchingModule && !pathname.startsWith('/modules/')) {
+    const subPath = pathname.substring(`/${matchingModule.id}`.length);
+    const destinationUrl = new URL(`/modules/${matchingModule.id}${subPath}`, request.url);
+    destinationUrl.search = request.nextUrl.search;
+    return NextResponse.rewrite(destinationUrl);
   }
 
   return NextResponse.next();

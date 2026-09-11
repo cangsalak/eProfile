@@ -8,12 +8,13 @@ import NextAdminSidebar from './common/sidebar';
 import { MenuItem } from './layout/Sidebar';
 import TopNavbar from './layout/TopNavbar';
 import PageBreadcrumb from './layout/PageBreadcrumb';
+import { PageHeaderProvider } from './layout/PageHeaderContext';
 import InspectorFloatingButton from '@/modules/system-inspector/components/InspectorFloatingButton';
 import { MenuOverride, ModuleRegistry } from '@/lib/modules';
 import { cn } from '@/utils/cn';
 import DeveloperCreditFooter from './DeveloperCreditFooter';
 
-import { applyThemeSettings } from '@/lib/theme-manager';
+import { applyThemeSettings, getResolvedThemeMode } from '@/lib/theme-manager';
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -72,14 +73,13 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       setIsSidebarOpen(true);
     }
 
-    // Initialize Theme from localStorage first
+    // Initialize Theme from resolved session/local storage first
     const savedTheme = localStorage.getItem('theme') || 'indigo';
-    const savedDarkMode = localStorage.getItem('darkMode');
     const savedFont = localStorage.getItem('systemFont') || 'prompt';
     const savedBorder = localStorage.getItem('borderRadius') || 'rounded';
     const savedSurface = localStorage.getItem('surfaceStyle') || 'shadow';
     
-    const initialIsDark = savedDarkMode !== null ? savedDarkMode === 'true' : true;
+    const initialIsDark = getResolvedThemeMode() === 'dark';
     setIsDarkMode(initialIsDark);
 
     applyThemeSettings({
@@ -110,11 +110,22 @@ export default function DashboardShell({ children }: DashboardShellProps) {
             return;
           }
 
-          if (data.theme) {
+          // Check if user has explicit preference in session/local storage
+          const userHasExplicitPref = sessionStorage.getItem('user_theme_preference') || localStorage.getItem('user_theme_preference');
+          if (!userHasExplicitPref && data.theme) {
             setIsDarkMode(data.theme === 'dark');
+          } else {
+            setIsDarkMode(getResolvedThemeMode() === 'dark');
           }
 
           applyThemeSettings(data);
+
+          if (data.menuOverrides) {
+            try {
+              const parsed = typeof data.menuOverrides === 'string' ? JSON.parse(data.menuOverrides) : data.menuOverrides;
+              if (Array.isArray(parsed)) setMenuOverrides(parsed);
+            } catch (_) {}
+          }
         }
       })
       .catch(console.error);
@@ -128,13 +139,6 @@ export default function DashboardShell({ children }: DashboardShellProps) {
         }
       })
       .catch(console.error);
-
-    fetch('/api/menus')
-      .then(res => res.ok ? res.json() : Promise.reject(new Error('Failed to load menu settings')))
-      .then(data => {
-        if (Array.isArray(data?.overrides)) setMenuOverrides(data.overrides);
-      })
-      .catch(() => {});
 
     // Listen for live theme updates across the application
     const handleLiveThemeUpdate = (e: CustomEvent) => {
@@ -154,6 +158,12 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           ...prev,
           enabledModules: detail.enabledModules,
         }));
+      }
+      if (detail.menuOverrides !== undefined) {
+        try {
+          const parsed = typeof detail.menuOverrides === 'string' ? JSON.parse(detail.menuOverrides) : detail.menuOverrides;
+          if (Array.isArray(parsed)) setMenuOverrides(parsed);
+        } catch (_) {}
       }
     };
 
@@ -176,7 +186,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const toggleDarkMode = () => {
     const newVal = !isDarkMode;
     setIsDarkMode(newVal);
-    applyThemeSettings({ theme: newVal ? 'dark' : 'light' });
+    applyThemeSettings({ theme: newVal ? 'dark' : 'light', userExplicit: true });
   };
 
   const handleLoginSuccess = (user: Personnel) => {
@@ -294,12 +304,14 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           />
 
           {/* Page Content Inside Surface Container */}
-          <main className="scrollbar-thin flex-1 min-h-0 overflow-y-auto print:overflow-visible p-4 sm:p-6 lg:p-8 scroll-smooth">
-            <div className="mx-auto w-full max-w-384 pb-5">
-              {!isGuest && <PageBreadcrumb />}
-              {children}
-            </div>
-          </main>
+          <PageHeaderProvider>
+            <main className="scrollbar-thin flex-1 min-h-0 overflow-y-auto print:overflow-visible p-4 sm:p-6 lg:p-8 scroll-smooth">
+              <div className="mx-auto w-full max-w-384 pb-5">
+                {!isGuest && <PageBreadcrumb />}
+                {children}
+              </div>
+            </main>
+          </PageHeaderProvider>
           {/* ============================================================
               ⚠️  DEVELOPER CREDIT FOOTER — DO NOT REMOVE OR MODIFY ⚠️
               ============================================================ */}

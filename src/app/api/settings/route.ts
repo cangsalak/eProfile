@@ -75,6 +75,7 @@ const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'bloodGroups',
   'educationLevels',
   'enabledModules',
+  'menuOverrides',
   // Site Content (CMS) for Home, About, Contact
   'homeBadgeText',
   'homeTitleLine1',
@@ -144,8 +145,7 @@ const PUBLIC_DEFAULTS: Record<string, string> = {
   leavePolicy:     JSON.stringify({ 'ลาพักผ่อน': 10, 'ลากิจ': 45, 'ลาป่วย': 60, 'ลาคลอดบุตร': 90, 'ลาอุปสมบท': 120 }),
   vehicleTypes:    JSON.stringify(['รถยนต์ส่วนบุคคล', 'รถจักรยานยนต์', 'รถยนต์ราชการ', 'รถจักรยานยนต์ราชการ']),
   bloodGroups:     JSON.stringify(['A', 'B', 'AB', 'O']),
-  educationLevels: JSON.stringify(['มัธยมศึกษาตอนต้น', 'มัธยมศึกษาตอนปลาย / ปวช.', 'อนุปริญญา / ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก']),
-  enabledModules:  JSON.stringify(['personnel', 'leaves', 'vehicles', 'badges', 'calendar', 'news', 'contacts', 'command-dashboard', 'system-inspector', 'site-content', 'test-slip', 'rpb1']),
+  enabledModules:  JSON.stringify(['dashboard', 'personnel', 'leaves', 'badges', 'calendar', 'news', 'contacts', 'system-inspector', 'site-content', 'test-slip', 'rpb1']),
   calendarDutyRoles: JSON.stringify([
     'นายทหารเวรผู้ใหญ่',
     'นายทหารเวร',

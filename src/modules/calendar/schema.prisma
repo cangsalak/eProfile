@@ -1,0 +1,15 @@
+// ================================================================
+// Calendar Module Schema
+// Contains: CalendarEvent
+// ================================================================
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  type        String   @default("general") // 'general', 'operation', 'notification', 'meeting'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
