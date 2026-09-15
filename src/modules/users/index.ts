@@ -6,6 +6,7 @@ import DirectoryView from './views/DirectoryView';
 import ProfileView from './views/ProfileView';
 import RoleSettingsView from './views/RoleSettingsView';
 import DepartmentsSettingsView from './views/DepartmentsSettingsView';
+import PersonnelFormView from './views/PersonnelFormView';
 
 export * from './manifest';
 export * from './types';
@@ -17,6 +18,7 @@ export { default as DirectoryView } from './views/DirectoryView';
 export { default as MainDashboardView } from './views/MainDashboardView';
 export { default as DepartmentsSettingsView } from './views/DepartmentsSettingsView';
 export { default as DepartmentsManager } from './settings/DepartmentsManager';
+export { default as PersonnelFormView } from './views/PersonnelFormView';
 
 export const UsersModule: ModuleDefinition = {
   manifest: UsersManifest,
@@ -27,6 +29,11 @@ export const UsersModule: ModuleDefinition = {
     'profile': ProfileView,
     'roles': RoleSettingsView,
     'departments': DepartmentsSettingsView,
+    'new': PersonnelFormView,
+    'manage/new': PersonnelFormView,
+    'edit': PersonnelFormView,
+    'manage/edit': PersonnelFormView,
+    'form': PersonnelFormView,
   },
 };
 

@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Personnel } from '@/modules/users';
 import ImageUploadBox from '@/components/common/ImageUploadBox';
 import PersonalInfoForm from './forms/PersonalInfoForm';
 import MilitaryInfoForm from './forms/MilitaryInfoForm';
 import ContactInfoForm from './forms/ContactInfoForm';
 import ExtendedHistoryForm from './forms/ExtendedHistoryForm';
+import { Card, Button } from '@/components/ui';
 
 interface AddPersonnelModalProps {
   isOpen: boolean;
@@ -23,6 +25,11 @@ export default function AddPersonnelModal({ isOpen, onClose, onAdd, initialData 
   const [prefixes, setPrefixes] = useState<string[]>([]);
   const [bloodGroups, setBloodGroups] = useState<string[]>([]);
   const [roles, setRoles] = useState<{name: string, displayName: string}[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -103,7 +110,7 @@ export default function AddPersonnelModal({ isOpen, onClose, onAdd, initialData 
     }
   }, [isOpen, initialData]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,20 +128,25 @@ export default function AddPersonnelModal({ isOpen, onClose, onAdd, initialData 
     onClose();
   };
 
-  return (
-    <div className="no-print fixed inset-0 z-[100] bg-slate-100 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="glass-card max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6 border-b border-slate-200 dark:border-slate-700/50 pb-4">
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+  const modalContent = (
+    <div className="no-print fixed inset-0 z-[99999] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in font-prompt">
+      <Card variant="convex" className="max-w-4xl w-full p-6 sm:p-7 max-h-[90vh] overflow-y-auto rounded-[24px] shadow-2xl">
+        <div className="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i className="fa-solid fa-user-plus text-primary-500"></i>
             {initialData ? 'แก้ไขข้อมูลบุคลากร' : 'เพิ่มข้อมูลบุคลากรใหม่'}
           </h3>
-          <button type="button" onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800">
+          <button 
+            type="button" 
+            onClick={onClose} 
+            className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 text-sm">
-          <div className="flex justify-center mb-4 border-b border-slate-200 dark:border-slate-700 pb-6">
+          <div className="flex justify-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-6">
             <div className="w-32">
               <ImageUploadBox 
                 label="รูปโปรไฟล์"
@@ -165,24 +177,30 @@ export default function AddPersonnelModal({ isOpen, onClose, onAdd, initialData 
           
           <ExtendedHistoryForm formData={formData} setFormData={setFormData} />
 
-          <div className="flex justify-end gap-3 pt-6 border-t border-slate-200 dark:border-slate-800">
-            <button
+          <div className="flex justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+            <Button
               type="button"
+              variant="secondary"
+              size="sm"
               onClick={onClose}
-              className="px-6 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors font-medium"
+              className="text-xs font-semibold rounded-xl"
             >
               ยกเลิก
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 shadow-[0_0_15px_rgba(99,102,241,0.3)] text-white font-medium transition-all"
+              variant="primary"
+              size="sm"
+              icon="fa-solid fa-save"
+              className="text-xs font-bold rounded-xl"
             >
-              <i className="fa-solid fa-save mr-2"></i>
               บันทึกข้อมูล
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null;
 }

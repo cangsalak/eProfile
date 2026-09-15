@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Personnel } from '@/modules/users';
 import Navbar from '@/components/Navbar';
 import BannerSummary from '@/components/BannerSummary';
@@ -157,16 +158,17 @@ export default function EProfilePage() {
         </Button>
 
         {currentUser && (
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={() => setIsAddModalOpen(true)}
-            icon="fa-solid fa-plus"
-            className="rounded-xl font-bold shadow-md shadow-primary-500/20"
-          >
-            เพิ่มบุคลากร
-          </Button>
+          <Link href="/modules/users/new">
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              icon="fa-solid fa-plus"
+              className="rounded-xl font-bold shadow-md shadow-primary-500/20"
+            >
+              เพิ่มบุคลากร
+            </Button>
+          </Link>
         )}
       </div>
 

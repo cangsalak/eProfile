@@ -384,10 +384,7 @@ export default function ManagePersonnelView() {
             type="button"
             variant="primary"
             size="sm"
-            onClick={() => {
-              setEditingPerson(null);
-              setIsAddModalOpen(true);
-            }}
+            onClick={() => router.push('/modules/users/new')}
             icon="fa-solid fa-user-plus"
             className="text-xs font-bold rounded-xl shadow-md shadow-primary-500/20"
           >
@@ -567,7 +564,7 @@ export default function ManagePersonnelView() {
           toggleSelectAll={toggleSelectAll}
           toggleSelectPerson={toggleSelectPerson}
           setLeaveModalPerson={setLeaveModalPerson}
-          setEditingPerson={setEditingPerson}
+          setEditingPerson={(person) => router.push(`/modules/users/new?id=${person.id}`)}
           setIsAddModalOpen={setIsAddModalOpen}
           handleDelete={handleDelete}
           sortBy={sortBy}
