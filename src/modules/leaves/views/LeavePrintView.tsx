@@ -1,5 +1,5 @@
 import React from 'react';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/modules/core/lib/prisma';
 import { notFound } from 'next/navigation';
 import './print.css';
 import { PersonalLeavePrintForm } from '../components/forms/PersonalLeavePrintForm';

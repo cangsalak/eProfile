@@ -1,9 +1,10 @@
 import assert from 'assert';
-import { GET as getMaintenanceHandler, POST as postMaintenanceHandler } from '../../src/app/api/settings/maintenance/route';
+import { handleGetMaintenance as getMaintenanceHandler, handleUpdateMaintenance as postMaintenanceHandler } from '../../src/modules/core/api';
 import { SignJWT } from 'jose';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import bcrypt from 'bcryptjs';
 
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-super-secret-jwt-key-2026-change-in-production';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
@@ -87,7 +88,7 @@ export async function runMaintenanceModeTests() {
   console.log('✔ Public GET /api/settings/maintenance verified');
 
   // Test 2: Anonymous POST rejected (401)
-  const anonReq = new Request('http://localhost:3000/api/settings/maintenance', {
+  const anonReq = new Request(`${BASE_URL}/api/settings/maintenance`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ isMaintenance: true })
@@ -97,7 +98,7 @@ export async function runMaintenanceModeTests() {
   console.log('✔ Anonymous modification blocked (401)');
 
   // Test 3: Regular USER POST rejected (403)
-  const userReq = new Request('http://localhost:3000/api/settings/maintenance', {
+  const userReq = new Request(`${BASE_URL}/api/settings/maintenance`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -110,7 +111,7 @@ export async function runMaintenanceModeTests() {
   console.log('✔ Regular USER blocked from updating maintenance (403)');
 
   // Test 4: ADMIN enables maintenance mode
-  const enableReq = new Request('http://localhost:3000/api/settings/maintenance', {
+  const enableReq = new Request(`${BASE_URL}/api/settings/maintenance`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ export async function runMaintenanceModeTests() {
   assert.strictEqual(verifyGetData.endTime, '02 ก.ย. 2569 เวลา 08:00 น.');
 
   // Test 5: ADMIN disables maintenance mode (restore normal state)
-  const disableReq = new Request('http://localhost:3000/api/settings/maintenance', {
+  const disableReq = new Request(`${BASE_URL}/api/settings/maintenance`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

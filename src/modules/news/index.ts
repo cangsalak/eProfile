@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { NewsManifest } from './manifest';
 import NewsDashboardView from './views/NewsDashboardView';
 import NotificationsInboxView from './views/NotificationsInboxView';

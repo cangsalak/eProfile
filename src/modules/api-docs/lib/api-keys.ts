@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/modules/core';
 
 export interface ApiKeyRecord {
   id: string;

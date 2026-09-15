@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const UsersManifest: ModuleManifest = {
   id: 'users',
@@ -11,7 +11,7 @@ export const UsersManifest: ModuleManifest = {
   category: 'core',
   isCore: true,
   defaultEnabled: true,
-  settingsPath: '/modules/users/roles',
+  settingsPath: '/modules/users/departments',
   menus: [
     {
       id: 'directory',
@@ -53,6 +53,14 @@ export const UsersManifest: ModuleManifest = {
     '/modules/personnel/manage': '/modules/users/manage',
     '/modules/personnel/roles': '/modules/users/roles',
     '/modules/personnel/departments': '/modules/users/departments',
+  },
+  apiRewrites: {
+    '/api/departments': '/api/modules/users/departments',
+    '/api/departments/:path*': '/api/modules/users/departments/:path*',
+    '/api/personnel': '/api/modules/users',
+    '/api/personnel/:path*': '/api/modules/users/:path*',
+    '/api/modules/personnel': '/api/modules/users',
+    '/api/modules/personnel/:path*': '/api/modules/users/:path*',
   }
 };
 

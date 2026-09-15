@@ -365,7 +365,7 @@ export default function BackupRestoreSettings({
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     ระบบใช้งานฐานข้อมูลแบบ Server ({dbProvider.toUpperCase()}) ขอแนะนำให้ตั้งค่า Automated Snapshot และ WAL Backup บนคลาวด์หรือ Database Server ควบคู่กับ Universal JSON
                   </p>
-                  <Link href="/modules/system-inspector">
+                  <Link href="/inspector">
                     <Button
                       variant="outline"
                       size="md"

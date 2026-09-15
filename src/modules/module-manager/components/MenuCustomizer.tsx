@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { ALL_SYSTEM_MODULES, MenuOverride } from '@/lib/modules';
+import { ALL_SYSTEM_MODULES, MenuOverride } from '@/modules/core/registry';
 import { Card, Button, Badge, Input } from '@/components/ui';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import {

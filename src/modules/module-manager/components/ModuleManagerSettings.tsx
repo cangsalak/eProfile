@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { ALL_SYSTEM_MODULES } from '@/lib/modules';
-import { ModuleManifest, ModuleCategory } from '@/lib/modules/types';
+import { ALL_SYSTEM_MODULES } from '@/modules/core/registry';
+import { ModuleManifest, ModuleCategory } from '@/modules/core/types';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { Card, Button, Badge, Input, Select } from '@/components/ui';
 import {
@@ -24,6 +24,7 @@ import {
   ExternalLink,
   Edit,
   RotateCcw,
+  ArrowUpCircle,
 } from 'lucide-react';
 
 interface ModuleManagerSettingsProps {
@@ -53,6 +54,13 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Update modal state
+  const [updateTarget, setUpdateTarget] = useState<ModuleManifest | null>(null);
+  const [selectedUpdateFile, setSelectedUpdateFile] = useState<File | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const updateFileInputRef = useRef<HTMLInputElement>(null);
+
   const [uninstallTarget, setUninstallTarget] = useState<ModuleManifest | null>(null);
   const [isUninstalling, setIsUninstalling] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -211,7 +219,7 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
     formData.append('file', selectedFile);
 
     try {
-      const res = await fetch('/api/modules/install', {
+      const res = await fetch('/api/modules/module-manager/install', {
         method: 'POST',
         body: formData,
       });
@@ -229,6 +237,39 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
       toast.error(err.message || 'เกิดข้อผิดพลาดในการติดตั้งโมดูล');
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleUpdateUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUpdateFile) {
+      toast.error('กรุณาเลือกไฟล์ .zip สำหรับอัปเดตโมดูล');
+      return;
+    }
+
+    setIsUpdating(true);
+    const formData = new FormData();
+    formData.append('file', selectedUpdateFile);
+
+    try {
+      const res = await fetch('/api/modules/module-manager/update', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'การอัปเดตล้มเหลว');
+      }
+
+      toast.success(data.message || 'อัปเดตโมดูลสำเร็จ');
+      setUpdateTarget(null);
+      setSelectedUpdateFile(null);
+      await fetchModules();
+    } catch (err: any) {
+      toast.error(err.message || 'เกิดข้อผิดพลาดในการอัปเดตโมดูล');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -658,9 +699,21 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
                       </div>
                     )}
 
-                    {/* Uninstall button for custom modules */}
+                    {/* Action buttons for custom modules */}
                     {isCustom && (
-                      <div className="pt-3 flex justify-end">
+                      <div className="pt-3 flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setUpdateTarget(mod);
+                            setSelectedUpdateFile(null);
+                          }}
+                          className="flex items-center gap-1.5"
+                        >
+                          <ArrowUpCircle className="w-3.5 h-3.5 text-primary-500" />
+                          <span>อัปเดตเวอร์ชันใหม่ (.ZIP)</span>
+                        </Button>
                         <Button
                           variant="danger"
                           size="sm"
@@ -756,6 +809,92 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
                     <>
                       <CheckCircle2 className="w-4 h-4" />
                       <span>ยืนยันการติดตั้ง</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Update ZIP Module Modal ── */}
+      {updateTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in font-prompt">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 animate-scale-up">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
+                  <ArrowUpCircle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                    อัปเดตโมดูล: {updateTarget.name}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    เวอร์ชันปัจจุบัน: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">v{updateTarget.version}</span>
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setUpdateTarget(null);
+                  setSelectedUpdateFile(null);
+                }}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateUpload} className="space-y-4">
+              <div
+                onClick={() => updateFileInputRef.current?.click()}
+                className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/30"
+              >
+                <input
+                  ref={updateFileInputRef}
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setSelectedUpdateFile(e.target.files?.[0] || null)}
+                  className="hidden"
+                />
+                <Upload className="w-10 h-10 mx-auto text-slate-400 mb-2" />
+                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  {selectedUpdateFile ? selectedUpdateFile.name : 'คลิกเพื่อเลือกไฟล์ .zip ของเวอร์ชันใหม่'}
+                </p>
+                <p className="text-[11px] text-slate-400 mt-1">
+                  ต้องเป็นเวอร์ชันที่สูงกว่า v{updateTarget.version} และใช้ module ID เดียวกัน ("{updateTarget.id}")
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    setUpdateTarget(null);
+                    setSelectedUpdateFile(null);
+                  }}
+                >
+                  ยกเลิก
+                </Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={!selectedUpdateFile || isUpdating}
+                  className="flex items-center gap-1.5"
+                >
+                  {isUpdating ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>กำลังอัปเดต...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>ยืนยันการอัปเดต</span>
                     </>
                   )}
                 </Button>

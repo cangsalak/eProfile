@@ -1,7 +1,8 @@
 import assert from 'assert';
 import { buildConnectionUrl, testDatabaseConnection } from '../../src/modules/install/lib/db-test';
-import { POST as testDbHandler } from '../../src/app/api/install/test-db/route';
-import { POST as installHandler } from '../../src/app/api/install/route';
+import { handleTestDb as testDbHandler, handleInstall as installHandler } from '../../src/modules/install/api';
+
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 
 export async function runDatabaseConfigTests() {
   console.log('\n--- Running Multi-Database Support & Installer Validation Tests (v1.3.0) ---');
@@ -46,7 +47,7 @@ export async function runDatabaseConfigTests() {
   console.log('✔ SQLite filesystem write-permission test verified');
 
   // Test 3: API Endpoint POST /api/install/test-db
-  const validReq = new Request('http://localhost:3000/api/install/test-db', {
+  const validReq = new Request(`${BASE_URL}/api/install/test-db`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ provider: 'sqlite', database: 'dev' }),
@@ -60,7 +61,7 @@ export async function runDatabaseConfigTests() {
   console.log('✔ POST /api/install/test-db endpoint verified');
 
   // Test 4: Invalid database provider rejection
-  const invalidReq = new Request('http://localhost:3000/api/install/test-db', {
+  const invalidReq = new Request(`${BASE_URL}/api/install/test-db`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ provider: 'oracle_invalid' }),
@@ -74,7 +75,7 @@ export async function runDatabaseConfigTests() {
 
   // Test 5: Strict Digits-Only Validation for citizenId and badgeNo
   // Non-numeric citizenId
-  const badCitizenReq = new Request('http://localhost:3000/api/install', {
+  const badCitizenReq = new Request(`${BASE_URL}/api/install`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -93,7 +94,7 @@ export async function runDatabaseConfigTests() {
   console.log('✔ Strict 13-digit citizenId validation verified');
 
   // Non-numeric badgeNo
-  const badBadgeReq = new Request('http://localhost:3000/api/install', {
+  const badBadgeReq = new Request(`${BASE_URL}/api/install`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

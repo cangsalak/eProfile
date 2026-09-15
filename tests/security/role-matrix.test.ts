@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { SignJWT } from 'jose';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 
 const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-super-secret-jwt-key-2026-change-in-production';

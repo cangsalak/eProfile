@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import { Card, Badge, Button } from '@/components/ui';
 
 export default function MemberVerifyBadgeView() {

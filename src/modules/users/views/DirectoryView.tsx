@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import Navbar from '@/components/Navbar';
 import BannerSummary from '@/components/BannerSummary';
 import SearchFilter from '../components/SearchFilter';

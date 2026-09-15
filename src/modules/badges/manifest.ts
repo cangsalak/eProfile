@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const BadgesManifest: ModuleManifest = {
   id: 'badges',
@@ -50,5 +50,9 @@ export const BadgesManifest: ModuleManifest = {
     '/manage/personnel/print-badges': '/modules/badges',
     '/profile/badges': '/modules/badges/my',
     '/verify/:id': '/modules/badges/verify/:id',
+  },
+  apiRewrites: {
+    '/api/verify/:id': '/api/modules/badges/verify/:id',
+    '/api/verify/:path*': '/api/modules/badges/verify/:path*',
   },
 };

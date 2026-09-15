@@ -1,8 +1,7 @@
 import assert from 'assert';
 import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';
-import { passwordPolicySchema, changePasswordSchema, loginSchema } from '../../src/lib/validations';
-import { isValidId, validateUploadedFile } from '../../src/lib/validate-utils';
+import { passwordPolicySchema, changePasswordSchema, loginSchema, isValidId, validateUploadedFile } from '../../src/modules/core';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-super-secret-jwt-key-2026-change-in-production';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);

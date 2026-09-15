@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth-guards';
+import { prisma } from '@/modules/core';
+import { requireAuth } from '@/modules/core';
 import { getFileCategory } from '../lib/file-utils';
 
 export async function handleListMedia(req: Request) {

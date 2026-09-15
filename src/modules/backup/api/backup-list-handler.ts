@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireRole } from '@/lib/auth-guards';
+import { requireRole } from '@/modules/core';
 import fs from 'fs';
 import path from 'path';
 

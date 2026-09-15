@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Input } from '@/components/ui';
 
 interface SystemSettingsFormProps {
   settings: any;
@@ -160,8 +161,8 @@ export default function SystemSettingsForm({
                     เลือกสีเน้นแต่งเอง (Custom Hex Color)
                   </label>
                   <div className="flex items-center space-x-3">
-                    <input id="customPrimaryColorPicker" type="color" name="customPrimaryColor" aria-label="เลือกสีแต่งเอง" value={settings.customPrimaryColor || '#5750F1'} onChange={handleChange} className="w-10 h-10 rounded-xl cursor-pointer border-0 p-0 shadow-sm" />
-                    <input id="customPrimaryColorHex" type="text" name="customPrimaryColor" aria-label="รหัสสี Hex แต่งเอง" value={settings.customPrimaryColor || '#5750F1'} onChange={handleChange} className="form-control font-mono uppercase w-32 py-1.5" />
+                    <Input id="customPrimaryColorPicker" type="color" name="customPrimaryColor" value={settings.customPrimaryColor || '#5750F1'} onChange={handleChange} className="p-0.5 h-10 w-16 cursor-pointer" />
+                    <Input id="customPrimaryColorHex" type="text" name="customPrimaryColor" value={settings.customPrimaryColor || '#5750F1'} onChange={handleChange} className="font-mono uppercase w-32" />
                   </div>
                 </div>
               </div>

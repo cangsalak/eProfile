@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { ApiDocsManifest } from './manifest';
 import ApiDocsView from './views/ApiDocsView';
 import ApiTokensView from './views/ApiTokensView';

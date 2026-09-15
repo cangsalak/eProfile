@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { testDatabaseConnection, DbConnectionParams, resolveAndValidateHost } from '../lib/db-test';
-import rateLimit from '@/lib/rate-limit';
-import { prisma } from '@/lib/prisma';
+import { rateLimit, prisma } from '@/modules/core';
 
 export const dynamic = 'force-dynamic';
 

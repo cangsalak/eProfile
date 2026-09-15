@@ -3,6 +3,7 @@
 import React from 'react';
 import IDBadge from '../components/IDBadge';
 import BadgeCanvasEditor from '../components/BadgeCanvasEditor';
+import { Input, Select, Checkbox } from '@/components/ui';
 
 interface BadgeDesignSettingsProps {
   settings: any;
@@ -51,78 +52,64 @@ export default function BadgeDesignSettings({ settings, setSettings, handleChang
 
         {settings.badgeTemplate !== 'canvas' && (
           <>
-            <div>
-              <label htmlFor="badgeHeaderTitle" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">ข้อความหัวบัตร (Header Title)</label>
-              <input
-                id="badgeHeaderTitle"
-                type="text"
-                name="badgeHeaderTitle"
-                aria-label="ข้อความหัวบัตร"
-                placeholder="บัตรประจำตัวข้าราชการ"
-                value={settings.badgeHeaderTitle ?? 'บัตรประจำตัวข้าราชการ'}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-              />
-            </div>
+            <Input
+              id="badgeHeaderTitle"
+              type="text"
+              name="badgeHeaderTitle"
+              label="ข้อความหัวบัตร (Header Title)"
+              placeholder="บัตรประจำตัวข้าราชการ"
+              value={settings.badgeHeaderTitle ?? 'บัตรประจำตัวข้าราชการ'}
+              onChange={handleChange}
+            />
 
-            <div>
-              <label htmlFor="badgeColorModeSelect" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">รูปแบบสีของบัตร (Color Mode)</label>
-              <select 
-                id="badgeColorModeSelect"
-                name="badgeColorMode" 
-                aria-label="รูปแบบสีของบัตร"
-                value={settings.badgeColorMode || 'auto'} 
-                onChange={handleChange} 
-                className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
-              >
-                <option value="auto">เปลี่ยนสีตามชั้นยศ/ประเภท (Auto)</option>
-                <option value="custom">ใช้สีเดียวทั้งองค์กร (Custom Color)</option>
-              </select>
-            </div>
+            <Select 
+              id="badgeColorModeSelect"
+              name="badgeColorMode" 
+              label="รูปแบบสีของบัตร (Color Mode)"
+              value={settings.badgeColorMode || 'auto'} 
+              onChange={handleChange} 
+            >
+              <option value="auto">เปลี่ยนสีตามชั้นยศ/ประเภท (Auto)</option>
+              <option value="custom">ใช้สีเดียวทั้งองค์กร (Custom Color)</option>
+            </Select>
 
             {settings.badgeColorMode === 'custom' && (
-              <div className="animate-fade-in">
-                <label htmlFor="badgeCustomColor" className="block text-slate-500 dark:text-slate-400 text-sm mb-2">เลือกสีหลัก (Primary Color)</label>
+              <div className="animate-fade-in flex flex-col gap-2">
+                <span className="block text-slate-500 dark:text-slate-400 text-sm">เลือกสีหลัก (Primary Color)</span>
                 <div className="flex items-center space-x-3">
-                  <input id="badgeCustomColor" type="color" name="badgeCustomColor" aria-label="เลือกสีหลักของบัตร" value={settings.badgeCustomColor || '#4f46e5'} onChange={handleChange} className="w-12 h-12 rounded cursor-pointer border-0 p-0" />
+                  <Input id="badgeCustomColor" type="color" name="badgeCustomColor" value={settings.badgeCustomColor || '#4f46e5'} onChange={handleChange} className="p-0.5 h-10 w-16 cursor-pointer" />
                   <span className="text-sm font-mono bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded">{settings.badgeCustomColor || '#4f46e5'}</span>
                 </div>
               </div>
             )}
 
             <div className="pt-2 space-y-3">
-              <label className="block text-slate-500 dark:text-slate-400 text-sm mb-2">ข้อมูลที่ต้องการแสดง</label>
-              <div className="flex items-center space-x-3">
-                <input type="checkbox" name="badgeShowBloodType" aria-label="แสดงกรุ๊ปเลือด" checked={settings.badgeShowBloodType !== 'false'} onChange={handleChange} id="badgeShowBloodType" className="w-4 h-4 rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-primary-500 focus:ring-primary-500 focus:ring-offset-slate-800" />
-                <label htmlFor="badgeShowBloodType" className="text-slate-700 dark:text-slate-300 text-sm cursor-pointer">แสดงกรุ๊ปเลือด</label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <input type="checkbox" name="badgeShowBarcode" aria-label="แสดงแถบบาร์โค้ด" checked={settings.badgeShowBarcode !== 'false'} onChange={handleChange} id="badgeShowBarcode" className="w-4 h-4 rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-primary-500 focus:ring-primary-500 focus:ring-offset-slate-800" />
-                <label htmlFor="badgeShowBarcode" className="text-slate-700 dark:text-slate-300 text-sm cursor-pointer">แสดงแถบบาร์โค้ด (เฉพาะ Modern)</label>
-              </div>
+              <span className="block text-slate-500 dark:text-slate-400 text-sm mb-2">ข้อมูลที่ต้องการแสดง</span>
+              <Checkbox name="badgeShowBloodType" label="แสดงกรุ๊ปเลือด" checked={settings.badgeShowBloodType !== 'false'} onChange={handleChange} id="badgeShowBloodType" />
+              <Checkbox name="badgeShowBarcode" label="แสดงแถบบาร์โค้ด (เฉพาะ Modern)" checked={settings.badgeShowBarcode !== 'false'} onChange={handleChange} id="badgeShowBarcode" />
             </div>
             
             <div className="pt-4 space-y-3 border-t border-slate-200 dark:border-slate-700">
-              <label className="block text-slate-500 dark:text-slate-400 text-sm font-medium mb-2">สีประจำกลุ่มกำลังพล (Auto Mode)</label>
+              <span className="block text-slate-500 dark:text-slate-400 text-sm font-medium mb-2">สีประจำกลุ่มกำลังพล (Auto Mode)</span>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label htmlFor="colorCommissioned" className="text-xs text-slate-500 block mb-1">นายทหารสัญญาบัตร</label>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs text-slate-500 block">นายทหารสัญญาบัตร</span>
                   <div className="flex items-center space-x-2">
-                    <input id="colorCommissioned" type="color" name="colorCommissioned" aria-label="สีประจำกลุ่มนายทหารสัญญาบัตร" value={settings.colorCommissioned || '#dc2626'} onChange={handleChange} className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
+                    <Input id="colorCommissioned" type="color" name="colorCommissioned" value={settings.colorCommissioned || '#dc2626'} onChange={handleChange} className="p-0.5 h-10 w-16 cursor-pointer" />
                     <span className="text-xs font-mono">{settings.colorCommissioned || '#dc2626'}</span>
                   </div>
                 </div>
-                <div>
-                  <label htmlFor="colorNonCommissioned" className="text-xs text-slate-500 block mb-1">นายทหารประทวน/ลูกจ้าง</label>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs text-slate-500 block">นายทหารประทวน/ลูกจ้าง</span>
                   <div className="flex items-center space-x-2">
-                    <input id="colorNonCommissioned" type="color" name="colorNonCommissioned" aria-label="สีประจำกลุ่มนายทหารประทวนและลูกจ้าง" value={settings.colorNonCommissioned || '#d97706'} onChange={handleChange} className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
+                    <Input id="colorNonCommissioned" type="color" name="colorNonCommissioned" value={settings.colorNonCommissioned || '#d97706'} onChange={handleChange} className="p-0.5 h-10 w-16 cursor-pointer" />
                     <span className="text-xs font-mono">{settings.colorNonCommissioned || '#d97706'}</span>
                   </div>
                 </div>
-                <div>
-                  <label htmlFor="colorConscript" className="text-xs text-slate-500 block mb-1">ทหารกองประจำการ</label>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs text-slate-500 block">ทหารกองประจำการ</span>
                   <div className="flex items-center space-x-2">
-                    <input id="colorConscript" type="color" name="colorConscript" aria-label="สีประจำกลุ่มทหารกองประจำการ" value={settings.colorConscript || '#16a34a'} onChange={handleChange} className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
+                    <Input id="colorConscript" type="color" name="colorConscript" value={settings.colorConscript || '#16a34a'} onChange={handleChange} className="p-0.5 h-10 w-16 cursor-pointer" />
                     <span className="text-xs font-mono">{settings.colorConscript || '#16a34a'}</span>
                   </div>
                 </div>

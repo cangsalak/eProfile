@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { ALL_SYSTEM_MODULES } from '@/lib/modules';
-import { requireAuth } from '@/lib/auth-guards';
+import { ALL_SYSTEM_MODULES } from '@/modules/core';
+import { requireAuth } from '@/modules/core';
 
 export async function handleGetModules(request: Request) {
   try {

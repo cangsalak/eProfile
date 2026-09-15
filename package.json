@@ -7,7 +7,7 @@
     "build": "npm run db:generate && next build",
     "start": "next start -p 3000",
     "lint": "next lint",
-    "test": "ts-node -r dotenv/config -r tsconfig-paths/register --compiler-options '{\"module\":\"CommonJS\"}' tests/run-all.ts",
+    "test": "ts-node -r dotenv/config -r tsconfig-paths/register --compiler-options '{\"module\":\"CommonJS\",\"jsx\":\"react\"}' tests/run-all.ts",
     "version:check": "node scripts/check-version.mjs",
     "db:merge": "npx ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/merge-schemas.ts",
     "db:generate": "npm run db:merge && node scripts/generate-schemas.js && prisma generate --schema=prisma/schema.prisma && prisma generate --schema=prisma/schema.mysql.prisma && prisma generate --schema=prisma/schema.postgresql.prisma",

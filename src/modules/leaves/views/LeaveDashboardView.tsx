@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import LeaveList from '../components/LeaveList';
 
 export default function LeaveDashboardView() {

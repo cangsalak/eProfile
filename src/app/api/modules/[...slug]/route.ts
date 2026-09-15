@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { ModuleApiRegistry } from '@/lib/modules/api-registry';
-import { ModuleRegistry } from '@/lib/modules/registry';
-import { prisma } from '@/lib/prisma';
-import { HttpMethod } from '@/lib/modules/types';
+import { ModuleApiRegistry } from '@/modules/core/api-registry';
+import { ModuleRegistry } from '@/modules/core/registry';
+import { prisma } from '@/modules/core';
+import { HttpMethod } from '@/modules/core/types';
 
 export const dynamic = 'force-dynamic';
 

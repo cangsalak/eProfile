@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand, HeadBucketCommand } from '@aws-sdk/client-s3';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/modules/core';
 
 export interface StorageConfig {
   provider: 'LOCAL' | 'S3';

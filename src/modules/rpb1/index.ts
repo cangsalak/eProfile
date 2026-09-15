@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { Rpb1Manifest } from './manifest';
 import Rpb1ListView from './views/Rpb1ListView';
 import Rpb1FormView from './views/Rpb1FormView';

@@ -41,7 +41,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
   return (
     <div className="rpb1-print-root bg-white text-black font-sarabun text-[14.5px] leading-[1.5]">
-      <style jsx global>{`
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @media print {
           @page {
             size: A4 portrait;
@@ -78,7 +80,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
             box-sizing: border-box;
           }
         }
-      `}</style>
+      `,
+        }}
+      />
 
       {/* ─────────────────────────────────────────────────────────────
           PAGE 1 (หมวด ๑ - ๗)

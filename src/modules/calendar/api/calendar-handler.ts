@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/modules/core';
 import ical from 'node-ical';
-import { requirePermission } from '@/lib/auth-guards';
+import { requirePermission } from '@/modules/core';
 
 export async function handleGetCalendarEvents(req: Request) {
   try {

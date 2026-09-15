@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import { seedDemoDataset } from '../../src/modules/install/lib/sample-data';
 
 export async function runInstallDemoDataTests() {

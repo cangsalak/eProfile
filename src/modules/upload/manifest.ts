@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const UploadManifest: ModuleManifest = {
   id: 'upload',
@@ -40,5 +40,9 @@ export const UploadManifest: ModuleManifest = {
     '/manage/media': '/modules/upload',
     '/media': '/modules/upload',
     '/modules/news/media': '/modules/upload',
+  },
+  apiRewrites: {
+    '/api/media': '/api/modules/upload',
+    '/api/media/:path*': '/api/modules/upload/:path*',
   },
 };

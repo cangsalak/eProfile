@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth-guards';
-import { isValidId } from '@/lib/validate-utils';
+import { prisma } from '@/modules/core';
+import { requireAuth } from '@/modules/core';
+import { isValidId } from '@/modules/core';
 
 export async function handleUpdateSingleNotification(
   req: Request,

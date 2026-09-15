@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { isValidId } from '@/lib/validate-utils';
+import { prisma } from '@/modules/core';
+import { isValidId } from '@/modules/core';
 
 /**
  * Public Badge Verification Handler

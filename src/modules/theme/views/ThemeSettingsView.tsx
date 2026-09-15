@@ -2,8 +2,8 @@
 
 import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
+import { Button, Badge } from '@/components/ui';
 import SystemSettingsForm from '../components/SystemSettingsForm';
-
 export default function ThemeSettingsView() {
   const [settings, setSettings] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -81,10 +81,10 @@ export default function ThemeSettingsView() {
           </div>
         )}
         <div className="flex justify-end border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
-          <button type="submit" disabled={isSaving} className="px-5 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white text-sm font-semibold">
+          <Button type="submit" variant="primary" disabled={isSaving} className="px-5 py-2.5">
             {isSaving ? <i className="fa-solid fa-circle-notch fa-spin mr-2" /> : <i className="fa-solid fa-save mr-2" />}
             {isSaving ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่าธีม'}
-          </button>
+          </Button>
         </div>
       </form>
 
@@ -179,21 +179,21 @@ export default function ThemeSettingsView() {
             ปุ่มและองค์ประกอบดีไซน์ (NextAdmin Components & Controls)
           </h4>
           <div className="flex flex-wrap items-center gap-3">
-            <button type="button" className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold shadow-sm transition-all">
+            <Button type="button" variant="primary">
               <i className="fa-solid fa-plus mr-1.5"></i> Primary Button
-            </button>
-            <button type="button" className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-slate-800 dark:text-slate-100 text-xs font-bold transition-all">
+            </Button>
+            <Button type="button" variant="secondary">
               Secondary Button
-            </button>
-            <button type="button" className="px-4 py-2 rounded-xl border border-primary-500 text-primary-600 dark:text-primary-400 hover:bg-primary-500/10 text-xs font-bold transition-all">
+            </Button>
+            <Button type="button" variant="outline">
               Outline Button
-            </button>
-            <span className="px-3 py-1 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-400 text-xs font-bold border border-primary-500/20">
+            </Button>
+            <Badge variant="primary" className="px-3 py-1">
               NextAdmin Badge
-            </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20">
+            </Badge>
+            <Badge variant="success" className="px-3 py-1">
               Active Status
-            </span>
+            </Badge>
           </div>
         </div>
       </div>

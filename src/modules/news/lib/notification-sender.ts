@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/modules/core';
 import nodemailer from 'nodemailer';
 
 export interface SendNotificationOptions {

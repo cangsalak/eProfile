@@ -1,4 +1,4 @@
-import { ApiInventorySummary } from './scanner';
+import type { ApiInventorySummary } from './scanner';
 
 export function generateOpenApiSpec(summary: ApiInventorySummary, baseUrl: string = 'http://localhost:3000') {
   const paths: Record<string, any> = {};

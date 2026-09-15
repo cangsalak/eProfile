@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { prisma } from '@/lib/prisma';
-import { requireRole } from '@/lib/auth-guards';
-import { ALL_SYSTEM_MODULES } from '@/lib/modules';
+import { prisma } from '@/modules/core';
+import { requireRole } from '@/modules/core';
+import { ALL_SYSTEM_MODULES } from '@/modules/core';
+import { executeLifecycleScript } from './lifecycle-helper';
 
 export async function handleUninstallModule(
   request: Request,
@@ -21,8 +22,18 @@ export async function handleUninstallModule(
     }
 
     // Protect core modules
-    const coreIds = ALL_SYSTEM_MODULES.map(m => m.id);
-    if (coreIds.includes(moduleId)) {
+    const RESERVED_CORE_MODULE_IDS = [
+      ...ALL_SYSTEM_MODULES.map(m => m.id),
+      'personnel',
+      'site-content',
+      'system-inspector',
+      'core',
+      'auth',
+      'settings',
+      'install',
+      'modules',
+    ];
+    if (RESERVED_CORE_MODULE_IDS.includes(moduleId)) {
       return NextResponse.json({ error: `ไม่อนุญาตให้ถอนการติดตั้ง Core Module ของระบบ ("${moduleId}")` }, { status: 400 });
     }
 
@@ -31,6 +42,26 @@ export async function handleUninstallModule(
 
     if (!targetModuleDir.startsWith(modulesRoot + path.sep)) {
       return NextResponse.json({ error: 'Invalid module path' }, { status: 400 });
+    }
+
+    // 0. Execute Uninstall Hook Script if defined
+    if (fs.existsSync(targetModuleDir)) {
+      const manifestPath = path.join(targetModuleDir, 'manifest.json');
+      if (fs.existsSync(manifestPath)) {
+        try {
+          const manifestContent = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+          if (manifestContent.scripts?.uninstall) {
+            const scriptRes = executeLifecycleScript(manifestContent.scripts.uninstall, targetModuleDir);
+            if (!scriptRes.success) {
+              return NextResponse.json({
+                error: `การประมวลผล Uninstall Script ล้มเหลว: ${scriptRes.error}`,
+              }, { status: 500 });
+            }
+          }
+        } catch (manifestErr: any) {
+          console.warn('Could not parse manifest.json during uninstall:', manifestErr);
+        }
+      }
     }
 
     // 1. Delete module folder if exists

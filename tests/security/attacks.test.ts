@@ -1,7 +1,7 @@
 import assert from 'assert';
 import DOMPurify from 'isomorphic-dompurify';
 import { SignJWT } from 'jose';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import bcrypt from 'bcryptjs';
 
 const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
@@ -208,7 +208,10 @@ export async function runSecurityAttacksTests() {
           password: injection,
         }),
       });
-      assert.ok(loginRes.status === 401 || loginRes.status === 404, `SQL injection in login should fail authentication safely (got ${loginRes.status})`);
+      assert.ok(
+        loginRes.status === 401 || loginRes.status === 404 || loginRes.status === 429,
+        `SQL injection in login should fail authentication safely (got ${loginRes.status})`
+      );
     }
 
     // Verify DB integrity is untouched

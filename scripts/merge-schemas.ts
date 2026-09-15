@@ -6,7 +6,7 @@
 
 // Must use require (not import) for CommonJS compatibility with ts-node
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { mergeSchemas } = require('../src/lib/schema-merger');
+const { mergeSchemas } = require('../src/modules/core/lib/schema-merger');
 
 const result = mergeSchemas();
 

@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
-import { prisma } from '@/lib/prisma';
-import { requireRole } from '@/lib/auth-guards';
+import { prisma } from '@/modules/core';
+import { requireRole } from '@/modules/core';
 import { universalBackupPayloadSchema, isValidBcryptHash } from '../lib/backup-validation';
 
 function isSQLiteFile(buffer: Buffer): boolean {

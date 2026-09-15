@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
-import { ModuleRegistry } from '@/lib/modules/registry';
+import { ModuleRegistry } from '@/modules/core/registry';
 
 /*
  * ============================================================
@@ -11,7 +11,7 @@ import { ModuleRegistry } from '@/lib/modules/registry';
  * หากถูกลบหรือแก้ไข ระบบจะหยุดทำงานทันที
  * ============================================================
  */
-import { CREDIT_INTEGRITY_HASH, DEVELOPER_CREDIT } from '@/lib/developer-credit';
+import { CREDIT_INTEGRITY_HASH, DEVELOPER_CREDIT } from '@/modules/core/lib/developer-credit';
 
 // Verify the developer credit integrity token at module load time
 const _creditStr = `${DEVELOPER_CREDIT.name}:${DEVELOPER_CREDIT.phone}:${DEVELOPER_CREDIT.email}:${DEVELOPER_CREDIT.bankRef}`;
@@ -25,13 +25,20 @@ const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 // Public API endpoints that don't require JWT authentication
 const publicApiPaths = [
   '/api/auth/login',
+  '/api/modules/auth/login',
   '/api/auth/setup-admin',
+  '/api/modules/auth/setup-admin',
   '/api/install',
+  '/api/modules/install',
   '/api/install/test-db',
+  '/api/modules/install/test-db',
   '/api/health',
   '/api/auth/forgot-password',
+  '/api/modules/auth/forgot-password',
   '/api/auth/reset-password',
+  '/api/modules/auth/reset-password',
   '/api/auth/me',
+  '/api/modules/auth/me',
   '/api/calendar/feed',
   '/api/modules/calendar/feed',
 ];
@@ -89,7 +96,6 @@ export async function middleware(request: NextRequest) {
   if (legacyDest) {
     const redirectUrl = new URL(legacyDest, request.url);
     redirectUrl.search = request.nextUrl.search;
-    // Use 308 for permanent redirect (or 307 for temporary). We use 308 to match next.config.js behavior if we wanted permanent, but next.config.js used permanent: false (which is 307/308 depending on method, but usually 307).
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -113,112 +119,48 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const DEDICATED_API_ROUTES = [
-    'admin', 'audit-logs', 'auth', 'contacts', 'departments', 'health',
-    'install', 'modules', 'personnel', 'roles', 'rpb1', 'services', 'settings'
-  ];
-
-  // 3. For API routes authentication:
+  // 3. For API routes authentication & dynamic rewriting:
   if (pathname.startsWith('/api/')) {
-    // Allow exact public API paths
-    if (publicApiPaths.includes(pathname)) {
-      return NextResponse.next();
-    }
-
-    // 3.0 Special rewrite for public /api/verify/:id -> /api/modules/badges/verify/:id
-    if (pathname.startsWith('/api/verify/')) {
-      const verifyId = pathname.substring('/api/verify/'.length);
-      const destinationUrl = new URL(`/api/modules/badges/verify/${verifyId}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    // Special rewrites for legacy /api endpoints
-    if (pathname === '/api/restore') {
-      const destinationUrl = new URL('/api/modules/backup/restore', request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/media' || pathname.startsWith('/api/media/')) {
-      const subPath = pathname.substring('/api/media'.length);
-      const destinationUrl = new URL(`/api/modules/upload${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/posts' || pathname.startsWith('/api/posts/')) {
-      const subPath = pathname.substring('/api/posts'.length);
-      const destinationUrl = new URL(`/api/modules/news/posts${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/notifications' || pathname.startsWith('/api/notifications/')) {
-      const subPath = pathname.substring('/api/notifications'.length);
-      const destinationUrl = new URL(`/api/modules/news/notifications${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/admin/api-docs' || pathname.startsWith('/api/admin/api-docs/')) {
-      const subPath = pathname.substring('/api/admin/api-docs'.length);
-      const destinationUrl = new URL(`/api/modules/api-docs${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/admin/api-tokens' || pathname.startsWith('/api/admin/api-tokens/')) {
-      const subPath = pathname.substring('/api/admin/api-tokens'.length);
-      const destinationUrl = new URL(`/api/modules/api-docs/tokens${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/api-docs' || pathname.startsWith('/api/api-docs/')) {
-      const subPath = pathname.substring('/api/api-docs'.length);
-      const destinationUrl = new URL(`/api/modules/api-docs${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    if (pathname === '/api/api-tokens' || pathname.startsWith('/api/api-tokens/')) {
-      const subPath = pathname.substring('/api/api-tokens'.length);
-      const destinationUrl = new URL(`/api/modules/api-docs/tokens${subPath}`, request.url);
-      destinationUrl.search = request.nextUrl.search;
-      return NextResponse.rewrite(destinationUrl);
-    }
-
-    // Allow public API prefixes
-    if (publicApiPrefixes.some(prefix => pathname.startsWith(prefix))) {
-      return NextResponse.next();
-    }
-
-    // Exception: Allow GET /api/settings, GET /api/modules & GET /api/services for basic non-sensitive metadata
-    if ((pathname === '/api/settings' || pathname === '/api/modules' || pathname === '/api/services') && request.method === 'GET') {
-      return NextResponse.next();
-    }
-
-    // Verify JWT for all other API routes
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized: No token provided' }, { status: 401 });
-    }
-
-    if (!isAuthenticated) {
-      return NextResponse.json({ error: 'Unauthorized: Invalid or expired token' }, { status: 401 });
-    }
-
-    // 3.1 Dynamic Module API rewriting for modules without dedicated top-level route folders
-    // (/api/<moduleId>/<path> -> /api/modules/<moduleId>/<path>)
-    const topApiFolder = pathname.replace(/^\/api\//, '').split('/')[0];
-    if (topApiFolder && !DEDICATED_API_ROUTES.includes(topApiFolder)) {
+    // Determine if there is a dynamic rewrite destination for this API path
+    let effectivePath = pathname;
+    const customRewrite = ModuleRegistry.getApiRewrite(pathname);
+    if (customRewrite) {
+      effectivePath = customRewrite;
+    } else if (!pathname.startsWith('/api/modules/')) {
+      // Check standard module prefix rewrite: /api/<moduleId>/<path> -> /api/modules/<moduleId>/<path>
+      const topApiFolder = pathname.replace(/^\/api\//, '').split('/')[0];
       const apiModule = ModuleRegistry.getAllModules().find(m => m.id === topApiFolder);
       if (apiModule) {
         const subPath = pathname.substring(`/api/${apiModule.id}`.length);
-        const destinationUrl = new URL(`/api/modules/${apiModule.id}${subPath}`, request.url);
-        destinationUrl.search = request.nextUrl.search;
-        return NextResponse.rewrite(destinationUrl);
+        effectivePath = `/api/modules/${apiModule.id}${subPath}`;
       }
+    }
+
+    // Check public API endpoints
+    const isPublic =
+      publicApiPaths.includes(pathname) ||
+      publicApiPaths.includes(effectivePath) ||
+      publicApiPrefixes.some(prefix => pathname.startsWith(prefix) || effectivePath.startsWith(prefix)) ||
+      ((pathname === '/api/settings' || pathname === '/api/modules' || pathname === '/api/services' ||
+        effectivePath === '/api/modules/settings' || effectivePath === '/api/modules/module-manager') &&
+        request.method === 'GET');
+
+    // Verify JWT for protected API routes
+    if (!isPublic) {
+      if (!token) {
+        return NextResponse.json({ error: 'Unauthorized: No token provided' }, { status: 401 });
+      }
+
+      if (!isAuthenticated) {
+        return NextResponse.json({ error: 'Unauthorized: Invalid or expired token' }, { status: 401 });
+      }
+    }
+
+    // If API route was rewritten to dynamic module endpoint, rewrite request
+    if (effectivePath !== pathname) {
+      const destinationUrl = new URL(effectivePath, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
     }
 
     return NextResponse.next();

@@ -1,9 +1,10 @@
 import assert from 'assert';
-import { POST as resetDbHandler } from '../../src/app/api/settings/reset-db/route';
+import { handleResetDatabase as resetDbHandler } from '../../src/modules/core/api';
 import { SignJWT } from 'jose';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import bcrypt from 'bcryptjs';
 
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-super-secret-jwt-key-2026-change-in-production';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
@@ -79,7 +80,7 @@ export async function runDatabaseResetTests() {
   const userToken = await makeToken(regularUser.id, 'USER', regularUser.username);
 
   // Test 1: Anonymous request rejected (401)
-  const anonReq = new Request('http://localhost:3000/api/settings/reset-db', {
+  const anonReq = new Request(`${BASE_URL}/api/settings/reset-db`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ confirmText: 'RESET-DATABASE', password: 'admin' })
@@ -89,7 +90,7 @@ export async function runDatabaseResetTests() {
   console.log('✔ Anonymous access blocked (401)');
 
   // Test 2: Regular USER role rejected (403)
-  const userReq = new Request('http://localhost:3000/api/settings/reset-db', {
+  const userReq = new Request(`${BASE_URL}/api/settings/reset-db`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ export async function runDatabaseResetTests() {
   console.log('✔ Non-SuperAdmin access blocked (403)');
 
   // Test 3: Invalid confirmation phrase rejected (400)
-  const badPhraseReq = new Request('http://localhost:3000/api/settings/reset-db', {
+  const badPhraseReq = new Request(`${BASE_URL}/api/settings/reset-db`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -115,7 +116,7 @@ export async function runDatabaseResetTests() {
   console.log('✔ Invalid confirmation phrase rejected (400)');
 
   // Test 4: Wrong password rejected (401)
-  const wrongPwReq = new Request('http://localhost:3000/api/settings/reset-db', {
+  const wrongPwReq = new Request(`${BASE_URL}/api/settings/reset-db`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

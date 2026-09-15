@@ -1,5 +1,5 @@
 import React from 'react';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface PersonnelTableProps {

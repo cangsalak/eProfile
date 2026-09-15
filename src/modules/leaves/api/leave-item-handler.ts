@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { verifyAuth } from '@/lib/auth';
-import { requirePermission } from '@/lib/auth-guards';
-import { isValidId } from '@/lib/validate-utils';
+import { prisma } from '@/modules/core';
+import { verifyAuth } from '@/modules/core';
+import { requirePermission } from '@/modules/core';
+import { isValidId } from '@/modules/core';
 import { z } from 'zod';
 
 /** Roles/permissions that are allowed to perform privileged leave operations */

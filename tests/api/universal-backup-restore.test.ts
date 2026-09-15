@@ -1,9 +1,10 @@
 import assert from 'assert';
 import { handleGetBackup as getBackupHandler, handleRestoreDatabase as postRestoreHandler } from '../../src/modules/backup/api';
 import { SignJWT } from 'jose';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import bcrypt from 'bcryptjs';
 
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
@@ -50,7 +51,7 @@ export async function runUniversalBackupRestoreTests() {
   const adminToken = await makeToken(admin.id, admin.role, admin.username);
 
   // Test 1: GET Universal JSON Backup
-  const jsonReq = new Request('http://localhost:3000/api/backup?format=json', {
+  const jsonReq = new Request(`${BASE_URL}/api/backup?format=json`, {
     method: 'GET',
     headers: { 'Cookie': `auth_token=${adminToken}` },
   });
@@ -67,7 +68,7 @@ export async function runUniversalBackupRestoreTests() {
   console.log(`✔ Universal JSON Backup generated successfully (${backupJson.summary.totalRecords} records across all tables)`);
 
   // Test 2: GET Native SQLite DB Backup
-  const dbReq = new Request('http://localhost:3000/api/backup?format=db', {
+  const dbReq = new Request(`${BASE_URL}/api/backup?format=db`, {
     method: 'GET',
     headers: { 'Cookie': `auth_token=${adminToken}` },
   });
@@ -82,7 +83,7 @@ export async function runUniversalBackupRestoreTests() {
   const badJsonBlob = new Blob(['{ "bad": "content" }'], { type: 'application/json' });
   invalidJsonFormData.append('file', badJsonBlob, 'invalid_backup.json');
 
-  const invalidRestoreReq = new Request('http://localhost:3000/api/restore', {
+  const invalidRestoreReq = new Request(`${BASE_URL}/api/restore`, {
     method: 'POST',
     headers: { 'Cookie': `auth_token=${adminToken}` },
     body: invalidJsonFormData,
@@ -97,7 +98,7 @@ export async function runUniversalBackupRestoreTests() {
   const validJsonBlob = new Blob([validJsonString], { type: 'application/json' });
   validJsonFormData.append('file', validJsonBlob, 'eprofile_valid_backup.json');
 
-  const validRestoreReq = new Request('http://localhost:3000/api/restore', {
+  const validRestoreReq = new Request(`${BASE_URL}/api/restore`, {
     method: 'POST',
     headers: { 'Cookie': `auth_token=${adminToken}` },
     body: validJsonFormData,

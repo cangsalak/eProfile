@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const Rpb1Manifest: ModuleManifest = {
   id: 'rpb1',

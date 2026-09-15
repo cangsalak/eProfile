@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { APP_NAME, APP_VERSION, VERSION_LABEL } from '@/lib/version';
+import { prisma } from '@/modules/core';
+import { APP_NAME, APP_VERSION, VERSION_LABEL } from '@/modules/core';
 import fs from 'fs';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * Health check endpoint for system monitoring (PM2 / Synology / Uptime Kuma).
+ * Health check endpoint for system monitoring (PM2 / Synology / Uptime Kuma / Tests).
  * Returns system health metrics safely.
  */
 export async function GET() {
@@ -28,7 +28,7 @@ export async function GET() {
     let lastBackup: string | null = null;
     const backupDir = path.join(process.cwd(), 'prisma', 'backups');
     if (fs.existsSync(backupDir)) {
-      const files = fs.readdirSync(backupDir).filter(f => f.endsWith('.db'));
+      const files = fs.readdirSync(backupDir).filter(f => f.endsWith('.db') || f.endsWith('.zip') || f.endsWith('.sql'));
       if (files.length > 0) {
         const sorted = files.map(f => ({
           name: f,

@@ -14,7 +14,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import { ROLE_DEFINITIONS } from '../src/lib/role-definitions';
+import { ROLE_DEFINITIONS } from '../src/modules/roles';
 
 const prisma = new PrismaClient();
 

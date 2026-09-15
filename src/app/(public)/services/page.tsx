@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/modules/core';
 
 export const dynamic = 'force-dynamic';
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-guards';
+import { requireAuth } from '@/modules/core';
 import nodemailer from 'nodemailer';
 
 export async function handleTestNotification(req: Request) {

@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const NewsManifest: ModuleManifest = {
   id: 'news',
@@ -49,5 +49,11 @@ export const NewsManifest: ModuleManifest = {
     '/manage/notifications': '/modules/news',
     '/manage/posts': '/modules/news',
     '/manage/news/settings': '/modules/news/settings',
+  },
+  apiRewrites: {
+    '/api/posts': '/api/modules/news/posts',
+    '/api/posts/:path*': '/api/modules/news/posts/:path*',
+    '/api/notifications': '/api/modules/news/notifications',
+    '/api/notifications/:path*': '/api/modules/news/notifications/:path*',
   },
 };

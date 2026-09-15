@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { parseExcelFile, downloadPersonnelTemplate } from '@/lib/excelUtils';
+import { parseExcelFile, downloadPersonnelTemplate } from '../lib/excelUtils';
 import toast from 'react-hot-toast';
 
 interface PersonnelImportModalProps {

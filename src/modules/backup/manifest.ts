@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const backupManifest: ModuleManifest = {
   id: 'backup',
@@ -32,5 +32,9 @@ export const backupManifest: ModuleManifest = {
   ],
   legacyRoutes: {
     '/manage/backup': '/modules/backup',
+  },
+  apiRewrites: {
+    '/api/restore': '/api/modules/backup/restore',
+    '/api/restore/:path*': '/api/modules/backup/restore/:path*',
   },
 };

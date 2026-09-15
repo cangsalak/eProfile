@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const ModuleManagerManifest: ModuleManifest = {
   id: 'module-manager',

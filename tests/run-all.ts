@@ -1,3 +1,9 @@
+// Ignore CSS imports in Node test runner
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+if (typeof require !== 'undefined' && require.extensions) {
+  require.extensions['.css'] = () => {};
+}
+
 import { runAuthUnitTests } from './unit/auth.test';
 import { runApiSecurityTests } from './api/api-security.test';
 import { runApiCrudTests } from './api/api-crud.test';
@@ -19,7 +25,7 @@ import { runInstallDemoDataTests } from './installer/install-demo-data.test';
 import { runModuleInstallerTests } from './modules/module-installer.test';
 import { runForgotPasswordFlowTests } from './auth/forgot-password-flow.test';
 import { runRpb1Tests } from './api/rpb1.test';
-import { prisma } from '../src/lib/prisma';
+import { prisma } from '../src/modules/core';
 
 async function main() {
   console.log('=====================================================');

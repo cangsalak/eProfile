@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const ApiDocsManifest: ModuleManifest = {
   id: 'api-docs',
@@ -32,5 +32,15 @@ export const ApiDocsManifest: ModuleManifest = {
     '/modules/api-tokens': '/modules/api-docs/tokens',
     '/api-tokens': '/modules/api-docs/tokens',
     '/inspector/api-tokens': '/modules/api-docs/tokens',
+  },
+  apiRewrites: {
+    '/api/admin/api-docs': '/api/modules/api-docs',
+    '/api/admin/api-docs/:path*': '/api/modules/api-docs/:path*',
+    '/api/admin/api-tokens': '/api/modules/api-docs/tokens',
+    '/api/admin/api-tokens/:path*': '/api/modules/api-docs/tokens/:path*',
+    '/api/api-docs': '/api/modules/api-docs',
+    '/api/api-docs/:path*': '/api/modules/api-docs/:path*',
+    '/api/api-tokens': '/api/modules/api-docs/tokens',
+    '/api/api-tokens/:path*': '/api/modules/api-docs/tokens/:path*',
   },
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import { QRCodeCanvas } from 'qrcode.react';
 import Barcode from 'react-barcode';
 

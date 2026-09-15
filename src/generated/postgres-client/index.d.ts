@@ -44,6 +44,16 @@ export type CalendarEvent = $Result.DefaultSelection<Prisma.$CalendarEventPayloa
  */
 export type ContactMessage = $Result.DefaultSelection<Prisma.$ContactMessagePayload>
 /**
+ * Model Inspection
+ * 
+ */
+export type Inspection = $Result.DefaultSelection<Prisma.$InspectionPayload>
+/**
+ * Model InspectionFinding
+ * 
+ */
+export type InspectionFinding = $Result.DefaultSelection<Prisma.$InspectionFindingPayload>
+/**
  * Model LeaveRecord
  * 
  */
@@ -65,6 +75,21 @@ export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
  */
 export type NotificationRead = $Result.DefaultSelection<Prisma.$NotificationReadPayload>
 /**
+ * Model Rpb1Record
+ * 
+ */
+export type Rpb1Record = $Result.DefaultSelection<Prisma.$Rpb1RecordPayload>
+/**
+ * Model Service
+ * 
+ */
+export type Service = $Result.DefaultSelection<Prisma.$ServicePayload>
+/**
+ * Model MediaFile
+ * 
+ */
+export type MediaFile = $Result.DefaultSelection<Prisma.$MediaFilePayload>
+/**
  * Model Personnel
  * 
  */
@@ -79,31 +104,6 @@ export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
  * 
  */
 export type PersonnelDocument = $Result.DefaultSelection<Prisma.$PersonnelDocumentPayload>
-/**
- * Model Rpb1Record
- * 
- */
-export type Rpb1Record = $Result.DefaultSelection<Prisma.$Rpb1RecordPayload>
-/**
- * Model Service
- * 
- */
-export type Service = $Result.DefaultSelection<Prisma.$ServicePayload>
-/**
- * Model Inspection
- * 
- */
-export type Inspection = $Result.DefaultSelection<Prisma.$InspectionPayload>
-/**
- * Model InspectionFinding
- * 
- */
-export type InspectionFinding = $Result.DefaultSelection<Prisma.$InspectionFindingPayload>
-/**
- * Model MediaFile
- * 
- */
-export type MediaFile = $Result.DefaultSelection<Prisma.$MediaFilePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -289,6 +289,26 @@ export class PrismaClient<
   get contactMessage(): Prisma.ContactMessageDelegate<ExtArgs>;
 
   /**
+   * `prisma.inspection`: Exposes CRUD operations for the **Inspection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Inspections
+    * const inspections = await prisma.inspection.findMany()
+    * ```
+    */
+  get inspection(): Prisma.InspectionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.inspectionFinding`: Exposes CRUD operations for the **InspectionFinding** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InspectionFindings
+    * const inspectionFindings = await prisma.inspectionFinding.findMany()
+    * ```
+    */
+  get inspectionFinding(): Prisma.InspectionFindingDelegate<ExtArgs>;
+
+  /**
    * `prisma.leaveRecord`: Exposes CRUD operations for the **LeaveRecord** model.
     * Example usage:
     * ```ts
@@ -329,6 +349,36 @@ export class PrismaClient<
   get notificationRead(): Prisma.NotificationReadDelegate<ExtArgs>;
 
   /**
+   * `prisma.rpb1Record`: Exposes CRUD operations for the **Rpb1Record** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Rpb1Records
+    * const rpb1Records = await prisma.rpb1Record.findMany()
+    * ```
+    */
+  get rpb1Record(): Prisma.Rpb1RecordDelegate<ExtArgs>;
+
+  /**
+   * `prisma.service`: Exposes CRUD operations for the **Service** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Services
+    * const services = await prisma.service.findMany()
+    * ```
+    */
+  get service(): Prisma.ServiceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.mediaFile`: Exposes CRUD operations for the **MediaFile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MediaFiles
+    * const mediaFiles = await prisma.mediaFile.findMany()
+    * ```
+    */
+  get mediaFile(): Prisma.MediaFileDelegate<ExtArgs>;
+
+  /**
    * `prisma.personnel`: Exposes CRUD operations for the **Personnel** model.
     * Example usage:
     * ```ts
@@ -357,56 +407,6 @@ export class PrismaClient<
     * ```
     */
   get personnelDocument(): Prisma.PersonnelDocumentDelegate<ExtArgs>;
-
-  /**
-   * `prisma.rpb1Record`: Exposes CRUD operations for the **Rpb1Record** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Rpb1Records
-    * const rpb1Records = await prisma.rpb1Record.findMany()
-    * ```
-    */
-  get rpb1Record(): Prisma.Rpb1RecordDelegate<ExtArgs>;
-
-  /**
-   * `prisma.service`: Exposes CRUD operations for the **Service** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Services
-    * const services = await prisma.service.findMany()
-    * ```
-    */
-  get service(): Prisma.ServiceDelegate<ExtArgs>;
-
-  /**
-   * `prisma.inspection`: Exposes CRUD operations for the **Inspection** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Inspections
-    * const inspections = await prisma.inspection.findMany()
-    * ```
-    */
-  get inspection(): Prisma.InspectionDelegate<ExtArgs>;
-
-  /**
-   * `prisma.inspectionFinding`: Exposes CRUD operations for the **InspectionFinding** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more InspectionFindings
-    * const inspectionFindings = await prisma.inspectionFinding.findMany()
-    * ```
-    */
-  get inspectionFinding(): Prisma.InspectionFindingDelegate<ExtArgs>;
-
-  /**
-   * `prisma.mediaFile`: Exposes CRUD operations for the **MediaFile** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more MediaFiles
-    * const mediaFiles = await prisma.mediaFile.findMany()
-    * ```
-    */
-  get mediaFile(): Prisma.MediaFileDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -854,18 +854,18 @@ export namespace Prisma {
     PasswordResetToken: 'PasswordResetToken',
     CalendarEvent: 'CalendarEvent',
     ContactMessage: 'ContactMessage',
+    Inspection: 'Inspection',
+    InspectionFinding: 'InspectionFinding',
     LeaveRecord: 'LeaveRecord',
     Post: 'Post',
     Notification: 'Notification',
     NotificationRead: 'NotificationRead',
-    Personnel: 'Personnel',
-    Department: 'Department',
-    PersonnelDocument: 'PersonnelDocument',
     Rpb1Record: 'Rpb1Record',
     Service: 'Service',
-    Inspection: 'Inspection',
-    InspectionFinding: 'InspectionFinding',
-    MediaFile: 'MediaFile'
+    MediaFile: 'MediaFile',
+    Personnel: 'Personnel',
+    Department: 'Department',
+    PersonnelDocument: 'PersonnelDocument'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -881,7 +881,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "systemSetting" | "systemRole" | "auditLog" | "passwordResetToken" | "calendarEvent" | "contactMessage" | "leaveRecord" | "post" | "notification" | "notificationRead" | "personnel" | "department" | "personnelDocument" | "rpb1Record" | "service" | "inspection" | "inspectionFinding" | "mediaFile"
+      modelProps: "systemSetting" | "systemRole" | "auditLog" | "passwordResetToken" | "calendarEvent" | "contactMessage" | "inspection" | "inspectionFinding" | "leaveRecord" | "post" | "notification" | "notificationRead" | "rpb1Record" | "service" | "mediaFile" | "personnel" | "department" | "personnelDocument"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1305,6 +1305,146 @@ export namespace Prisma {
           }
         }
       }
+      Inspection: {
+        payload: Prisma.$InspectionPayload<ExtArgs>
+        fields: Prisma.InspectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InspectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InspectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
+          }
+          findFirst: {
+            args: Prisma.InspectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InspectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
+          }
+          findMany: {
+            args: Prisma.InspectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>[]
+          }
+          create: {
+            args: Prisma.InspectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
+          }
+          createMany: {
+            args: Prisma.InspectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InspectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>[]
+          }
+          delete: {
+            args: Prisma.InspectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
+          }
+          update: {
+            args: Prisma.InspectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.InspectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InspectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InspectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
+          }
+          aggregate: {
+            args: Prisma.InspectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInspection>
+          }
+          groupBy: {
+            args: Prisma.InspectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InspectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InspectionCountArgs<ExtArgs>
+            result: $Utils.Optional<InspectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      InspectionFinding: {
+        payload: Prisma.$InspectionFindingPayload<ExtArgs>
+        fields: Prisma.InspectionFindingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InspectionFindingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InspectionFindingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
+          }
+          findFirst: {
+            args: Prisma.InspectionFindingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InspectionFindingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
+          }
+          findMany: {
+            args: Prisma.InspectionFindingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>[]
+          }
+          create: {
+            args: Prisma.InspectionFindingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
+          }
+          createMany: {
+            args: Prisma.InspectionFindingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InspectionFindingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>[]
+          }
+          delete: {
+            args: Prisma.InspectionFindingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
+          }
+          update: {
+            args: Prisma.InspectionFindingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
+          }
+          deleteMany: {
+            args: Prisma.InspectionFindingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InspectionFindingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InspectionFindingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
+          }
+          aggregate: {
+            args: Prisma.InspectionFindingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInspectionFinding>
+          }
+          groupBy: {
+            args: Prisma.InspectionFindingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InspectionFindingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InspectionFindingCountArgs<ExtArgs>
+            result: $Utils.Optional<InspectionFindingCountAggregateOutputType> | number
+          }
+        }
+      }
       LeaveRecord: {
         payload: Prisma.$LeaveRecordPayload<ExtArgs>
         fields: Prisma.LeaveRecordFieldRefs
@@ -1585,6 +1725,216 @@ export namespace Prisma {
           }
         }
       }
+      Rpb1Record: {
+        payload: Prisma.$Rpb1RecordPayload<ExtArgs>
+        fields: Prisma.Rpb1RecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.Rpb1RecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          findFirst: {
+            args: Prisma.Rpb1RecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Rpb1RecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          findMany: {
+            args: Prisma.Rpb1RecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>[]
+          }
+          create: {
+            args: Prisma.Rpb1RecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          createMany: {
+            args: Prisma.Rpb1RecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.Rpb1RecordCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>[]
+          }
+          delete: {
+            args: Prisma.Rpb1RecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          update: {
+            args: Prisma.Rpb1RecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.Rpb1RecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Rpb1RecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.Rpb1RecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          aggregate: {
+            args: Prisma.Rpb1RecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRpb1Record>
+          }
+          groupBy: {
+            args: Prisma.Rpb1RecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Rpb1RecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Rpb1RecordCountArgs<ExtArgs>
+            result: $Utils.Optional<Rpb1RecordCountAggregateOutputType> | number
+          }
+        }
+      }
+      Service: {
+        payload: Prisma.$ServicePayload<ExtArgs>
+        fields: Prisma.ServiceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ServiceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ServiceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          findFirst: {
+            args: Prisma.ServiceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ServiceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          findMany: {
+            args: Prisma.ServiceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>[]
+          }
+          create: {
+            args: Prisma.ServiceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          createMany: {
+            args: Prisma.ServiceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ServiceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>[]
+          }
+          delete: {
+            args: Prisma.ServiceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          update: {
+            args: Prisma.ServiceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          deleteMany: {
+            args: Prisma.ServiceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ServiceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ServiceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
+          }
+          aggregate: {
+            args: Prisma.ServiceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateService>
+          }
+          groupBy: {
+            args: Prisma.ServiceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ServiceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ServiceCountArgs<ExtArgs>
+            result: $Utils.Optional<ServiceCountAggregateOutputType> | number
+          }
+        }
+      }
+      MediaFile: {
+        payload: Prisma.$MediaFilePayload<ExtArgs>
+        fields: Prisma.MediaFileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MediaFileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MediaFileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          findFirst: {
+            args: Prisma.MediaFileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MediaFileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          findMany: {
+            args: Prisma.MediaFileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
+          }
+          create: {
+            args: Prisma.MediaFileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          createMany: {
+            args: Prisma.MediaFileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MediaFileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
+          }
+          delete: {
+            args: Prisma.MediaFileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          update: {
+            args: Prisma.MediaFileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          deleteMany: {
+            args: Prisma.MediaFileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MediaFileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.MediaFileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          aggregate: {
+            args: Prisma.MediaFileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMediaFile>
+          }
+          groupBy: {
+            args: Prisma.MediaFileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MediaFileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MediaFileCountArgs<ExtArgs>
+            result: $Utils.Optional<MediaFileCountAggregateOutputType> | number
+          }
+        }
+      }
       Personnel: {
         payload: Prisma.$PersonnelPayload<ExtArgs>
         fields: Prisma.PersonnelFieldRefs
@@ -1795,356 +2145,6 @@ export namespace Prisma {
           }
         }
       }
-      Rpb1Record: {
-        payload: Prisma.$Rpb1RecordPayload<ExtArgs>
-        fields: Prisma.Rpb1RecordFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.Rpb1RecordFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          findFirst: {
-            args: Prisma.Rpb1RecordFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.Rpb1RecordFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          findMany: {
-            args: Prisma.Rpb1RecordFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>[]
-          }
-          create: {
-            args: Prisma.Rpb1RecordCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          createMany: {
-            args: Prisma.Rpb1RecordCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.Rpb1RecordCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>[]
-          }
-          delete: {
-            args: Prisma.Rpb1RecordDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          update: {
-            args: Prisma.Rpb1RecordUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          deleteMany: {
-            args: Prisma.Rpb1RecordDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.Rpb1RecordUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.Rpb1RecordUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          aggregate: {
-            args: Prisma.Rpb1RecordAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRpb1Record>
-          }
-          groupBy: {
-            args: Prisma.Rpb1RecordGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Rpb1RecordGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.Rpb1RecordCountArgs<ExtArgs>
-            result: $Utils.Optional<Rpb1RecordCountAggregateOutputType> | number
-          }
-        }
-      }
-      Service: {
-        payload: Prisma.$ServicePayload<ExtArgs>
-        fields: Prisma.ServiceFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ServiceFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ServiceFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
-          }
-          findFirst: {
-            args: Prisma.ServiceFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ServiceFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
-          }
-          findMany: {
-            args: Prisma.ServiceFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>[]
-          }
-          create: {
-            args: Prisma.ServiceCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
-          }
-          createMany: {
-            args: Prisma.ServiceCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ServiceCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>[]
-          }
-          delete: {
-            args: Prisma.ServiceDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
-          }
-          update: {
-            args: Prisma.ServiceUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
-          }
-          deleteMany: {
-            args: Prisma.ServiceDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ServiceUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.ServiceUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServicePayload>
-          }
-          aggregate: {
-            args: Prisma.ServiceAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateService>
-          }
-          groupBy: {
-            args: Prisma.ServiceGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ServiceGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ServiceCountArgs<ExtArgs>
-            result: $Utils.Optional<ServiceCountAggregateOutputType> | number
-          }
-        }
-      }
-      Inspection: {
-        payload: Prisma.$InspectionPayload<ExtArgs>
-        fields: Prisma.InspectionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.InspectionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.InspectionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
-          }
-          findFirst: {
-            args: Prisma.InspectionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.InspectionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
-          }
-          findMany: {
-            args: Prisma.InspectionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>[]
-          }
-          create: {
-            args: Prisma.InspectionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
-          }
-          createMany: {
-            args: Prisma.InspectionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.InspectionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>[]
-          }
-          delete: {
-            args: Prisma.InspectionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
-          }
-          update: {
-            args: Prisma.InspectionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
-          }
-          deleteMany: {
-            args: Prisma.InspectionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.InspectionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.InspectionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionPayload>
-          }
-          aggregate: {
-            args: Prisma.InspectionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateInspection>
-          }
-          groupBy: {
-            args: Prisma.InspectionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<InspectionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.InspectionCountArgs<ExtArgs>
-            result: $Utils.Optional<InspectionCountAggregateOutputType> | number
-          }
-        }
-      }
-      InspectionFinding: {
-        payload: Prisma.$InspectionFindingPayload<ExtArgs>
-        fields: Prisma.InspectionFindingFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.InspectionFindingFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.InspectionFindingFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
-          }
-          findFirst: {
-            args: Prisma.InspectionFindingFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.InspectionFindingFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
-          }
-          findMany: {
-            args: Prisma.InspectionFindingFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>[]
-          }
-          create: {
-            args: Prisma.InspectionFindingCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
-          }
-          createMany: {
-            args: Prisma.InspectionFindingCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.InspectionFindingCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>[]
-          }
-          delete: {
-            args: Prisma.InspectionFindingDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
-          }
-          update: {
-            args: Prisma.InspectionFindingUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
-          }
-          deleteMany: {
-            args: Prisma.InspectionFindingDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.InspectionFindingUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.InspectionFindingUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InspectionFindingPayload>
-          }
-          aggregate: {
-            args: Prisma.InspectionFindingAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateInspectionFinding>
-          }
-          groupBy: {
-            args: Prisma.InspectionFindingGroupByArgs<ExtArgs>
-            result: $Utils.Optional<InspectionFindingGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.InspectionFindingCountArgs<ExtArgs>
-            result: $Utils.Optional<InspectionFindingCountAggregateOutputType> | number
-          }
-        }
-      }
-      MediaFile: {
-        payload: Prisma.$MediaFilePayload<ExtArgs>
-        fields: Prisma.MediaFileFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.MediaFileFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.MediaFileFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
-          }
-          findFirst: {
-            args: Prisma.MediaFileFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.MediaFileFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
-          }
-          findMany: {
-            args: Prisma.MediaFileFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
-          }
-          create: {
-            args: Prisma.MediaFileCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
-          }
-          createMany: {
-            args: Prisma.MediaFileCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.MediaFileCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
-          }
-          delete: {
-            args: Prisma.MediaFileDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
-          }
-          update: {
-            args: Prisma.MediaFileUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
-          }
-          deleteMany: {
-            args: Prisma.MediaFileDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.MediaFileUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.MediaFileUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
-          }
-          aggregate: {
-            args: Prisma.MediaFileAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateMediaFile>
-          }
-          groupBy: {
-            args: Prisma.MediaFileGroupByArgs<ExtArgs>
-            result: $Utils.Optional<MediaFileGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.MediaFileCountArgs<ExtArgs>
-            result: $Utils.Optional<MediaFileCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -2302,6 +2302,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type InspectionCountOutputType
+   */
+
+  export type InspectionCountOutputType = {
+    findings: number
+  }
+
+  export type InspectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    findings?: boolean | InspectionCountOutputTypeCountFindingsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InspectionCountOutputType without action
+   */
+  export type InspectionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionCountOutputType
+     */
+    select?: InspectionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InspectionCountOutputType without action
+   */
+  export type InspectionCountOutputTypeCountFindingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InspectionFindingWhereInput
+  }
+
+
+  /**
    * Count Type NotificationCountOutputType
    */
 
@@ -2450,37 +2481,6 @@ export namespace Prisma {
    */
   export type PersonnelCountOutputTypeCountRpb1RecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: Rpb1RecordWhereInput
-  }
-
-
-  /**
-   * Count Type InspectionCountOutputType
-   */
-
-  export type InspectionCountOutputType = {
-    findings: number
-  }
-
-  export type InspectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    findings?: boolean | InspectionCountOutputTypeCountFindingsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * InspectionCountOutputType without action
-   */
-  export type InspectionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionCountOutputType
-     */
-    select?: InspectionCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * InspectionCountOutputType without action
-   */
-  export type InspectionCountOutputTypeCountFindingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InspectionFindingWhereInput
   }
 
 
@@ -8002,6 +8002,2232 @@ export namespace Prisma {
 
 
   /**
+   * Model Inspection
+   */
+
+  export type AggregateInspection = {
+    _count: InspectionCountAggregateOutputType | null
+    _avg: InspectionAvgAggregateOutputType | null
+    _sum: InspectionSumAggregateOutputType | null
+    _min: InspectionMinAggregateOutputType | null
+    _max: InspectionMaxAggregateOutputType | null
+  }
+
+  export type InspectionAvgAggregateOutputType = {
+    durationMs: number | null
+    criticalCount: number | null
+    highCount: number | null
+    mediumCount: number | null
+    lowCount: number | null
+    infoCount: number | null
+    totalFindings: number | null
+  }
+
+  export type InspectionSumAggregateOutputType = {
+    durationMs: number | null
+    criticalCount: number | null
+    highCount: number | null
+    mediumCount: number | null
+    lowCount: number | null
+    infoCount: number | null
+    totalFindings: number | null
+  }
+
+  export type InspectionMinAggregateOutputType = {
+    id: string | null
+    page: string | null
+    url: string | null
+    scanMode: string | null
+    userId: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    durationMs: number | null
+    status: string | null
+    overallResult: string | null
+    criticalCount: number | null
+    highCount: number | null
+    mediumCount: number | null
+    lowCount: number | null
+    infoCount: number | null
+    totalFindings: number | null
+    createdAt: Date | null
+  }
+
+  export type InspectionMaxAggregateOutputType = {
+    id: string | null
+    page: string | null
+    url: string | null
+    scanMode: string | null
+    userId: string | null
+    startedAt: Date | null
+    completedAt: Date | null
+    durationMs: number | null
+    status: string | null
+    overallResult: string | null
+    criticalCount: number | null
+    highCount: number | null
+    mediumCount: number | null
+    lowCount: number | null
+    infoCount: number | null
+    totalFindings: number | null
+    createdAt: Date | null
+  }
+
+  export type InspectionCountAggregateOutputType = {
+    id: number
+    page: number
+    url: number
+    scanMode: number
+    userId: number
+    startedAt: number
+    completedAt: number
+    durationMs: number
+    status: number
+    overallResult: number
+    criticalCount: number
+    highCount: number
+    mediumCount: number
+    lowCount: number
+    infoCount: number
+    totalFindings: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type InspectionAvgAggregateInputType = {
+    durationMs?: true
+    criticalCount?: true
+    highCount?: true
+    mediumCount?: true
+    lowCount?: true
+    infoCount?: true
+    totalFindings?: true
+  }
+
+  export type InspectionSumAggregateInputType = {
+    durationMs?: true
+    criticalCount?: true
+    highCount?: true
+    mediumCount?: true
+    lowCount?: true
+    infoCount?: true
+    totalFindings?: true
+  }
+
+  export type InspectionMinAggregateInputType = {
+    id?: true
+    page?: true
+    url?: true
+    scanMode?: true
+    userId?: true
+    startedAt?: true
+    completedAt?: true
+    durationMs?: true
+    status?: true
+    overallResult?: true
+    criticalCount?: true
+    highCount?: true
+    mediumCount?: true
+    lowCount?: true
+    infoCount?: true
+    totalFindings?: true
+    createdAt?: true
+  }
+
+  export type InspectionMaxAggregateInputType = {
+    id?: true
+    page?: true
+    url?: true
+    scanMode?: true
+    userId?: true
+    startedAt?: true
+    completedAt?: true
+    durationMs?: true
+    status?: true
+    overallResult?: true
+    criticalCount?: true
+    highCount?: true
+    mediumCount?: true
+    lowCount?: true
+    infoCount?: true
+    totalFindings?: true
+    createdAt?: true
+  }
+
+  export type InspectionCountAggregateInputType = {
+    id?: true
+    page?: true
+    url?: true
+    scanMode?: true
+    userId?: true
+    startedAt?: true
+    completedAt?: true
+    durationMs?: true
+    status?: true
+    overallResult?: true
+    criticalCount?: true
+    highCount?: true
+    mediumCount?: true
+    lowCount?: true
+    infoCount?: true
+    totalFindings?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type InspectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Inspection to aggregate.
+     */
+    where?: InspectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inspections to fetch.
+     */
+    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InspectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inspections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inspections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Inspections
+    **/
+    _count?: true | InspectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InspectionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InspectionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InspectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InspectionMaxAggregateInputType
+  }
+
+  export type GetInspectionAggregateType<T extends InspectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateInspection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInspection[P]>
+      : GetScalarType<T[P], AggregateInspection[P]>
+  }
+
+
+
+
+  export type InspectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InspectionWhereInput
+    orderBy?: InspectionOrderByWithAggregationInput | InspectionOrderByWithAggregationInput[]
+    by: InspectionScalarFieldEnum[] | InspectionScalarFieldEnum
+    having?: InspectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InspectionCountAggregateInputType | true
+    _avg?: InspectionAvgAggregateInputType
+    _sum?: InspectionSumAggregateInputType
+    _min?: InspectionMinAggregateInputType
+    _max?: InspectionMaxAggregateInputType
+  }
+
+  export type InspectionGroupByOutputType = {
+    id: string
+    page: string
+    url: string
+    scanMode: string
+    userId: string
+    startedAt: Date
+    completedAt: Date
+    durationMs: number
+    status: string
+    overallResult: string
+    criticalCount: number
+    highCount: number
+    mediumCount: number
+    lowCount: number
+    infoCount: number
+    totalFindings: number
+    createdAt: Date
+    _count: InspectionCountAggregateOutputType | null
+    _avg: InspectionAvgAggregateOutputType | null
+    _sum: InspectionSumAggregateOutputType | null
+    _min: InspectionMinAggregateOutputType | null
+    _max: InspectionMaxAggregateOutputType | null
+  }
+
+  type GetInspectionGroupByPayload<T extends InspectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InspectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InspectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InspectionGroupByOutputType[P]>
+            : GetScalarType<T[P], InspectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InspectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    page?: boolean
+    url?: boolean
+    scanMode?: boolean
+    userId?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    durationMs?: boolean
+    status?: boolean
+    overallResult?: boolean
+    criticalCount?: boolean
+    highCount?: boolean
+    mediumCount?: boolean
+    lowCount?: boolean
+    infoCount?: boolean
+    totalFindings?: boolean
+    createdAt?: boolean
+    user?: boolean | PersonnelDefaultArgs<ExtArgs>
+    findings?: boolean | Inspection$findingsArgs<ExtArgs>
+    _count?: boolean | InspectionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inspection"]>
+
+  export type InspectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    page?: boolean
+    url?: boolean
+    scanMode?: boolean
+    userId?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    durationMs?: boolean
+    status?: boolean
+    overallResult?: boolean
+    criticalCount?: boolean
+    highCount?: boolean
+    mediumCount?: boolean
+    lowCount?: boolean
+    infoCount?: boolean
+    totalFindings?: boolean
+    createdAt?: boolean
+    user?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inspection"]>
+
+  export type InspectionSelectScalar = {
+    id?: boolean
+    page?: boolean
+    url?: boolean
+    scanMode?: boolean
+    userId?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    durationMs?: boolean
+    status?: boolean
+    overallResult?: boolean
+    criticalCount?: boolean
+    highCount?: boolean
+    mediumCount?: boolean
+    lowCount?: boolean
+    infoCount?: boolean
+    totalFindings?: boolean
+    createdAt?: boolean
+  }
+
+  export type InspectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | PersonnelDefaultArgs<ExtArgs>
+    findings?: boolean | Inspection$findingsArgs<ExtArgs>
+    _count?: boolean | InspectionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InspectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }
+
+  export type $InspectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Inspection"
+    objects: {
+      user: Prisma.$PersonnelPayload<ExtArgs>
+      findings: Prisma.$InspectionFindingPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      page: string
+      url: string
+      scanMode: string
+      userId: string
+      startedAt: Date
+      completedAt: Date
+      durationMs: number
+      status: string
+      overallResult: string
+      criticalCount: number
+      highCount: number
+      mediumCount: number
+      lowCount: number
+      infoCount: number
+      totalFindings: number
+      createdAt: Date
+    }, ExtArgs["result"]["inspection"]>
+    composites: {}
+  }
+
+  type InspectionGetPayload<S extends boolean | null | undefined | InspectionDefaultArgs> = $Result.GetResult<Prisma.$InspectionPayload, S>
+
+  type InspectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<InspectionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: InspectionCountAggregateInputType | true
+    }
+
+  export interface InspectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Inspection'], meta: { name: 'Inspection' } }
+    /**
+     * Find zero or one Inspection that matches the filter.
+     * @param {InspectionFindUniqueArgs} args - Arguments to find a Inspection
+     * @example
+     * // Get one Inspection
+     * const inspection = await prisma.inspection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InspectionFindUniqueArgs>(args: SelectSubset<T, InspectionFindUniqueArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Inspection that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {InspectionFindUniqueOrThrowArgs} args - Arguments to find a Inspection
+     * @example
+     * // Get one Inspection
+     * const inspection = await prisma.inspection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InspectionFindUniqueOrThrowArgs>(args: SelectSubset<T, InspectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Inspection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindFirstArgs} args - Arguments to find a Inspection
+     * @example
+     * // Get one Inspection
+     * const inspection = await prisma.inspection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InspectionFindFirstArgs>(args?: SelectSubset<T, InspectionFindFirstArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Inspection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindFirstOrThrowArgs} args - Arguments to find a Inspection
+     * @example
+     * // Get one Inspection
+     * const inspection = await prisma.inspection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InspectionFindFirstOrThrowArgs>(args?: SelectSubset<T, InspectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Inspections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Inspections
+     * const inspections = await prisma.inspection.findMany()
+     * 
+     * // Get first 10 Inspections
+     * const inspections = await prisma.inspection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inspectionWithIdOnly = await prisma.inspection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InspectionFindManyArgs>(args?: SelectSubset<T, InspectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Inspection.
+     * @param {InspectionCreateArgs} args - Arguments to create a Inspection.
+     * @example
+     * // Create one Inspection
+     * const Inspection = await prisma.inspection.create({
+     *   data: {
+     *     // ... data to create a Inspection
+     *   }
+     * })
+     * 
+     */
+    create<T extends InspectionCreateArgs>(args: SelectSubset<T, InspectionCreateArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Inspections.
+     * @param {InspectionCreateManyArgs} args - Arguments to create many Inspections.
+     * @example
+     * // Create many Inspections
+     * const inspection = await prisma.inspection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InspectionCreateManyArgs>(args?: SelectSubset<T, InspectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Inspections and returns the data saved in the database.
+     * @param {InspectionCreateManyAndReturnArgs} args - Arguments to create many Inspections.
+     * @example
+     * // Create many Inspections
+     * const inspection = await prisma.inspection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Inspections and only return the `id`
+     * const inspectionWithIdOnly = await prisma.inspection.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InspectionCreateManyAndReturnArgs>(args?: SelectSubset<T, InspectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Inspection.
+     * @param {InspectionDeleteArgs} args - Arguments to delete one Inspection.
+     * @example
+     * // Delete one Inspection
+     * const Inspection = await prisma.inspection.delete({
+     *   where: {
+     *     // ... filter to delete one Inspection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InspectionDeleteArgs>(args: SelectSubset<T, InspectionDeleteArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Inspection.
+     * @param {InspectionUpdateArgs} args - Arguments to update one Inspection.
+     * @example
+     * // Update one Inspection
+     * const inspection = await prisma.inspection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InspectionUpdateArgs>(args: SelectSubset<T, InspectionUpdateArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Inspections.
+     * @param {InspectionDeleteManyArgs} args - Arguments to filter Inspections to delete.
+     * @example
+     * // Delete a few Inspections
+     * const { count } = await prisma.inspection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InspectionDeleteManyArgs>(args?: SelectSubset<T, InspectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inspections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Inspections
+     * const inspection = await prisma.inspection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InspectionUpdateManyArgs>(args: SelectSubset<T, InspectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Inspection.
+     * @param {InspectionUpsertArgs} args - Arguments to update or create a Inspection.
+     * @example
+     * // Update or create a Inspection
+     * const inspection = await prisma.inspection.upsert({
+     *   create: {
+     *     // ... data to create a Inspection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Inspection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InspectionUpsertArgs>(args: SelectSubset<T, InspectionUpsertArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Inspections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionCountArgs} args - Arguments to filter Inspections to count.
+     * @example
+     * // Count the number of Inspections
+     * const count = await prisma.inspection.count({
+     *   where: {
+     *     // ... the filter for the Inspections we want to count
+     *   }
+     * })
+    **/
+    count<T extends InspectionCountArgs>(
+      args?: Subset<T, InspectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InspectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Inspection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InspectionAggregateArgs>(args: Subset<T, InspectionAggregateArgs>): Prisma.PrismaPromise<GetInspectionAggregateType<T>>
+
+    /**
+     * Group by Inspection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InspectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InspectionGroupByArgs['orderBy'] }
+        : { orderBy?: InspectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InspectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInspectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Inspection model
+   */
+  readonly fields: InspectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Inspection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InspectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends PersonnelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonnelDefaultArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    findings<T extends Inspection$findingsArgs<ExtArgs> = {}>(args?: Subset<T, Inspection$findingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Inspection model
+   */ 
+  interface InspectionFieldRefs {
+    readonly id: FieldRef<"Inspection", 'String'>
+    readonly page: FieldRef<"Inspection", 'String'>
+    readonly url: FieldRef<"Inspection", 'String'>
+    readonly scanMode: FieldRef<"Inspection", 'String'>
+    readonly userId: FieldRef<"Inspection", 'String'>
+    readonly startedAt: FieldRef<"Inspection", 'DateTime'>
+    readonly completedAt: FieldRef<"Inspection", 'DateTime'>
+    readonly durationMs: FieldRef<"Inspection", 'Int'>
+    readonly status: FieldRef<"Inspection", 'String'>
+    readonly overallResult: FieldRef<"Inspection", 'String'>
+    readonly criticalCount: FieldRef<"Inspection", 'Int'>
+    readonly highCount: FieldRef<"Inspection", 'Int'>
+    readonly mediumCount: FieldRef<"Inspection", 'Int'>
+    readonly lowCount: FieldRef<"Inspection", 'Int'>
+    readonly infoCount: FieldRef<"Inspection", 'Int'>
+    readonly totalFindings: FieldRef<"Inspection", 'Int'>
+    readonly createdAt: FieldRef<"Inspection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Inspection findUnique
+   */
+  export type InspectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * Filter, which Inspection to fetch.
+     */
+    where: InspectionWhereUniqueInput
+  }
+
+  /**
+   * Inspection findUniqueOrThrow
+   */
+  export type InspectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * Filter, which Inspection to fetch.
+     */
+    where: InspectionWhereUniqueInput
+  }
+
+  /**
+   * Inspection findFirst
+   */
+  export type InspectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * Filter, which Inspection to fetch.
+     */
+    where?: InspectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inspections to fetch.
+     */
+    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Inspections.
+     */
+    cursor?: InspectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inspections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inspections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inspections.
+     */
+    distinct?: InspectionScalarFieldEnum | InspectionScalarFieldEnum[]
+  }
+
+  /**
+   * Inspection findFirstOrThrow
+   */
+  export type InspectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * Filter, which Inspection to fetch.
+     */
+    where?: InspectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inspections to fetch.
+     */
+    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Inspections.
+     */
+    cursor?: InspectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inspections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inspections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inspections.
+     */
+    distinct?: InspectionScalarFieldEnum | InspectionScalarFieldEnum[]
+  }
+
+  /**
+   * Inspection findMany
+   */
+  export type InspectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * Filter, which Inspections to fetch.
+     */
+    where?: InspectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inspections to fetch.
+     */
+    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Inspections.
+     */
+    cursor?: InspectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inspections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inspections.
+     */
+    skip?: number
+    distinct?: InspectionScalarFieldEnum | InspectionScalarFieldEnum[]
+  }
+
+  /**
+   * Inspection create
+   */
+  export type InspectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Inspection.
+     */
+    data: XOR<InspectionCreateInput, InspectionUncheckedCreateInput>
+  }
+
+  /**
+   * Inspection createMany
+   */
+  export type InspectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Inspections.
+     */
+    data: InspectionCreateManyInput | InspectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Inspection createManyAndReturn
+   */
+  export type InspectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Inspections.
+     */
+    data: InspectionCreateManyInput | InspectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Inspection update
+   */
+  export type InspectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Inspection.
+     */
+    data: XOR<InspectionUpdateInput, InspectionUncheckedUpdateInput>
+    /**
+     * Choose, which Inspection to update.
+     */
+    where: InspectionWhereUniqueInput
+  }
+
+  /**
+   * Inspection updateMany
+   */
+  export type InspectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Inspections.
+     */
+    data: XOR<InspectionUpdateManyMutationInput, InspectionUncheckedUpdateManyInput>
+    /**
+     * Filter which Inspections to update
+     */
+    where?: InspectionWhereInput
+  }
+
+  /**
+   * Inspection upsert
+   */
+  export type InspectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Inspection to update in case it exists.
+     */
+    where: InspectionWhereUniqueInput
+    /**
+     * In case the Inspection found by the `where` argument doesn't exist, create a new Inspection with this data.
+     */
+    create: XOR<InspectionCreateInput, InspectionUncheckedCreateInput>
+    /**
+     * In case the Inspection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InspectionUpdateInput, InspectionUncheckedUpdateInput>
+  }
+
+  /**
+   * Inspection delete
+   */
+  export type InspectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+    /**
+     * Filter which Inspection to delete.
+     */
+    where: InspectionWhereUniqueInput
+  }
+
+  /**
+   * Inspection deleteMany
+   */
+  export type InspectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Inspections to delete
+     */
+    where?: InspectionWhereInput
+  }
+
+  /**
+   * Inspection.findings
+   */
+  export type Inspection$findingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    where?: InspectionFindingWhereInput
+    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
+    cursor?: InspectionFindingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
+  }
+
+  /**
+   * Inspection without action
+   */
+  export type InspectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inspection
+     */
+    select?: InspectionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InspectionFinding
+   */
+
+  export type AggregateInspectionFinding = {
+    _count: InspectionFindingCountAggregateOutputType | null
+    _min: InspectionFindingMinAggregateOutputType | null
+    _max: InspectionFindingMaxAggregateOutputType | null
+  }
+
+  export type InspectionFindingMinAggregateOutputType = {
+    id: string | null
+    inspectionId: string | null
+    findingCode: string | null
+    category: string | null
+    severity: string | null
+    title: string | null
+    description: string | null
+    expected: string | null
+    actual: string | null
+    element: string | null
+    selector: string | null
+    recommendation: string | null
+    status: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InspectionFindingMaxAggregateOutputType = {
+    id: string | null
+    inspectionId: string | null
+    findingCode: string | null
+    category: string | null
+    severity: string | null
+    title: string | null
+    description: string | null
+    expected: string | null
+    actual: string | null
+    element: string | null
+    selector: string | null
+    recommendation: string | null
+    status: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InspectionFindingCountAggregateOutputType = {
+    id: number
+    inspectionId: number
+    findingCode: number
+    category: number
+    severity: number
+    title: number
+    description: number
+    expected: number
+    actual: number
+    element: number
+    selector: number
+    recommendation: number
+    status: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InspectionFindingMinAggregateInputType = {
+    id?: true
+    inspectionId?: true
+    findingCode?: true
+    category?: true
+    severity?: true
+    title?: true
+    description?: true
+    expected?: true
+    actual?: true
+    element?: true
+    selector?: true
+    recommendation?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InspectionFindingMaxAggregateInputType = {
+    id?: true
+    inspectionId?: true
+    findingCode?: true
+    category?: true
+    severity?: true
+    title?: true
+    description?: true
+    expected?: true
+    actual?: true
+    element?: true
+    selector?: true
+    recommendation?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InspectionFindingCountAggregateInputType = {
+    id?: true
+    inspectionId?: true
+    findingCode?: true
+    category?: true
+    severity?: true
+    title?: true
+    description?: true
+    expected?: true
+    actual?: true
+    element?: true
+    selector?: true
+    recommendation?: true
+    status?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InspectionFindingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InspectionFinding to aggregate.
+     */
+    where?: InspectionFindingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InspectionFindings to fetch.
+     */
+    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InspectionFindingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InspectionFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InspectionFindings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InspectionFindings
+    **/
+    _count?: true | InspectionFindingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InspectionFindingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InspectionFindingMaxAggregateInputType
+  }
+
+  export type GetInspectionFindingAggregateType<T extends InspectionFindingAggregateArgs> = {
+        [P in keyof T & keyof AggregateInspectionFinding]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInspectionFinding[P]>
+      : GetScalarType<T[P], AggregateInspectionFinding[P]>
+  }
+
+
+
+
+  export type InspectionFindingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InspectionFindingWhereInput
+    orderBy?: InspectionFindingOrderByWithAggregationInput | InspectionFindingOrderByWithAggregationInput[]
+    by: InspectionFindingScalarFieldEnum[] | InspectionFindingScalarFieldEnum
+    having?: InspectionFindingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InspectionFindingCountAggregateInputType | true
+    _min?: InspectionFindingMinAggregateInputType
+    _max?: InspectionFindingMaxAggregateInputType
+  }
+
+  export type InspectionFindingGroupByOutputType = {
+    id: string
+    inspectionId: string
+    findingCode: string
+    category: string
+    severity: string
+    title: string
+    description: string
+    expected: string | null
+    actual: string | null
+    element: string | null
+    selector: string | null
+    recommendation: string
+    status: string
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InspectionFindingCountAggregateOutputType | null
+    _min: InspectionFindingMinAggregateOutputType | null
+    _max: InspectionFindingMaxAggregateOutputType | null
+  }
+
+  type GetInspectionFindingGroupByPayload<T extends InspectionFindingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InspectionFindingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InspectionFindingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InspectionFindingGroupByOutputType[P]>
+            : GetScalarType<T[P], InspectionFindingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InspectionFindingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inspectionId?: boolean
+    findingCode?: boolean
+    category?: boolean
+    severity?: boolean
+    title?: boolean
+    description?: boolean
+    expected?: boolean
+    actual?: boolean
+    element?: boolean
+    selector?: boolean
+    recommendation?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inspectionFinding"]>
+
+  export type InspectionFindingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inspectionId?: boolean
+    findingCode?: boolean
+    category?: boolean
+    severity?: boolean
+    title?: boolean
+    description?: boolean
+    expected?: boolean
+    actual?: boolean
+    element?: boolean
+    selector?: boolean
+    recommendation?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inspectionFinding"]>
+
+  export type InspectionFindingSelectScalar = {
+    id?: boolean
+    inspectionId?: boolean
+    findingCode?: boolean
+    category?: boolean
+    severity?: boolean
+    title?: boolean
+    description?: boolean
+    expected?: boolean
+    actual?: boolean
+    element?: boolean
+    selector?: boolean
+    recommendation?: boolean
+    status?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InspectionFindingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
+  }
+  export type InspectionFindingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
+  }
+
+  export type $InspectionFindingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InspectionFinding"
+    objects: {
+      inspection: Prisma.$InspectionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      inspectionId: string
+      findingCode: string
+      category: string
+      severity: string
+      title: string
+      description: string
+      expected: string | null
+      actual: string | null
+      element: string | null
+      selector: string | null
+      recommendation: string
+      status: string
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inspectionFinding"]>
+    composites: {}
+  }
+
+  type InspectionFindingGetPayload<S extends boolean | null | undefined | InspectionFindingDefaultArgs> = $Result.GetResult<Prisma.$InspectionFindingPayload, S>
+
+  type InspectionFindingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<InspectionFindingFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: InspectionFindingCountAggregateInputType | true
+    }
+
+  export interface InspectionFindingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InspectionFinding'], meta: { name: 'InspectionFinding' } }
+    /**
+     * Find zero or one InspectionFinding that matches the filter.
+     * @param {InspectionFindingFindUniqueArgs} args - Arguments to find a InspectionFinding
+     * @example
+     * // Get one InspectionFinding
+     * const inspectionFinding = await prisma.inspectionFinding.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InspectionFindingFindUniqueArgs>(args: SelectSubset<T, InspectionFindingFindUniqueArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one InspectionFinding that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {InspectionFindingFindUniqueOrThrowArgs} args - Arguments to find a InspectionFinding
+     * @example
+     * // Get one InspectionFinding
+     * const inspectionFinding = await prisma.inspectionFinding.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InspectionFindingFindUniqueOrThrowArgs>(args: SelectSubset<T, InspectionFindingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first InspectionFinding that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingFindFirstArgs} args - Arguments to find a InspectionFinding
+     * @example
+     * // Get one InspectionFinding
+     * const inspectionFinding = await prisma.inspectionFinding.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InspectionFindingFindFirstArgs>(args?: SelectSubset<T, InspectionFindingFindFirstArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first InspectionFinding that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingFindFirstOrThrowArgs} args - Arguments to find a InspectionFinding
+     * @example
+     * // Get one InspectionFinding
+     * const inspectionFinding = await prisma.inspectionFinding.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InspectionFindingFindFirstOrThrowArgs>(args?: SelectSubset<T, InspectionFindingFindFirstOrThrowArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more InspectionFindings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InspectionFindings
+     * const inspectionFindings = await prisma.inspectionFinding.findMany()
+     * 
+     * // Get first 10 InspectionFindings
+     * const inspectionFindings = await prisma.inspectionFinding.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inspectionFindingWithIdOnly = await prisma.inspectionFinding.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InspectionFindingFindManyArgs>(args?: SelectSubset<T, InspectionFindingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a InspectionFinding.
+     * @param {InspectionFindingCreateArgs} args - Arguments to create a InspectionFinding.
+     * @example
+     * // Create one InspectionFinding
+     * const InspectionFinding = await prisma.inspectionFinding.create({
+     *   data: {
+     *     // ... data to create a InspectionFinding
+     *   }
+     * })
+     * 
+     */
+    create<T extends InspectionFindingCreateArgs>(args: SelectSubset<T, InspectionFindingCreateArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many InspectionFindings.
+     * @param {InspectionFindingCreateManyArgs} args - Arguments to create many InspectionFindings.
+     * @example
+     * // Create many InspectionFindings
+     * const inspectionFinding = await prisma.inspectionFinding.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InspectionFindingCreateManyArgs>(args?: SelectSubset<T, InspectionFindingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InspectionFindings and returns the data saved in the database.
+     * @param {InspectionFindingCreateManyAndReturnArgs} args - Arguments to create many InspectionFindings.
+     * @example
+     * // Create many InspectionFindings
+     * const inspectionFinding = await prisma.inspectionFinding.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InspectionFindings and only return the `id`
+     * const inspectionFindingWithIdOnly = await prisma.inspectionFinding.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InspectionFindingCreateManyAndReturnArgs>(args?: SelectSubset<T, InspectionFindingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a InspectionFinding.
+     * @param {InspectionFindingDeleteArgs} args - Arguments to delete one InspectionFinding.
+     * @example
+     * // Delete one InspectionFinding
+     * const InspectionFinding = await prisma.inspectionFinding.delete({
+     *   where: {
+     *     // ... filter to delete one InspectionFinding
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InspectionFindingDeleteArgs>(args: SelectSubset<T, InspectionFindingDeleteArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one InspectionFinding.
+     * @param {InspectionFindingUpdateArgs} args - Arguments to update one InspectionFinding.
+     * @example
+     * // Update one InspectionFinding
+     * const inspectionFinding = await prisma.inspectionFinding.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InspectionFindingUpdateArgs>(args: SelectSubset<T, InspectionFindingUpdateArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more InspectionFindings.
+     * @param {InspectionFindingDeleteManyArgs} args - Arguments to filter InspectionFindings to delete.
+     * @example
+     * // Delete a few InspectionFindings
+     * const { count } = await prisma.inspectionFinding.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InspectionFindingDeleteManyArgs>(args?: SelectSubset<T, InspectionFindingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InspectionFindings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InspectionFindings
+     * const inspectionFinding = await prisma.inspectionFinding.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InspectionFindingUpdateManyArgs>(args: SelectSubset<T, InspectionFindingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one InspectionFinding.
+     * @param {InspectionFindingUpsertArgs} args - Arguments to update or create a InspectionFinding.
+     * @example
+     * // Update or create a InspectionFinding
+     * const inspectionFinding = await prisma.inspectionFinding.upsert({
+     *   create: {
+     *     // ... data to create a InspectionFinding
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InspectionFinding we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InspectionFindingUpsertArgs>(args: SelectSubset<T, InspectionFindingUpsertArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of InspectionFindings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingCountArgs} args - Arguments to filter InspectionFindings to count.
+     * @example
+     * // Count the number of InspectionFindings
+     * const count = await prisma.inspectionFinding.count({
+     *   where: {
+     *     // ... the filter for the InspectionFindings we want to count
+     *   }
+     * })
+    **/
+    count<T extends InspectionFindingCountArgs>(
+      args?: Subset<T, InspectionFindingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InspectionFindingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InspectionFinding.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InspectionFindingAggregateArgs>(args: Subset<T, InspectionFindingAggregateArgs>): Prisma.PrismaPromise<GetInspectionFindingAggregateType<T>>
+
+    /**
+     * Group by InspectionFinding.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InspectionFindingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InspectionFindingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InspectionFindingGroupByArgs['orderBy'] }
+        : { orderBy?: InspectionFindingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InspectionFindingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInspectionFindingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InspectionFinding model
+   */
+  readonly fields: InspectionFindingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InspectionFinding.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InspectionFindingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    inspection<T extends InspectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InspectionDefaultArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InspectionFinding model
+   */ 
+  interface InspectionFindingFieldRefs {
+    readonly id: FieldRef<"InspectionFinding", 'String'>
+    readonly inspectionId: FieldRef<"InspectionFinding", 'String'>
+    readonly findingCode: FieldRef<"InspectionFinding", 'String'>
+    readonly category: FieldRef<"InspectionFinding", 'String'>
+    readonly severity: FieldRef<"InspectionFinding", 'String'>
+    readonly title: FieldRef<"InspectionFinding", 'String'>
+    readonly description: FieldRef<"InspectionFinding", 'String'>
+    readonly expected: FieldRef<"InspectionFinding", 'String'>
+    readonly actual: FieldRef<"InspectionFinding", 'String'>
+    readonly element: FieldRef<"InspectionFinding", 'String'>
+    readonly selector: FieldRef<"InspectionFinding", 'String'>
+    readonly recommendation: FieldRef<"InspectionFinding", 'String'>
+    readonly status: FieldRef<"InspectionFinding", 'String'>
+    readonly notes: FieldRef<"InspectionFinding", 'String'>
+    readonly createdAt: FieldRef<"InspectionFinding", 'DateTime'>
+    readonly updatedAt: FieldRef<"InspectionFinding", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InspectionFinding findUnique
+   */
+  export type InspectionFindingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * Filter, which InspectionFinding to fetch.
+     */
+    where: InspectionFindingWhereUniqueInput
+  }
+
+  /**
+   * InspectionFinding findUniqueOrThrow
+   */
+  export type InspectionFindingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * Filter, which InspectionFinding to fetch.
+     */
+    where: InspectionFindingWhereUniqueInput
+  }
+
+  /**
+   * InspectionFinding findFirst
+   */
+  export type InspectionFindingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * Filter, which InspectionFinding to fetch.
+     */
+    where?: InspectionFindingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InspectionFindings to fetch.
+     */
+    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InspectionFindings.
+     */
+    cursor?: InspectionFindingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InspectionFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InspectionFindings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InspectionFindings.
+     */
+    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
+  }
+
+  /**
+   * InspectionFinding findFirstOrThrow
+   */
+  export type InspectionFindingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * Filter, which InspectionFinding to fetch.
+     */
+    where?: InspectionFindingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InspectionFindings to fetch.
+     */
+    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InspectionFindings.
+     */
+    cursor?: InspectionFindingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InspectionFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InspectionFindings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InspectionFindings.
+     */
+    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
+  }
+
+  /**
+   * InspectionFinding findMany
+   */
+  export type InspectionFindingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * Filter, which InspectionFindings to fetch.
+     */
+    where?: InspectionFindingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InspectionFindings to fetch.
+     */
+    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InspectionFindings.
+     */
+    cursor?: InspectionFindingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InspectionFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InspectionFindings.
+     */
+    skip?: number
+    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
+  }
+
+  /**
+   * InspectionFinding create
+   */
+  export type InspectionFindingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InspectionFinding.
+     */
+    data: XOR<InspectionFindingCreateInput, InspectionFindingUncheckedCreateInput>
+  }
+
+  /**
+   * InspectionFinding createMany
+   */
+  export type InspectionFindingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InspectionFindings.
+     */
+    data: InspectionFindingCreateManyInput | InspectionFindingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InspectionFinding createManyAndReturn
+   */
+  export type InspectionFindingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many InspectionFindings.
+     */
+    data: InspectionFindingCreateManyInput | InspectionFindingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InspectionFinding update
+   */
+  export type InspectionFindingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InspectionFinding.
+     */
+    data: XOR<InspectionFindingUpdateInput, InspectionFindingUncheckedUpdateInput>
+    /**
+     * Choose, which InspectionFinding to update.
+     */
+    where: InspectionFindingWhereUniqueInput
+  }
+
+  /**
+   * InspectionFinding updateMany
+   */
+  export type InspectionFindingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InspectionFindings.
+     */
+    data: XOR<InspectionFindingUpdateManyMutationInput, InspectionFindingUncheckedUpdateManyInput>
+    /**
+     * Filter which InspectionFindings to update
+     */
+    where?: InspectionFindingWhereInput
+  }
+
+  /**
+   * InspectionFinding upsert
+   */
+  export type InspectionFindingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InspectionFinding to update in case it exists.
+     */
+    where: InspectionFindingWhereUniqueInput
+    /**
+     * In case the InspectionFinding found by the `where` argument doesn't exist, create a new InspectionFinding with this data.
+     */
+    create: XOR<InspectionFindingCreateInput, InspectionFindingUncheckedCreateInput>
+    /**
+     * In case the InspectionFinding was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InspectionFindingUpdateInput, InspectionFindingUncheckedUpdateInput>
+  }
+
+  /**
+   * InspectionFinding delete
+   */
+  export type InspectionFindingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+    /**
+     * Filter which InspectionFinding to delete.
+     */
+    where: InspectionFindingWhereUniqueInput
+  }
+
+  /**
+   * InspectionFinding deleteMany
+   */
+  export type InspectionFindingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InspectionFindings to delete
+     */
+    where?: InspectionFindingWhereInput
+  }
+
+  /**
+   * InspectionFinding without action
+   */
+  export type InspectionFindingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InspectionFinding
+     */
+    select?: InspectionFindingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InspectionFindingInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model LeaveRecord
    */
 
@@ -12236,6 +14462,4607 @@ export namespace Prisma {
 
 
   /**
+   * Model Rpb1Record
+   */
+
+  export type AggregateRpb1Record = {
+    _count: Rpb1RecordCountAggregateOutputType | null
+    _avg: Rpb1RecordAvgAggregateOutputType | null
+    _sum: Rpb1RecordSumAggregateOutputType | null
+    _min: Rpb1RecordMinAggregateOutputType | null
+    _max: Rpb1RecordMaxAggregateOutputType | null
+  }
+
+  export type Rpb1RecordAvgAggregateOutputType = {
+    version: number | null
+    age: number | null
+    height: number | null
+    weight: number | null
+  }
+
+  export type Rpb1RecordSumAggregateOutputType = {
+    version: number | null
+    age: number | null
+    height: number | null
+    weight: number | null
+  }
+
+  export type Rpb1RecordMinAggregateOutputType = {
+    id: string | null
+    personnelId: string | null
+    status: string | null
+    version: number | null
+    classification: string | null
+    photoUrl: string | null
+    titleRank: string | null
+    firstName: string | null
+    middleName: string | null
+    lastName: string | null
+    gender: string | null
+    age: number | null
+    formerFirstName: string | null
+    nameChangeDoc: string | null
+    formerLastName: string | null
+    lastNameChangeDoc: string | null
+    nickname: string | null
+    citizenId: string | null
+    dateOfBirth: string | null
+    birthPlaceHospital: string | null
+    race: string | null
+    nationality: string | null
+    formerNationality: string | null
+    naturalizationDoc: string | null
+    religion: string | null
+    formerReligion: string | null
+    registeredHouseNo: string | null
+    registeredVillage: string | null
+    registeredMoo: string | null
+    registeredSoi: string | null
+    registeredRoad: string | null
+    registeredSubdistrict: string | null
+    registeredDistrict: string | null
+    registeredProvince: string | null
+    registeredPhone: string | null
+    currentHouseNo: string | null
+    currentVillage: string | null
+    currentMoo: string | null
+    currentSoi: string | null
+    currentRoad: string | null
+    currentSubdistrict: string | null
+    currentDistrict: string | null
+    currentProvince: string | null
+    currentPhone: string | null
+    phoneLandline: string | null
+    phoneMobile: string | null
+    email: string | null
+    lineId: string | null
+    facebook: string | null
+    instagram: string | null
+    otherContact: string | null
+    alienCardNo: string | null
+    alienCardDate: string | null
+    alienCardIssuedAt: string | null
+    alienResidenceDocNo: string | null
+    alienResidenceDocDate: string | null
+    alienResidenceIssuedAt: string | null
+    alienIdInThailand: string | null
+    birthCountry: string | null
+    entryDateToThailand: string | null
+    workPermitNo: string | null
+    workPermitIssuedBy: string | null
+    workPermitIssueDate: string | null
+    workPermitExpiryDate: string | null
+    height: number | null
+    weight: number | null
+    scarsDistinguishingMarks: string | null
+    bloodGroup: string | null
+    addressesPast15Years: string | null
+    educations: string | null
+    specialActivities: string | null
+    languages: string | null
+    workHistory: string | null
+    specialOccupationsHobbies: string | null
+    militaryStatus: string | null
+    militaryRank: string | null
+    militaryRegNumber: string | null
+    militaryBranchUnit: string | null
+    militaryUnitLocation: string | null
+    militaryServiceFrom: string | null
+    militaryServiceTo: string | null
+    militaryYearsServed: string | null
+    militaryDischargeReason: string | null
+    militaryLastCommander: string | null
+    militarySpecialOperations: string | null
+    militarySpecialOpDate: string | null
+    militarySpecialOpDuration: string | null
+    militaryExemptionReason: string | null
+    writerDetails: string | null
+    politicalSocialMemberships: string | null
+    foreignTravels: string | null
+    identificationDocuments: string | null
+    legalCases: string | null
+    disciplinaryPunishments: string | null
+    fatherDetails: string | null
+    motherDetails: string | null
+    maritalStatus: string | null
+    spouseFormerDetails: string | null
+    spouseCurrentDetails: string | null
+    children: string | null
+    siblings: string | null
+    relativesInGovernment: string | null
+    overseasContacts: string | null
+    cohabitants: string | null
+    closeFriendsRef: string | null
+    supporters: string | null
+    additionalExplanations: string | null
+    ownerSignatureDate: string | null
+    inspectorRankName: string | null
+    inspectorPosition: string | null
+    inspectorSignatureDate: string | null
+    sketchMapImage: string | null
+    mapHouseNo: string | null
+    mapVillage: string | null
+    mapMoo: string | null
+    mapSoi: string | null
+    mapRoad: string | null
+    mapSubdistrict: string | null
+    mapDistrict: string | null
+    mapProvince: string | null
+    mapPhone: string | null
+    mapHouseOwnerName: string | null
+    mapHouseOwnerPhone: string | null
+    emergencyContactRankName: string | null
+    emergencyContactRelation: string | null
+    emergencyContactAddress: string | null
+    extraTitleName: string | null
+    extraGender: string | null
+    extraBloodGroup: string | null
+    extraRegisteredAddress: string | null
+    extraCurrentAddress: string | null
+    extraIsSameAddress: boolean | null
+    extraMobilePhone: string | null
+    extraHomePhone: string | null
+    extraOfficePhone: string | null
+    extraEmail: string | null
+    extraOwnerSignatureDate: string | null
+    extraOfficerName: string | null
+    extraOfficerPosition: string | null
+    extraOfficerSignatureDate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Rpb1RecordMaxAggregateOutputType = {
+    id: string | null
+    personnelId: string | null
+    status: string | null
+    version: number | null
+    classification: string | null
+    photoUrl: string | null
+    titleRank: string | null
+    firstName: string | null
+    middleName: string | null
+    lastName: string | null
+    gender: string | null
+    age: number | null
+    formerFirstName: string | null
+    nameChangeDoc: string | null
+    formerLastName: string | null
+    lastNameChangeDoc: string | null
+    nickname: string | null
+    citizenId: string | null
+    dateOfBirth: string | null
+    birthPlaceHospital: string | null
+    race: string | null
+    nationality: string | null
+    formerNationality: string | null
+    naturalizationDoc: string | null
+    religion: string | null
+    formerReligion: string | null
+    registeredHouseNo: string | null
+    registeredVillage: string | null
+    registeredMoo: string | null
+    registeredSoi: string | null
+    registeredRoad: string | null
+    registeredSubdistrict: string | null
+    registeredDistrict: string | null
+    registeredProvince: string | null
+    registeredPhone: string | null
+    currentHouseNo: string | null
+    currentVillage: string | null
+    currentMoo: string | null
+    currentSoi: string | null
+    currentRoad: string | null
+    currentSubdistrict: string | null
+    currentDistrict: string | null
+    currentProvince: string | null
+    currentPhone: string | null
+    phoneLandline: string | null
+    phoneMobile: string | null
+    email: string | null
+    lineId: string | null
+    facebook: string | null
+    instagram: string | null
+    otherContact: string | null
+    alienCardNo: string | null
+    alienCardDate: string | null
+    alienCardIssuedAt: string | null
+    alienResidenceDocNo: string | null
+    alienResidenceDocDate: string | null
+    alienResidenceIssuedAt: string | null
+    alienIdInThailand: string | null
+    birthCountry: string | null
+    entryDateToThailand: string | null
+    workPermitNo: string | null
+    workPermitIssuedBy: string | null
+    workPermitIssueDate: string | null
+    workPermitExpiryDate: string | null
+    height: number | null
+    weight: number | null
+    scarsDistinguishingMarks: string | null
+    bloodGroup: string | null
+    addressesPast15Years: string | null
+    educations: string | null
+    specialActivities: string | null
+    languages: string | null
+    workHistory: string | null
+    specialOccupationsHobbies: string | null
+    militaryStatus: string | null
+    militaryRank: string | null
+    militaryRegNumber: string | null
+    militaryBranchUnit: string | null
+    militaryUnitLocation: string | null
+    militaryServiceFrom: string | null
+    militaryServiceTo: string | null
+    militaryYearsServed: string | null
+    militaryDischargeReason: string | null
+    militaryLastCommander: string | null
+    militarySpecialOperations: string | null
+    militarySpecialOpDate: string | null
+    militarySpecialOpDuration: string | null
+    militaryExemptionReason: string | null
+    writerDetails: string | null
+    politicalSocialMemberships: string | null
+    foreignTravels: string | null
+    identificationDocuments: string | null
+    legalCases: string | null
+    disciplinaryPunishments: string | null
+    fatherDetails: string | null
+    motherDetails: string | null
+    maritalStatus: string | null
+    spouseFormerDetails: string | null
+    spouseCurrentDetails: string | null
+    children: string | null
+    siblings: string | null
+    relativesInGovernment: string | null
+    overseasContacts: string | null
+    cohabitants: string | null
+    closeFriendsRef: string | null
+    supporters: string | null
+    additionalExplanations: string | null
+    ownerSignatureDate: string | null
+    inspectorRankName: string | null
+    inspectorPosition: string | null
+    inspectorSignatureDate: string | null
+    sketchMapImage: string | null
+    mapHouseNo: string | null
+    mapVillage: string | null
+    mapMoo: string | null
+    mapSoi: string | null
+    mapRoad: string | null
+    mapSubdistrict: string | null
+    mapDistrict: string | null
+    mapProvince: string | null
+    mapPhone: string | null
+    mapHouseOwnerName: string | null
+    mapHouseOwnerPhone: string | null
+    emergencyContactRankName: string | null
+    emergencyContactRelation: string | null
+    emergencyContactAddress: string | null
+    extraTitleName: string | null
+    extraGender: string | null
+    extraBloodGroup: string | null
+    extraRegisteredAddress: string | null
+    extraCurrentAddress: string | null
+    extraIsSameAddress: boolean | null
+    extraMobilePhone: string | null
+    extraHomePhone: string | null
+    extraOfficePhone: string | null
+    extraEmail: string | null
+    extraOwnerSignatureDate: string | null
+    extraOfficerName: string | null
+    extraOfficerPosition: string | null
+    extraOfficerSignatureDate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Rpb1RecordCountAggregateOutputType = {
+    id: number
+    personnelId: number
+    status: number
+    version: number
+    classification: number
+    photoUrl: number
+    titleRank: number
+    firstName: number
+    middleName: number
+    lastName: number
+    gender: number
+    age: number
+    formerFirstName: number
+    nameChangeDoc: number
+    formerLastName: number
+    lastNameChangeDoc: number
+    nickname: number
+    citizenId: number
+    dateOfBirth: number
+    birthPlaceHospital: number
+    race: number
+    nationality: number
+    formerNationality: number
+    naturalizationDoc: number
+    religion: number
+    formerReligion: number
+    registeredHouseNo: number
+    registeredVillage: number
+    registeredMoo: number
+    registeredSoi: number
+    registeredRoad: number
+    registeredSubdistrict: number
+    registeredDistrict: number
+    registeredProvince: number
+    registeredPhone: number
+    currentHouseNo: number
+    currentVillage: number
+    currentMoo: number
+    currentSoi: number
+    currentRoad: number
+    currentSubdistrict: number
+    currentDistrict: number
+    currentProvince: number
+    currentPhone: number
+    phoneLandline: number
+    phoneMobile: number
+    email: number
+    lineId: number
+    facebook: number
+    instagram: number
+    otherContact: number
+    alienCardNo: number
+    alienCardDate: number
+    alienCardIssuedAt: number
+    alienResidenceDocNo: number
+    alienResidenceDocDate: number
+    alienResidenceIssuedAt: number
+    alienIdInThailand: number
+    birthCountry: number
+    entryDateToThailand: number
+    workPermitNo: number
+    workPermitIssuedBy: number
+    workPermitIssueDate: number
+    workPermitExpiryDate: number
+    height: number
+    weight: number
+    scarsDistinguishingMarks: number
+    bloodGroup: number
+    addressesPast15Years: number
+    educations: number
+    specialActivities: number
+    languages: number
+    workHistory: number
+    specialOccupationsHobbies: number
+    militaryStatus: number
+    militaryRank: number
+    militaryRegNumber: number
+    militaryBranchUnit: number
+    militaryUnitLocation: number
+    militaryServiceFrom: number
+    militaryServiceTo: number
+    militaryYearsServed: number
+    militaryDischargeReason: number
+    militaryLastCommander: number
+    militarySpecialOperations: number
+    militarySpecialOpDate: number
+    militarySpecialOpDuration: number
+    militaryExemptionReason: number
+    writerDetails: number
+    politicalSocialMemberships: number
+    foreignTravels: number
+    identificationDocuments: number
+    legalCases: number
+    disciplinaryPunishments: number
+    fatherDetails: number
+    motherDetails: number
+    maritalStatus: number
+    spouseFormerDetails: number
+    spouseCurrentDetails: number
+    children: number
+    siblings: number
+    relativesInGovernment: number
+    overseasContacts: number
+    cohabitants: number
+    closeFriendsRef: number
+    supporters: number
+    additionalExplanations: number
+    ownerSignatureDate: number
+    inspectorRankName: number
+    inspectorPosition: number
+    inspectorSignatureDate: number
+    sketchMapImage: number
+    mapHouseNo: number
+    mapVillage: number
+    mapMoo: number
+    mapSoi: number
+    mapRoad: number
+    mapSubdistrict: number
+    mapDistrict: number
+    mapProvince: number
+    mapPhone: number
+    mapHouseOwnerName: number
+    mapHouseOwnerPhone: number
+    emergencyContactRankName: number
+    emergencyContactRelation: number
+    emergencyContactAddress: number
+    extraTitleName: number
+    extraGender: number
+    extraBloodGroup: number
+    extraRegisteredAddress: number
+    extraCurrentAddress: number
+    extraIsSameAddress: number
+    extraMobilePhone: number
+    extraHomePhone: number
+    extraOfficePhone: number
+    extraEmail: number
+    extraOwnerSignatureDate: number
+    extraOfficerName: number
+    extraOfficerPosition: number
+    extraOfficerSignatureDate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type Rpb1RecordAvgAggregateInputType = {
+    version?: true
+    age?: true
+    height?: true
+    weight?: true
+  }
+
+  export type Rpb1RecordSumAggregateInputType = {
+    version?: true
+    age?: true
+    height?: true
+    weight?: true
+  }
+
+  export type Rpb1RecordMinAggregateInputType = {
+    id?: true
+    personnelId?: true
+    status?: true
+    version?: true
+    classification?: true
+    photoUrl?: true
+    titleRank?: true
+    firstName?: true
+    middleName?: true
+    lastName?: true
+    gender?: true
+    age?: true
+    formerFirstName?: true
+    nameChangeDoc?: true
+    formerLastName?: true
+    lastNameChangeDoc?: true
+    nickname?: true
+    citizenId?: true
+    dateOfBirth?: true
+    birthPlaceHospital?: true
+    race?: true
+    nationality?: true
+    formerNationality?: true
+    naturalizationDoc?: true
+    religion?: true
+    formerReligion?: true
+    registeredHouseNo?: true
+    registeredVillage?: true
+    registeredMoo?: true
+    registeredSoi?: true
+    registeredRoad?: true
+    registeredSubdistrict?: true
+    registeredDistrict?: true
+    registeredProvince?: true
+    registeredPhone?: true
+    currentHouseNo?: true
+    currentVillage?: true
+    currentMoo?: true
+    currentSoi?: true
+    currentRoad?: true
+    currentSubdistrict?: true
+    currentDistrict?: true
+    currentProvince?: true
+    currentPhone?: true
+    phoneLandline?: true
+    phoneMobile?: true
+    email?: true
+    lineId?: true
+    facebook?: true
+    instagram?: true
+    otherContact?: true
+    alienCardNo?: true
+    alienCardDate?: true
+    alienCardIssuedAt?: true
+    alienResidenceDocNo?: true
+    alienResidenceDocDate?: true
+    alienResidenceIssuedAt?: true
+    alienIdInThailand?: true
+    birthCountry?: true
+    entryDateToThailand?: true
+    workPermitNo?: true
+    workPermitIssuedBy?: true
+    workPermitIssueDate?: true
+    workPermitExpiryDate?: true
+    height?: true
+    weight?: true
+    scarsDistinguishingMarks?: true
+    bloodGroup?: true
+    addressesPast15Years?: true
+    educations?: true
+    specialActivities?: true
+    languages?: true
+    workHistory?: true
+    specialOccupationsHobbies?: true
+    militaryStatus?: true
+    militaryRank?: true
+    militaryRegNumber?: true
+    militaryBranchUnit?: true
+    militaryUnitLocation?: true
+    militaryServiceFrom?: true
+    militaryServiceTo?: true
+    militaryYearsServed?: true
+    militaryDischargeReason?: true
+    militaryLastCommander?: true
+    militarySpecialOperations?: true
+    militarySpecialOpDate?: true
+    militarySpecialOpDuration?: true
+    militaryExemptionReason?: true
+    writerDetails?: true
+    politicalSocialMemberships?: true
+    foreignTravels?: true
+    identificationDocuments?: true
+    legalCases?: true
+    disciplinaryPunishments?: true
+    fatherDetails?: true
+    motherDetails?: true
+    maritalStatus?: true
+    spouseFormerDetails?: true
+    spouseCurrentDetails?: true
+    children?: true
+    siblings?: true
+    relativesInGovernment?: true
+    overseasContacts?: true
+    cohabitants?: true
+    closeFriendsRef?: true
+    supporters?: true
+    additionalExplanations?: true
+    ownerSignatureDate?: true
+    inspectorRankName?: true
+    inspectorPosition?: true
+    inspectorSignatureDate?: true
+    sketchMapImage?: true
+    mapHouseNo?: true
+    mapVillage?: true
+    mapMoo?: true
+    mapSoi?: true
+    mapRoad?: true
+    mapSubdistrict?: true
+    mapDistrict?: true
+    mapProvince?: true
+    mapPhone?: true
+    mapHouseOwnerName?: true
+    mapHouseOwnerPhone?: true
+    emergencyContactRankName?: true
+    emergencyContactRelation?: true
+    emergencyContactAddress?: true
+    extraTitleName?: true
+    extraGender?: true
+    extraBloodGroup?: true
+    extraRegisteredAddress?: true
+    extraCurrentAddress?: true
+    extraIsSameAddress?: true
+    extraMobilePhone?: true
+    extraHomePhone?: true
+    extraOfficePhone?: true
+    extraEmail?: true
+    extraOwnerSignatureDate?: true
+    extraOfficerName?: true
+    extraOfficerPosition?: true
+    extraOfficerSignatureDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Rpb1RecordMaxAggregateInputType = {
+    id?: true
+    personnelId?: true
+    status?: true
+    version?: true
+    classification?: true
+    photoUrl?: true
+    titleRank?: true
+    firstName?: true
+    middleName?: true
+    lastName?: true
+    gender?: true
+    age?: true
+    formerFirstName?: true
+    nameChangeDoc?: true
+    formerLastName?: true
+    lastNameChangeDoc?: true
+    nickname?: true
+    citizenId?: true
+    dateOfBirth?: true
+    birthPlaceHospital?: true
+    race?: true
+    nationality?: true
+    formerNationality?: true
+    naturalizationDoc?: true
+    religion?: true
+    formerReligion?: true
+    registeredHouseNo?: true
+    registeredVillage?: true
+    registeredMoo?: true
+    registeredSoi?: true
+    registeredRoad?: true
+    registeredSubdistrict?: true
+    registeredDistrict?: true
+    registeredProvince?: true
+    registeredPhone?: true
+    currentHouseNo?: true
+    currentVillage?: true
+    currentMoo?: true
+    currentSoi?: true
+    currentRoad?: true
+    currentSubdistrict?: true
+    currentDistrict?: true
+    currentProvince?: true
+    currentPhone?: true
+    phoneLandline?: true
+    phoneMobile?: true
+    email?: true
+    lineId?: true
+    facebook?: true
+    instagram?: true
+    otherContact?: true
+    alienCardNo?: true
+    alienCardDate?: true
+    alienCardIssuedAt?: true
+    alienResidenceDocNo?: true
+    alienResidenceDocDate?: true
+    alienResidenceIssuedAt?: true
+    alienIdInThailand?: true
+    birthCountry?: true
+    entryDateToThailand?: true
+    workPermitNo?: true
+    workPermitIssuedBy?: true
+    workPermitIssueDate?: true
+    workPermitExpiryDate?: true
+    height?: true
+    weight?: true
+    scarsDistinguishingMarks?: true
+    bloodGroup?: true
+    addressesPast15Years?: true
+    educations?: true
+    specialActivities?: true
+    languages?: true
+    workHistory?: true
+    specialOccupationsHobbies?: true
+    militaryStatus?: true
+    militaryRank?: true
+    militaryRegNumber?: true
+    militaryBranchUnit?: true
+    militaryUnitLocation?: true
+    militaryServiceFrom?: true
+    militaryServiceTo?: true
+    militaryYearsServed?: true
+    militaryDischargeReason?: true
+    militaryLastCommander?: true
+    militarySpecialOperations?: true
+    militarySpecialOpDate?: true
+    militarySpecialOpDuration?: true
+    militaryExemptionReason?: true
+    writerDetails?: true
+    politicalSocialMemberships?: true
+    foreignTravels?: true
+    identificationDocuments?: true
+    legalCases?: true
+    disciplinaryPunishments?: true
+    fatherDetails?: true
+    motherDetails?: true
+    maritalStatus?: true
+    spouseFormerDetails?: true
+    spouseCurrentDetails?: true
+    children?: true
+    siblings?: true
+    relativesInGovernment?: true
+    overseasContacts?: true
+    cohabitants?: true
+    closeFriendsRef?: true
+    supporters?: true
+    additionalExplanations?: true
+    ownerSignatureDate?: true
+    inspectorRankName?: true
+    inspectorPosition?: true
+    inspectorSignatureDate?: true
+    sketchMapImage?: true
+    mapHouseNo?: true
+    mapVillage?: true
+    mapMoo?: true
+    mapSoi?: true
+    mapRoad?: true
+    mapSubdistrict?: true
+    mapDistrict?: true
+    mapProvince?: true
+    mapPhone?: true
+    mapHouseOwnerName?: true
+    mapHouseOwnerPhone?: true
+    emergencyContactRankName?: true
+    emergencyContactRelation?: true
+    emergencyContactAddress?: true
+    extraTitleName?: true
+    extraGender?: true
+    extraBloodGroup?: true
+    extraRegisteredAddress?: true
+    extraCurrentAddress?: true
+    extraIsSameAddress?: true
+    extraMobilePhone?: true
+    extraHomePhone?: true
+    extraOfficePhone?: true
+    extraEmail?: true
+    extraOwnerSignatureDate?: true
+    extraOfficerName?: true
+    extraOfficerPosition?: true
+    extraOfficerSignatureDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Rpb1RecordCountAggregateInputType = {
+    id?: true
+    personnelId?: true
+    status?: true
+    version?: true
+    classification?: true
+    photoUrl?: true
+    titleRank?: true
+    firstName?: true
+    middleName?: true
+    lastName?: true
+    gender?: true
+    age?: true
+    formerFirstName?: true
+    nameChangeDoc?: true
+    formerLastName?: true
+    lastNameChangeDoc?: true
+    nickname?: true
+    citizenId?: true
+    dateOfBirth?: true
+    birthPlaceHospital?: true
+    race?: true
+    nationality?: true
+    formerNationality?: true
+    naturalizationDoc?: true
+    religion?: true
+    formerReligion?: true
+    registeredHouseNo?: true
+    registeredVillage?: true
+    registeredMoo?: true
+    registeredSoi?: true
+    registeredRoad?: true
+    registeredSubdistrict?: true
+    registeredDistrict?: true
+    registeredProvince?: true
+    registeredPhone?: true
+    currentHouseNo?: true
+    currentVillage?: true
+    currentMoo?: true
+    currentSoi?: true
+    currentRoad?: true
+    currentSubdistrict?: true
+    currentDistrict?: true
+    currentProvince?: true
+    currentPhone?: true
+    phoneLandline?: true
+    phoneMobile?: true
+    email?: true
+    lineId?: true
+    facebook?: true
+    instagram?: true
+    otherContact?: true
+    alienCardNo?: true
+    alienCardDate?: true
+    alienCardIssuedAt?: true
+    alienResidenceDocNo?: true
+    alienResidenceDocDate?: true
+    alienResidenceIssuedAt?: true
+    alienIdInThailand?: true
+    birthCountry?: true
+    entryDateToThailand?: true
+    workPermitNo?: true
+    workPermitIssuedBy?: true
+    workPermitIssueDate?: true
+    workPermitExpiryDate?: true
+    height?: true
+    weight?: true
+    scarsDistinguishingMarks?: true
+    bloodGroup?: true
+    addressesPast15Years?: true
+    educations?: true
+    specialActivities?: true
+    languages?: true
+    workHistory?: true
+    specialOccupationsHobbies?: true
+    militaryStatus?: true
+    militaryRank?: true
+    militaryRegNumber?: true
+    militaryBranchUnit?: true
+    militaryUnitLocation?: true
+    militaryServiceFrom?: true
+    militaryServiceTo?: true
+    militaryYearsServed?: true
+    militaryDischargeReason?: true
+    militaryLastCommander?: true
+    militarySpecialOperations?: true
+    militarySpecialOpDate?: true
+    militarySpecialOpDuration?: true
+    militaryExemptionReason?: true
+    writerDetails?: true
+    politicalSocialMemberships?: true
+    foreignTravels?: true
+    identificationDocuments?: true
+    legalCases?: true
+    disciplinaryPunishments?: true
+    fatherDetails?: true
+    motherDetails?: true
+    maritalStatus?: true
+    spouseFormerDetails?: true
+    spouseCurrentDetails?: true
+    children?: true
+    siblings?: true
+    relativesInGovernment?: true
+    overseasContacts?: true
+    cohabitants?: true
+    closeFriendsRef?: true
+    supporters?: true
+    additionalExplanations?: true
+    ownerSignatureDate?: true
+    inspectorRankName?: true
+    inspectorPosition?: true
+    inspectorSignatureDate?: true
+    sketchMapImage?: true
+    mapHouseNo?: true
+    mapVillage?: true
+    mapMoo?: true
+    mapSoi?: true
+    mapRoad?: true
+    mapSubdistrict?: true
+    mapDistrict?: true
+    mapProvince?: true
+    mapPhone?: true
+    mapHouseOwnerName?: true
+    mapHouseOwnerPhone?: true
+    emergencyContactRankName?: true
+    emergencyContactRelation?: true
+    emergencyContactAddress?: true
+    extraTitleName?: true
+    extraGender?: true
+    extraBloodGroup?: true
+    extraRegisteredAddress?: true
+    extraCurrentAddress?: true
+    extraIsSameAddress?: true
+    extraMobilePhone?: true
+    extraHomePhone?: true
+    extraOfficePhone?: true
+    extraEmail?: true
+    extraOwnerSignatureDate?: true
+    extraOfficerName?: true
+    extraOfficerPosition?: true
+    extraOfficerSignatureDate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type Rpb1RecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Rpb1Record to aggregate.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Rpb1Records
+    **/
+    _count?: true | Rpb1RecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Rpb1RecordAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Rpb1RecordSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Rpb1RecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Rpb1RecordMaxAggregateInputType
+  }
+
+  export type GetRpb1RecordAggregateType<T extends Rpb1RecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateRpb1Record]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRpb1Record[P]>
+      : GetScalarType<T[P], AggregateRpb1Record[P]>
+  }
+
+
+
+
+  export type Rpb1RecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Rpb1RecordWhereInput
+    orderBy?: Rpb1RecordOrderByWithAggregationInput | Rpb1RecordOrderByWithAggregationInput[]
+    by: Rpb1RecordScalarFieldEnum[] | Rpb1RecordScalarFieldEnum
+    having?: Rpb1RecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Rpb1RecordCountAggregateInputType | true
+    _avg?: Rpb1RecordAvgAggregateInputType
+    _sum?: Rpb1RecordSumAggregateInputType
+    _min?: Rpb1RecordMinAggregateInputType
+    _max?: Rpb1RecordMaxAggregateInputType
+  }
+
+  export type Rpb1RecordGroupByOutputType = {
+    id: string
+    personnelId: string
+    status: string
+    version: number
+    classification: string
+    photoUrl: string | null
+    titleRank: string | null
+    firstName: string | null
+    middleName: string | null
+    lastName: string | null
+    gender: string | null
+    age: number | null
+    formerFirstName: string | null
+    nameChangeDoc: string | null
+    formerLastName: string | null
+    lastNameChangeDoc: string | null
+    nickname: string | null
+    citizenId: string | null
+    dateOfBirth: string | null
+    birthPlaceHospital: string | null
+    race: string | null
+    nationality: string | null
+    formerNationality: string | null
+    naturalizationDoc: string | null
+    religion: string | null
+    formerReligion: string | null
+    registeredHouseNo: string | null
+    registeredVillage: string | null
+    registeredMoo: string | null
+    registeredSoi: string | null
+    registeredRoad: string | null
+    registeredSubdistrict: string | null
+    registeredDistrict: string | null
+    registeredProvince: string | null
+    registeredPhone: string | null
+    currentHouseNo: string | null
+    currentVillage: string | null
+    currentMoo: string | null
+    currentSoi: string | null
+    currentRoad: string | null
+    currentSubdistrict: string | null
+    currentDistrict: string | null
+    currentProvince: string | null
+    currentPhone: string | null
+    phoneLandline: string | null
+    phoneMobile: string | null
+    email: string | null
+    lineId: string | null
+    facebook: string | null
+    instagram: string | null
+    otherContact: string | null
+    alienCardNo: string | null
+    alienCardDate: string | null
+    alienCardIssuedAt: string | null
+    alienResidenceDocNo: string | null
+    alienResidenceDocDate: string | null
+    alienResidenceIssuedAt: string | null
+    alienIdInThailand: string | null
+    birthCountry: string | null
+    entryDateToThailand: string | null
+    workPermitNo: string | null
+    workPermitIssuedBy: string | null
+    workPermitIssueDate: string | null
+    workPermitExpiryDate: string | null
+    height: number | null
+    weight: number | null
+    scarsDistinguishingMarks: string | null
+    bloodGroup: string | null
+    addressesPast15Years: string
+    educations: string
+    specialActivities: string
+    languages: string
+    workHistory: string
+    specialOccupationsHobbies: string | null
+    militaryStatus: string | null
+    militaryRank: string | null
+    militaryRegNumber: string | null
+    militaryBranchUnit: string | null
+    militaryUnitLocation: string | null
+    militaryServiceFrom: string | null
+    militaryServiceTo: string | null
+    militaryYearsServed: string | null
+    militaryDischargeReason: string | null
+    militaryLastCommander: string | null
+    militarySpecialOperations: string | null
+    militarySpecialOpDate: string | null
+    militarySpecialOpDuration: string | null
+    militaryExemptionReason: string | null
+    writerDetails: string | null
+    politicalSocialMemberships: string
+    foreignTravels: string
+    identificationDocuments: string
+    legalCases: string
+    disciplinaryPunishments: string | null
+    fatherDetails: string | null
+    motherDetails: string | null
+    maritalStatus: string | null
+    spouseFormerDetails: string | null
+    spouseCurrentDetails: string | null
+    children: string
+    siblings: string
+    relativesInGovernment: string
+    overseasContacts: string
+    cohabitants: string
+    closeFriendsRef: string
+    supporters: string
+    additionalExplanations: string | null
+    ownerSignatureDate: string | null
+    inspectorRankName: string | null
+    inspectorPosition: string | null
+    inspectorSignatureDate: string | null
+    sketchMapImage: string | null
+    mapHouseNo: string | null
+    mapVillage: string | null
+    mapMoo: string | null
+    mapSoi: string | null
+    mapRoad: string | null
+    mapSubdistrict: string | null
+    mapDistrict: string | null
+    mapProvince: string | null
+    mapPhone: string | null
+    mapHouseOwnerName: string | null
+    mapHouseOwnerPhone: string | null
+    emergencyContactRankName: string | null
+    emergencyContactRelation: string | null
+    emergencyContactAddress: string | null
+    extraTitleName: string | null
+    extraGender: string | null
+    extraBloodGroup: string | null
+    extraRegisteredAddress: string | null
+    extraCurrentAddress: string | null
+    extraIsSameAddress: boolean
+    extraMobilePhone: string | null
+    extraHomePhone: string | null
+    extraOfficePhone: string | null
+    extraEmail: string | null
+    extraOwnerSignatureDate: string | null
+    extraOfficerName: string | null
+    extraOfficerPosition: string | null
+    extraOfficerSignatureDate: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: Rpb1RecordCountAggregateOutputType | null
+    _avg: Rpb1RecordAvgAggregateOutputType | null
+    _sum: Rpb1RecordSumAggregateOutputType | null
+    _min: Rpb1RecordMinAggregateOutputType | null
+    _max: Rpb1RecordMaxAggregateOutputType | null
+  }
+
+  type GetRpb1RecordGroupByPayload<T extends Rpb1RecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Rpb1RecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Rpb1RecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
+            : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Rpb1RecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personnelId?: boolean
+    status?: boolean
+    version?: boolean
+    classification?: boolean
+    photoUrl?: boolean
+    titleRank?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    lastName?: boolean
+    gender?: boolean
+    age?: boolean
+    formerFirstName?: boolean
+    nameChangeDoc?: boolean
+    formerLastName?: boolean
+    lastNameChangeDoc?: boolean
+    nickname?: boolean
+    citizenId?: boolean
+    dateOfBirth?: boolean
+    birthPlaceHospital?: boolean
+    race?: boolean
+    nationality?: boolean
+    formerNationality?: boolean
+    naturalizationDoc?: boolean
+    religion?: boolean
+    formerReligion?: boolean
+    registeredHouseNo?: boolean
+    registeredVillage?: boolean
+    registeredMoo?: boolean
+    registeredSoi?: boolean
+    registeredRoad?: boolean
+    registeredSubdistrict?: boolean
+    registeredDistrict?: boolean
+    registeredProvince?: boolean
+    registeredPhone?: boolean
+    currentHouseNo?: boolean
+    currentVillage?: boolean
+    currentMoo?: boolean
+    currentSoi?: boolean
+    currentRoad?: boolean
+    currentSubdistrict?: boolean
+    currentDistrict?: boolean
+    currentProvince?: boolean
+    currentPhone?: boolean
+    phoneLandline?: boolean
+    phoneMobile?: boolean
+    email?: boolean
+    lineId?: boolean
+    facebook?: boolean
+    instagram?: boolean
+    otherContact?: boolean
+    alienCardNo?: boolean
+    alienCardDate?: boolean
+    alienCardIssuedAt?: boolean
+    alienResidenceDocNo?: boolean
+    alienResidenceDocDate?: boolean
+    alienResidenceIssuedAt?: boolean
+    alienIdInThailand?: boolean
+    birthCountry?: boolean
+    entryDateToThailand?: boolean
+    workPermitNo?: boolean
+    workPermitIssuedBy?: boolean
+    workPermitIssueDate?: boolean
+    workPermitExpiryDate?: boolean
+    height?: boolean
+    weight?: boolean
+    scarsDistinguishingMarks?: boolean
+    bloodGroup?: boolean
+    addressesPast15Years?: boolean
+    educations?: boolean
+    specialActivities?: boolean
+    languages?: boolean
+    workHistory?: boolean
+    specialOccupationsHobbies?: boolean
+    militaryStatus?: boolean
+    militaryRank?: boolean
+    militaryRegNumber?: boolean
+    militaryBranchUnit?: boolean
+    militaryUnitLocation?: boolean
+    militaryServiceFrom?: boolean
+    militaryServiceTo?: boolean
+    militaryYearsServed?: boolean
+    militaryDischargeReason?: boolean
+    militaryLastCommander?: boolean
+    militarySpecialOperations?: boolean
+    militarySpecialOpDate?: boolean
+    militarySpecialOpDuration?: boolean
+    militaryExemptionReason?: boolean
+    writerDetails?: boolean
+    politicalSocialMemberships?: boolean
+    foreignTravels?: boolean
+    identificationDocuments?: boolean
+    legalCases?: boolean
+    disciplinaryPunishments?: boolean
+    fatherDetails?: boolean
+    motherDetails?: boolean
+    maritalStatus?: boolean
+    spouseFormerDetails?: boolean
+    spouseCurrentDetails?: boolean
+    children?: boolean
+    siblings?: boolean
+    relativesInGovernment?: boolean
+    overseasContacts?: boolean
+    cohabitants?: boolean
+    closeFriendsRef?: boolean
+    supporters?: boolean
+    additionalExplanations?: boolean
+    ownerSignatureDate?: boolean
+    inspectorRankName?: boolean
+    inspectorPosition?: boolean
+    inspectorSignatureDate?: boolean
+    sketchMapImage?: boolean
+    mapHouseNo?: boolean
+    mapVillage?: boolean
+    mapMoo?: boolean
+    mapSoi?: boolean
+    mapRoad?: boolean
+    mapSubdistrict?: boolean
+    mapDistrict?: boolean
+    mapProvince?: boolean
+    mapPhone?: boolean
+    mapHouseOwnerName?: boolean
+    mapHouseOwnerPhone?: boolean
+    emergencyContactRankName?: boolean
+    emergencyContactRelation?: boolean
+    emergencyContactAddress?: boolean
+    extraTitleName?: boolean
+    extraGender?: boolean
+    extraBloodGroup?: boolean
+    extraRegisteredAddress?: boolean
+    extraCurrentAddress?: boolean
+    extraIsSameAddress?: boolean
+    extraMobilePhone?: boolean
+    extraHomePhone?: boolean
+    extraOfficePhone?: boolean
+    extraEmail?: boolean
+    extraOwnerSignatureDate?: boolean
+    extraOfficerName?: boolean
+    extraOfficerPosition?: boolean
+    extraOfficerSignatureDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rpb1Record"]>
+
+  export type Rpb1RecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personnelId?: boolean
+    status?: boolean
+    version?: boolean
+    classification?: boolean
+    photoUrl?: boolean
+    titleRank?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    lastName?: boolean
+    gender?: boolean
+    age?: boolean
+    formerFirstName?: boolean
+    nameChangeDoc?: boolean
+    formerLastName?: boolean
+    lastNameChangeDoc?: boolean
+    nickname?: boolean
+    citizenId?: boolean
+    dateOfBirth?: boolean
+    birthPlaceHospital?: boolean
+    race?: boolean
+    nationality?: boolean
+    formerNationality?: boolean
+    naturalizationDoc?: boolean
+    religion?: boolean
+    formerReligion?: boolean
+    registeredHouseNo?: boolean
+    registeredVillage?: boolean
+    registeredMoo?: boolean
+    registeredSoi?: boolean
+    registeredRoad?: boolean
+    registeredSubdistrict?: boolean
+    registeredDistrict?: boolean
+    registeredProvince?: boolean
+    registeredPhone?: boolean
+    currentHouseNo?: boolean
+    currentVillage?: boolean
+    currentMoo?: boolean
+    currentSoi?: boolean
+    currentRoad?: boolean
+    currentSubdistrict?: boolean
+    currentDistrict?: boolean
+    currentProvince?: boolean
+    currentPhone?: boolean
+    phoneLandline?: boolean
+    phoneMobile?: boolean
+    email?: boolean
+    lineId?: boolean
+    facebook?: boolean
+    instagram?: boolean
+    otherContact?: boolean
+    alienCardNo?: boolean
+    alienCardDate?: boolean
+    alienCardIssuedAt?: boolean
+    alienResidenceDocNo?: boolean
+    alienResidenceDocDate?: boolean
+    alienResidenceIssuedAt?: boolean
+    alienIdInThailand?: boolean
+    birthCountry?: boolean
+    entryDateToThailand?: boolean
+    workPermitNo?: boolean
+    workPermitIssuedBy?: boolean
+    workPermitIssueDate?: boolean
+    workPermitExpiryDate?: boolean
+    height?: boolean
+    weight?: boolean
+    scarsDistinguishingMarks?: boolean
+    bloodGroup?: boolean
+    addressesPast15Years?: boolean
+    educations?: boolean
+    specialActivities?: boolean
+    languages?: boolean
+    workHistory?: boolean
+    specialOccupationsHobbies?: boolean
+    militaryStatus?: boolean
+    militaryRank?: boolean
+    militaryRegNumber?: boolean
+    militaryBranchUnit?: boolean
+    militaryUnitLocation?: boolean
+    militaryServiceFrom?: boolean
+    militaryServiceTo?: boolean
+    militaryYearsServed?: boolean
+    militaryDischargeReason?: boolean
+    militaryLastCommander?: boolean
+    militarySpecialOperations?: boolean
+    militarySpecialOpDate?: boolean
+    militarySpecialOpDuration?: boolean
+    militaryExemptionReason?: boolean
+    writerDetails?: boolean
+    politicalSocialMemberships?: boolean
+    foreignTravels?: boolean
+    identificationDocuments?: boolean
+    legalCases?: boolean
+    disciplinaryPunishments?: boolean
+    fatherDetails?: boolean
+    motherDetails?: boolean
+    maritalStatus?: boolean
+    spouseFormerDetails?: boolean
+    spouseCurrentDetails?: boolean
+    children?: boolean
+    siblings?: boolean
+    relativesInGovernment?: boolean
+    overseasContacts?: boolean
+    cohabitants?: boolean
+    closeFriendsRef?: boolean
+    supporters?: boolean
+    additionalExplanations?: boolean
+    ownerSignatureDate?: boolean
+    inspectorRankName?: boolean
+    inspectorPosition?: boolean
+    inspectorSignatureDate?: boolean
+    sketchMapImage?: boolean
+    mapHouseNo?: boolean
+    mapVillage?: boolean
+    mapMoo?: boolean
+    mapSoi?: boolean
+    mapRoad?: boolean
+    mapSubdistrict?: boolean
+    mapDistrict?: boolean
+    mapProvince?: boolean
+    mapPhone?: boolean
+    mapHouseOwnerName?: boolean
+    mapHouseOwnerPhone?: boolean
+    emergencyContactRankName?: boolean
+    emergencyContactRelation?: boolean
+    emergencyContactAddress?: boolean
+    extraTitleName?: boolean
+    extraGender?: boolean
+    extraBloodGroup?: boolean
+    extraRegisteredAddress?: boolean
+    extraCurrentAddress?: boolean
+    extraIsSameAddress?: boolean
+    extraMobilePhone?: boolean
+    extraHomePhone?: boolean
+    extraOfficePhone?: boolean
+    extraEmail?: boolean
+    extraOwnerSignatureDate?: boolean
+    extraOfficerName?: boolean
+    extraOfficerPosition?: boolean
+    extraOfficerSignatureDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rpb1Record"]>
+
+  export type Rpb1RecordSelectScalar = {
+    id?: boolean
+    personnelId?: boolean
+    status?: boolean
+    version?: boolean
+    classification?: boolean
+    photoUrl?: boolean
+    titleRank?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    lastName?: boolean
+    gender?: boolean
+    age?: boolean
+    formerFirstName?: boolean
+    nameChangeDoc?: boolean
+    formerLastName?: boolean
+    lastNameChangeDoc?: boolean
+    nickname?: boolean
+    citizenId?: boolean
+    dateOfBirth?: boolean
+    birthPlaceHospital?: boolean
+    race?: boolean
+    nationality?: boolean
+    formerNationality?: boolean
+    naturalizationDoc?: boolean
+    religion?: boolean
+    formerReligion?: boolean
+    registeredHouseNo?: boolean
+    registeredVillage?: boolean
+    registeredMoo?: boolean
+    registeredSoi?: boolean
+    registeredRoad?: boolean
+    registeredSubdistrict?: boolean
+    registeredDistrict?: boolean
+    registeredProvince?: boolean
+    registeredPhone?: boolean
+    currentHouseNo?: boolean
+    currentVillage?: boolean
+    currentMoo?: boolean
+    currentSoi?: boolean
+    currentRoad?: boolean
+    currentSubdistrict?: boolean
+    currentDistrict?: boolean
+    currentProvince?: boolean
+    currentPhone?: boolean
+    phoneLandline?: boolean
+    phoneMobile?: boolean
+    email?: boolean
+    lineId?: boolean
+    facebook?: boolean
+    instagram?: boolean
+    otherContact?: boolean
+    alienCardNo?: boolean
+    alienCardDate?: boolean
+    alienCardIssuedAt?: boolean
+    alienResidenceDocNo?: boolean
+    alienResidenceDocDate?: boolean
+    alienResidenceIssuedAt?: boolean
+    alienIdInThailand?: boolean
+    birthCountry?: boolean
+    entryDateToThailand?: boolean
+    workPermitNo?: boolean
+    workPermitIssuedBy?: boolean
+    workPermitIssueDate?: boolean
+    workPermitExpiryDate?: boolean
+    height?: boolean
+    weight?: boolean
+    scarsDistinguishingMarks?: boolean
+    bloodGroup?: boolean
+    addressesPast15Years?: boolean
+    educations?: boolean
+    specialActivities?: boolean
+    languages?: boolean
+    workHistory?: boolean
+    specialOccupationsHobbies?: boolean
+    militaryStatus?: boolean
+    militaryRank?: boolean
+    militaryRegNumber?: boolean
+    militaryBranchUnit?: boolean
+    militaryUnitLocation?: boolean
+    militaryServiceFrom?: boolean
+    militaryServiceTo?: boolean
+    militaryYearsServed?: boolean
+    militaryDischargeReason?: boolean
+    militaryLastCommander?: boolean
+    militarySpecialOperations?: boolean
+    militarySpecialOpDate?: boolean
+    militarySpecialOpDuration?: boolean
+    militaryExemptionReason?: boolean
+    writerDetails?: boolean
+    politicalSocialMemberships?: boolean
+    foreignTravels?: boolean
+    identificationDocuments?: boolean
+    legalCases?: boolean
+    disciplinaryPunishments?: boolean
+    fatherDetails?: boolean
+    motherDetails?: boolean
+    maritalStatus?: boolean
+    spouseFormerDetails?: boolean
+    spouseCurrentDetails?: boolean
+    children?: boolean
+    siblings?: boolean
+    relativesInGovernment?: boolean
+    overseasContacts?: boolean
+    cohabitants?: boolean
+    closeFriendsRef?: boolean
+    supporters?: boolean
+    additionalExplanations?: boolean
+    ownerSignatureDate?: boolean
+    inspectorRankName?: boolean
+    inspectorPosition?: boolean
+    inspectorSignatureDate?: boolean
+    sketchMapImage?: boolean
+    mapHouseNo?: boolean
+    mapVillage?: boolean
+    mapMoo?: boolean
+    mapSoi?: boolean
+    mapRoad?: boolean
+    mapSubdistrict?: boolean
+    mapDistrict?: boolean
+    mapProvince?: boolean
+    mapPhone?: boolean
+    mapHouseOwnerName?: boolean
+    mapHouseOwnerPhone?: boolean
+    emergencyContactRankName?: boolean
+    emergencyContactRelation?: boolean
+    emergencyContactAddress?: boolean
+    extraTitleName?: boolean
+    extraGender?: boolean
+    extraBloodGroup?: boolean
+    extraRegisteredAddress?: boolean
+    extraCurrentAddress?: boolean
+    extraIsSameAddress?: boolean
+    extraMobilePhone?: boolean
+    extraHomePhone?: boolean
+    extraOfficePhone?: boolean
+    extraEmail?: boolean
+    extraOwnerSignatureDate?: boolean
+    extraOfficerName?: boolean
+    extraOfficerPosition?: boolean
+    extraOfficerSignatureDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type Rpb1RecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }
+  export type Rpb1RecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }
+
+  export type $Rpb1RecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Rpb1Record"
+    objects: {
+      personnel: Prisma.$PersonnelPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personnelId: string
+      status: string
+      version: number
+      classification: string
+      photoUrl: string | null
+      titleRank: string | null
+      firstName: string | null
+      middleName: string | null
+      lastName: string | null
+      gender: string | null
+      age: number | null
+      formerFirstName: string | null
+      nameChangeDoc: string | null
+      formerLastName: string | null
+      lastNameChangeDoc: string | null
+      nickname: string | null
+      citizenId: string | null
+      dateOfBirth: string | null
+      birthPlaceHospital: string | null
+      race: string | null
+      nationality: string | null
+      formerNationality: string | null
+      naturalizationDoc: string | null
+      religion: string | null
+      formerReligion: string | null
+      registeredHouseNo: string | null
+      registeredVillage: string | null
+      registeredMoo: string | null
+      registeredSoi: string | null
+      registeredRoad: string | null
+      registeredSubdistrict: string | null
+      registeredDistrict: string | null
+      registeredProvince: string | null
+      registeredPhone: string | null
+      currentHouseNo: string | null
+      currentVillage: string | null
+      currentMoo: string | null
+      currentSoi: string | null
+      currentRoad: string | null
+      currentSubdistrict: string | null
+      currentDistrict: string | null
+      currentProvince: string | null
+      currentPhone: string | null
+      phoneLandline: string | null
+      phoneMobile: string | null
+      email: string | null
+      lineId: string | null
+      facebook: string | null
+      instagram: string | null
+      otherContact: string | null
+      alienCardNo: string | null
+      alienCardDate: string | null
+      alienCardIssuedAt: string | null
+      alienResidenceDocNo: string | null
+      alienResidenceDocDate: string | null
+      alienResidenceIssuedAt: string | null
+      alienIdInThailand: string | null
+      birthCountry: string | null
+      entryDateToThailand: string | null
+      workPermitNo: string | null
+      workPermitIssuedBy: string | null
+      workPermitIssueDate: string | null
+      workPermitExpiryDate: string | null
+      height: number | null
+      weight: number | null
+      scarsDistinguishingMarks: string | null
+      bloodGroup: string | null
+      addressesPast15Years: string
+      educations: string
+      specialActivities: string
+      languages: string
+      workHistory: string
+      specialOccupationsHobbies: string | null
+      militaryStatus: string | null
+      militaryRank: string | null
+      militaryRegNumber: string | null
+      militaryBranchUnit: string | null
+      militaryUnitLocation: string | null
+      militaryServiceFrom: string | null
+      militaryServiceTo: string | null
+      militaryYearsServed: string | null
+      militaryDischargeReason: string | null
+      militaryLastCommander: string | null
+      militarySpecialOperations: string | null
+      militarySpecialOpDate: string | null
+      militarySpecialOpDuration: string | null
+      militaryExemptionReason: string | null
+      writerDetails: string | null
+      politicalSocialMemberships: string
+      foreignTravels: string
+      identificationDocuments: string
+      legalCases: string
+      disciplinaryPunishments: string | null
+      fatherDetails: string | null
+      motherDetails: string | null
+      maritalStatus: string | null
+      spouseFormerDetails: string | null
+      spouseCurrentDetails: string | null
+      children: string
+      siblings: string
+      relativesInGovernment: string
+      overseasContacts: string
+      cohabitants: string
+      closeFriendsRef: string
+      supporters: string
+      additionalExplanations: string | null
+      ownerSignatureDate: string | null
+      inspectorRankName: string | null
+      inspectorPosition: string | null
+      inspectorSignatureDate: string | null
+      sketchMapImage: string | null
+      mapHouseNo: string | null
+      mapVillage: string | null
+      mapMoo: string | null
+      mapSoi: string | null
+      mapRoad: string | null
+      mapSubdistrict: string | null
+      mapDistrict: string | null
+      mapProvince: string | null
+      mapPhone: string | null
+      mapHouseOwnerName: string | null
+      mapHouseOwnerPhone: string | null
+      emergencyContactRankName: string | null
+      emergencyContactRelation: string | null
+      emergencyContactAddress: string | null
+      extraTitleName: string | null
+      extraGender: string | null
+      extraBloodGroup: string | null
+      extraRegisteredAddress: string | null
+      extraCurrentAddress: string | null
+      extraIsSameAddress: boolean
+      extraMobilePhone: string | null
+      extraHomePhone: string | null
+      extraOfficePhone: string | null
+      extraEmail: string | null
+      extraOwnerSignatureDate: string | null
+      extraOfficerName: string | null
+      extraOfficerPosition: string | null
+      extraOfficerSignatureDate: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["rpb1Record"]>
+    composites: {}
+  }
+
+  type Rpb1RecordGetPayload<S extends boolean | null | undefined | Rpb1RecordDefaultArgs> = $Result.GetResult<Prisma.$Rpb1RecordPayload, S>
+
+  type Rpb1RecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<Rpb1RecordFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: Rpb1RecordCountAggregateInputType | true
+    }
+
+  export interface Rpb1RecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Rpb1Record'], meta: { name: 'Rpb1Record' } }
+    /**
+     * Find zero or one Rpb1Record that matches the filter.
+     * @param {Rpb1RecordFindUniqueArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends Rpb1RecordFindUniqueArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Rpb1Record that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {Rpb1RecordFindUniqueOrThrowArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends Rpb1RecordFindUniqueOrThrowArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Rpb1Record that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordFindFirstArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends Rpb1RecordFindFirstArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Rpb1Record that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordFindFirstOrThrowArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends Rpb1RecordFindFirstOrThrowArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Rpb1Records that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Rpb1Records
+     * const rpb1Records = await prisma.rpb1Record.findMany()
+     * 
+     * // Get first 10 Rpb1Records
+     * const rpb1Records = await prisma.rpb1Record.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rpb1RecordWithIdOnly = await prisma.rpb1Record.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends Rpb1RecordFindManyArgs>(args?: SelectSubset<T, Rpb1RecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Rpb1Record.
+     * @param {Rpb1RecordCreateArgs} args - Arguments to create a Rpb1Record.
+     * @example
+     * // Create one Rpb1Record
+     * const Rpb1Record = await prisma.rpb1Record.create({
+     *   data: {
+     *     // ... data to create a Rpb1Record
+     *   }
+     * })
+     * 
+     */
+    create<T extends Rpb1RecordCreateArgs>(args: SelectSubset<T, Rpb1RecordCreateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Rpb1Records.
+     * @param {Rpb1RecordCreateManyArgs} args - Arguments to create many Rpb1Records.
+     * @example
+     * // Create many Rpb1Records
+     * const rpb1Record = await prisma.rpb1Record.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends Rpb1RecordCreateManyArgs>(args?: SelectSubset<T, Rpb1RecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Rpb1Records and returns the data saved in the database.
+     * @param {Rpb1RecordCreateManyAndReturnArgs} args - Arguments to create many Rpb1Records.
+     * @example
+     * // Create many Rpb1Records
+     * const rpb1Record = await prisma.rpb1Record.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Rpb1Records and only return the `id`
+     * const rpb1RecordWithIdOnly = await prisma.rpb1Record.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends Rpb1RecordCreateManyAndReturnArgs>(args?: SelectSubset<T, Rpb1RecordCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Rpb1Record.
+     * @param {Rpb1RecordDeleteArgs} args - Arguments to delete one Rpb1Record.
+     * @example
+     * // Delete one Rpb1Record
+     * const Rpb1Record = await prisma.rpb1Record.delete({
+     *   where: {
+     *     // ... filter to delete one Rpb1Record
+     *   }
+     * })
+     * 
+     */
+    delete<T extends Rpb1RecordDeleteArgs>(args: SelectSubset<T, Rpb1RecordDeleteArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Rpb1Record.
+     * @param {Rpb1RecordUpdateArgs} args - Arguments to update one Rpb1Record.
+     * @example
+     * // Update one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends Rpb1RecordUpdateArgs>(args: SelectSubset<T, Rpb1RecordUpdateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Rpb1Records.
+     * @param {Rpb1RecordDeleteManyArgs} args - Arguments to filter Rpb1Records to delete.
+     * @example
+     * // Delete a few Rpb1Records
+     * const { count } = await prisma.rpb1Record.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends Rpb1RecordDeleteManyArgs>(args?: SelectSubset<T, Rpb1RecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Rpb1Records.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Rpb1Records
+     * const rpb1Record = await prisma.rpb1Record.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends Rpb1RecordUpdateManyArgs>(args: SelectSubset<T, Rpb1RecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Rpb1Record.
+     * @param {Rpb1RecordUpsertArgs} args - Arguments to update or create a Rpb1Record.
+     * @example
+     * // Update or create a Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.upsert({
+     *   create: {
+     *     // ... data to create a Rpb1Record
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Rpb1Record we want to update
+     *   }
+     * })
+     */
+    upsert<T extends Rpb1RecordUpsertArgs>(args: SelectSubset<T, Rpb1RecordUpsertArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Rpb1Records.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordCountArgs} args - Arguments to filter Rpb1Records to count.
+     * @example
+     * // Count the number of Rpb1Records
+     * const count = await prisma.rpb1Record.count({
+     *   where: {
+     *     // ... the filter for the Rpb1Records we want to count
+     *   }
+     * })
+    **/
+    count<T extends Rpb1RecordCountArgs>(
+      args?: Subset<T, Rpb1RecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Rpb1RecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Rpb1Record.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Rpb1RecordAggregateArgs>(args: Subset<T, Rpb1RecordAggregateArgs>): Prisma.PrismaPromise<GetRpb1RecordAggregateType<T>>
+
+    /**
+     * Group by Rpb1Record.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Rpb1RecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Rpb1RecordGroupByArgs['orderBy'] }
+        : { orderBy?: Rpb1RecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Rpb1RecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRpb1RecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Rpb1Record model
+   */
+  readonly fields: Rpb1RecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Rpb1Record.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__Rpb1RecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personnel<T extends PersonnelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonnelDefaultArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Rpb1Record model
+   */ 
+  interface Rpb1RecordFieldRefs {
+    readonly id: FieldRef<"Rpb1Record", 'String'>
+    readonly personnelId: FieldRef<"Rpb1Record", 'String'>
+    readonly status: FieldRef<"Rpb1Record", 'String'>
+    readonly version: FieldRef<"Rpb1Record", 'Int'>
+    readonly classification: FieldRef<"Rpb1Record", 'String'>
+    readonly photoUrl: FieldRef<"Rpb1Record", 'String'>
+    readonly titleRank: FieldRef<"Rpb1Record", 'String'>
+    readonly firstName: FieldRef<"Rpb1Record", 'String'>
+    readonly middleName: FieldRef<"Rpb1Record", 'String'>
+    readonly lastName: FieldRef<"Rpb1Record", 'String'>
+    readonly gender: FieldRef<"Rpb1Record", 'String'>
+    readonly age: FieldRef<"Rpb1Record", 'Int'>
+    readonly formerFirstName: FieldRef<"Rpb1Record", 'String'>
+    readonly nameChangeDoc: FieldRef<"Rpb1Record", 'String'>
+    readonly formerLastName: FieldRef<"Rpb1Record", 'String'>
+    readonly lastNameChangeDoc: FieldRef<"Rpb1Record", 'String'>
+    readonly nickname: FieldRef<"Rpb1Record", 'String'>
+    readonly citizenId: FieldRef<"Rpb1Record", 'String'>
+    readonly dateOfBirth: FieldRef<"Rpb1Record", 'String'>
+    readonly birthPlaceHospital: FieldRef<"Rpb1Record", 'String'>
+    readonly race: FieldRef<"Rpb1Record", 'String'>
+    readonly nationality: FieldRef<"Rpb1Record", 'String'>
+    readonly formerNationality: FieldRef<"Rpb1Record", 'String'>
+    readonly naturalizationDoc: FieldRef<"Rpb1Record", 'String'>
+    readonly religion: FieldRef<"Rpb1Record", 'String'>
+    readonly formerReligion: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredHouseNo: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredVillage: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredMoo: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredSoi: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredRoad: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredSubdistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredDistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredProvince: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly currentHouseNo: FieldRef<"Rpb1Record", 'String'>
+    readonly currentVillage: FieldRef<"Rpb1Record", 'String'>
+    readonly currentMoo: FieldRef<"Rpb1Record", 'String'>
+    readonly currentSoi: FieldRef<"Rpb1Record", 'String'>
+    readonly currentRoad: FieldRef<"Rpb1Record", 'String'>
+    readonly currentSubdistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly currentDistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly currentProvince: FieldRef<"Rpb1Record", 'String'>
+    readonly currentPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly phoneLandline: FieldRef<"Rpb1Record", 'String'>
+    readonly phoneMobile: FieldRef<"Rpb1Record", 'String'>
+    readonly email: FieldRef<"Rpb1Record", 'String'>
+    readonly lineId: FieldRef<"Rpb1Record", 'String'>
+    readonly facebook: FieldRef<"Rpb1Record", 'String'>
+    readonly instagram: FieldRef<"Rpb1Record", 'String'>
+    readonly otherContact: FieldRef<"Rpb1Record", 'String'>
+    readonly alienCardNo: FieldRef<"Rpb1Record", 'String'>
+    readonly alienCardDate: FieldRef<"Rpb1Record", 'String'>
+    readonly alienCardIssuedAt: FieldRef<"Rpb1Record", 'String'>
+    readonly alienResidenceDocNo: FieldRef<"Rpb1Record", 'String'>
+    readonly alienResidenceDocDate: FieldRef<"Rpb1Record", 'String'>
+    readonly alienResidenceIssuedAt: FieldRef<"Rpb1Record", 'String'>
+    readonly alienIdInThailand: FieldRef<"Rpb1Record", 'String'>
+    readonly birthCountry: FieldRef<"Rpb1Record", 'String'>
+    readonly entryDateToThailand: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitNo: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitIssuedBy: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitIssueDate: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitExpiryDate: FieldRef<"Rpb1Record", 'String'>
+    readonly height: FieldRef<"Rpb1Record", 'Float'>
+    readonly weight: FieldRef<"Rpb1Record", 'Float'>
+    readonly scarsDistinguishingMarks: FieldRef<"Rpb1Record", 'String'>
+    readonly bloodGroup: FieldRef<"Rpb1Record", 'String'>
+    readonly addressesPast15Years: FieldRef<"Rpb1Record", 'String'>
+    readonly educations: FieldRef<"Rpb1Record", 'String'>
+    readonly specialActivities: FieldRef<"Rpb1Record", 'String'>
+    readonly languages: FieldRef<"Rpb1Record", 'String'>
+    readonly workHistory: FieldRef<"Rpb1Record", 'String'>
+    readonly specialOccupationsHobbies: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryStatus: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryRank: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryRegNumber: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryBranchUnit: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryUnitLocation: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryServiceFrom: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryServiceTo: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryYearsServed: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryDischargeReason: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryLastCommander: FieldRef<"Rpb1Record", 'String'>
+    readonly militarySpecialOperations: FieldRef<"Rpb1Record", 'String'>
+    readonly militarySpecialOpDate: FieldRef<"Rpb1Record", 'String'>
+    readonly militarySpecialOpDuration: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryExemptionReason: FieldRef<"Rpb1Record", 'String'>
+    readonly writerDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly politicalSocialMemberships: FieldRef<"Rpb1Record", 'String'>
+    readonly foreignTravels: FieldRef<"Rpb1Record", 'String'>
+    readonly identificationDocuments: FieldRef<"Rpb1Record", 'String'>
+    readonly legalCases: FieldRef<"Rpb1Record", 'String'>
+    readonly disciplinaryPunishments: FieldRef<"Rpb1Record", 'String'>
+    readonly fatherDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly motherDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly maritalStatus: FieldRef<"Rpb1Record", 'String'>
+    readonly spouseFormerDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly spouseCurrentDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly children: FieldRef<"Rpb1Record", 'String'>
+    readonly siblings: FieldRef<"Rpb1Record", 'String'>
+    readonly relativesInGovernment: FieldRef<"Rpb1Record", 'String'>
+    readonly overseasContacts: FieldRef<"Rpb1Record", 'String'>
+    readonly cohabitants: FieldRef<"Rpb1Record", 'String'>
+    readonly closeFriendsRef: FieldRef<"Rpb1Record", 'String'>
+    readonly supporters: FieldRef<"Rpb1Record", 'String'>
+    readonly additionalExplanations: FieldRef<"Rpb1Record", 'String'>
+    readonly ownerSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly inspectorRankName: FieldRef<"Rpb1Record", 'String'>
+    readonly inspectorPosition: FieldRef<"Rpb1Record", 'String'>
+    readonly inspectorSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly sketchMapImage: FieldRef<"Rpb1Record", 'String'>
+    readonly mapHouseNo: FieldRef<"Rpb1Record", 'String'>
+    readonly mapVillage: FieldRef<"Rpb1Record", 'String'>
+    readonly mapMoo: FieldRef<"Rpb1Record", 'String'>
+    readonly mapSoi: FieldRef<"Rpb1Record", 'String'>
+    readonly mapRoad: FieldRef<"Rpb1Record", 'String'>
+    readonly mapSubdistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly mapDistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly mapProvince: FieldRef<"Rpb1Record", 'String'>
+    readonly mapPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly mapHouseOwnerName: FieldRef<"Rpb1Record", 'String'>
+    readonly mapHouseOwnerPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly emergencyContactRankName: FieldRef<"Rpb1Record", 'String'>
+    readonly emergencyContactRelation: FieldRef<"Rpb1Record", 'String'>
+    readonly emergencyContactAddress: FieldRef<"Rpb1Record", 'String'>
+    readonly extraTitleName: FieldRef<"Rpb1Record", 'String'>
+    readonly extraGender: FieldRef<"Rpb1Record", 'String'>
+    readonly extraBloodGroup: FieldRef<"Rpb1Record", 'String'>
+    readonly extraRegisteredAddress: FieldRef<"Rpb1Record", 'String'>
+    readonly extraCurrentAddress: FieldRef<"Rpb1Record", 'String'>
+    readonly extraIsSameAddress: FieldRef<"Rpb1Record", 'Boolean'>
+    readonly extraMobilePhone: FieldRef<"Rpb1Record", 'String'>
+    readonly extraHomePhone: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficePhone: FieldRef<"Rpb1Record", 'String'>
+    readonly extraEmail: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOwnerSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficerName: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficerPosition: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficerSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly createdAt: FieldRef<"Rpb1Record", 'DateTime'>
+    readonly updatedAt: FieldRef<"Rpb1Record", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Rpb1Record findUnique
+   */
+  export type Rpb1RecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record findUniqueOrThrow
+   */
+  export type Rpb1RecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record findFirst
+   */
+  export type Rpb1RecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Rpb1Records.
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Rpb1Records.
+     */
+    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
+  }
+
+  /**
+   * Rpb1Record findFirstOrThrow
+   */
+  export type Rpb1RecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Rpb1Records.
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Rpb1Records.
+     */
+    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
+  }
+
+  /**
+   * Rpb1Record findMany
+   */
+  export type Rpb1RecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Records to fetch.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Rpb1Records.
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
+  }
+
+  /**
+   * Rpb1Record create
+   */
+  export type Rpb1RecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Rpb1Record.
+     */
+    data: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
+  }
+
+  /**
+   * Rpb1Record createMany
+   */
+  export type Rpb1RecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Rpb1Records.
+     */
+    data: Rpb1RecordCreateManyInput | Rpb1RecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Rpb1Record createManyAndReturn
+   */
+  export type Rpb1RecordCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Rpb1Records.
+     */
+    data: Rpb1RecordCreateManyInput | Rpb1RecordCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Rpb1Record update
+   */
+  export type Rpb1RecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Rpb1Record.
+     */
+    data: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
+    /**
+     * Choose, which Rpb1Record to update.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record updateMany
+   */
+  export type Rpb1RecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Rpb1Records.
+     */
+    data: XOR<Rpb1RecordUpdateManyMutationInput, Rpb1RecordUncheckedUpdateManyInput>
+    /**
+     * Filter which Rpb1Records to update
+     */
+    where?: Rpb1RecordWhereInput
+  }
+
+  /**
+   * Rpb1Record upsert
+   */
+  export type Rpb1RecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Rpb1Record to update in case it exists.
+     */
+    where: Rpb1RecordWhereUniqueInput
+    /**
+     * In case the Rpb1Record found by the `where` argument doesn't exist, create a new Rpb1Record with this data.
+     */
+    create: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
+    /**
+     * In case the Rpb1Record was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
+  }
+
+  /**
+   * Rpb1Record delete
+   */
+  export type Rpb1RecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter which Rpb1Record to delete.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record deleteMany
+   */
+  export type Rpb1RecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Rpb1Records to delete
+     */
+    where?: Rpb1RecordWhereInput
+  }
+
+  /**
+   * Rpb1Record without action
+   */
+  export type Rpb1RecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Service
+   */
+
+  export type AggregateService = {
+    _count: ServiceCountAggregateOutputType | null
+    _avg: ServiceAvgAggregateOutputType | null
+    _sum: ServiceSumAggregateOutputType | null
+    _min: ServiceMinAggregateOutputType | null
+    _max: ServiceMaxAggregateOutputType | null
+  }
+
+  export type ServiceAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type ServiceSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type ServiceMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    price: string | null
+    image: string | null
+    icon: string | null
+    published: boolean | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ServiceMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    price: string | null
+    image: string | null
+    icon: string | null
+    published: boolean | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ServiceCountAggregateOutputType = {
+    id: number
+    title: number
+    description: number
+    price: number
+    image: number
+    icon: number
+    published: number
+    order: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ServiceAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type ServiceSumAggregateInputType = {
+    order?: true
+  }
+
+  export type ServiceMinAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    price?: true
+    image?: true
+    icon?: true
+    published?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ServiceMaxAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    price?: true
+    image?: true
+    icon?: true
+    published?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ServiceCountAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    price?: true
+    image?: true
+    icon?: true
+    published?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ServiceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Service to aggregate.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Services
+    **/
+    _count?: true | ServiceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ServiceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ServiceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ServiceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ServiceMaxAggregateInputType
+  }
+
+  export type GetServiceAggregateType<T extends ServiceAggregateArgs> = {
+        [P in keyof T & keyof AggregateService]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateService[P]>
+      : GetScalarType<T[P], AggregateService[P]>
+  }
+
+
+
+
+  export type ServiceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceWhereInput
+    orderBy?: ServiceOrderByWithAggregationInput | ServiceOrderByWithAggregationInput[]
+    by: ServiceScalarFieldEnum[] | ServiceScalarFieldEnum
+    having?: ServiceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ServiceCountAggregateInputType | true
+    _avg?: ServiceAvgAggregateInputType
+    _sum?: ServiceSumAggregateInputType
+    _min?: ServiceMinAggregateInputType
+    _max?: ServiceMaxAggregateInputType
+  }
+
+  export type ServiceGroupByOutputType = {
+    id: string
+    title: string
+    description: string
+    price: string | null
+    image: string | null
+    icon: string | null
+    published: boolean
+    order: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ServiceCountAggregateOutputType | null
+    _avg: ServiceAvgAggregateOutputType | null
+    _sum: ServiceSumAggregateOutputType | null
+    _min: ServiceMinAggregateOutputType | null
+    _max: ServiceMaxAggregateOutputType | null
+  }
+
+  type GetServiceGroupByPayload<T extends ServiceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ServiceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ServiceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ServiceGroupByOutputType[P]>
+            : GetScalarType<T[P], ServiceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    price?: boolean
+    image?: boolean
+    icon?: boolean
+    published?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["service"]>
+
+  export type ServiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    price?: boolean
+    image?: boolean
+    icon?: boolean
+    published?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["service"]>
+
+  export type ServiceSelectScalar = {
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    price?: boolean
+    image?: boolean
+    icon?: boolean
+    published?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $ServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Service"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      description: string
+      price: string | null
+      image: string | null
+      icon: string | null
+      published: boolean
+      order: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["service"]>
+    composites: {}
+  }
+
+  type ServiceGetPayload<S extends boolean | null | undefined | ServiceDefaultArgs> = $Result.GetResult<Prisma.$ServicePayload, S>
+
+  type ServiceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ServiceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ServiceCountAggregateInputType | true
+    }
+
+  export interface ServiceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Service'], meta: { name: 'Service' } }
+    /**
+     * Find zero or one Service that matches the filter.
+     * @param {ServiceFindUniqueArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ServiceFindUniqueArgs>(args: SelectSubset<T, ServiceFindUniqueArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Service that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ServiceFindUniqueOrThrowArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ServiceFindUniqueOrThrowArgs>(args: SelectSubset<T, ServiceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Service that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceFindFirstArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ServiceFindFirstArgs>(args?: SelectSubset<T, ServiceFindFirstArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Service that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceFindFirstOrThrowArgs} args - Arguments to find a Service
+     * @example
+     * // Get one Service
+     * const service = await prisma.service.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ServiceFindFirstOrThrowArgs>(args?: SelectSubset<T, ServiceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Services that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Services
+     * const services = await prisma.service.findMany()
+     * 
+     * // Get first 10 Services
+     * const services = await prisma.service.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const serviceWithIdOnly = await prisma.service.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ServiceFindManyArgs>(args?: SelectSubset<T, ServiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Service.
+     * @param {ServiceCreateArgs} args - Arguments to create a Service.
+     * @example
+     * // Create one Service
+     * const Service = await prisma.service.create({
+     *   data: {
+     *     // ... data to create a Service
+     *   }
+     * })
+     * 
+     */
+    create<T extends ServiceCreateArgs>(args: SelectSubset<T, ServiceCreateArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Services.
+     * @param {ServiceCreateManyArgs} args - Arguments to create many Services.
+     * @example
+     * // Create many Services
+     * const service = await prisma.service.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ServiceCreateManyArgs>(args?: SelectSubset<T, ServiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Services and returns the data saved in the database.
+     * @param {ServiceCreateManyAndReturnArgs} args - Arguments to create many Services.
+     * @example
+     * // Create many Services
+     * const service = await prisma.service.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Services and only return the `id`
+     * const serviceWithIdOnly = await prisma.service.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ServiceCreateManyAndReturnArgs>(args?: SelectSubset<T, ServiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Service.
+     * @param {ServiceDeleteArgs} args - Arguments to delete one Service.
+     * @example
+     * // Delete one Service
+     * const Service = await prisma.service.delete({
+     *   where: {
+     *     // ... filter to delete one Service
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ServiceDeleteArgs>(args: SelectSubset<T, ServiceDeleteArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Service.
+     * @param {ServiceUpdateArgs} args - Arguments to update one Service.
+     * @example
+     * // Update one Service
+     * const service = await prisma.service.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ServiceUpdateArgs>(args: SelectSubset<T, ServiceUpdateArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Services.
+     * @param {ServiceDeleteManyArgs} args - Arguments to filter Services to delete.
+     * @example
+     * // Delete a few Services
+     * const { count } = await prisma.service.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ServiceDeleteManyArgs>(args?: SelectSubset<T, ServiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Services.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Services
+     * const service = await prisma.service.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ServiceUpdateManyArgs>(args: SelectSubset<T, ServiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Service.
+     * @param {ServiceUpsertArgs} args - Arguments to update or create a Service.
+     * @example
+     * // Update or create a Service
+     * const service = await prisma.service.upsert({
+     *   create: {
+     *     // ... data to create a Service
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Service we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ServiceUpsertArgs>(args: SelectSubset<T, ServiceUpsertArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Services.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCountArgs} args - Arguments to filter Services to count.
+     * @example
+     * // Count the number of Services
+     * const count = await prisma.service.count({
+     *   where: {
+     *     // ... the filter for the Services we want to count
+     *   }
+     * })
+    **/
+    count<T extends ServiceCountArgs>(
+      args?: Subset<T, ServiceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ServiceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Service.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ServiceAggregateArgs>(args: Subset<T, ServiceAggregateArgs>): Prisma.PrismaPromise<GetServiceAggregateType<T>>
+
+    /**
+     * Group by Service.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ServiceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ServiceGroupByArgs['orderBy'] }
+        : { orderBy?: ServiceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ServiceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetServiceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Service model
+   */
+  readonly fields: ServiceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Service.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Service model
+   */ 
+  interface ServiceFieldRefs {
+    readonly id: FieldRef<"Service", 'String'>
+    readonly title: FieldRef<"Service", 'String'>
+    readonly description: FieldRef<"Service", 'String'>
+    readonly price: FieldRef<"Service", 'String'>
+    readonly image: FieldRef<"Service", 'String'>
+    readonly icon: FieldRef<"Service", 'String'>
+    readonly published: FieldRef<"Service", 'Boolean'>
+    readonly order: FieldRef<"Service", 'Int'>
+    readonly createdAt: FieldRef<"Service", 'DateTime'>
+    readonly updatedAt: FieldRef<"Service", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Service findUnique
+   */
+  export type ServiceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service findUniqueOrThrow
+   */
+  export type ServiceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service findFirst
+   */
+  export type ServiceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Services.
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Services.
+     */
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Service findFirstOrThrow
+   */
+  export type ServiceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Filter, which Service to fetch.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Services.
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Services.
+     */
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Service findMany
+   */
+  export type ServiceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Filter, which Services to fetch.
+     */
+    where?: ServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Services to fetch.
+     */
+    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Services.
+     */
+    cursor?: ServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Services.
+     */
+    skip?: number
+    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
+  }
+
+  /**
+   * Service create
+   */
+  export type ServiceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * The data needed to create a Service.
+     */
+    data: XOR<ServiceCreateInput, ServiceUncheckedCreateInput>
+  }
+
+  /**
+   * Service createMany
+   */
+  export type ServiceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Services.
+     */
+    data: ServiceCreateManyInput | ServiceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Service createManyAndReturn
+   */
+  export type ServiceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Services.
+     */
+    data: ServiceCreateManyInput | ServiceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Service update
+   */
+  export type ServiceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * The data needed to update a Service.
+     */
+    data: XOR<ServiceUpdateInput, ServiceUncheckedUpdateInput>
+    /**
+     * Choose, which Service to update.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service updateMany
+   */
+  export type ServiceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Services.
+     */
+    data: XOR<ServiceUpdateManyMutationInput, ServiceUncheckedUpdateManyInput>
+    /**
+     * Filter which Services to update
+     */
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * Service upsert
+   */
+  export type ServiceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * The filter to search for the Service to update in case it exists.
+     */
+    where: ServiceWhereUniqueInput
+    /**
+     * In case the Service found by the `where` argument doesn't exist, create a new Service with this data.
+     */
+    create: XOR<ServiceCreateInput, ServiceUncheckedCreateInput>
+    /**
+     * In case the Service was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ServiceUpdateInput, ServiceUncheckedUpdateInput>
+  }
+
+  /**
+   * Service delete
+   */
+  export type ServiceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+    /**
+     * Filter which Service to delete.
+     */
+    where: ServiceWhereUniqueInput
+  }
+
+  /**
+   * Service deleteMany
+   */
+  export type ServiceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Services to delete
+     */
+    where?: ServiceWhereInput
+  }
+
+  /**
+   * Service without action
+   */
+  export type ServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service
+     */
+    select?: ServiceSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MediaFile
+   */
+
+  export type AggregateMediaFile = {
+    _count: MediaFileCountAggregateOutputType | null
+    _avg: MediaFileAvgAggregateOutputType | null
+    _sum: MediaFileSumAggregateOutputType | null
+    _min: MediaFileMinAggregateOutputType | null
+    _max: MediaFileMaxAggregateOutputType | null
+  }
+
+  export type MediaFileAvgAggregateOutputType = {
+    size: number | null
+  }
+
+  export type MediaFileSumAggregateOutputType = {
+    size: number | null
+  }
+
+  export type MediaFileMinAggregateOutputType = {
+    id: string | null
+    filename: string | null
+    url: string | null
+    size: number | null
+    mimetype: string | null
+    uploadedById: string | null
+    createdAt: Date | null
+  }
+
+  export type MediaFileMaxAggregateOutputType = {
+    id: string | null
+    filename: string | null
+    url: string | null
+    size: number | null
+    mimetype: string | null
+    uploadedById: string | null
+    createdAt: Date | null
+  }
+
+  export type MediaFileCountAggregateOutputType = {
+    id: number
+    filename: number
+    url: number
+    size: number
+    mimetype: number
+    uploadedById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MediaFileAvgAggregateInputType = {
+    size?: true
+  }
+
+  export type MediaFileSumAggregateInputType = {
+    size?: true
+  }
+
+  export type MediaFileMinAggregateInputType = {
+    id?: true
+    filename?: true
+    url?: true
+    size?: true
+    mimetype?: true
+    uploadedById?: true
+    createdAt?: true
+  }
+
+  export type MediaFileMaxAggregateInputType = {
+    id?: true
+    filename?: true
+    url?: true
+    size?: true
+    mimetype?: true
+    uploadedById?: true
+    createdAt?: true
+  }
+
+  export type MediaFileCountAggregateInputType = {
+    id?: true
+    filename?: true
+    url?: true
+    size?: true
+    mimetype?: true
+    uploadedById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MediaFileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MediaFile to aggregate.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MediaFiles
+    **/
+    _count?: true | MediaFileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MediaFileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MediaFileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MediaFileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MediaFileMaxAggregateInputType
+  }
+
+  export type GetMediaFileAggregateType<T extends MediaFileAggregateArgs> = {
+        [P in keyof T & keyof AggregateMediaFile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMediaFile[P]>
+      : GetScalarType<T[P], AggregateMediaFile[P]>
+  }
+
+
+
+
+  export type MediaFileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MediaFileWhereInput
+    orderBy?: MediaFileOrderByWithAggregationInput | MediaFileOrderByWithAggregationInput[]
+    by: MediaFileScalarFieldEnum[] | MediaFileScalarFieldEnum
+    having?: MediaFileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MediaFileCountAggregateInputType | true
+    _avg?: MediaFileAvgAggregateInputType
+    _sum?: MediaFileSumAggregateInputType
+    _min?: MediaFileMinAggregateInputType
+    _max?: MediaFileMaxAggregateInputType
+  }
+
+  export type MediaFileGroupByOutputType = {
+    id: string
+    filename: string
+    url: string
+    size: number
+    mimetype: string
+    uploadedById: string | null
+    createdAt: Date
+    _count: MediaFileCountAggregateOutputType | null
+    _avg: MediaFileAvgAggregateOutputType | null
+    _sum: MediaFileSumAggregateOutputType | null
+    _min: MediaFileMinAggregateOutputType | null
+    _max: MediaFileMaxAggregateOutputType | null
+  }
+
+  type GetMediaFileGroupByPayload<T extends MediaFileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MediaFileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MediaFileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MediaFileGroupByOutputType[P]>
+            : GetScalarType<T[P], MediaFileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MediaFileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    filename?: boolean
+    url?: boolean
+    size?: boolean
+    mimetype?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaFile"]>
+
+  export type MediaFileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    filename?: boolean
+    url?: boolean
+    size?: boolean
+    mimetype?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaFile"]>
+
+  export type MediaFileSelectScalar = {
+    id?: boolean
+    filename?: boolean
+    url?: boolean
+    size?: boolean
+    mimetype?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+  }
+
+  export type MediaFileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }
+  export type MediaFileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }
+
+  export type $MediaFilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MediaFile"
+    objects: {
+      uploadedBy: Prisma.$PersonnelPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      filename: string
+      url: string
+      size: number
+      mimetype: string
+      uploadedById: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["mediaFile"]>
+    composites: {}
+  }
+
+  type MediaFileGetPayload<S extends boolean | null | undefined | MediaFileDefaultArgs> = $Result.GetResult<Prisma.$MediaFilePayload, S>
+
+  type MediaFileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<MediaFileFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: MediaFileCountAggregateInputType | true
+    }
+
+  export interface MediaFileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MediaFile'], meta: { name: 'MediaFile' } }
+    /**
+     * Find zero or one MediaFile that matches the filter.
+     * @param {MediaFileFindUniqueArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MediaFileFindUniqueArgs>(args: SelectSubset<T, MediaFileFindUniqueArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one MediaFile that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {MediaFileFindUniqueOrThrowArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MediaFileFindUniqueOrThrowArgs>(args: SelectSubset<T, MediaFileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first MediaFile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileFindFirstArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MediaFileFindFirstArgs>(args?: SelectSubset<T, MediaFileFindFirstArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first MediaFile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileFindFirstOrThrowArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MediaFileFindFirstOrThrowArgs>(args?: SelectSubset<T, MediaFileFindFirstOrThrowArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more MediaFiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MediaFiles
+     * const mediaFiles = await prisma.mediaFile.findMany()
+     * 
+     * // Get first 10 MediaFiles
+     * const mediaFiles = await prisma.mediaFile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const mediaFileWithIdOnly = await prisma.mediaFile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MediaFileFindManyArgs>(args?: SelectSubset<T, MediaFileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a MediaFile.
+     * @param {MediaFileCreateArgs} args - Arguments to create a MediaFile.
+     * @example
+     * // Create one MediaFile
+     * const MediaFile = await prisma.mediaFile.create({
+     *   data: {
+     *     // ... data to create a MediaFile
+     *   }
+     * })
+     * 
+     */
+    create<T extends MediaFileCreateArgs>(args: SelectSubset<T, MediaFileCreateArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many MediaFiles.
+     * @param {MediaFileCreateManyArgs} args - Arguments to create many MediaFiles.
+     * @example
+     * // Create many MediaFiles
+     * const mediaFile = await prisma.mediaFile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MediaFileCreateManyArgs>(args?: SelectSubset<T, MediaFileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MediaFiles and returns the data saved in the database.
+     * @param {MediaFileCreateManyAndReturnArgs} args - Arguments to create many MediaFiles.
+     * @example
+     * // Create many MediaFiles
+     * const mediaFile = await prisma.mediaFile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MediaFiles and only return the `id`
+     * const mediaFileWithIdOnly = await prisma.mediaFile.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MediaFileCreateManyAndReturnArgs>(args?: SelectSubset<T, MediaFileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a MediaFile.
+     * @param {MediaFileDeleteArgs} args - Arguments to delete one MediaFile.
+     * @example
+     * // Delete one MediaFile
+     * const MediaFile = await prisma.mediaFile.delete({
+     *   where: {
+     *     // ... filter to delete one MediaFile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MediaFileDeleteArgs>(args: SelectSubset<T, MediaFileDeleteArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one MediaFile.
+     * @param {MediaFileUpdateArgs} args - Arguments to update one MediaFile.
+     * @example
+     * // Update one MediaFile
+     * const mediaFile = await prisma.mediaFile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MediaFileUpdateArgs>(args: SelectSubset<T, MediaFileUpdateArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more MediaFiles.
+     * @param {MediaFileDeleteManyArgs} args - Arguments to filter MediaFiles to delete.
+     * @example
+     * // Delete a few MediaFiles
+     * const { count } = await prisma.mediaFile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MediaFileDeleteManyArgs>(args?: SelectSubset<T, MediaFileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MediaFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MediaFiles
+     * const mediaFile = await prisma.mediaFile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MediaFileUpdateManyArgs>(args: SelectSubset<T, MediaFileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MediaFile.
+     * @param {MediaFileUpsertArgs} args - Arguments to update or create a MediaFile.
+     * @example
+     * // Update or create a MediaFile
+     * const mediaFile = await prisma.mediaFile.upsert({
+     *   create: {
+     *     // ... data to create a MediaFile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MediaFile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MediaFileUpsertArgs>(args: SelectSubset<T, MediaFileUpsertArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of MediaFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileCountArgs} args - Arguments to filter MediaFiles to count.
+     * @example
+     * // Count the number of MediaFiles
+     * const count = await prisma.mediaFile.count({
+     *   where: {
+     *     // ... the filter for the MediaFiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends MediaFileCountArgs>(
+      args?: Subset<T, MediaFileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MediaFileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MediaFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MediaFileAggregateArgs>(args: Subset<T, MediaFileAggregateArgs>): Prisma.PrismaPromise<GetMediaFileAggregateType<T>>
+
+    /**
+     * Group by MediaFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MediaFileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MediaFileGroupByArgs['orderBy'] }
+        : { orderBy?: MediaFileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MediaFileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMediaFileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MediaFile model
+   */
+  readonly fields: MediaFileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MediaFile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MediaFileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    uploadedBy<T extends MediaFile$uploadedByArgs<ExtArgs> = {}>(args?: Subset<T, MediaFile$uploadedByArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MediaFile model
+   */ 
+  interface MediaFileFieldRefs {
+    readonly id: FieldRef<"MediaFile", 'String'>
+    readonly filename: FieldRef<"MediaFile", 'String'>
+    readonly url: FieldRef<"MediaFile", 'String'>
+    readonly size: FieldRef<"MediaFile", 'Int'>
+    readonly mimetype: FieldRef<"MediaFile", 'String'>
+    readonly uploadedById: FieldRef<"MediaFile", 'String'>
+    readonly createdAt: FieldRef<"MediaFile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MediaFile findUnique
+   */
+  export type MediaFileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile findUniqueOrThrow
+   */
+  export type MediaFileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile findFirst
+   */
+  export type MediaFileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MediaFiles.
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MediaFiles.
+     */
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile findFirstOrThrow
+   */
+  export type MediaFileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MediaFiles.
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MediaFiles.
+     */
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile findMany
+   */
+  export type MediaFileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFiles to fetch.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MediaFiles.
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile create
+   */
+  export type MediaFileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MediaFile.
+     */
+    data: XOR<MediaFileCreateInput, MediaFileUncheckedCreateInput>
+  }
+
+  /**
+   * MediaFile createMany
+   */
+  export type MediaFileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MediaFiles.
+     */
+    data: MediaFileCreateManyInput | MediaFileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MediaFile createManyAndReturn
+   */
+  export type MediaFileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many MediaFiles.
+     */
+    data: MediaFileCreateManyInput | MediaFileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MediaFile update
+   */
+  export type MediaFileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MediaFile.
+     */
+    data: XOR<MediaFileUpdateInput, MediaFileUncheckedUpdateInput>
+    /**
+     * Choose, which MediaFile to update.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile updateMany
+   */
+  export type MediaFileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MediaFiles.
+     */
+    data: XOR<MediaFileUpdateManyMutationInput, MediaFileUncheckedUpdateManyInput>
+    /**
+     * Filter which MediaFiles to update
+     */
+    where?: MediaFileWhereInput
+  }
+
+  /**
+   * MediaFile upsert
+   */
+  export type MediaFileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MediaFile to update in case it exists.
+     */
+    where: MediaFileWhereUniqueInput
+    /**
+     * In case the MediaFile found by the `where` argument doesn't exist, create a new MediaFile with this data.
+     */
+    create: XOR<MediaFileCreateInput, MediaFileUncheckedCreateInput>
+    /**
+     * In case the MediaFile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MediaFileUpdateInput, MediaFileUncheckedUpdateInput>
+  }
+
+  /**
+   * MediaFile delete
+   */
+  export type MediaFileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter which MediaFile to delete.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile deleteMany
+   */
+  export type MediaFileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MediaFiles to delete
+     */
+    where?: MediaFileWhereInput
+  }
+
+  /**
+   * MediaFile.uploadedBy
+   */
+  export type MediaFile$uploadedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Personnel
+     */
+    select?: PersonnelSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonnelInclude<ExtArgs> | null
+    where?: PersonnelWhereInput
+  }
+
+  /**
+   * MediaFile without action
+   */
+  export type MediaFileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Personnel
    */
 
@@ -15925,6833 +22752,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Rpb1Record
-   */
-
-  export type AggregateRpb1Record = {
-    _count: Rpb1RecordCountAggregateOutputType | null
-    _avg: Rpb1RecordAvgAggregateOutputType | null
-    _sum: Rpb1RecordSumAggregateOutputType | null
-    _min: Rpb1RecordMinAggregateOutputType | null
-    _max: Rpb1RecordMaxAggregateOutputType | null
-  }
-
-  export type Rpb1RecordAvgAggregateOutputType = {
-    version: number | null
-    age: number | null
-    height: number | null
-    weight: number | null
-  }
-
-  export type Rpb1RecordSumAggregateOutputType = {
-    version: number | null
-    age: number | null
-    height: number | null
-    weight: number | null
-  }
-
-  export type Rpb1RecordMinAggregateOutputType = {
-    id: string | null
-    personnelId: string | null
-    status: string | null
-    version: number | null
-    classification: string | null
-    photoUrl: string | null
-    titleRank: string | null
-    firstName: string | null
-    middleName: string | null
-    lastName: string | null
-    gender: string | null
-    age: number | null
-    formerFirstName: string | null
-    nameChangeDoc: string | null
-    formerLastName: string | null
-    lastNameChangeDoc: string | null
-    nickname: string | null
-    citizenId: string | null
-    dateOfBirth: string | null
-    birthPlaceHospital: string | null
-    race: string | null
-    nationality: string | null
-    formerNationality: string | null
-    naturalizationDoc: string | null
-    religion: string | null
-    formerReligion: string | null
-    registeredHouseNo: string | null
-    registeredVillage: string | null
-    registeredMoo: string | null
-    registeredSoi: string | null
-    registeredRoad: string | null
-    registeredSubdistrict: string | null
-    registeredDistrict: string | null
-    registeredProvince: string | null
-    registeredPhone: string | null
-    currentHouseNo: string | null
-    currentVillage: string | null
-    currentMoo: string | null
-    currentSoi: string | null
-    currentRoad: string | null
-    currentSubdistrict: string | null
-    currentDistrict: string | null
-    currentProvince: string | null
-    currentPhone: string | null
-    phoneLandline: string | null
-    phoneMobile: string | null
-    email: string | null
-    lineId: string | null
-    facebook: string | null
-    instagram: string | null
-    otherContact: string | null
-    alienCardNo: string | null
-    alienCardDate: string | null
-    alienCardIssuedAt: string | null
-    alienResidenceDocNo: string | null
-    alienResidenceDocDate: string | null
-    alienResidenceIssuedAt: string | null
-    alienIdInThailand: string | null
-    birthCountry: string | null
-    entryDateToThailand: string | null
-    workPermitNo: string | null
-    workPermitIssuedBy: string | null
-    workPermitIssueDate: string | null
-    workPermitExpiryDate: string | null
-    height: number | null
-    weight: number | null
-    scarsDistinguishingMarks: string | null
-    bloodGroup: string | null
-    addressesPast15Years: string | null
-    educations: string | null
-    specialActivities: string | null
-    languages: string | null
-    workHistory: string | null
-    specialOccupationsHobbies: string | null
-    militaryStatus: string | null
-    militaryRank: string | null
-    militaryRegNumber: string | null
-    militaryBranchUnit: string | null
-    militaryUnitLocation: string | null
-    militaryServiceFrom: string | null
-    militaryServiceTo: string | null
-    militaryYearsServed: string | null
-    militaryDischargeReason: string | null
-    militaryLastCommander: string | null
-    militarySpecialOperations: string | null
-    militarySpecialOpDate: string | null
-    militarySpecialOpDuration: string | null
-    militaryExemptionReason: string | null
-    writerDetails: string | null
-    politicalSocialMemberships: string | null
-    foreignTravels: string | null
-    identificationDocuments: string | null
-    legalCases: string | null
-    disciplinaryPunishments: string | null
-    fatherDetails: string | null
-    motherDetails: string | null
-    maritalStatus: string | null
-    spouseFormerDetails: string | null
-    spouseCurrentDetails: string | null
-    children: string | null
-    siblings: string | null
-    relativesInGovernment: string | null
-    overseasContacts: string | null
-    cohabitants: string | null
-    closeFriendsRef: string | null
-    supporters: string | null
-    additionalExplanations: string | null
-    ownerSignatureDate: string | null
-    inspectorRankName: string | null
-    inspectorPosition: string | null
-    inspectorSignatureDate: string | null
-    sketchMapImage: string | null
-    mapHouseNo: string | null
-    mapVillage: string | null
-    mapMoo: string | null
-    mapSoi: string | null
-    mapRoad: string | null
-    mapSubdistrict: string | null
-    mapDistrict: string | null
-    mapProvince: string | null
-    mapPhone: string | null
-    mapHouseOwnerName: string | null
-    mapHouseOwnerPhone: string | null
-    emergencyContactRankName: string | null
-    emergencyContactRelation: string | null
-    emergencyContactAddress: string | null
-    extraTitleName: string | null
-    extraGender: string | null
-    extraBloodGroup: string | null
-    extraRegisteredAddress: string | null
-    extraCurrentAddress: string | null
-    extraIsSameAddress: boolean | null
-    extraMobilePhone: string | null
-    extraHomePhone: string | null
-    extraOfficePhone: string | null
-    extraEmail: string | null
-    extraOwnerSignatureDate: string | null
-    extraOfficerName: string | null
-    extraOfficerPosition: string | null
-    extraOfficerSignatureDate: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type Rpb1RecordMaxAggregateOutputType = {
-    id: string | null
-    personnelId: string | null
-    status: string | null
-    version: number | null
-    classification: string | null
-    photoUrl: string | null
-    titleRank: string | null
-    firstName: string | null
-    middleName: string | null
-    lastName: string | null
-    gender: string | null
-    age: number | null
-    formerFirstName: string | null
-    nameChangeDoc: string | null
-    formerLastName: string | null
-    lastNameChangeDoc: string | null
-    nickname: string | null
-    citizenId: string | null
-    dateOfBirth: string | null
-    birthPlaceHospital: string | null
-    race: string | null
-    nationality: string | null
-    formerNationality: string | null
-    naturalizationDoc: string | null
-    religion: string | null
-    formerReligion: string | null
-    registeredHouseNo: string | null
-    registeredVillage: string | null
-    registeredMoo: string | null
-    registeredSoi: string | null
-    registeredRoad: string | null
-    registeredSubdistrict: string | null
-    registeredDistrict: string | null
-    registeredProvince: string | null
-    registeredPhone: string | null
-    currentHouseNo: string | null
-    currentVillage: string | null
-    currentMoo: string | null
-    currentSoi: string | null
-    currentRoad: string | null
-    currentSubdistrict: string | null
-    currentDistrict: string | null
-    currentProvince: string | null
-    currentPhone: string | null
-    phoneLandline: string | null
-    phoneMobile: string | null
-    email: string | null
-    lineId: string | null
-    facebook: string | null
-    instagram: string | null
-    otherContact: string | null
-    alienCardNo: string | null
-    alienCardDate: string | null
-    alienCardIssuedAt: string | null
-    alienResidenceDocNo: string | null
-    alienResidenceDocDate: string | null
-    alienResidenceIssuedAt: string | null
-    alienIdInThailand: string | null
-    birthCountry: string | null
-    entryDateToThailand: string | null
-    workPermitNo: string | null
-    workPermitIssuedBy: string | null
-    workPermitIssueDate: string | null
-    workPermitExpiryDate: string | null
-    height: number | null
-    weight: number | null
-    scarsDistinguishingMarks: string | null
-    bloodGroup: string | null
-    addressesPast15Years: string | null
-    educations: string | null
-    specialActivities: string | null
-    languages: string | null
-    workHistory: string | null
-    specialOccupationsHobbies: string | null
-    militaryStatus: string | null
-    militaryRank: string | null
-    militaryRegNumber: string | null
-    militaryBranchUnit: string | null
-    militaryUnitLocation: string | null
-    militaryServiceFrom: string | null
-    militaryServiceTo: string | null
-    militaryYearsServed: string | null
-    militaryDischargeReason: string | null
-    militaryLastCommander: string | null
-    militarySpecialOperations: string | null
-    militarySpecialOpDate: string | null
-    militarySpecialOpDuration: string | null
-    militaryExemptionReason: string | null
-    writerDetails: string | null
-    politicalSocialMemberships: string | null
-    foreignTravels: string | null
-    identificationDocuments: string | null
-    legalCases: string | null
-    disciplinaryPunishments: string | null
-    fatherDetails: string | null
-    motherDetails: string | null
-    maritalStatus: string | null
-    spouseFormerDetails: string | null
-    spouseCurrentDetails: string | null
-    children: string | null
-    siblings: string | null
-    relativesInGovernment: string | null
-    overseasContacts: string | null
-    cohabitants: string | null
-    closeFriendsRef: string | null
-    supporters: string | null
-    additionalExplanations: string | null
-    ownerSignatureDate: string | null
-    inspectorRankName: string | null
-    inspectorPosition: string | null
-    inspectorSignatureDate: string | null
-    sketchMapImage: string | null
-    mapHouseNo: string | null
-    mapVillage: string | null
-    mapMoo: string | null
-    mapSoi: string | null
-    mapRoad: string | null
-    mapSubdistrict: string | null
-    mapDistrict: string | null
-    mapProvince: string | null
-    mapPhone: string | null
-    mapHouseOwnerName: string | null
-    mapHouseOwnerPhone: string | null
-    emergencyContactRankName: string | null
-    emergencyContactRelation: string | null
-    emergencyContactAddress: string | null
-    extraTitleName: string | null
-    extraGender: string | null
-    extraBloodGroup: string | null
-    extraRegisteredAddress: string | null
-    extraCurrentAddress: string | null
-    extraIsSameAddress: boolean | null
-    extraMobilePhone: string | null
-    extraHomePhone: string | null
-    extraOfficePhone: string | null
-    extraEmail: string | null
-    extraOwnerSignatureDate: string | null
-    extraOfficerName: string | null
-    extraOfficerPosition: string | null
-    extraOfficerSignatureDate: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type Rpb1RecordCountAggregateOutputType = {
-    id: number
-    personnelId: number
-    status: number
-    version: number
-    classification: number
-    photoUrl: number
-    titleRank: number
-    firstName: number
-    middleName: number
-    lastName: number
-    gender: number
-    age: number
-    formerFirstName: number
-    nameChangeDoc: number
-    formerLastName: number
-    lastNameChangeDoc: number
-    nickname: number
-    citizenId: number
-    dateOfBirth: number
-    birthPlaceHospital: number
-    race: number
-    nationality: number
-    formerNationality: number
-    naturalizationDoc: number
-    religion: number
-    formerReligion: number
-    registeredHouseNo: number
-    registeredVillage: number
-    registeredMoo: number
-    registeredSoi: number
-    registeredRoad: number
-    registeredSubdistrict: number
-    registeredDistrict: number
-    registeredProvince: number
-    registeredPhone: number
-    currentHouseNo: number
-    currentVillage: number
-    currentMoo: number
-    currentSoi: number
-    currentRoad: number
-    currentSubdistrict: number
-    currentDistrict: number
-    currentProvince: number
-    currentPhone: number
-    phoneLandline: number
-    phoneMobile: number
-    email: number
-    lineId: number
-    facebook: number
-    instagram: number
-    otherContact: number
-    alienCardNo: number
-    alienCardDate: number
-    alienCardIssuedAt: number
-    alienResidenceDocNo: number
-    alienResidenceDocDate: number
-    alienResidenceIssuedAt: number
-    alienIdInThailand: number
-    birthCountry: number
-    entryDateToThailand: number
-    workPermitNo: number
-    workPermitIssuedBy: number
-    workPermitIssueDate: number
-    workPermitExpiryDate: number
-    height: number
-    weight: number
-    scarsDistinguishingMarks: number
-    bloodGroup: number
-    addressesPast15Years: number
-    educations: number
-    specialActivities: number
-    languages: number
-    workHistory: number
-    specialOccupationsHobbies: number
-    militaryStatus: number
-    militaryRank: number
-    militaryRegNumber: number
-    militaryBranchUnit: number
-    militaryUnitLocation: number
-    militaryServiceFrom: number
-    militaryServiceTo: number
-    militaryYearsServed: number
-    militaryDischargeReason: number
-    militaryLastCommander: number
-    militarySpecialOperations: number
-    militarySpecialOpDate: number
-    militarySpecialOpDuration: number
-    militaryExemptionReason: number
-    writerDetails: number
-    politicalSocialMemberships: number
-    foreignTravels: number
-    identificationDocuments: number
-    legalCases: number
-    disciplinaryPunishments: number
-    fatherDetails: number
-    motherDetails: number
-    maritalStatus: number
-    spouseFormerDetails: number
-    spouseCurrentDetails: number
-    children: number
-    siblings: number
-    relativesInGovernment: number
-    overseasContacts: number
-    cohabitants: number
-    closeFriendsRef: number
-    supporters: number
-    additionalExplanations: number
-    ownerSignatureDate: number
-    inspectorRankName: number
-    inspectorPosition: number
-    inspectorSignatureDate: number
-    sketchMapImage: number
-    mapHouseNo: number
-    mapVillage: number
-    mapMoo: number
-    mapSoi: number
-    mapRoad: number
-    mapSubdistrict: number
-    mapDistrict: number
-    mapProvince: number
-    mapPhone: number
-    mapHouseOwnerName: number
-    mapHouseOwnerPhone: number
-    emergencyContactRankName: number
-    emergencyContactRelation: number
-    emergencyContactAddress: number
-    extraTitleName: number
-    extraGender: number
-    extraBloodGroup: number
-    extraRegisteredAddress: number
-    extraCurrentAddress: number
-    extraIsSameAddress: number
-    extraMobilePhone: number
-    extraHomePhone: number
-    extraOfficePhone: number
-    extraEmail: number
-    extraOwnerSignatureDate: number
-    extraOfficerName: number
-    extraOfficerPosition: number
-    extraOfficerSignatureDate: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type Rpb1RecordAvgAggregateInputType = {
-    version?: true
-    age?: true
-    height?: true
-    weight?: true
-  }
-
-  export type Rpb1RecordSumAggregateInputType = {
-    version?: true
-    age?: true
-    height?: true
-    weight?: true
-  }
-
-  export type Rpb1RecordMinAggregateInputType = {
-    id?: true
-    personnelId?: true
-    status?: true
-    version?: true
-    classification?: true
-    photoUrl?: true
-    titleRank?: true
-    firstName?: true
-    middleName?: true
-    lastName?: true
-    gender?: true
-    age?: true
-    formerFirstName?: true
-    nameChangeDoc?: true
-    formerLastName?: true
-    lastNameChangeDoc?: true
-    nickname?: true
-    citizenId?: true
-    dateOfBirth?: true
-    birthPlaceHospital?: true
-    race?: true
-    nationality?: true
-    formerNationality?: true
-    naturalizationDoc?: true
-    religion?: true
-    formerReligion?: true
-    registeredHouseNo?: true
-    registeredVillage?: true
-    registeredMoo?: true
-    registeredSoi?: true
-    registeredRoad?: true
-    registeredSubdistrict?: true
-    registeredDistrict?: true
-    registeredProvince?: true
-    registeredPhone?: true
-    currentHouseNo?: true
-    currentVillage?: true
-    currentMoo?: true
-    currentSoi?: true
-    currentRoad?: true
-    currentSubdistrict?: true
-    currentDistrict?: true
-    currentProvince?: true
-    currentPhone?: true
-    phoneLandline?: true
-    phoneMobile?: true
-    email?: true
-    lineId?: true
-    facebook?: true
-    instagram?: true
-    otherContact?: true
-    alienCardNo?: true
-    alienCardDate?: true
-    alienCardIssuedAt?: true
-    alienResidenceDocNo?: true
-    alienResidenceDocDate?: true
-    alienResidenceIssuedAt?: true
-    alienIdInThailand?: true
-    birthCountry?: true
-    entryDateToThailand?: true
-    workPermitNo?: true
-    workPermitIssuedBy?: true
-    workPermitIssueDate?: true
-    workPermitExpiryDate?: true
-    height?: true
-    weight?: true
-    scarsDistinguishingMarks?: true
-    bloodGroup?: true
-    addressesPast15Years?: true
-    educations?: true
-    specialActivities?: true
-    languages?: true
-    workHistory?: true
-    specialOccupationsHobbies?: true
-    militaryStatus?: true
-    militaryRank?: true
-    militaryRegNumber?: true
-    militaryBranchUnit?: true
-    militaryUnitLocation?: true
-    militaryServiceFrom?: true
-    militaryServiceTo?: true
-    militaryYearsServed?: true
-    militaryDischargeReason?: true
-    militaryLastCommander?: true
-    militarySpecialOperations?: true
-    militarySpecialOpDate?: true
-    militarySpecialOpDuration?: true
-    militaryExemptionReason?: true
-    writerDetails?: true
-    politicalSocialMemberships?: true
-    foreignTravels?: true
-    identificationDocuments?: true
-    legalCases?: true
-    disciplinaryPunishments?: true
-    fatherDetails?: true
-    motherDetails?: true
-    maritalStatus?: true
-    spouseFormerDetails?: true
-    spouseCurrentDetails?: true
-    children?: true
-    siblings?: true
-    relativesInGovernment?: true
-    overseasContacts?: true
-    cohabitants?: true
-    closeFriendsRef?: true
-    supporters?: true
-    additionalExplanations?: true
-    ownerSignatureDate?: true
-    inspectorRankName?: true
-    inspectorPosition?: true
-    inspectorSignatureDate?: true
-    sketchMapImage?: true
-    mapHouseNo?: true
-    mapVillage?: true
-    mapMoo?: true
-    mapSoi?: true
-    mapRoad?: true
-    mapSubdistrict?: true
-    mapDistrict?: true
-    mapProvince?: true
-    mapPhone?: true
-    mapHouseOwnerName?: true
-    mapHouseOwnerPhone?: true
-    emergencyContactRankName?: true
-    emergencyContactRelation?: true
-    emergencyContactAddress?: true
-    extraTitleName?: true
-    extraGender?: true
-    extraBloodGroup?: true
-    extraRegisteredAddress?: true
-    extraCurrentAddress?: true
-    extraIsSameAddress?: true
-    extraMobilePhone?: true
-    extraHomePhone?: true
-    extraOfficePhone?: true
-    extraEmail?: true
-    extraOwnerSignatureDate?: true
-    extraOfficerName?: true
-    extraOfficerPosition?: true
-    extraOfficerSignatureDate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type Rpb1RecordMaxAggregateInputType = {
-    id?: true
-    personnelId?: true
-    status?: true
-    version?: true
-    classification?: true
-    photoUrl?: true
-    titleRank?: true
-    firstName?: true
-    middleName?: true
-    lastName?: true
-    gender?: true
-    age?: true
-    formerFirstName?: true
-    nameChangeDoc?: true
-    formerLastName?: true
-    lastNameChangeDoc?: true
-    nickname?: true
-    citizenId?: true
-    dateOfBirth?: true
-    birthPlaceHospital?: true
-    race?: true
-    nationality?: true
-    formerNationality?: true
-    naturalizationDoc?: true
-    religion?: true
-    formerReligion?: true
-    registeredHouseNo?: true
-    registeredVillage?: true
-    registeredMoo?: true
-    registeredSoi?: true
-    registeredRoad?: true
-    registeredSubdistrict?: true
-    registeredDistrict?: true
-    registeredProvince?: true
-    registeredPhone?: true
-    currentHouseNo?: true
-    currentVillage?: true
-    currentMoo?: true
-    currentSoi?: true
-    currentRoad?: true
-    currentSubdistrict?: true
-    currentDistrict?: true
-    currentProvince?: true
-    currentPhone?: true
-    phoneLandline?: true
-    phoneMobile?: true
-    email?: true
-    lineId?: true
-    facebook?: true
-    instagram?: true
-    otherContact?: true
-    alienCardNo?: true
-    alienCardDate?: true
-    alienCardIssuedAt?: true
-    alienResidenceDocNo?: true
-    alienResidenceDocDate?: true
-    alienResidenceIssuedAt?: true
-    alienIdInThailand?: true
-    birthCountry?: true
-    entryDateToThailand?: true
-    workPermitNo?: true
-    workPermitIssuedBy?: true
-    workPermitIssueDate?: true
-    workPermitExpiryDate?: true
-    height?: true
-    weight?: true
-    scarsDistinguishingMarks?: true
-    bloodGroup?: true
-    addressesPast15Years?: true
-    educations?: true
-    specialActivities?: true
-    languages?: true
-    workHistory?: true
-    specialOccupationsHobbies?: true
-    militaryStatus?: true
-    militaryRank?: true
-    militaryRegNumber?: true
-    militaryBranchUnit?: true
-    militaryUnitLocation?: true
-    militaryServiceFrom?: true
-    militaryServiceTo?: true
-    militaryYearsServed?: true
-    militaryDischargeReason?: true
-    militaryLastCommander?: true
-    militarySpecialOperations?: true
-    militarySpecialOpDate?: true
-    militarySpecialOpDuration?: true
-    militaryExemptionReason?: true
-    writerDetails?: true
-    politicalSocialMemberships?: true
-    foreignTravels?: true
-    identificationDocuments?: true
-    legalCases?: true
-    disciplinaryPunishments?: true
-    fatherDetails?: true
-    motherDetails?: true
-    maritalStatus?: true
-    spouseFormerDetails?: true
-    spouseCurrentDetails?: true
-    children?: true
-    siblings?: true
-    relativesInGovernment?: true
-    overseasContacts?: true
-    cohabitants?: true
-    closeFriendsRef?: true
-    supporters?: true
-    additionalExplanations?: true
-    ownerSignatureDate?: true
-    inspectorRankName?: true
-    inspectorPosition?: true
-    inspectorSignatureDate?: true
-    sketchMapImage?: true
-    mapHouseNo?: true
-    mapVillage?: true
-    mapMoo?: true
-    mapSoi?: true
-    mapRoad?: true
-    mapSubdistrict?: true
-    mapDistrict?: true
-    mapProvince?: true
-    mapPhone?: true
-    mapHouseOwnerName?: true
-    mapHouseOwnerPhone?: true
-    emergencyContactRankName?: true
-    emergencyContactRelation?: true
-    emergencyContactAddress?: true
-    extraTitleName?: true
-    extraGender?: true
-    extraBloodGroup?: true
-    extraRegisteredAddress?: true
-    extraCurrentAddress?: true
-    extraIsSameAddress?: true
-    extraMobilePhone?: true
-    extraHomePhone?: true
-    extraOfficePhone?: true
-    extraEmail?: true
-    extraOwnerSignatureDate?: true
-    extraOfficerName?: true
-    extraOfficerPosition?: true
-    extraOfficerSignatureDate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type Rpb1RecordCountAggregateInputType = {
-    id?: true
-    personnelId?: true
-    status?: true
-    version?: true
-    classification?: true
-    photoUrl?: true
-    titleRank?: true
-    firstName?: true
-    middleName?: true
-    lastName?: true
-    gender?: true
-    age?: true
-    formerFirstName?: true
-    nameChangeDoc?: true
-    formerLastName?: true
-    lastNameChangeDoc?: true
-    nickname?: true
-    citizenId?: true
-    dateOfBirth?: true
-    birthPlaceHospital?: true
-    race?: true
-    nationality?: true
-    formerNationality?: true
-    naturalizationDoc?: true
-    religion?: true
-    formerReligion?: true
-    registeredHouseNo?: true
-    registeredVillage?: true
-    registeredMoo?: true
-    registeredSoi?: true
-    registeredRoad?: true
-    registeredSubdistrict?: true
-    registeredDistrict?: true
-    registeredProvince?: true
-    registeredPhone?: true
-    currentHouseNo?: true
-    currentVillage?: true
-    currentMoo?: true
-    currentSoi?: true
-    currentRoad?: true
-    currentSubdistrict?: true
-    currentDistrict?: true
-    currentProvince?: true
-    currentPhone?: true
-    phoneLandline?: true
-    phoneMobile?: true
-    email?: true
-    lineId?: true
-    facebook?: true
-    instagram?: true
-    otherContact?: true
-    alienCardNo?: true
-    alienCardDate?: true
-    alienCardIssuedAt?: true
-    alienResidenceDocNo?: true
-    alienResidenceDocDate?: true
-    alienResidenceIssuedAt?: true
-    alienIdInThailand?: true
-    birthCountry?: true
-    entryDateToThailand?: true
-    workPermitNo?: true
-    workPermitIssuedBy?: true
-    workPermitIssueDate?: true
-    workPermitExpiryDate?: true
-    height?: true
-    weight?: true
-    scarsDistinguishingMarks?: true
-    bloodGroup?: true
-    addressesPast15Years?: true
-    educations?: true
-    specialActivities?: true
-    languages?: true
-    workHistory?: true
-    specialOccupationsHobbies?: true
-    militaryStatus?: true
-    militaryRank?: true
-    militaryRegNumber?: true
-    militaryBranchUnit?: true
-    militaryUnitLocation?: true
-    militaryServiceFrom?: true
-    militaryServiceTo?: true
-    militaryYearsServed?: true
-    militaryDischargeReason?: true
-    militaryLastCommander?: true
-    militarySpecialOperations?: true
-    militarySpecialOpDate?: true
-    militarySpecialOpDuration?: true
-    militaryExemptionReason?: true
-    writerDetails?: true
-    politicalSocialMemberships?: true
-    foreignTravels?: true
-    identificationDocuments?: true
-    legalCases?: true
-    disciplinaryPunishments?: true
-    fatherDetails?: true
-    motherDetails?: true
-    maritalStatus?: true
-    spouseFormerDetails?: true
-    spouseCurrentDetails?: true
-    children?: true
-    siblings?: true
-    relativesInGovernment?: true
-    overseasContacts?: true
-    cohabitants?: true
-    closeFriendsRef?: true
-    supporters?: true
-    additionalExplanations?: true
-    ownerSignatureDate?: true
-    inspectorRankName?: true
-    inspectorPosition?: true
-    inspectorSignatureDate?: true
-    sketchMapImage?: true
-    mapHouseNo?: true
-    mapVillage?: true
-    mapMoo?: true
-    mapSoi?: true
-    mapRoad?: true
-    mapSubdistrict?: true
-    mapDistrict?: true
-    mapProvince?: true
-    mapPhone?: true
-    mapHouseOwnerName?: true
-    mapHouseOwnerPhone?: true
-    emergencyContactRankName?: true
-    emergencyContactRelation?: true
-    emergencyContactAddress?: true
-    extraTitleName?: true
-    extraGender?: true
-    extraBloodGroup?: true
-    extraRegisteredAddress?: true
-    extraCurrentAddress?: true
-    extraIsSameAddress?: true
-    extraMobilePhone?: true
-    extraHomePhone?: true
-    extraOfficePhone?: true
-    extraEmail?: true
-    extraOwnerSignatureDate?: true
-    extraOfficerName?: true
-    extraOfficerPosition?: true
-    extraOfficerSignatureDate?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type Rpb1RecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Rpb1Record to aggregate.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Rpb1Records
-    **/
-    _count?: true | Rpb1RecordCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: Rpb1RecordAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: Rpb1RecordSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Rpb1RecordMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Rpb1RecordMaxAggregateInputType
-  }
-
-  export type GetRpb1RecordAggregateType<T extends Rpb1RecordAggregateArgs> = {
-        [P in keyof T & keyof AggregateRpb1Record]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRpb1Record[P]>
-      : GetScalarType<T[P], AggregateRpb1Record[P]>
-  }
-
-
-
-
-  export type Rpb1RecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: Rpb1RecordWhereInput
-    orderBy?: Rpb1RecordOrderByWithAggregationInput | Rpb1RecordOrderByWithAggregationInput[]
-    by: Rpb1RecordScalarFieldEnum[] | Rpb1RecordScalarFieldEnum
-    having?: Rpb1RecordScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Rpb1RecordCountAggregateInputType | true
-    _avg?: Rpb1RecordAvgAggregateInputType
-    _sum?: Rpb1RecordSumAggregateInputType
-    _min?: Rpb1RecordMinAggregateInputType
-    _max?: Rpb1RecordMaxAggregateInputType
-  }
-
-  export type Rpb1RecordGroupByOutputType = {
-    id: string
-    personnelId: string
-    status: string
-    version: number
-    classification: string
-    photoUrl: string | null
-    titleRank: string | null
-    firstName: string | null
-    middleName: string | null
-    lastName: string | null
-    gender: string | null
-    age: number | null
-    formerFirstName: string | null
-    nameChangeDoc: string | null
-    formerLastName: string | null
-    lastNameChangeDoc: string | null
-    nickname: string | null
-    citizenId: string | null
-    dateOfBirth: string | null
-    birthPlaceHospital: string | null
-    race: string | null
-    nationality: string | null
-    formerNationality: string | null
-    naturalizationDoc: string | null
-    religion: string | null
-    formerReligion: string | null
-    registeredHouseNo: string | null
-    registeredVillage: string | null
-    registeredMoo: string | null
-    registeredSoi: string | null
-    registeredRoad: string | null
-    registeredSubdistrict: string | null
-    registeredDistrict: string | null
-    registeredProvince: string | null
-    registeredPhone: string | null
-    currentHouseNo: string | null
-    currentVillage: string | null
-    currentMoo: string | null
-    currentSoi: string | null
-    currentRoad: string | null
-    currentSubdistrict: string | null
-    currentDistrict: string | null
-    currentProvince: string | null
-    currentPhone: string | null
-    phoneLandline: string | null
-    phoneMobile: string | null
-    email: string | null
-    lineId: string | null
-    facebook: string | null
-    instagram: string | null
-    otherContact: string | null
-    alienCardNo: string | null
-    alienCardDate: string | null
-    alienCardIssuedAt: string | null
-    alienResidenceDocNo: string | null
-    alienResidenceDocDate: string | null
-    alienResidenceIssuedAt: string | null
-    alienIdInThailand: string | null
-    birthCountry: string | null
-    entryDateToThailand: string | null
-    workPermitNo: string | null
-    workPermitIssuedBy: string | null
-    workPermitIssueDate: string | null
-    workPermitExpiryDate: string | null
-    height: number | null
-    weight: number | null
-    scarsDistinguishingMarks: string | null
-    bloodGroup: string | null
-    addressesPast15Years: string
-    educations: string
-    specialActivities: string
-    languages: string
-    workHistory: string
-    specialOccupationsHobbies: string | null
-    militaryStatus: string | null
-    militaryRank: string | null
-    militaryRegNumber: string | null
-    militaryBranchUnit: string | null
-    militaryUnitLocation: string | null
-    militaryServiceFrom: string | null
-    militaryServiceTo: string | null
-    militaryYearsServed: string | null
-    militaryDischargeReason: string | null
-    militaryLastCommander: string | null
-    militarySpecialOperations: string | null
-    militarySpecialOpDate: string | null
-    militarySpecialOpDuration: string | null
-    militaryExemptionReason: string | null
-    writerDetails: string | null
-    politicalSocialMemberships: string
-    foreignTravels: string
-    identificationDocuments: string
-    legalCases: string
-    disciplinaryPunishments: string | null
-    fatherDetails: string | null
-    motherDetails: string | null
-    maritalStatus: string | null
-    spouseFormerDetails: string | null
-    spouseCurrentDetails: string | null
-    children: string
-    siblings: string
-    relativesInGovernment: string
-    overseasContacts: string
-    cohabitants: string
-    closeFriendsRef: string
-    supporters: string
-    additionalExplanations: string | null
-    ownerSignatureDate: string | null
-    inspectorRankName: string | null
-    inspectorPosition: string | null
-    inspectorSignatureDate: string | null
-    sketchMapImage: string | null
-    mapHouseNo: string | null
-    mapVillage: string | null
-    mapMoo: string | null
-    mapSoi: string | null
-    mapRoad: string | null
-    mapSubdistrict: string | null
-    mapDistrict: string | null
-    mapProvince: string | null
-    mapPhone: string | null
-    mapHouseOwnerName: string | null
-    mapHouseOwnerPhone: string | null
-    emergencyContactRankName: string | null
-    emergencyContactRelation: string | null
-    emergencyContactAddress: string | null
-    extraTitleName: string | null
-    extraGender: string | null
-    extraBloodGroup: string | null
-    extraRegisteredAddress: string | null
-    extraCurrentAddress: string | null
-    extraIsSameAddress: boolean
-    extraMobilePhone: string | null
-    extraHomePhone: string | null
-    extraOfficePhone: string | null
-    extraEmail: string | null
-    extraOwnerSignatureDate: string | null
-    extraOfficerName: string | null
-    extraOfficerPosition: string | null
-    extraOfficerSignatureDate: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: Rpb1RecordCountAggregateOutputType | null
-    _avg: Rpb1RecordAvgAggregateOutputType | null
-    _sum: Rpb1RecordSumAggregateOutputType | null
-    _min: Rpb1RecordMinAggregateOutputType | null
-    _max: Rpb1RecordMaxAggregateOutputType | null
-  }
-
-  type GetRpb1RecordGroupByPayload<T extends Rpb1RecordGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<Rpb1RecordGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Rpb1RecordGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
-            : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type Rpb1RecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    personnelId?: boolean
-    status?: boolean
-    version?: boolean
-    classification?: boolean
-    photoUrl?: boolean
-    titleRank?: boolean
-    firstName?: boolean
-    middleName?: boolean
-    lastName?: boolean
-    gender?: boolean
-    age?: boolean
-    formerFirstName?: boolean
-    nameChangeDoc?: boolean
-    formerLastName?: boolean
-    lastNameChangeDoc?: boolean
-    nickname?: boolean
-    citizenId?: boolean
-    dateOfBirth?: boolean
-    birthPlaceHospital?: boolean
-    race?: boolean
-    nationality?: boolean
-    formerNationality?: boolean
-    naturalizationDoc?: boolean
-    religion?: boolean
-    formerReligion?: boolean
-    registeredHouseNo?: boolean
-    registeredVillage?: boolean
-    registeredMoo?: boolean
-    registeredSoi?: boolean
-    registeredRoad?: boolean
-    registeredSubdistrict?: boolean
-    registeredDistrict?: boolean
-    registeredProvince?: boolean
-    registeredPhone?: boolean
-    currentHouseNo?: boolean
-    currentVillage?: boolean
-    currentMoo?: boolean
-    currentSoi?: boolean
-    currentRoad?: boolean
-    currentSubdistrict?: boolean
-    currentDistrict?: boolean
-    currentProvince?: boolean
-    currentPhone?: boolean
-    phoneLandline?: boolean
-    phoneMobile?: boolean
-    email?: boolean
-    lineId?: boolean
-    facebook?: boolean
-    instagram?: boolean
-    otherContact?: boolean
-    alienCardNo?: boolean
-    alienCardDate?: boolean
-    alienCardIssuedAt?: boolean
-    alienResidenceDocNo?: boolean
-    alienResidenceDocDate?: boolean
-    alienResidenceIssuedAt?: boolean
-    alienIdInThailand?: boolean
-    birthCountry?: boolean
-    entryDateToThailand?: boolean
-    workPermitNo?: boolean
-    workPermitIssuedBy?: boolean
-    workPermitIssueDate?: boolean
-    workPermitExpiryDate?: boolean
-    height?: boolean
-    weight?: boolean
-    scarsDistinguishingMarks?: boolean
-    bloodGroup?: boolean
-    addressesPast15Years?: boolean
-    educations?: boolean
-    specialActivities?: boolean
-    languages?: boolean
-    workHistory?: boolean
-    specialOccupationsHobbies?: boolean
-    militaryStatus?: boolean
-    militaryRank?: boolean
-    militaryRegNumber?: boolean
-    militaryBranchUnit?: boolean
-    militaryUnitLocation?: boolean
-    militaryServiceFrom?: boolean
-    militaryServiceTo?: boolean
-    militaryYearsServed?: boolean
-    militaryDischargeReason?: boolean
-    militaryLastCommander?: boolean
-    militarySpecialOperations?: boolean
-    militarySpecialOpDate?: boolean
-    militarySpecialOpDuration?: boolean
-    militaryExemptionReason?: boolean
-    writerDetails?: boolean
-    politicalSocialMemberships?: boolean
-    foreignTravels?: boolean
-    identificationDocuments?: boolean
-    legalCases?: boolean
-    disciplinaryPunishments?: boolean
-    fatherDetails?: boolean
-    motherDetails?: boolean
-    maritalStatus?: boolean
-    spouseFormerDetails?: boolean
-    spouseCurrentDetails?: boolean
-    children?: boolean
-    siblings?: boolean
-    relativesInGovernment?: boolean
-    overseasContacts?: boolean
-    cohabitants?: boolean
-    closeFriendsRef?: boolean
-    supporters?: boolean
-    additionalExplanations?: boolean
-    ownerSignatureDate?: boolean
-    inspectorRankName?: boolean
-    inspectorPosition?: boolean
-    inspectorSignatureDate?: boolean
-    sketchMapImage?: boolean
-    mapHouseNo?: boolean
-    mapVillage?: boolean
-    mapMoo?: boolean
-    mapSoi?: boolean
-    mapRoad?: boolean
-    mapSubdistrict?: boolean
-    mapDistrict?: boolean
-    mapProvince?: boolean
-    mapPhone?: boolean
-    mapHouseOwnerName?: boolean
-    mapHouseOwnerPhone?: boolean
-    emergencyContactRankName?: boolean
-    emergencyContactRelation?: boolean
-    emergencyContactAddress?: boolean
-    extraTitleName?: boolean
-    extraGender?: boolean
-    extraBloodGroup?: boolean
-    extraRegisteredAddress?: boolean
-    extraCurrentAddress?: boolean
-    extraIsSameAddress?: boolean
-    extraMobilePhone?: boolean
-    extraHomePhone?: boolean
-    extraOfficePhone?: boolean
-    extraEmail?: boolean
-    extraOwnerSignatureDate?: boolean
-    extraOfficerName?: boolean
-    extraOfficerPosition?: boolean
-    extraOfficerSignatureDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["rpb1Record"]>
-
-  export type Rpb1RecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    personnelId?: boolean
-    status?: boolean
-    version?: boolean
-    classification?: boolean
-    photoUrl?: boolean
-    titleRank?: boolean
-    firstName?: boolean
-    middleName?: boolean
-    lastName?: boolean
-    gender?: boolean
-    age?: boolean
-    formerFirstName?: boolean
-    nameChangeDoc?: boolean
-    formerLastName?: boolean
-    lastNameChangeDoc?: boolean
-    nickname?: boolean
-    citizenId?: boolean
-    dateOfBirth?: boolean
-    birthPlaceHospital?: boolean
-    race?: boolean
-    nationality?: boolean
-    formerNationality?: boolean
-    naturalizationDoc?: boolean
-    religion?: boolean
-    formerReligion?: boolean
-    registeredHouseNo?: boolean
-    registeredVillage?: boolean
-    registeredMoo?: boolean
-    registeredSoi?: boolean
-    registeredRoad?: boolean
-    registeredSubdistrict?: boolean
-    registeredDistrict?: boolean
-    registeredProvince?: boolean
-    registeredPhone?: boolean
-    currentHouseNo?: boolean
-    currentVillage?: boolean
-    currentMoo?: boolean
-    currentSoi?: boolean
-    currentRoad?: boolean
-    currentSubdistrict?: boolean
-    currentDistrict?: boolean
-    currentProvince?: boolean
-    currentPhone?: boolean
-    phoneLandline?: boolean
-    phoneMobile?: boolean
-    email?: boolean
-    lineId?: boolean
-    facebook?: boolean
-    instagram?: boolean
-    otherContact?: boolean
-    alienCardNo?: boolean
-    alienCardDate?: boolean
-    alienCardIssuedAt?: boolean
-    alienResidenceDocNo?: boolean
-    alienResidenceDocDate?: boolean
-    alienResidenceIssuedAt?: boolean
-    alienIdInThailand?: boolean
-    birthCountry?: boolean
-    entryDateToThailand?: boolean
-    workPermitNo?: boolean
-    workPermitIssuedBy?: boolean
-    workPermitIssueDate?: boolean
-    workPermitExpiryDate?: boolean
-    height?: boolean
-    weight?: boolean
-    scarsDistinguishingMarks?: boolean
-    bloodGroup?: boolean
-    addressesPast15Years?: boolean
-    educations?: boolean
-    specialActivities?: boolean
-    languages?: boolean
-    workHistory?: boolean
-    specialOccupationsHobbies?: boolean
-    militaryStatus?: boolean
-    militaryRank?: boolean
-    militaryRegNumber?: boolean
-    militaryBranchUnit?: boolean
-    militaryUnitLocation?: boolean
-    militaryServiceFrom?: boolean
-    militaryServiceTo?: boolean
-    militaryYearsServed?: boolean
-    militaryDischargeReason?: boolean
-    militaryLastCommander?: boolean
-    militarySpecialOperations?: boolean
-    militarySpecialOpDate?: boolean
-    militarySpecialOpDuration?: boolean
-    militaryExemptionReason?: boolean
-    writerDetails?: boolean
-    politicalSocialMemberships?: boolean
-    foreignTravels?: boolean
-    identificationDocuments?: boolean
-    legalCases?: boolean
-    disciplinaryPunishments?: boolean
-    fatherDetails?: boolean
-    motherDetails?: boolean
-    maritalStatus?: boolean
-    spouseFormerDetails?: boolean
-    spouseCurrentDetails?: boolean
-    children?: boolean
-    siblings?: boolean
-    relativesInGovernment?: boolean
-    overseasContacts?: boolean
-    cohabitants?: boolean
-    closeFriendsRef?: boolean
-    supporters?: boolean
-    additionalExplanations?: boolean
-    ownerSignatureDate?: boolean
-    inspectorRankName?: boolean
-    inspectorPosition?: boolean
-    inspectorSignatureDate?: boolean
-    sketchMapImage?: boolean
-    mapHouseNo?: boolean
-    mapVillage?: boolean
-    mapMoo?: boolean
-    mapSoi?: boolean
-    mapRoad?: boolean
-    mapSubdistrict?: boolean
-    mapDistrict?: boolean
-    mapProvince?: boolean
-    mapPhone?: boolean
-    mapHouseOwnerName?: boolean
-    mapHouseOwnerPhone?: boolean
-    emergencyContactRankName?: boolean
-    emergencyContactRelation?: boolean
-    emergencyContactAddress?: boolean
-    extraTitleName?: boolean
-    extraGender?: boolean
-    extraBloodGroup?: boolean
-    extraRegisteredAddress?: boolean
-    extraCurrentAddress?: boolean
-    extraIsSameAddress?: boolean
-    extraMobilePhone?: boolean
-    extraHomePhone?: boolean
-    extraOfficePhone?: boolean
-    extraEmail?: boolean
-    extraOwnerSignatureDate?: boolean
-    extraOfficerName?: boolean
-    extraOfficerPosition?: boolean
-    extraOfficerSignatureDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["rpb1Record"]>
-
-  export type Rpb1RecordSelectScalar = {
-    id?: boolean
-    personnelId?: boolean
-    status?: boolean
-    version?: boolean
-    classification?: boolean
-    photoUrl?: boolean
-    titleRank?: boolean
-    firstName?: boolean
-    middleName?: boolean
-    lastName?: boolean
-    gender?: boolean
-    age?: boolean
-    formerFirstName?: boolean
-    nameChangeDoc?: boolean
-    formerLastName?: boolean
-    lastNameChangeDoc?: boolean
-    nickname?: boolean
-    citizenId?: boolean
-    dateOfBirth?: boolean
-    birthPlaceHospital?: boolean
-    race?: boolean
-    nationality?: boolean
-    formerNationality?: boolean
-    naturalizationDoc?: boolean
-    religion?: boolean
-    formerReligion?: boolean
-    registeredHouseNo?: boolean
-    registeredVillage?: boolean
-    registeredMoo?: boolean
-    registeredSoi?: boolean
-    registeredRoad?: boolean
-    registeredSubdistrict?: boolean
-    registeredDistrict?: boolean
-    registeredProvince?: boolean
-    registeredPhone?: boolean
-    currentHouseNo?: boolean
-    currentVillage?: boolean
-    currentMoo?: boolean
-    currentSoi?: boolean
-    currentRoad?: boolean
-    currentSubdistrict?: boolean
-    currentDistrict?: boolean
-    currentProvince?: boolean
-    currentPhone?: boolean
-    phoneLandline?: boolean
-    phoneMobile?: boolean
-    email?: boolean
-    lineId?: boolean
-    facebook?: boolean
-    instagram?: boolean
-    otherContact?: boolean
-    alienCardNo?: boolean
-    alienCardDate?: boolean
-    alienCardIssuedAt?: boolean
-    alienResidenceDocNo?: boolean
-    alienResidenceDocDate?: boolean
-    alienResidenceIssuedAt?: boolean
-    alienIdInThailand?: boolean
-    birthCountry?: boolean
-    entryDateToThailand?: boolean
-    workPermitNo?: boolean
-    workPermitIssuedBy?: boolean
-    workPermitIssueDate?: boolean
-    workPermitExpiryDate?: boolean
-    height?: boolean
-    weight?: boolean
-    scarsDistinguishingMarks?: boolean
-    bloodGroup?: boolean
-    addressesPast15Years?: boolean
-    educations?: boolean
-    specialActivities?: boolean
-    languages?: boolean
-    workHistory?: boolean
-    specialOccupationsHobbies?: boolean
-    militaryStatus?: boolean
-    militaryRank?: boolean
-    militaryRegNumber?: boolean
-    militaryBranchUnit?: boolean
-    militaryUnitLocation?: boolean
-    militaryServiceFrom?: boolean
-    militaryServiceTo?: boolean
-    militaryYearsServed?: boolean
-    militaryDischargeReason?: boolean
-    militaryLastCommander?: boolean
-    militarySpecialOperations?: boolean
-    militarySpecialOpDate?: boolean
-    militarySpecialOpDuration?: boolean
-    militaryExemptionReason?: boolean
-    writerDetails?: boolean
-    politicalSocialMemberships?: boolean
-    foreignTravels?: boolean
-    identificationDocuments?: boolean
-    legalCases?: boolean
-    disciplinaryPunishments?: boolean
-    fatherDetails?: boolean
-    motherDetails?: boolean
-    maritalStatus?: boolean
-    spouseFormerDetails?: boolean
-    spouseCurrentDetails?: boolean
-    children?: boolean
-    siblings?: boolean
-    relativesInGovernment?: boolean
-    overseasContacts?: boolean
-    cohabitants?: boolean
-    closeFriendsRef?: boolean
-    supporters?: boolean
-    additionalExplanations?: boolean
-    ownerSignatureDate?: boolean
-    inspectorRankName?: boolean
-    inspectorPosition?: boolean
-    inspectorSignatureDate?: boolean
-    sketchMapImage?: boolean
-    mapHouseNo?: boolean
-    mapVillage?: boolean
-    mapMoo?: boolean
-    mapSoi?: boolean
-    mapRoad?: boolean
-    mapSubdistrict?: boolean
-    mapDistrict?: boolean
-    mapProvince?: boolean
-    mapPhone?: boolean
-    mapHouseOwnerName?: boolean
-    mapHouseOwnerPhone?: boolean
-    emergencyContactRankName?: boolean
-    emergencyContactRelation?: boolean
-    emergencyContactAddress?: boolean
-    extraTitleName?: boolean
-    extraGender?: boolean
-    extraBloodGroup?: boolean
-    extraRegisteredAddress?: boolean
-    extraCurrentAddress?: boolean
-    extraIsSameAddress?: boolean
-    extraMobilePhone?: boolean
-    extraHomePhone?: boolean
-    extraOfficePhone?: boolean
-    extraEmail?: boolean
-    extraOwnerSignatureDate?: boolean
-    extraOfficerName?: boolean
-    extraOfficerPosition?: boolean
-    extraOfficerSignatureDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type Rpb1RecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }
-  export type Rpb1RecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }
-
-  export type $Rpb1RecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Rpb1Record"
-    objects: {
-      personnel: Prisma.$PersonnelPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      personnelId: string
-      status: string
-      version: number
-      classification: string
-      photoUrl: string | null
-      titleRank: string | null
-      firstName: string | null
-      middleName: string | null
-      lastName: string | null
-      gender: string | null
-      age: number | null
-      formerFirstName: string | null
-      nameChangeDoc: string | null
-      formerLastName: string | null
-      lastNameChangeDoc: string | null
-      nickname: string | null
-      citizenId: string | null
-      dateOfBirth: string | null
-      birthPlaceHospital: string | null
-      race: string | null
-      nationality: string | null
-      formerNationality: string | null
-      naturalizationDoc: string | null
-      religion: string | null
-      formerReligion: string | null
-      registeredHouseNo: string | null
-      registeredVillage: string | null
-      registeredMoo: string | null
-      registeredSoi: string | null
-      registeredRoad: string | null
-      registeredSubdistrict: string | null
-      registeredDistrict: string | null
-      registeredProvince: string | null
-      registeredPhone: string | null
-      currentHouseNo: string | null
-      currentVillage: string | null
-      currentMoo: string | null
-      currentSoi: string | null
-      currentRoad: string | null
-      currentSubdistrict: string | null
-      currentDistrict: string | null
-      currentProvince: string | null
-      currentPhone: string | null
-      phoneLandline: string | null
-      phoneMobile: string | null
-      email: string | null
-      lineId: string | null
-      facebook: string | null
-      instagram: string | null
-      otherContact: string | null
-      alienCardNo: string | null
-      alienCardDate: string | null
-      alienCardIssuedAt: string | null
-      alienResidenceDocNo: string | null
-      alienResidenceDocDate: string | null
-      alienResidenceIssuedAt: string | null
-      alienIdInThailand: string | null
-      birthCountry: string | null
-      entryDateToThailand: string | null
-      workPermitNo: string | null
-      workPermitIssuedBy: string | null
-      workPermitIssueDate: string | null
-      workPermitExpiryDate: string | null
-      height: number | null
-      weight: number | null
-      scarsDistinguishingMarks: string | null
-      bloodGroup: string | null
-      addressesPast15Years: string
-      educations: string
-      specialActivities: string
-      languages: string
-      workHistory: string
-      specialOccupationsHobbies: string | null
-      militaryStatus: string | null
-      militaryRank: string | null
-      militaryRegNumber: string | null
-      militaryBranchUnit: string | null
-      militaryUnitLocation: string | null
-      militaryServiceFrom: string | null
-      militaryServiceTo: string | null
-      militaryYearsServed: string | null
-      militaryDischargeReason: string | null
-      militaryLastCommander: string | null
-      militarySpecialOperations: string | null
-      militarySpecialOpDate: string | null
-      militarySpecialOpDuration: string | null
-      militaryExemptionReason: string | null
-      writerDetails: string | null
-      politicalSocialMemberships: string
-      foreignTravels: string
-      identificationDocuments: string
-      legalCases: string
-      disciplinaryPunishments: string | null
-      fatherDetails: string | null
-      motherDetails: string | null
-      maritalStatus: string | null
-      spouseFormerDetails: string | null
-      spouseCurrentDetails: string | null
-      children: string
-      siblings: string
-      relativesInGovernment: string
-      overseasContacts: string
-      cohabitants: string
-      closeFriendsRef: string
-      supporters: string
-      additionalExplanations: string | null
-      ownerSignatureDate: string | null
-      inspectorRankName: string | null
-      inspectorPosition: string | null
-      inspectorSignatureDate: string | null
-      sketchMapImage: string | null
-      mapHouseNo: string | null
-      mapVillage: string | null
-      mapMoo: string | null
-      mapSoi: string | null
-      mapRoad: string | null
-      mapSubdistrict: string | null
-      mapDistrict: string | null
-      mapProvince: string | null
-      mapPhone: string | null
-      mapHouseOwnerName: string | null
-      mapHouseOwnerPhone: string | null
-      emergencyContactRankName: string | null
-      emergencyContactRelation: string | null
-      emergencyContactAddress: string | null
-      extraTitleName: string | null
-      extraGender: string | null
-      extraBloodGroup: string | null
-      extraRegisteredAddress: string | null
-      extraCurrentAddress: string | null
-      extraIsSameAddress: boolean
-      extraMobilePhone: string | null
-      extraHomePhone: string | null
-      extraOfficePhone: string | null
-      extraEmail: string | null
-      extraOwnerSignatureDate: string | null
-      extraOfficerName: string | null
-      extraOfficerPosition: string | null
-      extraOfficerSignatureDate: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["rpb1Record"]>
-    composites: {}
-  }
-
-  type Rpb1RecordGetPayload<S extends boolean | null | undefined | Rpb1RecordDefaultArgs> = $Result.GetResult<Prisma.$Rpb1RecordPayload, S>
-
-  type Rpb1RecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<Rpb1RecordFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: Rpb1RecordCountAggregateInputType | true
-    }
-
-  export interface Rpb1RecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Rpb1Record'], meta: { name: 'Rpb1Record' } }
-    /**
-     * Find zero or one Rpb1Record that matches the filter.
-     * @param {Rpb1RecordFindUniqueArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends Rpb1RecordFindUniqueArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Rpb1Record that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {Rpb1RecordFindUniqueOrThrowArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends Rpb1RecordFindUniqueOrThrowArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Rpb1Record that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordFindFirstArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends Rpb1RecordFindFirstArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Rpb1Record that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordFindFirstOrThrowArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends Rpb1RecordFindFirstOrThrowArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Rpb1Records that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Rpb1Records
-     * const rpb1Records = await prisma.rpb1Record.findMany()
-     * 
-     * // Get first 10 Rpb1Records
-     * const rpb1Records = await prisma.rpb1Record.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const rpb1RecordWithIdOnly = await prisma.rpb1Record.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends Rpb1RecordFindManyArgs>(args?: SelectSubset<T, Rpb1RecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Rpb1Record.
-     * @param {Rpb1RecordCreateArgs} args - Arguments to create a Rpb1Record.
-     * @example
-     * // Create one Rpb1Record
-     * const Rpb1Record = await prisma.rpb1Record.create({
-     *   data: {
-     *     // ... data to create a Rpb1Record
-     *   }
-     * })
-     * 
-     */
-    create<T extends Rpb1RecordCreateArgs>(args: SelectSubset<T, Rpb1RecordCreateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Rpb1Records.
-     * @param {Rpb1RecordCreateManyArgs} args - Arguments to create many Rpb1Records.
-     * @example
-     * // Create many Rpb1Records
-     * const rpb1Record = await prisma.rpb1Record.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends Rpb1RecordCreateManyArgs>(args?: SelectSubset<T, Rpb1RecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Rpb1Records and returns the data saved in the database.
-     * @param {Rpb1RecordCreateManyAndReturnArgs} args - Arguments to create many Rpb1Records.
-     * @example
-     * // Create many Rpb1Records
-     * const rpb1Record = await prisma.rpb1Record.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Rpb1Records and only return the `id`
-     * const rpb1RecordWithIdOnly = await prisma.rpb1Record.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends Rpb1RecordCreateManyAndReturnArgs>(args?: SelectSubset<T, Rpb1RecordCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a Rpb1Record.
-     * @param {Rpb1RecordDeleteArgs} args - Arguments to delete one Rpb1Record.
-     * @example
-     * // Delete one Rpb1Record
-     * const Rpb1Record = await prisma.rpb1Record.delete({
-     *   where: {
-     *     // ... filter to delete one Rpb1Record
-     *   }
-     * })
-     * 
-     */
-    delete<T extends Rpb1RecordDeleteArgs>(args: SelectSubset<T, Rpb1RecordDeleteArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Rpb1Record.
-     * @param {Rpb1RecordUpdateArgs} args - Arguments to update one Rpb1Record.
-     * @example
-     * // Update one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends Rpb1RecordUpdateArgs>(args: SelectSubset<T, Rpb1RecordUpdateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Rpb1Records.
-     * @param {Rpb1RecordDeleteManyArgs} args - Arguments to filter Rpb1Records to delete.
-     * @example
-     * // Delete a few Rpb1Records
-     * const { count } = await prisma.rpb1Record.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends Rpb1RecordDeleteManyArgs>(args?: SelectSubset<T, Rpb1RecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Rpb1Records.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Rpb1Records
-     * const rpb1Record = await prisma.rpb1Record.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends Rpb1RecordUpdateManyArgs>(args: SelectSubset<T, Rpb1RecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Rpb1Record.
-     * @param {Rpb1RecordUpsertArgs} args - Arguments to update or create a Rpb1Record.
-     * @example
-     * // Update or create a Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.upsert({
-     *   create: {
-     *     // ... data to create a Rpb1Record
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Rpb1Record we want to update
-     *   }
-     * })
-     */
-    upsert<T extends Rpb1RecordUpsertArgs>(args: SelectSubset<T, Rpb1RecordUpsertArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Rpb1Records.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordCountArgs} args - Arguments to filter Rpb1Records to count.
-     * @example
-     * // Count the number of Rpb1Records
-     * const count = await prisma.rpb1Record.count({
-     *   where: {
-     *     // ... the filter for the Rpb1Records we want to count
-     *   }
-     * })
-    **/
-    count<T extends Rpb1RecordCountArgs>(
-      args?: Subset<T, Rpb1RecordCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Rpb1RecordCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Rpb1Record.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Rpb1RecordAggregateArgs>(args: Subset<T, Rpb1RecordAggregateArgs>): Prisma.PrismaPromise<GetRpb1RecordAggregateType<T>>
-
-    /**
-     * Group by Rpb1Record.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends Rpb1RecordGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: Rpb1RecordGroupByArgs['orderBy'] }
-        : { orderBy?: Rpb1RecordGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, Rpb1RecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRpb1RecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Rpb1Record model
-   */
-  readonly fields: Rpb1RecordFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Rpb1Record.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__Rpb1RecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    personnel<T extends PersonnelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonnelDefaultArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Rpb1Record model
-   */ 
-  interface Rpb1RecordFieldRefs {
-    readonly id: FieldRef<"Rpb1Record", 'String'>
-    readonly personnelId: FieldRef<"Rpb1Record", 'String'>
-    readonly status: FieldRef<"Rpb1Record", 'String'>
-    readonly version: FieldRef<"Rpb1Record", 'Int'>
-    readonly classification: FieldRef<"Rpb1Record", 'String'>
-    readonly photoUrl: FieldRef<"Rpb1Record", 'String'>
-    readonly titleRank: FieldRef<"Rpb1Record", 'String'>
-    readonly firstName: FieldRef<"Rpb1Record", 'String'>
-    readonly middleName: FieldRef<"Rpb1Record", 'String'>
-    readonly lastName: FieldRef<"Rpb1Record", 'String'>
-    readonly gender: FieldRef<"Rpb1Record", 'String'>
-    readonly age: FieldRef<"Rpb1Record", 'Int'>
-    readonly formerFirstName: FieldRef<"Rpb1Record", 'String'>
-    readonly nameChangeDoc: FieldRef<"Rpb1Record", 'String'>
-    readonly formerLastName: FieldRef<"Rpb1Record", 'String'>
-    readonly lastNameChangeDoc: FieldRef<"Rpb1Record", 'String'>
-    readonly nickname: FieldRef<"Rpb1Record", 'String'>
-    readonly citizenId: FieldRef<"Rpb1Record", 'String'>
-    readonly dateOfBirth: FieldRef<"Rpb1Record", 'String'>
-    readonly birthPlaceHospital: FieldRef<"Rpb1Record", 'String'>
-    readonly race: FieldRef<"Rpb1Record", 'String'>
-    readonly nationality: FieldRef<"Rpb1Record", 'String'>
-    readonly formerNationality: FieldRef<"Rpb1Record", 'String'>
-    readonly naturalizationDoc: FieldRef<"Rpb1Record", 'String'>
-    readonly religion: FieldRef<"Rpb1Record", 'String'>
-    readonly formerReligion: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredHouseNo: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredVillage: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredMoo: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredSoi: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredRoad: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredSubdistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredDistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredProvince: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly currentHouseNo: FieldRef<"Rpb1Record", 'String'>
-    readonly currentVillage: FieldRef<"Rpb1Record", 'String'>
-    readonly currentMoo: FieldRef<"Rpb1Record", 'String'>
-    readonly currentSoi: FieldRef<"Rpb1Record", 'String'>
-    readonly currentRoad: FieldRef<"Rpb1Record", 'String'>
-    readonly currentSubdistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly currentDistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly currentProvince: FieldRef<"Rpb1Record", 'String'>
-    readonly currentPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly phoneLandline: FieldRef<"Rpb1Record", 'String'>
-    readonly phoneMobile: FieldRef<"Rpb1Record", 'String'>
-    readonly email: FieldRef<"Rpb1Record", 'String'>
-    readonly lineId: FieldRef<"Rpb1Record", 'String'>
-    readonly facebook: FieldRef<"Rpb1Record", 'String'>
-    readonly instagram: FieldRef<"Rpb1Record", 'String'>
-    readonly otherContact: FieldRef<"Rpb1Record", 'String'>
-    readonly alienCardNo: FieldRef<"Rpb1Record", 'String'>
-    readonly alienCardDate: FieldRef<"Rpb1Record", 'String'>
-    readonly alienCardIssuedAt: FieldRef<"Rpb1Record", 'String'>
-    readonly alienResidenceDocNo: FieldRef<"Rpb1Record", 'String'>
-    readonly alienResidenceDocDate: FieldRef<"Rpb1Record", 'String'>
-    readonly alienResidenceIssuedAt: FieldRef<"Rpb1Record", 'String'>
-    readonly alienIdInThailand: FieldRef<"Rpb1Record", 'String'>
-    readonly birthCountry: FieldRef<"Rpb1Record", 'String'>
-    readonly entryDateToThailand: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitNo: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitIssuedBy: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitIssueDate: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitExpiryDate: FieldRef<"Rpb1Record", 'String'>
-    readonly height: FieldRef<"Rpb1Record", 'Float'>
-    readonly weight: FieldRef<"Rpb1Record", 'Float'>
-    readonly scarsDistinguishingMarks: FieldRef<"Rpb1Record", 'String'>
-    readonly bloodGroup: FieldRef<"Rpb1Record", 'String'>
-    readonly addressesPast15Years: FieldRef<"Rpb1Record", 'String'>
-    readonly educations: FieldRef<"Rpb1Record", 'String'>
-    readonly specialActivities: FieldRef<"Rpb1Record", 'String'>
-    readonly languages: FieldRef<"Rpb1Record", 'String'>
-    readonly workHistory: FieldRef<"Rpb1Record", 'String'>
-    readonly specialOccupationsHobbies: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryStatus: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryRank: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryRegNumber: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryBranchUnit: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryUnitLocation: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryServiceFrom: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryServiceTo: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryYearsServed: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryDischargeReason: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryLastCommander: FieldRef<"Rpb1Record", 'String'>
-    readonly militarySpecialOperations: FieldRef<"Rpb1Record", 'String'>
-    readonly militarySpecialOpDate: FieldRef<"Rpb1Record", 'String'>
-    readonly militarySpecialOpDuration: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryExemptionReason: FieldRef<"Rpb1Record", 'String'>
-    readonly writerDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly politicalSocialMemberships: FieldRef<"Rpb1Record", 'String'>
-    readonly foreignTravels: FieldRef<"Rpb1Record", 'String'>
-    readonly identificationDocuments: FieldRef<"Rpb1Record", 'String'>
-    readonly legalCases: FieldRef<"Rpb1Record", 'String'>
-    readonly disciplinaryPunishments: FieldRef<"Rpb1Record", 'String'>
-    readonly fatherDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly motherDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly maritalStatus: FieldRef<"Rpb1Record", 'String'>
-    readonly spouseFormerDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly spouseCurrentDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly children: FieldRef<"Rpb1Record", 'String'>
-    readonly siblings: FieldRef<"Rpb1Record", 'String'>
-    readonly relativesInGovernment: FieldRef<"Rpb1Record", 'String'>
-    readonly overseasContacts: FieldRef<"Rpb1Record", 'String'>
-    readonly cohabitants: FieldRef<"Rpb1Record", 'String'>
-    readonly closeFriendsRef: FieldRef<"Rpb1Record", 'String'>
-    readonly supporters: FieldRef<"Rpb1Record", 'String'>
-    readonly additionalExplanations: FieldRef<"Rpb1Record", 'String'>
-    readonly ownerSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly inspectorRankName: FieldRef<"Rpb1Record", 'String'>
-    readonly inspectorPosition: FieldRef<"Rpb1Record", 'String'>
-    readonly inspectorSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly sketchMapImage: FieldRef<"Rpb1Record", 'String'>
-    readonly mapHouseNo: FieldRef<"Rpb1Record", 'String'>
-    readonly mapVillage: FieldRef<"Rpb1Record", 'String'>
-    readonly mapMoo: FieldRef<"Rpb1Record", 'String'>
-    readonly mapSoi: FieldRef<"Rpb1Record", 'String'>
-    readonly mapRoad: FieldRef<"Rpb1Record", 'String'>
-    readonly mapSubdistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly mapDistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly mapProvince: FieldRef<"Rpb1Record", 'String'>
-    readonly mapPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly mapHouseOwnerName: FieldRef<"Rpb1Record", 'String'>
-    readonly mapHouseOwnerPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly emergencyContactRankName: FieldRef<"Rpb1Record", 'String'>
-    readonly emergencyContactRelation: FieldRef<"Rpb1Record", 'String'>
-    readonly emergencyContactAddress: FieldRef<"Rpb1Record", 'String'>
-    readonly extraTitleName: FieldRef<"Rpb1Record", 'String'>
-    readonly extraGender: FieldRef<"Rpb1Record", 'String'>
-    readonly extraBloodGroup: FieldRef<"Rpb1Record", 'String'>
-    readonly extraRegisteredAddress: FieldRef<"Rpb1Record", 'String'>
-    readonly extraCurrentAddress: FieldRef<"Rpb1Record", 'String'>
-    readonly extraIsSameAddress: FieldRef<"Rpb1Record", 'Boolean'>
-    readonly extraMobilePhone: FieldRef<"Rpb1Record", 'String'>
-    readonly extraHomePhone: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficePhone: FieldRef<"Rpb1Record", 'String'>
-    readonly extraEmail: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOwnerSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficerName: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficerPosition: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficerSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly createdAt: FieldRef<"Rpb1Record", 'DateTime'>
-    readonly updatedAt: FieldRef<"Rpb1Record", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Rpb1Record findUnique
-   */
-  export type Rpb1RecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record findUniqueOrThrow
-   */
-  export type Rpb1RecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record findFirst
-   */
-  export type Rpb1RecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Rpb1Records.
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Rpb1Records.
-     */
-    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
-  }
-
-  /**
-   * Rpb1Record findFirstOrThrow
-   */
-  export type Rpb1RecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Rpb1Records.
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Rpb1Records.
-     */
-    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
-  }
-
-  /**
-   * Rpb1Record findMany
-   */
-  export type Rpb1RecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Records to fetch.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Rpb1Records.
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
-  }
-
-  /**
-   * Rpb1Record create
-   */
-  export type Rpb1RecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Rpb1Record.
-     */
-    data: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
-  }
-
-  /**
-   * Rpb1Record createMany
-   */
-  export type Rpb1RecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Rpb1Records.
-     */
-    data: Rpb1RecordCreateManyInput | Rpb1RecordCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Rpb1Record createManyAndReturn
-   */
-  export type Rpb1RecordCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many Rpb1Records.
-     */
-    data: Rpb1RecordCreateManyInput | Rpb1RecordCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Rpb1Record update
-   */
-  export type Rpb1RecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Rpb1Record.
-     */
-    data: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
-    /**
-     * Choose, which Rpb1Record to update.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record updateMany
-   */
-  export type Rpb1RecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Rpb1Records.
-     */
-    data: XOR<Rpb1RecordUpdateManyMutationInput, Rpb1RecordUncheckedUpdateManyInput>
-    /**
-     * Filter which Rpb1Records to update
-     */
-    where?: Rpb1RecordWhereInput
-  }
-
-  /**
-   * Rpb1Record upsert
-   */
-  export type Rpb1RecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Rpb1Record to update in case it exists.
-     */
-    where: Rpb1RecordWhereUniqueInput
-    /**
-     * In case the Rpb1Record found by the `where` argument doesn't exist, create a new Rpb1Record with this data.
-     */
-    create: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
-    /**
-     * In case the Rpb1Record was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
-  }
-
-  /**
-   * Rpb1Record delete
-   */
-  export type Rpb1RecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter which Rpb1Record to delete.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record deleteMany
-   */
-  export type Rpb1RecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Rpb1Records to delete
-     */
-    where?: Rpb1RecordWhereInput
-  }
-
-  /**
-   * Rpb1Record without action
-   */
-  export type Rpb1RecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Service
-   */
-
-  export type AggregateService = {
-    _count: ServiceCountAggregateOutputType | null
-    _avg: ServiceAvgAggregateOutputType | null
-    _sum: ServiceSumAggregateOutputType | null
-    _min: ServiceMinAggregateOutputType | null
-    _max: ServiceMaxAggregateOutputType | null
-  }
-
-  export type ServiceAvgAggregateOutputType = {
-    order: number | null
-  }
-
-  export type ServiceSumAggregateOutputType = {
-    order: number | null
-  }
-
-  export type ServiceMinAggregateOutputType = {
-    id: string | null
-    title: string | null
-    description: string | null
-    price: string | null
-    image: string | null
-    icon: string | null
-    published: boolean | null
-    order: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type ServiceMaxAggregateOutputType = {
-    id: string | null
-    title: string | null
-    description: string | null
-    price: string | null
-    image: string | null
-    icon: string | null
-    published: boolean | null
-    order: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type ServiceCountAggregateOutputType = {
-    id: number
-    title: number
-    description: number
-    price: number
-    image: number
-    icon: number
-    published: number
-    order: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type ServiceAvgAggregateInputType = {
-    order?: true
-  }
-
-  export type ServiceSumAggregateInputType = {
-    order?: true
-  }
-
-  export type ServiceMinAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    price?: true
-    image?: true
-    icon?: true
-    published?: true
-    order?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type ServiceMaxAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    price?: true
-    image?: true
-    icon?: true
-    published?: true
-    order?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type ServiceCountAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    price?: true
-    image?: true
-    icon?: true
-    published?: true
-    order?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type ServiceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Service to aggregate.
-     */
-    where?: ServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Services to fetch.
-     */
-    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Services from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Services.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Services
-    **/
-    _count?: true | ServiceCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ServiceAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ServiceSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ServiceMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ServiceMaxAggregateInputType
-  }
-
-  export type GetServiceAggregateType<T extends ServiceAggregateArgs> = {
-        [P in keyof T & keyof AggregateService]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateService[P]>
-      : GetScalarType<T[P], AggregateService[P]>
-  }
-
-
-
-
-  export type ServiceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ServiceWhereInput
-    orderBy?: ServiceOrderByWithAggregationInput | ServiceOrderByWithAggregationInput[]
-    by: ServiceScalarFieldEnum[] | ServiceScalarFieldEnum
-    having?: ServiceScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ServiceCountAggregateInputType | true
-    _avg?: ServiceAvgAggregateInputType
-    _sum?: ServiceSumAggregateInputType
-    _min?: ServiceMinAggregateInputType
-    _max?: ServiceMaxAggregateInputType
-  }
-
-  export type ServiceGroupByOutputType = {
-    id: string
-    title: string
-    description: string
-    price: string | null
-    image: string | null
-    icon: string | null
-    published: boolean
-    order: number
-    createdAt: Date
-    updatedAt: Date
-    _count: ServiceCountAggregateOutputType | null
-    _avg: ServiceAvgAggregateOutputType | null
-    _sum: ServiceSumAggregateOutputType | null
-    _min: ServiceMinAggregateOutputType | null
-    _max: ServiceMaxAggregateOutputType | null
-  }
-
-  type GetServiceGroupByPayload<T extends ServiceGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ServiceGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ServiceGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ServiceGroupByOutputType[P]>
-            : GetScalarType<T[P], ServiceGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    price?: boolean
-    image?: boolean
-    icon?: boolean
-    published?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["service"]>
-
-  export type ServiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    price?: boolean
-    image?: boolean
-    icon?: boolean
-    published?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["service"]>
-
-  export type ServiceSelectScalar = {
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    price?: boolean
-    image?: boolean
-    icon?: boolean
-    published?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-
-  export type $ServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Service"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      title: string
-      description: string
-      price: string | null
-      image: string | null
-      icon: string | null
-      published: boolean
-      order: number
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["service"]>
-    composites: {}
-  }
-
-  type ServiceGetPayload<S extends boolean | null | undefined | ServiceDefaultArgs> = $Result.GetResult<Prisma.$ServicePayload, S>
-
-  type ServiceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<ServiceFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: ServiceCountAggregateInputType | true
-    }
-
-  export interface ServiceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Service'], meta: { name: 'Service' } }
-    /**
-     * Find zero or one Service that matches the filter.
-     * @param {ServiceFindUniqueArgs} args - Arguments to find a Service
-     * @example
-     * // Get one Service
-     * const service = await prisma.service.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ServiceFindUniqueArgs>(args: SelectSubset<T, ServiceFindUniqueArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Service that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {ServiceFindUniqueOrThrowArgs} args - Arguments to find a Service
-     * @example
-     * // Get one Service
-     * const service = await prisma.service.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ServiceFindUniqueOrThrowArgs>(args: SelectSubset<T, ServiceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Service that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceFindFirstArgs} args - Arguments to find a Service
-     * @example
-     * // Get one Service
-     * const service = await prisma.service.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ServiceFindFirstArgs>(args?: SelectSubset<T, ServiceFindFirstArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Service that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceFindFirstOrThrowArgs} args - Arguments to find a Service
-     * @example
-     * // Get one Service
-     * const service = await prisma.service.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ServiceFindFirstOrThrowArgs>(args?: SelectSubset<T, ServiceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Services that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Services
-     * const services = await prisma.service.findMany()
-     * 
-     * // Get first 10 Services
-     * const services = await prisma.service.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const serviceWithIdOnly = await prisma.service.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ServiceFindManyArgs>(args?: SelectSubset<T, ServiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Service.
-     * @param {ServiceCreateArgs} args - Arguments to create a Service.
-     * @example
-     * // Create one Service
-     * const Service = await prisma.service.create({
-     *   data: {
-     *     // ... data to create a Service
-     *   }
-     * })
-     * 
-     */
-    create<T extends ServiceCreateArgs>(args: SelectSubset<T, ServiceCreateArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Services.
-     * @param {ServiceCreateManyArgs} args - Arguments to create many Services.
-     * @example
-     * // Create many Services
-     * const service = await prisma.service.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ServiceCreateManyArgs>(args?: SelectSubset<T, ServiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Services and returns the data saved in the database.
-     * @param {ServiceCreateManyAndReturnArgs} args - Arguments to create many Services.
-     * @example
-     * // Create many Services
-     * const service = await prisma.service.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Services and only return the `id`
-     * const serviceWithIdOnly = await prisma.service.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ServiceCreateManyAndReturnArgs>(args?: SelectSubset<T, ServiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a Service.
-     * @param {ServiceDeleteArgs} args - Arguments to delete one Service.
-     * @example
-     * // Delete one Service
-     * const Service = await prisma.service.delete({
-     *   where: {
-     *     // ... filter to delete one Service
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ServiceDeleteArgs>(args: SelectSubset<T, ServiceDeleteArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Service.
-     * @param {ServiceUpdateArgs} args - Arguments to update one Service.
-     * @example
-     * // Update one Service
-     * const service = await prisma.service.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ServiceUpdateArgs>(args: SelectSubset<T, ServiceUpdateArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Services.
-     * @param {ServiceDeleteManyArgs} args - Arguments to filter Services to delete.
-     * @example
-     * // Delete a few Services
-     * const { count } = await prisma.service.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ServiceDeleteManyArgs>(args?: SelectSubset<T, ServiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Services.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Services
-     * const service = await prisma.service.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ServiceUpdateManyArgs>(args: SelectSubset<T, ServiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Service.
-     * @param {ServiceUpsertArgs} args - Arguments to update or create a Service.
-     * @example
-     * // Update or create a Service
-     * const service = await prisma.service.upsert({
-     *   create: {
-     *     // ... data to create a Service
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Service we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ServiceUpsertArgs>(args: SelectSubset<T, ServiceUpsertArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Services.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceCountArgs} args - Arguments to filter Services to count.
-     * @example
-     * // Count the number of Services
-     * const count = await prisma.service.count({
-     *   where: {
-     *     // ... the filter for the Services we want to count
-     *   }
-     * })
-    **/
-    count<T extends ServiceCountArgs>(
-      args?: Subset<T, ServiceCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ServiceCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Service.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ServiceAggregateArgs>(args: Subset<T, ServiceAggregateArgs>): Prisma.PrismaPromise<GetServiceAggregateType<T>>
-
-    /**
-     * Group by Service.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ServiceGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ServiceGroupByArgs['orderBy'] }
-        : { orderBy?: ServiceGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ServiceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetServiceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Service model
-   */
-  readonly fields: ServiceFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Service.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Service model
-   */ 
-  interface ServiceFieldRefs {
-    readonly id: FieldRef<"Service", 'String'>
-    readonly title: FieldRef<"Service", 'String'>
-    readonly description: FieldRef<"Service", 'String'>
-    readonly price: FieldRef<"Service", 'String'>
-    readonly image: FieldRef<"Service", 'String'>
-    readonly icon: FieldRef<"Service", 'String'>
-    readonly published: FieldRef<"Service", 'Boolean'>
-    readonly order: FieldRef<"Service", 'Int'>
-    readonly createdAt: FieldRef<"Service", 'DateTime'>
-    readonly updatedAt: FieldRef<"Service", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Service findUnique
-   */
-  export type ServiceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * Filter, which Service to fetch.
-     */
-    where: ServiceWhereUniqueInput
-  }
-
-  /**
-   * Service findUniqueOrThrow
-   */
-  export type ServiceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * Filter, which Service to fetch.
-     */
-    where: ServiceWhereUniqueInput
-  }
-
-  /**
-   * Service findFirst
-   */
-  export type ServiceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * Filter, which Service to fetch.
-     */
-    where?: ServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Services to fetch.
-     */
-    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Services.
-     */
-    cursor?: ServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Services from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Services.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Services.
-     */
-    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
-  }
-
-  /**
-   * Service findFirstOrThrow
-   */
-  export type ServiceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * Filter, which Service to fetch.
-     */
-    where?: ServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Services to fetch.
-     */
-    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Services.
-     */
-    cursor?: ServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Services from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Services.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Services.
-     */
-    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
-  }
-
-  /**
-   * Service findMany
-   */
-  export type ServiceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * Filter, which Services to fetch.
-     */
-    where?: ServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Services to fetch.
-     */
-    orderBy?: ServiceOrderByWithRelationInput | ServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Services.
-     */
-    cursor?: ServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Services from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Services.
-     */
-    skip?: number
-    distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
-  }
-
-  /**
-   * Service create
-   */
-  export type ServiceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * The data needed to create a Service.
-     */
-    data: XOR<ServiceCreateInput, ServiceUncheckedCreateInput>
-  }
-
-  /**
-   * Service createMany
-   */
-  export type ServiceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Services.
-     */
-    data: ServiceCreateManyInput | ServiceCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Service createManyAndReturn
-   */
-  export type ServiceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many Services.
-     */
-    data: ServiceCreateManyInput | ServiceCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Service update
-   */
-  export type ServiceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * The data needed to update a Service.
-     */
-    data: XOR<ServiceUpdateInput, ServiceUncheckedUpdateInput>
-    /**
-     * Choose, which Service to update.
-     */
-    where: ServiceWhereUniqueInput
-  }
-
-  /**
-   * Service updateMany
-   */
-  export type ServiceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Services.
-     */
-    data: XOR<ServiceUpdateManyMutationInput, ServiceUncheckedUpdateManyInput>
-    /**
-     * Filter which Services to update
-     */
-    where?: ServiceWhereInput
-  }
-
-  /**
-   * Service upsert
-   */
-  export type ServiceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * The filter to search for the Service to update in case it exists.
-     */
-    where: ServiceWhereUniqueInput
-    /**
-     * In case the Service found by the `where` argument doesn't exist, create a new Service with this data.
-     */
-    create: XOR<ServiceCreateInput, ServiceUncheckedCreateInput>
-    /**
-     * In case the Service was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ServiceUpdateInput, ServiceUncheckedUpdateInput>
-  }
-
-  /**
-   * Service delete
-   */
-  export type ServiceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-    /**
-     * Filter which Service to delete.
-     */
-    where: ServiceWhereUniqueInput
-  }
-
-  /**
-   * Service deleteMany
-   */
-  export type ServiceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Services to delete
-     */
-    where?: ServiceWhereInput
-  }
-
-  /**
-   * Service without action
-   */
-  export type ServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Service
-     */
-    select?: ServiceSelect<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Inspection
-   */
-
-  export type AggregateInspection = {
-    _count: InspectionCountAggregateOutputType | null
-    _avg: InspectionAvgAggregateOutputType | null
-    _sum: InspectionSumAggregateOutputType | null
-    _min: InspectionMinAggregateOutputType | null
-    _max: InspectionMaxAggregateOutputType | null
-  }
-
-  export type InspectionAvgAggregateOutputType = {
-    durationMs: number | null
-    criticalCount: number | null
-    highCount: number | null
-    mediumCount: number | null
-    lowCount: number | null
-    infoCount: number | null
-    totalFindings: number | null
-  }
-
-  export type InspectionSumAggregateOutputType = {
-    durationMs: number | null
-    criticalCount: number | null
-    highCount: number | null
-    mediumCount: number | null
-    lowCount: number | null
-    infoCount: number | null
-    totalFindings: number | null
-  }
-
-  export type InspectionMinAggregateOutputType = {
-    id: string | null
-    page: string | null
-    url: string | null
-    scanMode: string | null
-    userId: string | null
-    startedAt: Date | null
-    completedAt: Date | null
-    durationMs: number | null
-    status: string | null
-    overallResult: string | null
-    criticalCount: number | null
-    highCount: number | null
-    mediumCount: number | null
-    lowCount: number | null
-    infoCount: number | null
-    totalFindings: number | null
-    createdAt: Date | null
-  }
-
-  export type InspectionMaxAggregateOutputType = {
-    id: string | null
-    page: string | null
-    url: string | null
-    scanMode: string | null
-    userId: string | null
-    startedAt: Date | null
-    completedAt: Date | null
-    durationMs: number | null
-    status: string | null
-    overallResult: string | null
-    criticalCount: number | null
-    highCount: number | null
-    mediumCount: number | null
-    lowCount: number | null
-    infoCount: number | null
-    totalFindings: number | null
-    createdAt: Date | null
-  }
-
-  export type InspectionCountAggregateOutputType = {
-    id: number
-    page: number
-    url: number
-    scanMode: number
-    userId: number
-    startedAt: number
-    completedAt: number
-    durationMs: number
-    status: number
-    overallResult: number
-    criticalCount: number
-    highCount: number
-    mediumCount: number
-    lowCount: number
-    infoCount: number
-    totalFindings: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type InspectionAvgAggregateInputType = {
-    durationMs?: true
-    criticalCount?: true
-    highCount?: true
-    mediumCount?: true
-    lowCount?: true
-    infoCount?: true
-    totalFindings?: true
-  }
-
-  export type InspectionSumAggregateInputType = {
-    durationMs?: true
-    criticalCount?: true
-    highCount?: true
-    mediumCount?: true
-    lowCount?: true
-    infoCount?: true
-    totalFindings?: true
-  }
-
-  export type InspectionMinAggregateInputType = {
-    id?: true
-    page?: true
-    url?: true
-    scanMode?: true
-    userId?: true
-    startedAt?: true
-    completedAt?: true
-    durationMs?: true
-    status?: true
-    overallResult?: true
-    criticalCount?: true
-    highCount?: true
-    mediumCount?: true
-    lowCount?: true
-    infoCount?: true
-    totalFindings?: true
-    createdAt?: true
-  }
-
-  export type InspectionMaxAggregateInputType = {
-    id?: true
-    page?: true
-    url?: true
-    scanMode?: true
-    userId?: true
-    startedAt?: true
-    completedAt?: true
-    durationMs?: true
-    status?: true
-    overallResult?: true
-    criticalCount?: true
-    highCount?: true
-    mediumCount?: true
-    lowCount?: true
-    infoCount?: true
-    totalFindings?: true
-    createdAt?: true
-  }
-
-  export type InspectionCountAggregateInputType = {
-    id?: true
-    page?: true
-    url?: true
-    scanMode?: true
-    userId?: true
-    startedAt?: true
-    completedAt?: true
-    durationMs?: true
-    status?: true
-    overallResult?: true
-    criticalCount?: true
-    highCount?: true
-    mediumCount?: true
-    lowCount?: true
-    infoCount?: true
-    totalFindings?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type InspectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Inspection to aggregate.
-     */
-    where?: InspectionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Inspections to fetch.
-     */
-    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: InspectionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Inspections from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Inspections.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Inspections
-    **/
-    _count?: true | InspectionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: InspectionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: InspectionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: InspectionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: InspectionMaxAggregateInputType
-  }
-
-  export type GetInspectionAggregateType<T extends InspectionAggregateArgs> = {
-        [P in keyof T & keyof AggregateInspection]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateInspection[P]>
-      : GetScalarType<T[P], AggregateInspection[P]>
-  }
-
-
-
-
-  export type InspectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InspectionWhereInput
-    orderBy?: InspectionOrderByWithAggregationInput | InspectionOrderByWithAggregationInput[]
-    by: InspectionScalarFieldEnum[] | InspectionScalarFieldEnum
-    having?: InspectionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: InspectionCountAggregateInputType | true
-    _avg?: InspectionAvgAggregateInputType
-    _sum?: InspectionSumAggregateInputType
-    _min?: InspectionMinAggregateInputType
-    _max?: InspectionMaxAggregateInputType
-  }
-
-  export type InspectionGroupByOutputType = {
-    id: string
-    page: string
-    url: string
-    scanMode: string
-    userId: string
-    startedAt: Date
-    completedAt: Date
-    durationMs: number
-    status: string
-    overallResult: string
-    criticalCount: number
-    highCount: number
-    mediumCount: number
-    lowCount: number
-    infoCount: number
-    totalFindings: number
-    createdAt: Date
-    _count: InspectionCountAggregateOutputType | null
-    _avg: InspectionAvgAggregateOutputType | null
-    _sum: InspectionSumAggregateOutputType | null
-    _min: InspectionMinAggregateOutputType | null
-    _max: InspectionMaxAggregateOutputType | null
-  }
-
-  type GetInspectionGroupByPayload<T extends InspectionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<InspectionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof InspectionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], InspectionGroupByOutputType[P]>
-            : GetScalarType<T[P], InspectionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type InspectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    page?: boolean
-    url?: boolean
-    scanMode?: boolean
-    userId?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    durationMs?: boolean
-    status?: boolean
-    overallResult?: boolean
-    criticalCount?: boolean
-    highCount?: boolean
-    mediumCount?: boolean
-    lowCount?: boolean
-    infoCount?: boolean
-    totalFindings?: boolean
-    createdAt?: boolean
-    user?: boolean | PersonnelDefaultArgs<ExtArgs>
-    findings?: boolean | Inspection$findingsArgs<ExtArgs>
-    _count?: boolean | InspectionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["inspection"]>
-
-  export type InspectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    page?: boolean
-    url?: boolean
-    scanMode?: boolean
-    userId?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    durationMs?: boolean
-    status?: boolean
-    overallResult?: boolean
-    criticalCount?: boolean
-    highCount?: boolean
-    mediumCount?: boolean
-    lowCount?: boolean
-    infoCount?: boolean
-    totalFindings?: boolean
-    createdAt?: boolean
-    user?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["inspection"]>
-
-  export type InspectionSelectScalar = {
-    id?: boolean
-    page?: boolean
-    url?: boolean
-    scanMode?: boolean
-    userId?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    durationMs?: boolean
-    status?: boolean
-    overallResult?: boolean
-    criticalCount?: boolean
-    highCount?: boolean
-    mediumCount?: boolean
-    lowCount?: boolean
-    infoCount?: boolean
-    totalFindings?: boolean
-    createdAt?: boolean
-  }
-
-  export type InspectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | PersonnelDefaultArgs<ExtArgs>
-    findings?: boolean | Inspection$findingsArgs<ExtArgs>
-    _count?: boolean | InspectionCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type InspectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }
-
-  export type $InspectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Inspection"
-    objects: {
-      user: Prisma.$PersonnelPayload<ExtArgs>
-      findings: Prisma.$InspectionFindingPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      page: string
-      url: string
-      scanMode: string
-      userId: string
-      startedAt: Date
-      completedAt: Date
-      durationMs: number
-      status: string
-      overallResult: string
-      criticalCount: number
-      highCount: number
-      mediumCount: number
-      lowCount: number
-      infoCount: number
-      totalFindings: number
-      createdAt: Date
-    }, ExtArgs["result"]["inspection"]>
-    composites: {}
-  }
-
-  type InspectionGetPayload<S extends boolean | null | undefined | InspectionDefaultArgs> = $Result.GetResult<Prisma.$InspectionPayload, S>
-
-  type InspectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<InspectionFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: InspectionCountAggregateInputType | true
-    }
-
-  export interface InspectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Inspection'], meta: { name: 'Inspection' } }
-    /**
-     * Find zero or one Inspection that matches the filter.
-     * @param {InspectionFindUniqueArgs} args - Arguments to find a Inspection
-     * @example
-     * // Get one Inspection
-     * const inspection = await prisma.inspection.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends InspectionFindUniqueArgs>(args: SelectSubset<T, InspectionFindUniqueArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Inspection that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {InspectionFindUniqueOrThrowArgs} args - Arguments to find a Inspection
-     * @example
-     * // Get one Inspection
-     * const inspection = await prisma.inspection.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends InspectionFindUniqueOrThrowArgs>(args: SelectSubset<T, InspectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Inspection that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindFirstArgs} args - Arguments to find a Inspection
-     * @example
-     * // Get one Inspection
-     * const inspection = await prisma.inspection.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends InspectionFindFirstArgs>(args?: SelectSubset<T, InspectionFindFirstArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Inspection that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindFirstOrThrowArgs} args - Arguments to find a Inspection
-     * @example
-     * // Get one Inspection
-     * const inspection = await prisma.inspection.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends InspectionFindFirstOrThrowArgs>(args?: SelectSubset<T, InspectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Inspections that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Inspections
-     * const inspections = await prisma.inspection.findMany()
-     * 
-     * // Get first 10 Inspections
-     * const inspections = await prisma.inspection.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const inspectionWithIdOnly = await prisma.inspection.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends InspectionFindManyArgs>(args?: SelectSubset<T, InspectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Inspection.
-     * @param {InspectionCreateArgs} args - Arguments to create a Inspection.
-     * @example
-     * // Create one Inspection
-     * const Inspection = await prisma.inspection.create({
-     *   data: {
-     *     // ... data to create a Inspection
-     *   }
-     * })
-     * 
-     */
-    create<T extends InspectionCreateArgs>(args: SelectSubset<T, InspectionCreateArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Inspections.
-     * @param {InspectionCreateManyArgs} args - Arguments to create many Inspections.
-     * @example
-     * // Create many Inspections
-     * const inspection = await prisma.inspection.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends InspectionCreateManyArgs>(args?: SelectSubset<T, InspectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Inspections and returns the data saved in the database.
-     * @param {InspectionCreateManyAndReturnArgs} args - Arguments to create many Inspections.
-     * @example
-     * // Create many Inspections
-     * const inspection = await prisma.inspection.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Inspections and only return the `id`
-     * const inspectionWithIdOnly = await prisma.inspection.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends InspectionCreateManyAndReturnArgs>(args?: SelectSubset<T, InspectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a Inspection.
-     * @param {InspectionDeleteArgs} args - Arguments to delete one Inspection.
-     * @example
-     * // Delete one Inspection
-     * const Inspection = await prisma.inspection.delete({
-     *   where: {
-     *     // ... filter to delete one Inspection
-     *   }
-     * })
-     * 
-     */
-    delete<T extends InspectionDeleteArgs>(args: SelectSubset<T, InspectionDeleteArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Inspection.
-     * @param {InspectionUpdateArgs} args - Arguments to update one Inspection.
-     * @example
-     * // Update one Inspection
-     * const inspection = await prisma.inspection.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends InspectionUpdateArgs>(args: SelectSubset<T, InspectionUpdateArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Inspections.
-     * @param {InspectionDeleteManyArgs} args - Arguments to filter Inspections to delete.
-     * @example
-     * // Delete a few Inspections
-     * const { count } = await prisma.inspection.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends InspectionDeleteManyArgs>(args?: SelectSubset<T, InspectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Inspections.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Inspections
-     * const inspection = await prisma.inspection.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends InspectionUpdateManyArgs>(args: SelectSubset<T, InspectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Inspection.
-     * @param {InspectionUpsertArgs} args - Arguments to update or create a Inspection.
-     * @example
-     * // Update or create a Inspection
-     * const inspection = await prisma.inspection.upsert({
-     *   create: {
-     *     // ... data to create a Inspection
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Inspection we want to update
-     *   }
-     * })
-     */
-    upsert<T extends InspectionUpsertArgs>(args: SelectSubset<T, InspectionUpsertArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Inspections.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionCountArgs} args - Arguments to filter Inspections to count.
-     * @example
-     * // Count the number of Inspections
-     * const count = await prisma.inspection.count({
-     *   where: {
-     *     // ... the filter for the Inspections we want to count
-     *   }
-     * })
-    **/
-    count<T extends InspectionCountArgs>(
-      args?: Subset<T, InspectionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], InspectionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Inspection.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends InspectionAggregateArgs>(args: Subset<T, InspectionAggregateArgs>): Prisma.PrismaPromise<GetInspectionAggregateType<T>>
-
-    /**
-     * Group by Inspection.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends InspectionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: InspectionGroupByArgs['orderBy'] }
-        : { orderBy?: InspectionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, InspectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInspectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Inspection model
-   */
-  readonly fields: InspectionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Inspection.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__InspectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends PersonnelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonnelDefaultArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    findings<T extends Inspection$findingsArgs<ExtArgs> = {}>(args?: Subset<T, Inspection$findingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findMany"> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Inspection model
-   */ 
-  interface InspectionFieldRefs {
-    readonly id: FieldRef<"Inspection", 'String'>
-    readonly page: FieldRef<"Inspection", 'String'>
-    readonly url: FieldRef<"Inspection", 'String'>
-    readonly scanMode: FieldRef<"Inspection", 'String'>
-    readonly userId: FieldRef<"Inspection", 'String'>
-    readonly startedAt: FieldRef<"Inspection", 'DateTime'>
-    readonly completedAt: FieldRef<"Inspection", 'DateTime'>
-    readonly durationMs: FieldRef<"Inspection", 'Int'>
-    readonly status: FieldRef<"Inspection", 'String'>
-    readonly overallResult: FieldRef<"Inspection", 'String'>
-    readonly criticalCount: FieldRef<"Inspection", 'Int'>
-    readonly highCount: FieldRef<"Inspection", 'Int'>
-    readonly mediumCount: FieldRef<"Inspection", 'Int'>
-    readonly lowCount: FieldRef<"Inspection", 'Int'>
-    readonly infoCount: FieldRef<"Inspection", 'Int'>
-    readonly totalFindings: FieldRef<"Inspection", 'Int'>
-    readonly createdAt: FieldRef<"Inspection", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Inspection findUnique
-   */
-  export type InspectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * Filter, which Inspection to fetch.
-     */
-    where: InspectionWhereUniqueInput
-  }
-
-  /**
-   * Inspection findUniqueOrThrow
-   */
-  export type InspectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * Filter, which Inspection to fetch.
-     */
-    where: InspectionWhereUniqueInput
-  }
-
-  /**
-   * Inspection findFirst
-   */
-  export type InspectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * Filter, which Inspection to fetch.
-     */
-    where?: InspectionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Inspections to fetch.
-     */
-    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Inspections.
-     */
-    cursor?: InspectionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Inspections from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Inspections.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Inspections.
-     */
-    distinct?: InspectionScalarFieldEnum | InspectionScalarFieldEnum[]
-  }
-
-  /**
-   * Inspection findFirstOrThrow
-   */
-  export type InspectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * Filter, which Inspection to fetch.
-     */
-    where?: InspectionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Inspections to fetch.
-     */
-    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Inspections.
-     */
-    cursor?: InspectionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Inspections from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Inspections.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Inspections.
-     */
-    distinct?: InspectionScalarFieldEnum | InspectionScalarFieldEnum[]
-  }
-
-  /**
-   * Inspection findMany
-   */
-  export type InspectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * Filter, which Inspections to fetch.
-     */
-    where?: InspectionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Inspections to fetch.
-     */
-    orderBy?: InspectionOrderByWithRelationInput | InspectionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Inspections.
-     */
-    cursor?: InspectionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Inspections from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Inspections.
-     */
-    skip?: number
-    distinct?: InspectionScalarFieldEnum | InspectionScalarFieldEnum[]
-  }
-
-  /**
-   * Inspection create
-   */
-  export type InspectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Inspection.
-     */
-    data: XOR<InspectionCreateInput, InspectionUncheckedCreateInput>
-  }
-
-  /**
-   * Inspection createMany
-   */
-  export type InspectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Inspections.
-     */
-    data: InspectionCreateManyInput | InspectionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Inspection createManyAndReturn
-   */
-  export type InspectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many Inspections.
-     */
-    data: InspectionCreateManyInput | InspectionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Inspection update
-   */
-  export type InspectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Inspection.
-     */
-    data: XOR<InspectionUpdateInput, InspectionUncheckedUpdateInput>
-    /**
-     * Choose, which Inspection to update.
-     */
-    where: InspectionWhereUniqueInput
-  }
-
-  /**
-   * Inspection updateMany
-   */
-  export type InspectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Inspections.
-     */
-    data: XOR<InspectionUpdateManyMutationInput, InspectionUncheckedUpdateManyInput>
-    /**
-     * Filter which Inspections to update
-     */
-    where?: InspectionWhereInput
-  }
-
-  /**
-   * Inspection upsert
-   */
-  export type InspectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Inspection to update in case it exists.
-     */
-    where: InspectionWhereUniqueInput
-    /**
-     * In case the Inspection found by the `where` argument doesn't exist, create a new Inspection with this data.
-     */
-    create: XOR<InspectionCreateInput, InspectionUncheckedCreateInput>
-    /**
-     * In case the Inspection was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<InspectionUpdateInput, InspectionUncheckedUpdateInput>
-  }
-
-  /**
-   * Inspection delete
-   */
-  export type InspectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-    /**
-     * Filter which Inspection to delete.
-     */
-    where: InspectionWhereUniqueInput
-  }
-
-  /**
-   * Inspection deleteMany
-   */
-  export type InspectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Inspections to delete
-     */
-    where?: InspectionWhereInput
-  }
-
-  /**
-   * Inspection.findings
-   */
-  export type Inspection$findingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    where?: InspectionFindingWhereInput
-    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
-    cursor?: InspectionFindingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
-  }
-
-  /**
-   * Inspection without action
-   */
-  export type InspectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inspection
-     */
-    select?: InspectionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model InspectionFinding
-   */
-
-  export type AggregateInspectionFinding = {
-    _count: InspectionFindingCountAggregateOutputType | null
-    _min: InspectionFindingMinAggregateOutputType | null
-    _max: InspectionFindingMaxAggregateOutputType | null
-  }
-
-  export type InspectionFindingMinAggregateOutputType = {
-    id: string | null
-    inspectionId: string | null
-    findingCode: string | null
-    category: string | null
-    severity: string | null
-    title: string | null
-    description: string | null
-    expected: string | null
-    actual: string | null
-    element: string | null
-    selector: string | null
-    recommendation: string | null
-    status: string | null
-    notes: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type InspectionFindingMaxAggregateOutputType = {
-    id: string | null
-    inspectionId: string | null
-    findingCode: string | null
-    category: string | null
-    severity: string | null
-    title: string | null
-    description: string | null
-    expected: string | null
-    actual: string | null
-    element: string | null
-    selector: string | null
-    recommendation: string | null
-    status: string | null
-    notes: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type InspectionFindingCountAggregateOutputType = {
-    id: number
-    inspectionId: number
-    findingCode: number
-    category: number
-    severity: number
-    title: number
-    description: number
-    expected: number
-    actual: number
-    element: number
-    selector: number
-    recommendation: number
-    status: number
-    notes: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type InspectionFindingMinAggregateInputType = {
-    id?: true
-    inspectionId?: true
-    findingCode?: true
-    category?: true
-    severity?: true
-    title?: true
-    description?: true
-    expected?: true
-    actual?: true
-    element?: true
-    selector?: true
-    recommendation?: true
-    status?: true
-    notes?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type InspectionFindingMaxAggregateInputType = {
-    id?: true
-    inspectionId?: true
-    findingCode?: true
-    category?: true
-    severity?: true
-    title?: true
-    description?: true
-    expected?: true
-    actual?: true
-    element?: true
-    selector?: true
-    recommendation?: true
-    status?: true
-    notes?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type InspectionFindingCountAggregateInputType = {
-    id?: true
-    inspectionId?: true
-    findingCode?: true
-    category?: true
-    severity?: true
-    title?: true
-    description?: true
-    expected?: true
-    actual?: true
-    element?: true
-    selector?: true
-    recommendation?: true
-    status?: true
-    notes?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type InspectionFindingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InspectionFinding to aggregate.
-     */
-    where?: InspectionFindingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InspectionFindings to fetch.
-     */
-    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: InspectionFindingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InspectionFindings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InspectionFindings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned InspectionFindings
-    **/
-    _count?: true | InspectionFindingCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: InspectionFindingMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: InspectionFindingMaxAggregateInputType
-  }
-
-  export type GetInspectionFindingAggregateType<T extends InspectionFindingAggregateArgs> = {
-        [P in keyof T & keyof AggregateInspectionFinding]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateInspectionFinding[P]>
-      : GetScalarType<T[P], AggregateInspectionFinding[P]>
-  }
-
-
-
-
-  export type InspectionFindingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InspectionFindingWhereInput
-    orderBy?: InspectionFindingOrderByWithAggregationInput | InspectionFindingOrderByWithAggregationInput[]
-    by: InspectionFindingScalarFieldEnum[] | InspectionFindingScalarFieldEnum
-    having?: InspectionFindingScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: InspectionFindingCountAggregateInputType | true
-    _min?: InspectionFindingMinAggregateInputType
-    _max?: InspectionFindingMaxAggregateInputType
-  }
-
-  export type InspectionFindingGroupByOutputType = {
-    id: string
-    inspectionId: string
-    findingCode: string
-    category: string
-    severity: string
-    title: string
-    description: string
-    expected: string | null
-    actual: string | null
-    element: string | null
-    selector: string | null
-    recommendation: string
-    status: string
-    notes: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: InspectionFindingCountAggregateOutputType | null
-    _min: InspectionFindingMinAggregateOutputType | null
-    _max: InspectionFindingMaxAggregateOutputType | null
-  }
-
-  type GetInspectionFindingGroupByPayload<T extends InspectionFindingGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<InspectionFindingGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof InspectionFindingGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], InspectionFindingGroupByOutputType[P]>
-            : GetScalarType<T[P], InspectionFindingGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type InspectionFindingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    inspectionId?: boolean
-    findingCode?: boolean
-    category?: boolean
-    severity?: boolean
-    title?: boolean
-    description?: boolean
-    expected?: boolean
-    actual?: boolean
-    element?: boolean
-    selector?: boolean
-    recommendation?: boolean
-    status?: boolean
-    notes?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["inspectionFinding"]>
-
-  export type InspectionFindingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    inspectionId?: boolean
-    findingCode?: boolean
-    category?: boolean
-    severity?: boolean
-    title?: boolean
-    description?: boolean
-    expected?: boolean
-    actual?: boolean
-    element?: boolean
-    selector?: boolean
-    recommendation?: boolean
-    status?: boolean
-    notes?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["inspectionFinding"]>
-
-  export type InspectionFindingSelectScalar = {
-    id?: boolean
-    inspectionId?: boolean
-    findingCode?: boolean
-    category?: boolean
-    severity?: boolean
-    title?: boolean
-    description?: boolean
-    expected?: boolean
-    actual?: boolean
-    element?: boolean
-    selector?: boolean
-    recommendation?: boolean
-    status?: boolean
-    notes?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type InspectionFindingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
-  }
-  export type InspectionFindingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    inspection?: boolean | InspectionDefaultArgs<ExtArgs>
-  }
-
-  export type $InspectionFindingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "InspectionFinding"
-    objects: {
-      inspection: Prisma.$InspectionPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      inspectionId: string
-      findingCode: string
-      category: string
-      severity: string
-      title: string
-      description: string
-      expected: string | null
-      actual: string | null
-      element: string | null
-      selector: string | null
-      recommendation: string
-      status: string
-      notes: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["inspectionFinding"]>
-    composites: {}
-  }
-
-  type InspectionFindingGetPayload<S extends boolean | null | undefined | InspectionFindingDefaultArgs> = $Result.GetResult<Prisma.$InspectionFindingPayload, S>
-
-  type InspectionFindingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<InspectionFindingFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: InspectionFindingCountAggregateInputType | true
-    }
-
-  export interface InspectionFindingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InspectionFinding'], meta: { name: 'InspectionFinding' } }
-    /**
-     * Find zero or one InspectionFinding that matches the filter.
-     * @param {InspectionFindingFindUniqueArgs} args - Arguments to find a InspectionFinding
-     * @example
-     * // Get one InspectionFinding
-     * const inspectionFinding = await prisma.inspectionFinding.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends InspectionFindingFindUniqueArgs>(args: SelectSubset<T, InspectionFindingFindUniqueArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one InspectionFinding that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {InspectionFindingFindUniqueOrThrowArgs} args - Arguments to find a InspectionFinding
-     * @example
-     * // Get one InspectionFinding
-     * const inspectionFinding = await prisma.inspectionFinding.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends InspectionFindingFindUniqueOrThrowArgs>(args: SelectSubset<T, InspectionFindingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first InspectionFinding that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingFindFirstArgs} args - Arguments to find a InspectionFinding
-     * @example
-     * // Get one InspectionFinding
-     * const inspectionFinding = await prisma.inspectionFinding.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends InspectionFindingFindFirstArgs>(args?: SelectSubset<T, InspectionFindingFindFirstArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first InspectionFinding that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingFindFirstOrThrowArgs} args - Arguments to find a InspectionFinding
-     * @example
-     * // Get one InspectionFinding
-     * const inspectionFinding = await prisma.inspectionFinding.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends InspectionFindingFindFirstOrThrowArgs>(args?: SelectSubset<T, InspectionFindingFindFirstOrThrowArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more InspectionFindings that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all InspectionFindings
-     * const inspectionFindings = await prisma.inspectionFinding.findMany()
-     * 
-     * // Get first 10 InspectionFindings
-     * const inspectionFindings = await prisma.inspectionFinding.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const inspectionFindingWithIdOnly = await prisma.inspectionFinding.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends InspectionFindingFindManyArgs>(args?: SelectSubset<T, InspectionFindingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a InspectionFinding.
-     * @param {InspectionFindingCreateArgs} args - Arguments to create a InspectionFinding.
-     * @example
-     * // Create one InspectionFinding
-     * const InspectionFinding = await prisma.inspectionFinding.create({
-     *   data: {
-     *     // ... data to create a InspectionFinding
-     *   }
-     * })
-     * 
-     */
-    create<T extends InspectionFindingCreateArgs>(args: SelectSubset<T, InspectionFindingCreateArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many InspectionFindings.
-     * @param {InspectionFindingCreateManyArgs} args - Arguments to create many InspectionFindings.
-     * @example
-     * // Create many InspectionFindings
-     * const inspectionFinding = await prisma.inspectionFinding.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends InspectionFindingCreateManyArgs>(args?: SelectSubset<T, InspectionFindingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many InspectionFindings and returns the data saved in the database.
-     * @param {InspectionFindingCreateManyAndReturnArgs} args - Arguments to create many InspectionFindings.
-     * @example
-     * // Create many InspectionFindings
-     * const inspectionFinding = await prisma.inspectionFinding.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many InspectionFindings and only return the `id`
-     * const inspectionFindingWithIdOnly = await prisma.inspectionFinding.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends InspectionFindingCreateManyAndReturnArgs>(args?: SelectSubset<T, InspectionFindingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a InspectionFinding.
-     * @param {InspectionFindingDeleteArgs} args - Arguments to delete one InspectionFinding.
-     * @example
-     * // Delete one InspectionFinding
-     * const InspectionFinding = await prisma.inspectionFinding.delete({
-     *   where: {
-     *     // ... filter to delete one InspectionFinding
-     *   }
-     * })
-     * 
-     */
-    delete<T extends InspectionFindingDeleteArgs>(args: SelectSubset<T, InspectionFindingDeleteArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one InspectionFinding.
-     * @param {InspectionFindingUpdateArgs} args - Arguments to update one InspectionFinding.
-     * @example
-     * // Update one InspectionFinding
-     * const inspectionFinding = await prisma.inspectionFinding.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends InspectionFindingUpdateArgs>(args: SelectSubset<T, InspectionFindingUpdateArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more InspectionFindings.
-     * @param {InspectionFindingDeleteManyArgs} args - Arguments to filter InspectionFindings to delete.
-     * @example
-     * // Delete a few InspectionFindings
-     * const { count } = await prisma.inspectionFinding.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends InspectionFindingDeleteManyArgs>(args?: SelectSubset<T, InspectionFindingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more InspectionFindings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many InspectionFindings
-     * const inspectionFinding = await prisma.inspectionFinding.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends InspectionFindingUpdateManyArgs>(args: SelectSubset<T, InspectionFindingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one InspectionFinding.
-     * @param {InspectionFindingUpsertArgs} args - Arguments to update or create a InspectionFinding.
-     * @example
-     * // Update or create a InspectionFinding
-     * const inspectionFinding = await prisma.inspectionFinding.upsert({
-     *   create: {
-     *     // ... data to create a InspectionFinding
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the InspectionFinding we want to update
-     *   }
-     * })
-     */
-    upsert<T extends InspectionFindingUpsertArgs>(args: SelectSubset<T, InspectionFindingUpsertArgs<ExtArgs>>): Prisma__InspectionFindingClient<$Result.GetResult<Prisma.$InspectionFindingPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of InspectionFindings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingCountArgs} args - Arguments to filter InspectionFindings to count.
-     * @example
-     * // Count the number of InspectionFindings
-     * const count = await prisma.inspectionFinding.count({
-     *   where: {
-     *     // ... the filter for the InspectionFindings we want to count
-     *   }
-     * })
-    **/
-    count<T extends InspectionFindingCountArgs>(
-      args?: Subset<T, InspectionFindingCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], InspectionFindingCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a InspectionFinding.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends InspectionFindingAggregateArgs>(args: Subset<T, InspectionFindingAggregateArgs>): Prisma.PrismaPromise<GetInspectionFindingAggregateType<T>>
-
-    /**
-     * Group by InspectionFinding.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InspectionFindingGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends InspectionFindingGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: InspectionFindingGroupByArgs['orderBy'] }
-        : { orderBy?: InspectionFindingGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, InspectionFindingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInspectionFindingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the InspectionFinding model
-   */
-  readonly fields: InspectionFindingFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for InspectionFinding.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__InspectionFindingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    inspection<T extends InspectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InspectionDefaultArgs<ExtArgs>>): Prisma__InspectionClient<$Result.GetResult<Prisma.$InspectionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the InspectionFinding model
-   */ 
-  interface InspectionFindingFieldRefs {
-    readonly id: FieldRef<"InspectionFinding", 'String'>
-    readonly inspectionId: FieldRef<"InspectionFinding", 'String'>
-    readonly findingCode: FieldRef<"InspectionFinding", 'String'>
-    readonly category: FieldRef<"InspectionFinding", 'String'>
-    readonly severity: FieldRef<"InspectionFinding", 'String'>
-    readonly title: FieldRef<"InspectionFinding", 'String'>
-    readonly description: FieldRef<"InspectionFinding", 'String'>
-    readonly expected: FieldRef<"InspectionFinding", 'String'>
-    readonly actual: FieldRef<"InspectionFinding", 'String'>
-    readonly element: FieldRef<"InspectionFinding", 'String'>
-    readonly selector: FieldRef<"InspectionFinding", 'String'>
-    readonly recommendation: FieldRef<"InspectionFinding", 'String'>
-    readonly status: FieldRef<"InspectionFinding", 'String'>
-    readonly notes: FieldRef<"InspectionFinding", 'String'>
-    readonly createdAt: FieldRef<"InspectionFinding", 'DateTime'>
-    readonly updatedAt: FieldRef<"InspectionFinding", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * InspectionFinding findUnique
-   */
-  export type InspectionFindingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * Filter, which InspectionFinding to fetch.
-     */
-    where: InspectionFindingWhereUniqueInput
-  }
-
-  /**
-   * InspectionFinding findUniqueOrThrow
-   */
-  export type InspectionFindingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * Filter, which InspectionFinding to fetch.
-     */
-    where: InspectionFindingWhereUniqueInput
-  }
-
-  /**
-   * InspectionFinding findFirst
-   */
-  export type InspectionFindingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * Filter, which InspectionFinding to fetch.
-     */
-    where?: InspectionFindingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InspectionFindings to fetch.
-     */
-    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InspectionFindings.
-     */
-    cursor?: InspectionFindingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InspectionFindings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InspectionFindings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InspectionFindings.
-     */
-    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
-  }
-
-  /**
-   * InspectionFinding findFirstOrThrow
-   */
-  export type InspectionFindingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * Filter, which InspectionFinding to fetch.
-     */
-    where?: InspectionFindingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InspectionFindings to fetch.
-     */
-    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InspectionFindings.
-     */
-    cursor?: InspectionFindingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InspectionFindings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InspectionFindings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InspectionFindings.
-     */
-    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
-  }
-
-  /**
-   * InspectionFinding findMany
-   */
-  export type InspectionFindingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * Filter, which InspectionFindings to fetch.
-     */
-    where?: InspectionFindingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InspectionFindings to fetch.
-     */
-    orderBy?: InspectionFindingOrderByWithRelationInput | InspectionFindingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing InspectionFindings.
-     */
-    cursor?: InspectionFindingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InspectionFindings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InspectionFindings.
-     */
-    skip?: number
-    distinct?: InspectionFindingScalarFieldEnum | InspectionFindingScalarFieldEnum[]
-  }
-
-  /**
-   * InspectionFinding create
-   */
-  export type InspectionFindingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * The data needed to create a InspectionFinding.
-     */
-    data: XOR<InspectionFindingCreateInput, InspectionFindingUncheckedCreateInput>
-  }
-
-  /**
-   * InspectionFinding createMany
-   */
-  export type InspectionFindingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many InspectionFindings.
-     */
-    data: InspectionFindingCreateManyInput | InspectionFindingCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * InspectionFinding createManyAndReturn
-   */
-  export type InspectionFindingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many InspectionFindings.
-     */
-    data: InspectionFindingCreateManyInput | InspectionFindingCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * InspectionFinding update
-   */
-  export type InspectionFindingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * The data needed to update a InspectionFinding.
-     */
-    data: XOR<InspectionFindingUpdateInput, InspectionFindingUncheckedUpdateInput>
-    /**
-     * Choose, which InspectionFinding to update.
-     */
-    where: InspectionFindingWhereUniqueInput
-  }
-
-  /**
-   * InspectionFinding updateMany
-   */
-  export type InspectionFindingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update InspectionFindings.
-     */
-    data: XOR<InspectionFindingUpdateManyMutationInput, InspectionFindingUncheckedUpdateManyInput>
-    /**
-     * Filter which InspectionFindings to update
-     */
-    where?: InspectionFindingWhereInput
-  }
-
-  /**
-   * InspectionFinding upsert
-   */
-  export type InspectionFindingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * The filter to search for the InspectionFinding to update in case it exists.
-     */
-    where: InspectionFindingWhereUniqueInput
-    /**
-     * In case the InspectionFinding found by the `where` argument doesn't exist, create a new InspectionFinding with this data.
-     */
-    create: XOR<InspectionFindingCreateInput, InspectionFindingUncheckedCreateInput>
-    /**
-     * In case the InspectionFinding was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<InspectionFindingUpdateInput, InspectionFindingUncheckedUpdateInput>
-  }
-
-  /**
-   * InspectionFinding delete
-   */
-  export type InspectionFindingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-    /**
-     * Filter which InspectionFinding to delete.
-     */
-    where: InspectionFindingWhereUniqueInput
-  }
-
-  /**
-   * InspectionFinding deleteMany
-   */
-  export type InspectionFindingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InspectionFindings to delete
-     */
-    where?: InspectionFindingWhereInput
-  }
-
-  /**
-   * InspectionFinding without action
-   */
-  export type InspectionFindingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InspectionFinding
-     */
-    select?: InspectionFindingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InspectionFindingInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model MediaFile
-   */
-
-  export type AggregateMediaFile = {
-    _count: MediaFileCountAggregateOutputType | null
-    _avg: MediaFileAvgAggregateOutputType | null
-    _sum: MediaFileSumAggregateOutputType | null
-    _min: MediaFileMinAggregateOutputType | null
-    _max: MediaFileMaxAggregateOutputType | null
-  }
-
-  export type MediaFileAvgAggregateOutputType = {
-    size: number | null
-  }
-
-  export type MediaFileSumAggregateOutputType = {
-    size: number | null
-  }
-
-  export type MediaFileMinAggregateOutputType = {
-    id: string | null
-    filename: string | null
-    url: string | null
-    size: number | null
-    mimetype: string | null
-    uploadedById: string | null
-    createdAt: Date | null
-  }
-
-  export type MediaFileMaxAggregateOutputType = {
-    id: string | null
-    filename: string | null
-    url: string | null
-    size: number | null
-    mimetype: string | null
-    uploadedById: string | null
-    createdAt: Date | null
-  }
-
-  export type MediaFileCountAggregateOutputType = {
-    id: number
-    filename: number
-    url: number
-    size: number
-    mimetype: number
-    uploadedById: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type MediaFileAvgAggregateInputType = {
-    size?: true
-  }
-
-  export type MediaFileSumAggregateInputType = {
-    size?: true
-  }
-
-  export type MediaFileMinAggregateInputType = {
-    id?: true
-    filename?: true
-    url?: true
-    size?: true
-    mimetype?: true
-    uploadedById?: true
-    createdAt?: true
-  }
-
-  export type MediaFileMaxAggregateInputType = {
-    id?: true
-    filename?: true
-    url?: true
-    size?: true
-    mimetype?: true
-    uploadedById?: true
-    createdAt?: true
-  }
-
-  export type MediaFileCountAggregateInputType = {
-    id?: true
-    filename?: true
-    url?: true
-    size?: true
-    mimetype?: true
-    uploadedById?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type MediaFileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MediaFile to aggregate.
-     */
-    where?: MediaFileWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MediaFiles to fetch.
-     */
-    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: MediaFileWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MediaFiles from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MediaFiles.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned MediaFiles
-    **/
-    _count?: true | MediaFileCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: MediaFileAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: MediaFileSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: MediaFileMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: MediaFileMaxAggregateInputType
-  }
-
-  export type GetMediaFileAggregateType<T extends MediaFileAggregateArgs> = {
-        [P in keyof T & keyof AggregateMediaFile]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateMediaFile[P]>
-      : GetScalarType<T[P], AggregateMediaFile[P]>
-  }
-
-
-
-
-  export type MediaFileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MediaFileWhereInput
-    orderBy?: MediaFileOrderByWithAggregationInput | MediaFileOrderByWithAggregationInput[]
-    by: MediaFileScalarFieldEnum[] | MediaFileScalarFieldEnum
-    having?: MediaFileScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: MediaFileCountAggregateInputType | true
-    _avg?: MediaFileAvgAggregateInputType
-    _sum?: MediaFileSumAggregateInputType
-    _min?: MediaFileMinAggregateInputType
-    _max?: MediaFileMaxAggregateInputType
-  }
-
-  export type MediaFileGroupByOutputType = {
-    id: string
-    filename: string
-    url: string
-    size: number
-    mimetype: string
-    uploadedById: string | null
-    createdAt: Date
-    _count: MediaFileCountAggregateOutputType | null
-    _avg: MediaFileAvgAggregateOutputType | null
-    _sum: MediaFileSumAggregateOutputType | null
-    _min: MediaFileMinAggregateOutputType | null
-    _max: MediaFileMaxAggregateOutputType | null
-  }
-
-  type GetMediaFileGroupByPayload<T extends MediaFileGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<MediaFileGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof MediaFileGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], MediaFileGroupByOutputType[P]>
-            : GetScalarType<T[P], MediaFileGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type MediaFileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    filename?: boolean
-    url?: boolean
-    size?: boolean
-    mimetype?: boolean
-    uploadedById?: boolean
-    createdAt?: boolean
-    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
-  }, ExtArgs["result"]["mediaFile"]>
-
-  export type MediaFileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    filename?: boolean
-    url?: boolean
-    size?: boolean
-    mimetype?: boolean
-    uploadedById?: boolean
-    createdAt?: boolean
-    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
-  }, ExtArgs["result"]["mediaFile"]>
-
-  export type MediaFileSelectScalar = {
-    id?: boolean
-    filename?: boolean
-    url?: boolean
-    size?: boolean
-    mimetype?: boolean
-    uploadedById?: boolean
-    createdAt?: boolean
-  }
-
-  export type MediaFileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
-  }
-  export type MediaFileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
-  }
-
-  export type $MediaFilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "MediaFile"
-    objects: {
-      uploadedBy: Prisma.$PersonnelPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      filename: string
-      url: string
-      size: number
-      mimetype: string
-      uploadedById: string | null
-      createdAt: Date
-    }, ExtArgs["result"]["mediaFile"]>
-    composites: {}
-  }
-
-  type MediaFileGetPayload<S extends boolean | null | undefined | MediaFileDefaultArgs> = $Result.GetResult<Prisma.$MediaFilePayload, S>
-
-  type MediaFileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<MediaFileFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: MediaFileCountAggregateInputType | true
-    }
-
-  export interface MediaFileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MediaFile'], meta: { name: 'MediaFile' } }
-    /**
-     * Find zero or one MediaFile that matches the filter.
-     * @param {MediaFileFindUniqueArgs} args - Arguments to find a MediaFile
-     * @example
-     * // Get one MediaFile
-     * const mediaFile = await prisma.mediaFile.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends MediaFileFindUniqueArgs>(args: SelectSubset<T, MediaFileFindUniqueArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one MediaFile that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {MediaFileFindUniqueOrThrowArgs} args - Arguments to find a MediaFile
-     * @example
-     * // Get one MediaFile
-     * const mediaFile = await prisma.mediaFile.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends MediaFileFindUniqueOrThrowArgs>(args: SelectSubset<T, MediaFileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first MediaFile that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileFindFirstArgs} args - Arguments to find a MediaFile
-     * @example
-     * // Get one MediaFile
-     * const mediaFile = await prisma.mediaFile.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends MediaFileFindFirstArgs>(args?: SelectSubset<T, MediaFileFindFirstArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first MediaFile that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileFindFirstOrThrowArgs} args - Arguments to find a MediaFile
-     * @example
-     * // Get one MediaFile
-     * const mediaFile = await prisma.mediaFile.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends MediaFileFindFirstOrThrowArgs>(args?: SelectSubset<T, MediaFileFindFirstOrThrowArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more MediaFiles that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all MediaFiles
-     * const mediaFiles = await prisma.mediaFile.findMany()
-     * 
-     * // Get first 10 MediaFiles
-     * const mediaFiles = await prisma.mediaFile.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const mediaFileWithIdOnly = await prisma.mediaFile.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends MediaFileFindManyArgs>(args?: SelectSubset<T, MediaFileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a MediaFile.
-     * @param {MediaFileCreateArgs} args - Arguments to create a MediaFile.
-     * @example
-     * // Create one MediaFile
-     * const MediaFile = await prisma.mediaFile.create({
-     *   data: {
-     *     // ... data to create a MediaFile
-     *   }
-     * })
-     * 
-     */
-    create<T extends MediaFileCreateArgs>(args: SelectSubset<T, MediaFileCreateArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many MediaFiles.
-     * @param {MediaFileCreateManyArgs} args - Arguments to create many MediaFiles.
-     * @example
-     * // Create many MediaFiles
-     * const mediaFile = await prisma.mediaFile.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends MediaFileCreateManyArgs>(args?: SelectSubset<T, MediaFileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many MediaFiles and returns the data saved in the database.
-     * @param {MediaFileCreateManyAndReturnArgs} args - Arguments to create many MediaFiles.
-     * @example
-     * // Create many MediaFiles
-     * const mediaFile = await prisma.mediaFile.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many MediaFiles and only return the `id`
-     * const mediaFileWithIdOnly = await prisma.mediaFile.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends MediaFileCreateManyAndReturnArgs>(args?: SelectSubset<T, MediaFileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a MediaFile.
-     * @param {MediaFileDeleteArgs} args - Arguments to delete one MediaFile.
-     * @example
-     * // Delete one MediaFile
-     * const MediaFile = await prisma.mediaFile.delete({
-     *   where: {
-     *     // ... filter to delete one MediaFile
-     *   }
-     * })
-     * 
-     */
-    delete<T extends MediaFileDeleteArgs>(args: SelectSubset<T, MediaFileDeleteArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one MediaFile.
-     * @param {MediaFileUpdateArgs} args - Arguments to update one MediaFile.
-     * @example
-     * // Update one MediaFile
-     * const mediaFile = await prisma.mediaFile.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends MediaFileUpdateArgs>(args: SelectSubset<T, MediaFileUpdateArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more MediaFiles.
-     * @param {MediaFileDeleteManyArgs} args - Arguments to filter MediaFiles to delete.
-     * @example
-     * // Delete a few MediaFiles
-     * const { count } = await prisma.mediaFile.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends MediaFileDeleteManyArgs>(args?: SelectSubset<T, MediaFileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MediaFiles.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many MediaFiles
-     * const mediaFile = await prisma.mediaFile.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends MediaFileUpdateManyArgs>(args: SelectSubset<T, MediaFileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one MediaFile.
-     * @param {MediaFileUpsertArgs} args - Arguments to update or create a MediaFile.
-     * @example
-     * // Update or create a MediaFile
-     * const mediaFile = await prisma.mediaFile.upsert({
-     *   create: {
-     *     // ... data to create a MediaFile
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the MediaFile we want to update
-     *   }
-     * })
-     */
-    upsert<T extends MediaFileUpsertArgs>(args: SelectSubset<T, MediaFileUpsertArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of MediaFiles.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileCountArgs} args - Arguments to filter MediaFiles to count.
-     * @example
-     * // Count the number of MediaFiles
-     * const count = await prisma.mediaFile.count({
-     *   where: {
-     *     // ... the filter for the MediaFiles we want to count
-     *   }
-     * })
-    **/
-    count<T extends MediaFileCountArgs>(
-      args?: Subset<T, MediaFileCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], MediaFileCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a MediaFile.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends MediaFileAggregateArgs>(args: Subset<T, MediaFileAggregateArgs>): Prisma.PrismaPromise<GetMediaFileAggregateType<T>>
-
-    /**
-     * Group by MediaFile.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MediaFileGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends MediaFileGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: MediaFileGroupByArgs['orderBy'] }
-        : { orderBy?: MediaFileGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, MediaFileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMediaFileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the MediaFile model
-   */
-  readonly fields: MediaFileFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for MediaFile.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__MediaFileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    uploadedBy<T extends MediaFile$uploadedByArgs<ExtArgs> = {}>(args?: Subset<T, MediaFile$uploadedByArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the MediaFile model
-   */ 
-  interface MediaFileFieldRefs {
-    readonly id: FieldRef<"MediaFile", 'String'>
-    readonly filename: FieldRef<"MediaFile", 'String'>
-    readonly url: FieldRef<"MediaFile", 'String'>
-    readonly size: FieldRef<"MediaFile", 'Int'>
-    readonly mimetype: FieldRef<"MediaFile", 'String'>
-    readonly uploadedById: FieldRef<"MediaFile", 'String'>
-    readonly createdAt: FieldRef<"MediaFile", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * MediaFile findUnique
-   */
-  export type MediaFileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * Filter, which MediaFile to fetch.
-     */
-    where: MediaFileWhereUniqueInput
-  }
-
-  /**
-   * MediaFile findUniqueOrThrow
-   */
-  export type MediaFileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * Filter, which MediaFile to fetch.
-     */
-    where: MediaFileWhereUniqueInput
-  }
-
-  /**
-   * MediaFile findFirst
-   */
-  export type MediaFileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * Filter, which MediaFile to fetch.
-     */
-    where?: MediaFileWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MediaFiles to fetch.
-     */
-    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MediaFiles.
-     */
-    cursor?: MediaFileWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MediaFiles from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MediaFiles.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MediaFiles.
-     */
-    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
-  }
-
-  /**
-   * MediaFile findFirstOrThrow
-   */
-  export type MediaFileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * Filter, which MediaFile to fetch.
-     */
-    where?: MediaFileWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MediaFiles to fetch.
-     */
-    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MediaFiles.
-     */
-    cursor?: MediaFileWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MediaFiles from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MediaFiles.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MediaFiles.
-     */
-    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
-  }
-
-  /**
-   * MediaFile findMany
-   */
-  export type MediaFileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * Filter, which MediaFiles to fetch.
-     */
-    where?: MediaFileWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MediaFiles to fetch.
-     */
-    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing MediaFiles.
-     */
-    cursor?: MediaFileWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MediaFiles from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MediaFiles.
-     */
-    skip?: number
-    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
-  }
-
-  /**
-   * MediaFile create
-   */
-  export type MediaFileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * The data needed to create a MediaFile.
-     */
-    data: XOR<MediaFileCreateInput, MediaFileUncheckedCreateInput>
-  }
-
-  /**
-   * MediaFile createMany
-   */
-  export type MediaFileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many MediaFiles.
-     */
-    data: MediaFileCreateManyInput | MediaFileCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * MediaFile createManyAndReturn
-   */
-  export type MediaFileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many MediaFiles.
-     */
-    data: MediaFileCreateManyInput | MediaFileCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MediaFile update
-   */
-  export type MediaFileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * The data needed to update a MediaFile.
-     */
-    data: XOR<MediaFileUpdateInput, MediaFileUncheckedUpdateInput>
-    /**
-     * Choose, which MediaFile to update.
-     */
-    where: MediaFileWhereUniqueInput
-  }
-
-  /**
-   * MediaFile updateMany
-   */
-  export type MediaFileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update MediaFiles.
-     */
-    data: XOR<MediaFileUpdateManyMutationInput, MediaFileUncheckedUpdateManyInput>
-    /**
-     * Filter which MediaFiles to update
-     */
-    where?: MediaFileWhereInput
-  }
-
-  /**
-   * MediaFile upsert
-   */
-  export type MediaFileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * The filter to search for the MediaFile to update in case it exists.
-     */
-    where: MediaFileWhereUniqueInput
-    /**
-     * In case the MediaFile found by the `where` argument doesn't exist, create a new MediaFile with this data.
-     */
-    create: XOR<MediaFileCreateInput, MediaFileUncheckedCreateInput>
-    /**
-     * In case the MediaFile was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<MediaFileUpdateInput, MediaFileUncheckedUpdateInput>
-  }
-
-  /**
-   * MediaFile delete
-   */
-  export type MediaFileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-    /**
-     * Filter which MediaFile to delete.
-     */
-    where: MediaFileWhereUniqueInput
-  }
-
-  /**
-   * MediaFile deleteMany
-   */
-  export type MediaFileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MediaFiles to delete
-     */
-    where?: MediaFileWhereInput
-  }
-
-  /**
-   * MediaFile.uploadedBy
-   */
-  export type MediaFile$uploadedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Personnel
-     */
-    select?: PersonnelSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PersonnelInclude<ExtArgs> | null
-    where?: PersonnelWhereInput
-  }
-
-  /**
-   * MediaFile without action
-   */
-  export type MediaFileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MediaFile
-     */
-    select?: MediaFileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MediaFileInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -22841,6 +22841,51 @@ export namespace Prisma {
   export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
 
 
+  export const InspectionScalarFieldEnum: {
+    id: 'id',
+    page: 'page',
+    url: 'url',
+    scanMode: 'scanMode',
+    userId: 'userId',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt',
+    durationMs: 'durationMs',
+    status: 'status',
+    overallResult: 'overallResult',
+    criticalCount: 'criticalCount',
+    highCount: 'highCount',
+    mediumCount: 'mediumCount',
+    lowCount: 'lowCount',
+    infoCount: 'infoCount',
+    totalFindings: 'totalFindings',
+    createdAt: 'createdAt'
+  };
+
+  export type InspectionScalarFieldEnum = (typeof InspectionScalarFieldEnum)[keyof typeof InspectionScalarFieldEnum]
+
+
+  export const InspectionFindingScalarFieldEnum: {
+    id: 'id',
+    inspectionId: 'inspectionId',
+    findingCode: 'findingCode',
+    category: 'category',
+    severity: 'severity',
+    title: 'title',
+    description: 'description',
+    expected: 'expected',
+    actual: 'actual',
+    element: 'element',
+    selector: 'selector',
+    recommendation: 'recommendation',
+    status: 'status',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InspectionFindingScalarFieldEnum = (typeof InspectionFindingScalarFieldEnum)[keyof typeof InspectionFindingScalarFieldEnum]
+
+
   export const LeaveRecordScalarFieldEnum: {
     id: 'id',
     personnelId: 'personnelId',
@@ -22915,88 +22960,6 @@ export namespace Prisma {
   };
 
   export type NotificationReadScalarFieldEnum = (typeof NotificationReadScalarFieldEnum)[keyof typeof NotificationReadScalarFieldEnum]
-
-
-  export const PersonnelScalarFieldEnum: {
-    id: 'id',
-    badgeNo: 'badgeNo',
-    username: 'username',
-    password: 'password',
-    role: 'role',
-    prefix: 'prefix',
-    firstName: 'firstName',
-    lastName: 'lastName',
-    position: 'position',
-    department: 'department',
-    subDepartment: 'subDepartment',
-    personnelType: 'personnelType',
-    phone: 'phone',
-    mobile: 'mobile',
-    email: 'email',
-    status: 'status',
-    avatarColor: 'avatarColor',
-    skills: 'skills',
-    education: 'education',
-    experience: 'experience',
-    notes: 'notes',
-    citizenId: 'citizenId',
-    dateOfBirth: 'dateOfBirth',
-    bloodType: 'bloodType',
-    religion: 'religion',
-    officialId: 'officialId',
-    militaryBranch: 'militaryBranch',
-    commissionDate: 'commissionDate',
-    currentAddress: 'currentAddress',
-    currentTambon: 'currentTambon',
-    currentAmphoe: 'currentAmphoe',
-    currentProvince: 'currentProvince',
-    currentZipcode: 'currentZipcode',
-    emergencyContactName: 'emergencyContactName',
-    emergencyContactPhone: 'emergencyContactPhone',
-    emergencyContactRelation: 'emergencyContactRelation',
-    royalDecorations: 'royalDecorations',
-    trainingHistory: 'trainingHistory',
-    coverPhoto: 'coverPhoto',
-    profileTheme: 'profileTheme',
-    mustChangePassword: 'mustChangePassword',
-    failedLoginAttempts: 'failedLoginAttempts',
-    lockedUntil: 'lockedUntil',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type PersonnelScalarFieldEnum = (typeof PersonnelScalarFieldEnum)[keyof typeof PersonnelScalarFieldEnum]
-
-
-  export const DepartmentScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    shortName: 'shortName',
-    subDepartments: 'subDepartments',
-    sortOrder: 'sortOrder',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
-
-
-  export const PersonnelDocumentScalarFieldEnum: {
-    id: 'id',
-    personnelId: 'personnelId',
-    category: 'category',
-    filename: 'filename',
-    mimeType: 'mimeType',
-    size: 'size',
-    storagePath: 'storagePath',
-    uploadedBy: 'uploadedBy',
-    notes: 'notes',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    expiresAt: 'expiresAt'
-  };
-
-  export type PersonnelDocumentScalarFieldEnum = (typeof PersonnelDocumentScalarFieldEnum)[keyof typeof PersonnelDocumentScalarFieldEnum]
 
 
   export const Rpb1RecordScalarFieldEnum: {
@@ -23163,51 +23126,6 @@ export namespace Prisma {
   export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
 
 
-  export const InspectionScalarFieldEnum: {
-    id: 'id',
-    page: 'page',
-    url: 'url',
-    scanMode: 'scanMode',
-    userId: 'userId',
-    startedAt: 'startedAt',
-    completedAt: 'completedAt',
-    durationMs: 'durationMs',
-    status: 'status',
-    overallResult: 'overallResult',
-    criticalCount: 'criticalCount',
-    highCount: 'highCount',
-    mediumCount: 'mediumCount',
-    lowCount: 'lowCount',
-    infoCount: 'infoCount',
-    totalFindings: 'totalFindings',
-    createdAt: 'createdAt'
-  };
-
-  export type InspectionScalarFieldEnum = (typeof InspectionScalarFieldEnum)[keyof typeof InspectionScalarFieldEnum]
-
-
-  export const InspectionFindingScalarFieldEnum: {
-    id: 'id',
-    inspectionId: 'inspectionId',
-    findingCode: 'findingCode',
-    category: 'category',
-    severity: 'severity',
-    title: 'title',
-    description: 'description',
-    expected: 'expected',
-    actual: 'actual',
-    element: 'element',
-    selector: 'selector',
-    recommendation: 'recommendation',
-    status: 'status',
-    notes: 'notes',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type InspectionFindingScalarFieldEnum = (typeof InspectionFindingScalarFieldEnum)[keyof typeof InspectionFindingScalarFieldEnum]
-
-
   export const MediaFileScalarFieldEnum: {
     id: 'id',
     filename: 'filename',
@@ -23219,6 +23137,88 @@ export namespace Prisma {
   };
 
   export type MediaFileScalarFieldEnum = (typeof MediaFileScalarFieldEnum)[keyof typeof MediaFileScalarFieldEnum]
+
+
+  export const PersonnelScalarFieldEnum: {
+    id: 'id',
+    badgeNo: 'badgeNo',
+    username: 'username',
+    password: 'password',
+    role: 'role',
+    prefix: 'prefix',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    position: 'position',
+    department: 'department',
+    subDepartment: 'subDepartment',
+    personnelType: 'personnelType',
+    phone: 'phone',
+    mobile: 'mobile',
+    email: 'email',
+    status: 'status',
+    avatarColor: 'avatarColor',
+    skills: 'skills',
+    education: 'education',
+    experience: 'experience',
+    notes: 'notes',
+    citizenId: 'citizenId',
+    dateOfBirth: 'dateOfBirth',
+    bloodType: 'bloodType',
+    religion: 'religion',
+    officialId: 'officialId',
+    militaryBranch: 'militaryBranch',
+    commissionDate: 'commissionDate',
+    currentAddress: 'currentAddress',
+    currentTambon: 'currentTambon',
+    currentAmphoe: 'currentAmphoe',
+    currentProvince: 'currentProvince',
+    currentZipcode: 'currentZipcode',
+    emergencyContactName: 'emergencyContactName',
+    emergencyContactPhone: 'emergencyContactPhone',
+    emergencyContactRelation: 'emergencyContactRelation',
+    royalDecorations: 'royalDecorations',
+    trainingHistory: 'trainingHistory',
+    coverPhoto: 'coverPhoto',
+    profileTheme: 'profileTheme',
+    mustChangePassword: 'mustChangePassword',
+    failedLoginAttempts: 'failedLoginAttempts',
+    lockedUntil: 'lockedUntil',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PersonnelScalarFieldEnum = (typeof PersonnelScalarFieldEnum)[keyof typeof PersonnelScalarFieldEnum]
+
+
+  export const DepartmentScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    shortName: 'shortName',
+    subDepartments: 'subDepartments',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
+
+
+  export const PersonnelDocumentScalarFieldEnum: {
+    id: 'id',
+    personnelId: 'personnelId',
+    category: 'category',
+    filename: 'filename',
+    mimeType: 'mimeType',
+    size: 'size',
+    storagePath: 'storagePath',
+    uploadedBy: 'uploadedBy',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type PersonnelDocumentScalarFieldEnum = (typeof PersonnelDocumentScalarFieldEnum)[keyof typeof PersonnelDocumentScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -23286,20 +23286,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -23310,6 +23296,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -23682,6 +23682,236 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ContactMessage"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ContactMessage"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ContactMessage"> | Date | string
+  }
+
+  export type InspectionWhereInput = {
+    AND?: InspectionWhereInput | InspectionWhereInput[]
+    OR?: InspectionWhereInput[]
+    NOT?: InspectionWhereInput | InspectionWhereInput[]
+    id?: StringFilter<"Inspection"> | string
+    page?: StringFilter<"Inspection"> | string
+    url?: StringFilter<"Inspection"> | string
+    scanMode?: StringFilter<"Inspection"> | string
+    userId?: StringFilter<"Inspection"> | string
+    startedAt?: DateTimeFilter<"Inspection"> | Date | string
+    completedAt?: DateTimeFilter<"Inspection"> | Date | string
+    durationMs?: IntFilter<"Inspection"> | number
+    status?: StringFilter<"Inspection"> | string
+    overallResult?: StringFilter<"Inspection"> | string
+    criticalCount?: IntFilter<"Inspection"> | number
+    highCount?: IntFilter<"Inspection"> | number
+    mediumCount?: IntFilter<"Inspection"> | number
+    lowCount?: IntFilter<"Inspection"> | number
+    infoCount?: IntFilter<"Inspection"> | number
+    totalFindings?: IntFilter<"Inspection"> | number
+    createdAt?: DateTimeFilter<"Inspection"> | Date | string
+    user?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
+    findings?: InspectionFindingListRelationFilter
+  }
+
+  export type InspectionOrderByWithRelationInput = {
+    id?: SortOrder
+    page?: SortOrder
+    url?: SortOrder
+    scanMode?: SortOrder
+    userId?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    durationMs?: SortOrder
+    status?: SortOrder
+    overallResult?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+    createdAt?: SortOrder
+    user?: PersonnelOrderByWithRelationInput
+    findings?: InspectionFindingOrderByRelationAggregateInput
+  }
+
+  export type InspectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InspectionWhereInput | InspectionWhereInput[]
+    OR?: InspectionWhereInput[]
+    NOT?: InspectionWhereInput | InspectionWhereInput[]
+    page?: StringFilter<"Inspection"> | string
+    url?: StringFilter<"Inspection"> | string
+    scanMode?: StringFilter<"Inspection"> | string
+    userId?: StringFilter<"Inspection"> | string
+    startedAt?: DateTimeFilter<"Inspection"> | Date | string
+    completedAt?: DateTimeFilter<"Inspection"> | Date | string
+    durationMs?: IntFilter<"Inspection"> | number
+    status?: StringFilter<"Inspection"> | string
+    overallResult?: StringFilter<"Inspection"> | string
+    criticalCount?: IntFilter<"Inspection"> | number
+    highCount?: IntFilter<"Inspection"> | number
+    mediumCount?: IntFilter<"Inspection"> | number
+    lowCount?: IntFilter<"Inspection"> | number
+    infoCount?: IntFilter<"Inspection"> | number
+    totalFindings?: IntFilter<"Inspection"> | number
+    createdAt?: DateTimeFilter<"Inspection"> | Date | string
+    user?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
+    findings?: InspectionFindingListRelationFilter
+  }, "id">
+
+  export type InspectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    page?: SortOrder
+    url?: SortOrder
+    scanMode?: SortOrder
+    userId?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    durationMs?: SortOrder
+    status?: SortOrder
+    overallResult?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+    createdAt?: SortOrder
+    _count?: InspectionCountOrderByAggregateInput
+    _avg?: InspectionAvgOrderByAggregateInput
+    _max?: InspectionMaxOrderByAggregateInput
+    _min?: InspectionMinOrderByAggregateInput
+    _sum?: InspectionSumOrderByAggregateInput
+  }
+
+  export type InspectionScalarWhereWithAggregatesInput = {
+    AND?: InspectionScalarWhereWithAggregatesInput | InspectionScalarWhereWithAggregatesInput[]
+    OR?: InspectionScalarWhereWithAggregatesInput[]
+    NOT?: InspectionScalarWhereWithAggregatesInput | InspectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Inspection"> | string
+    page?: StringWithAggregatesFilter<"Inspection"> | string
+    url?: StringWithAggregatesFilter<"Inspection"> | string
+    scanMode?: StringWithAggregatesFilter<"Inspection"> | string
+    userId?: StringWithAggregatesFilter<"Inspection"> | string
+    startedAt?: DateTimeWithAggregatesFilter<"Inspection"> | Date | string
+    completedAt?: DateTimeWithAggregatesFilter<"Inspection"> | Date | string
+    durationMs?: IntWithAggregatesFilter<"Inspection"> | number
+    status?: StringWithAggregatesFilter<"Inspection"> | string
+    overallResult?: StringWithAggregatesFilter<"Inspection"> | string
+    criticalCount?: IntWithAggregatesFilter<"Inspection"> | number
+    highCount?: IntWithAggregatesFilter<"Inspection"> | number
+    mediumCount?: IntWithAggregatesFilter<"Inspection"> | number
+    lowCount?: IntWithAggregatesFilter<"Inspection"> | number
+    infoCount?: IntWithAggregatesFilter<"Inspection"> | number
+    totalFindings?: IntWithAggregatesFilter<"Inspection"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Inspection"> | Date | string
+  }
+
+  export type InspectionFindingWhereInput = {
+    AND?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
+    OR?: InspectionFindingWhereInput[]
+    NOT?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
+    id?: StringFilter<"InspectionFinding"> | string
+    inspectionId?: StringFilter<"InspectionFinding"> | string
+    findingCode?: StringFilter<"InspectionFinding"> | string
+    category?: StringFilter<"InspectionFinding"> | string
+    severity?: StringFilter<"InspectionFinding"> | string
+    title?: StringFilter<"InspectionFinding"> | string
+    description?: StringFilter<"InspectionFinding"> | string
+    expected?: StringNullableFilter<"InspectionFinding"> | string | null
+    actual?: StringNullableFilter<"InspectionFinding"> | string | null
+    element?: StringNullableFilter<"InspectionFinding"> | string | null
+    selector?: StringNullableFilter<"InspectionFinding"> | string | null
+    recommendation?: StringFilter<"InspectionFinding"> | string
+    status?: StringFilter<"InspectionFinding"> | string
+    notes?: StringNullableFilter<"InspectionFinding"> | string | null
+    createdAt?: DateTimeFilter<"InspectionFinding"> | Date | string
+    updatedAt?: DateTimeFilter<"InspectionFinding"> | Date | string
+    inspection?: XOR<InspectionRelationFilter, InspectionWhereInput>
+  }
+
+  export type InspectionFindingOrderByWithRelationInput = {
+    id?: SortOrder
+    inspectionId?: SortOrder
+    findingCode?: SortOrder
+    category?: SortOrder
+    severity?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    expected?: SortOrderInput | SortOrder
+    actual?: SortOrderInput | SortOrder
+    element?: SortOrderInput | SortOrder
+    selector?: SortOrderInput | SortOrder
+    recommendation?: SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    inspection?: InspectionOrderByWithRelationInput
+  }
+
+  export type InspectionFindingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
+    OR?: InspectionFindingWhereInput[]
+    NOT?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
+    inspectionId?: StringFilter<"InspectionFinding"> | string
+    findingCode?: StringFilter<"InspectionFinding"> | string
+    category?: StringFilter<"InspectionFinding"> | string
+    severity?: StringFilter<"InspectionFinding"> | string
+    title?: StringFilter<"InspectionFinding"> | string
+    description?: StringFilter<"InspectionFinding"> | string
+    expected?: StringNullableFilter<"InspectionFinding"> | string | null
+    actual?: StringNullableFilter<"InspectionFinding"> | string | null
+    element?: StringNullableFilter<"InspectionFinding"> | string | null
+    selector?: StringNullableFilter<"InspectionFinding"> | string | null
+    recommendation?: StringFilter<"InspectionFinding"> | string
+    status?: StringFilter<"InspectionFinding"> | string
+    notes?: StringNullableFilter<"InspectionFinding"> | string | null
+    createdAt?: DateTimeFilter<"InspectionFinding"> | Date | string
+    updatedAt?: DateTimeFilter<"InspectionFinding"> | Date | string
+    inspection?: XOR<InspectionRelationFilter, InspectionWhereInput>
+  }, "id">
+
+  export type InspectionFindingOrderByWithAggregationInput = {
+    id?: SortOrder
+    inspectionId?: SortOrder
+    findingCode?: SortOrder
+    category?: SortOrder
+    severity?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    expected?: SortOrderInput | SortOrder
+    actual?: SortOrderInput | SortOrder
+    element?: SortOrderInput | SortOrder
+    selector?: SortOrderInput | SortOrder
+    recommendation?: SortOrder
+    status?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InspectionFindingCountOrderByAggregateInput
+    _max?: InspectionFindingMaxOrderByAggregateInput
+    _min?: InspectionFindingMinOrderByAggregateInput
+  }
+
+  export type InspectionFindingScalarWhereWithAggregatesInput = {
+    AND?: InspectionFindingScalarWhereWithAggregatesInput | InspectionFindingScalarWhereWithAggregatesInput[]
+    OR?: InspectionFindingScalarWhereWithAggregatesInput[]
+    NOT?: InspectionFindingScalarWhereWithAggregatesInput | InspectionFindingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    inspectionId?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    findingCode?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    category?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    severity?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    title?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    description?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    expected?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
+    actual?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
+    element?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
+    selector?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
+    recommendation?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    status?: StringWithAggregatesFilter<"InspectionFinding"> | string
+    notes?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InspectionFinding"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InspectionFinding"> | Date | string
   }
 
   export type LeaveRecordWhereInput = {
@@ -24074,449 +24304,6 @@ export namespace Prisma {
     notificationId?: StringWithAggregatesFilter<"NotificationRead"> | string
     personnelId?: StringWithAggregatesFilter<"NotificationRead"> | string
     readAt?: DateTimeWithAggregatesFilter<"NotificationRead"> | Date | string
-  }
-
-  export type PersonnelWhereInput = {
-    AND?: PersonnelWhereInput | PersonnelWhereInput[]
-    OR?: PersonnelWhereInput[]
-    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
-    id?: StringFilter<"Personnel"> | string
-    badgeNo?: StringFilter<"Personnel"> | string
-    username?: StringFilter<"Personnel"> | string
-    password?: StringFilter<"Personnel"> | string
-    role?: StringFilter<"Personnel"> | string
-    prefix?: StringFilter<"Personnel"> | string
-    firstName?: StringFilter<"Personnel"> | string
-    lastName?: StringFilter<"Personnel"> | string
-    position?: StringFilter<"Personnel"> | string
-    department?: StringFilter<"Personnel"> | string
-    subDepartment?: StringFilter<"Personnel"> | string
-    personnelType?: StringFilter<"Personnel"> | string
-    phone?: StringFilter<"Personnel"> | string
-    mobile?: StringFilter<"Personnel"> | string
-    email?: StringFilter<"Personnel"> | string
-    status?: StringFilter<"Personnel"> | string
-    avatarColor?: StringFilter<"Personnel"> | string
-    skills?: StringFilter<"Personnel"> | string
-    education?: StringFilter<"Personnel"> | string
-    experience?: StringFilter<"Personnel"> | string
-    notes?: StringNullableFilter<"Personnel"> | string | null
-    citizenId?: StringFilter<"Personnel"> | string
-    dateOfBirth?: StringFilter<"Personnel"> | string
-    bloodType?: StringFilter<"Personnel"> | string
-    religion?: StringFilter<"Personnel"> | string
-    officialId?: StringFilter<"Personnel"> | string
-    militaryBranch?: StringFilter<"Personnel"> | string
-    commissionDate?: StringFilter<"Personnel"> | string
-    currentAddress?: StringFilter<"Personnel"> | string
-    currentTambon?: StringFilter<"Personnel"> | string
-    currentAmphoe?: StringFilter<"Personnel"> | string
-    currentProvince?: StringFilter<"Personnel"> | string
-    currentZipcode?: StringFilter<"Personnel"> | string
-    emergencyContactName?: StringFilter<"Personnel"> | string
-    emergencyContactPhone?: StringFilter<"Personnel"> | string
-    emergencyContactRelation?: StringFilter<"Personnel"> | string
-    royalDecorations?: StringFilter<"Personnel"> | string
-    trainingHistory?: StringFilter<"Personnel"> | string
-    coverPhoto?: StringFilter<"Personnel"> | string
-    profileTheme?: StringFilter<"Personnel"> | string
-    mustChangePassword?: BoolFilter<"Personnel"> | boolean
-    failedLoginAttempts?: IntFilter<"Personnel"> | number
-    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
-    createdAt?: DateTimeFilter<"Personnel"> | Date | string
-    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
-    leaves?: LeaveRecordListRelationFilter
-    approvedLeaves?: LeaveRecordListRelationFilter
-    notifications?: NotificationListRelationFilter
-    notificationReads?: NotificationReadListRelationFilter
-    posts?: PostListRelationFilter
-    auditLogs?: AuditLogListRelationFilter
-    mediaFiles?: MediaFileListRelationFilter
-    passwordResetTokens?: PasswordResetTokenListRelationFilter
-    documents?: PersonnelDocumentListRelationFilter
-    inspections?: InspectionListRelationFilter
-    rpb1Records?: Rpb1RecordListRelationFilter
-  }
-
-  export type PersonnelOrderByWithRelationInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    leaves?: LeaveRecordOrderByRelationAggregateInput
-    approvedLeaves?: LeaveRecordOrderByRelationAggregateInput
-    notifications?: NotificationOrderByRelationAggregateInput
-    notificationReads?: NotificationReadOrderByRelationAggregateInput
-    posts?: PostOrderByRelationAggregateInput
-    auditLogs?: AuditLogOrderByRelationAggregateInput
-    mediaFiles?: MediaFileOrderByRelationAggregateInput
-    passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
-    documents?: PersonnelDocumentOrderByRelationAggregateInput
-    inspections?: InspectionOrderByRelationAggregateInput
-    rpb1Records?: Rpb1RecordOrderByRelationAggregateInput
-  }
-
-  export type PersonnelWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    badgeNo?: string
-    username?: string
-    AND?: PersonnelWhereInput | PersonnelWhereInput[]
-    OR?: PersonnelWhereInput[]
-    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
-    password?: StringFilter<"Personnel"> | string
-    role?: StringFilter<"Personnel"> | string
-    prefix?: StringFilter<"Personnel"> | string
-    firstName?: StringFilter<"Personnel"> | string
-    lastName?: StringFilter<"Personnel"> | string
-    position?: StringFilter<"Personnel"> | string
-    department?: StringFilter<"Personnel"> | string
-    subDepartment?: StringFilter<"Personnel"> | string
-    personnelType?: StringFilter<"Personnel"> | string
-    phone?: StringFilter<"Personnel"> | string
-    mobile?: StringFilter<"Personnel"> | string
-    email?: StringFilter<"Personnel"> | string
-    status?: StringFilter<"Personnel"> | string
-    avatarColor?: StringFilter<"Personnel"> | string
-    skills?: StringFilter<"Personnel"> | string
-    education?: StringFilter<"Personnel"> | string
-    experience?: StringFilter<"Personnel"> | string
-    notes?: StringNullableFilter<"Personnel"> | string | null
-    citizenId?: StringFilter<"Personnel"> | string
-    dateOfBirth?: StringFilter<"Personnel"> | string
-    bloodType?: StringFilter<"Personnel"> | string
-    religion?: StringFilter<"Personnel"> | string
-    officialId?: StringFilter<"Personnel"> | string
-    militaryBranch?: StringFilter<"Personnel"> | string
-    commissionDate?: StringFilter<"Personnel"> | string
-    currentAddress?: StringFilter<"Personnel"> | string
-    currentTambon?: StringFilter<"Personnel"> | string
-    currentAmphoe?: StringFilter<"Personnel"> | string
-    currentProvince?: StringFilter<"Personnel"> | string
-    currentZipcode?: StringFilter<"Personnel"> | string
-    emergencyContactName?: StringFilter<"Personnel"> | string
-    emergencyContactPhone?: StringFilter<"Personnel"> | string
-    emergencyContactRelation?: StringFilter<"Personnel"> | string
-    royalDecorations?: StringFilter<"Personnel"> | string
-    trainingHistory?: StringFilter<"Personnel"> | string
-    coverPhoto?: StringFilter<"Personnel"> | string
-    profileTheme?: StringFilter<"Personnel"> | string
-    mustChangePassword?: BoolFilter<"Personnel"> | boolean
-    failedLoginAttempts?: IntFilter<"Personnel"> | number
-    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
-    createdAt?: DateTimeFilter<"Personnel"> | Date | string
-    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
-    leaves?: LeaveRecordListRelationFilter
-    approvedLeaves?: LeaveRecordListRelationFilter
-    notifications?: NotificationListRelationFilter
-    notificationReads?: NotificationReadListRelationFilter
-    posts?: PostListRelationFilter
-    auditLogs?: AuditLogListRelationFilter
-    mediaFiles?: MediaFileListRelationFilter
-    passwordResetTokens?: PasswordResetTokenListRelationFilter
-    documents?: PersonnelDocumentListRelationFilter
-    inspections?: InspectionListRelationFilter
-    rpb1Records?: Rpb1RecordListRelationFilter
-  }, "id" | "badgeNo" | "username">
-
-  export type PersonnelOrderByWithAggregationInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: PersonnelCountOrderByAggregateInput
-    _avg?: PersonnelAvgOrderByAggregateInput
-    _max?: PersonnelMaxOrderByAggregateInput
-    _min?: PersonnelMinOrderByAggregateInput
-    _sum?: PersonnelSumOrderByAggregateInput
-  }
-
-  export type PersonnelScalarWhereWithAggregatesInput = {
-    AND?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
-    OR?: PersonnelScalarWhereWithAggregatesInput[]
-    NOT?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Personnel"> | string
-    badgeNo?: StringWithAggregatesFilter<"Personnel"> | string
-    username?: StringWithAggregatesFilter<"Personnel"> | string
-    password?: StringWithAggregatesFilter<"Personnel"> | string
-    role?: StringWithAggregatesFilter<"Personnel"> | string
-    prefix?: StringWithAggregatesFilter<"Personnel"> | string
-    firstName?: StringWithAggregatesFilter<"Personnel"> | string
-    lastName?: StringWithAggregatesFilter<"Personnel"> | string
-    position?: StringWithAggregatesFilter<"Personnel"> | string
-    department?: StringWithAggregatesFilter<"Personnel"> | string
-    subDepartment?: StringWithAggregatesFilter<"Personnel"> | string
-    personnelType?: StringWithAggregatesFilter<"Personnel"> | string
-    phone?: StringWithAggregatesFilter<"Personnel"> | string
-    mobile?: StringWithAggregatesFilter<"Personnel"> | string
-    email?: StringWithAggregatesFilter<"Personnel"> | string
-    status?: StringWithAggregatesFilter<"Personnel"> | string
-    avatarColor?: StringWithAggregatesFilter<"Personnel"> | string
-    skills?: StringWithAggregatesFilter<"Personnel"> | string
-    education?: StringWithAggregatesFilter<"Personnel"> | string
-    experience?: StringWithAggregatesFilter<"Personnel"> | string
-    notes?: StringNullableWithAggregatesFilter<"Personnel"> | string | null
-    citizenId?: StringWithAggregatesFilter<"Personnel"> | string
-    dateOfBirth?: StringWithAggregatesFilter<"Personnel"> | string
-    bloodType?: StringWithAggregatesFilter<"Personnel"> | string
-    religion?: StringWithAggregatesFilter<"Personnel"> | string
-    officialId?: StringWithAggregatesFilter<"Personnel"> | string
-    militaryBranch?: StringWithAggregatesFilter<"Personnel"> | string
-    commissionDate?: StringWithAggregatesFilter<"Personnel"> | string
-    currentAddress?: StringWithAggregatesFilter<"Personnel"> | string
-    currentTambon?: StringWithAggregatesFilter<"Personnel"> | string
-    currentAmphoe?: StringWithAggregatesFilter<"Personnel"> | string
-    currentProvince?: StringWithAggregatesFilter<"Personnel"> | string
-    currentZipcode?: StringWithAggregatesFilter<"Personnel"> | string
-    emergencyContactName?: StringWithAggregatesFilter<"Personnel"> | string
-    emergencyContactPhone?: StringWithAggregatesFilter<"Personnel"> | string
-    emergencyContactRelation?: StringWithAggregatesFilter<"Personnel"> | string
-    royalDecorations?: StringWithAggregatesFilter<"Personnel"> | string
-    trainingHistory?: StringWithAggregatesFilter<"Personnel"> | string
-    coverPhoto?: StringWithAggregatesFilter<"Personnel"> | string
-    profileTheme?: StringWithAggregatesFilter<"Personnel"> | string
-    mustChangePassword?: BoolWithAggregatesFilter<"Personnel"> | boolean
-    failedLoginAttempts?: IntWithAggregatesFilter<"Personnel"> | number
-    lockedUntil?: DateTimeNullableWithAggregatesFilter<"Personnel"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
-  }
-
-  export type DepartmentWhereInput = {
-    AND?: DepartmentWhereInput | DepartmentWhereInput[]
-    OR?: DepartmentWhereInput[]
-    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
-    id?: StringFilter<"Department"> | string
-    name?: StringFilter<"Department"> | string
-    shortName?: StringNullableFilter<"Department"> | string | null
-    subDepartments?: StringFilter<"Department"> | string
-    sortOrder?: IntFilter<"Department"> | number
-    createdAt?: DateTimeFilter<"Department"> | Date | string
-    updatedAt?: DateTimeFilter<"Department"> | Date | string
-  }
-
-  export type DepartmentOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrderInput | SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    name?: string
-    AND?: DepartmentWhereInput | DepartmentWhereInput[]
-    OR?: DepartmentWhereInput[]
-    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
-    shortName?: StringNullableFilter<"Department"> | string | null
-    subDepartments?: StringFilter<"Department"> | string
-    sortOrder?: IntFilter<"Department"> | number
-    createdAt?: DateTimeFilter<"Department"> | Date | string
-    updatedAt?: DateTimeFilter<"Department"> | Date | string
-  }, "id" | "name">
-
-  export type DepartmentOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrderInput | SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: DepartmentCountOrderByAggregateInput
-    _avg?: DepartmentAvgOrderByAggregateInput
-    _max?: DepartmentMaxOrderByAggregateInput
-    _min?: DepartmentMinOrderByAggregateInput
-    _sum?: DepartmentSumOrderByAggregateInput
-  }
-
-  export type DepartmentScalarWhereWithAggregatesInput = {
-    AND?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
-    OR?: DepartmentScalarWhereWithAggregatesInput[]
-    NOT?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Department"> | string
-    name?: StringWithAggregatesFilter<"Department"> | string
-    shortName?: StringNullableWithAggregatesFilter<"Department"> | string | null
-    subDepartments?: StringWithAggregatesFilter<"Department"> | string
-    sortOrder?: IntWithAggregatesFilter<"Department"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
-  }
-
-  export type PersonnelDocumentWhereInput = {
-    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    OR?: PersonnelDocumentWhereInput[]
-    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    id?: StringFilter<"PersonnelDocument"> | string
-    personnelId?: StringFilter<"PersonnelDocument"> | string
-    category?: StringFilter<"PersonnelDocument"> | string
-    filename?: StringFilter<"PersonnelDocument"> | string
-    mimeType?: StringFilter<"PersonnelDocument"> | string
-    size?: IntFilter<"PersonnelDocument"> | number
-    storagePath?: StringFilter<"PersonnelDocument"> | string
-    uploadedBy?: StringFilter<"PersonnelDocument"> | string
-    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
-    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
-    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
-  }
-
-  export type PersonnelDocumentOrderByWithRelationInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrderInput | SortOrder
-    personnel?: PersonnelOrderByWithRelationInput
-  }
-
-  export type PersonnelDocumentWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    OR?: PersonnelDocumentWhereInput[]
-    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    personnelId?: StringFilter<"PersonnelDocument"> | string
-    category?: StringFilter<"PersonnelDocument"> | string
-    filename?: StringFilter<"PersonnelDocument"> | string
-    mimeType?: StringFilter<"PersonnelDocument"> | string
-    size?: IntFilter<"PersonnelDocument"> | number
-    storagePath?: StringFilter<"PersonnelDocument"> | string
-    uploadedBy?: StringFilter<"PersonnelDocument"> | string
-    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
-    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
-    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
-  }, "id">
-
-  export type PersonnelDocumentOrderByWithAggregationInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrderInput | SortOrder
-    _count?: PersonnelDocumentCountOrderByAggregateInput
-    _avg?: PersonnelDocumentAvgOrderByAggregateInput
-    _max?: PersonnelDocumentMaxOrderByAggregateInput
-    _min?: PersonnelDocumentMinOrderByAggregateInput
-    _sum?: PersonnelDocumentSumOrderByAggregateInput
-  }
-
-  export type PersonnelDocumentScalarWhereWithAggregatesInput = {
-    AND?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
-    OR?: PersonnelDocumentScalarWhereWithAggregatesInput[]
-    NOT?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    personnelId?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    category?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    filename?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    mimeType?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    size?: IntWithAggregatesFilter<"PersonnelDocument"> | number
-    storagePath?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    uploadedBy?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    notes?: StringNullableWithAggregatesFilter<"PersonnelDocument"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
-    expiresAt?: DateTimeNullableWithAggregatesFilter<"PersonnelDocument"> | Date | string | null
   }
 
   export type Rpb1RecordWhereInput = {
@@ -25340,236 +25127,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
   }
 
-  export type InspectionWhereInput = {
-    AND?: InspectionWhereInput | InspectionWhereInput[]
-    OR?: InspectionWhereInput[]
-    NOT?: InspectionWhereInput | InspectionWhereInput[]
-    id?: StringFilter<"Inspection"> | string
-    page?: StringFilter<"Inspection"> | string
-    url?: StringFilter<"Inspection"> | string
-    scanMode?: StringFilter<"Inspection"> | string
-    userId?: StringFilter<"Inspection"> | string
-    startedAt?: DateTimeFilter<"Inspection"> | Date | string
-    completedAt?: DateTimeFilter<"Inspection"> | Date | string
-    durationMs?: IntFilter<"Inspection"> | number
-    status?: StringFilter<"Inspection"> | string
-    overallResult?: StringFilter<"Inspection"> | string
-    criticalCount?: IntFilter<"Inspection"> | number
-    highCount?: IntFilter<"Inspection"> | number
-    mediumCount?: IntFilter<"Inspection"> | number
-    lowCount?: IntFilter<"Inspection"> | number
-    infoCount?: IntFilter<"Inspection"> | number
-    totalFindings?: IntFilter<"Inspection"> | number
-    createdAt?: DateTimeFilter<"Inspection"> | Date | string
-    user?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
-    findings?: InspectionFindingListRelationFilter
-  }
-
-  export type InspectionOrderByWithRelationInput = {
-    id?: SortOrder
-    page?: SortOrder
-    url?: SortOrder
-    scanMode?: SortOrder
-    userId?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    durationMs?: SortOrder
-    status?: SortOrder
-    overallResult?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-    createdAt?: SortOrder
-    user?: PersonnelOrderByWithRelationInput
-    findings?: InspectionFindingOrderByRelationAggregateInput
-  }
-
-  export type InspectionWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: InspectionWhereInput | InspectionWhereInput[]
-    OR?: InspectionWhereInput[]
-    NOT?: InspectionWhereInput | InspectionWhereInput[]
-    page?: StringFilter<"Inspection"> | string
-    url?: StringFilter<"Inspection"> | string
-    scanMode?: StringFilter<"Inspection"> | string
-    userId?: StringFilter<"Inspection"> | string
-    startedAt?: DateTimeFilter<"Inspection"> | Date | string
-    completedAt?: DateTimeFilter<"Inspection"> | Date | string
-    durationMs?: IntFilter<"Inspection"> | number
-    status?: StringFilter<"Inspection"> | string
-    overallResult?: StringFilter<"Inspection"> | string
-    criticalCount?: IntFilter<"Inspection"> | number
-    highCount?: IntFilter<"Inspection"> | number
-    mediumCount?: IntFilter<"Inspection"> | number
-    lowCount?: IntFilter<"Inspection"> | number
-    infoCount?: IntFilter<"Inspection"> | number
-    totalFindings?: IntFilter<"Inspection"> | number
-    createdAt?: DateTimeFilter<"Inspection"> | Date | string
-    user?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
-    findings?: InspectionFindingListRelationFilter
-  }, "id">
-
-  export type InspectionOrderByWithAggregationInput = {
-    id?: SortOrder
-    page?: SortOrder
-    url?: SortOrder
-    scanMode?: SortOrder
-    userId?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    durationMs?: SortOrder
-    status?: SortOrder
-    overallResult?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-    createdAt?: SortOrder
-    _count?: InspectionCountOrderByAggregateInput
-    _avg?: InspectionAvgOrderByAggregateInput
-    _max?: InspectionMaxOrderByAggregateInput
-    _min?: InspectionMinOrderByAggregateInput
-    _sum?: InspectionSumOrderByAggregateInput
-  }
-
-  export type InspectionScalarWhereWithAggregatesInput = {
-    AND?: InspectionScalarWhereWithAggregatesInput | InspectionScalarWhereWithAggregatesInput[]
-    OR?: InspectionScalarWhereWithAggregatesInput[]
-    NOT?: InspectionScalarWhereWithAggregatesInput | InspectionScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Inspection"> | string
-    page?: StringWithAggregatesFilter<"Inspection"> | string
-    url?: StringWithAggregatesFilter<"Inspection"> | string
-    scanMode?: StringWithAggregatesFilter<"Inspection"> | string
-    userId?: StringWithAggregatesFilter<"Inspection"> | string
-    startedAt?: DateTimeWithAggregatesFilter<"Inspection"> | Date | string
-    completedAt?: DateTimeWithAggregatesFilter<"Inspection"> | Date | string
-    durationMs?: IntWithAggregatesFilter<"Inspection"> | number
-    status?: StringWithAggregatesFilter<"Inspection"> | string
-    overallResult?: StringWithAggregatesFilter<"Inspection"> | string
-    criticalCount?: IntWithAggregatesFilter<"Inspection"> | number
-    highCount?: IntWithAggregatesFilter<"Inspection"> | number
-    mediumCount?: IntWithAggregatesFilter<"Inspection"> | number
-    lowCount?: IntWithAggregatesFilter<"Inspection"> | number
-    infoCount?: IntWithAggregatesFilter<"Inspection"> | number
-    totalFindings?: IntWithAggregatesFilter<"Inspection"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Inspection"> | Date | string
-  }
-
-  export type InspectionFindingWhereInput = {
-    AND?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
-    OR?: InspectionFindingWhereInput[]
-    NOT?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
-    id?: StringFilter<"InspectionFinding"> | string
-    inspectionId?: StringFilter<"InspectionFinding"> | string
-    findingCode?: StringFilter<"InspectionFinding"> | string
-    category?: StringFilter<"InspectionFinding"> | string
-    severity?: StringFilter<"InspectionFinding"> | string
-    title?: StringFilter<"InspectionFinding"> | string
-    description?: StringFilter<"InspectionFinding"> | string
-    expected?: StringNullableFilter<"InspectionFinding"> | string | null
-    actual?: StringNullableFilter<"InspectionFinding"> | string | null
-    element?: StringNullableFilter<"InspectionFinding"> | string | null
-    selector?: StringNullableFilter<"InspectionFinding"> | string | null
-    recommendation?: StringFilter<"InspectionFinding"> | string
-    status?: StringFilter<"InspectionFinding"> | string
-    notes?: StringNullableFilter<"InspectionFinding"> | string | null
-    createdAt?: DateTimeFilter<"InspectionFinding"> | Date | string
-    updatedAt?: DateTimeFilter<"InspectionFinding"> | Date | string
-    inspection?: XOR<InspectionRelationFilter, InspectionWhereInput>
-  }
-
-  export type InspectionFindingOrderByWithRelationInput = {
-    id?: SortOrder
-    inspectionId?: SortOrder
-    findingCode?: SortOrder
-    category?: SortOrder
-    severity?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    expected?: SortOrderInput | SortOrder
-    actual?: SortOrderInput | SortOrder
-    element?: SortOrderInput | SortOrder
-    selector?: SortOrderInput | SortOrder
-    recommendation?: SortOrder
-    status?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    inspection?: InspectionOrderByWithRelationInput
-  }
-
-  export type InspectionFindingWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
-    OR?: InspectionFindingWhereInput[]
-    NOT?: InspectionFindingWhereInput | InspectionFindingWhereInput[]
-    inspectionId?: StringFilter<"InspectionFinding"> | string
-    findingCode?: StringFilter<"InspectionFinding"> | string
-    category?: StringFilter<"InspectionFinding"> | string
-    severity?: StringFilter<"InspectionFinding"> | string
-    title?: StringFilter<"InspectionFinding"> | string
-    description?: StringFilter<"InspectionFinding"> | string
-    expected?: StringNullableFilter<"InspectionFinding"> | string | null
-    actual?: StringNullableFilter<"InspectionFinding"> | string | null
-    element?: StringNullableFilter<"InspectionFinding"> | string | null
-    selector?: StringNullableFilter<"InspectionFinding"> | string | null
-    recommendation?: StringFilter<"InspectionFinding"> | string
-    status?: StringFilter<"InspectionFinding"> | string
-    notes?: StringNullableFilter<"InspectionFinding"> | string | null
-    createdAt?: DateTimeFilter<"InspectionFinding"> | Date | string
-    updatedAt?: DateTimeFilter<"InspectionFinding"> | Date | string
-    inspection?: XOR<InspectionRelationFilter, InspectionWhereInput>
-  }, "id">
-
-  export type InspectionFindingOrderByWithAggregationInput = {
-    id?: SortOrder
-    inspectionId?: SortOrder
-    findingCode?: SortOrder
-    category?: SortOrder
-    severity?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    expected?: SortOrderInput | SortOrder
-    actual?: SortOrderInput | SortOrder
-    element?: SortOrderInput | SortOrder
-    selector?: SortOrderInput | SortOrder
-    recommendation?: SortOrder
-    status?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: InspectionFindingCountOrderByAggregateInput
-    _max?: InspectionFindingMaxOrderByAggregateInput
-    _min?: InspectionFindingMinOrderByAggregateInput
-  }
-
-  export type InspectionFindingScalarWhereWithAggregatesInput = {
-    AND?: InspectionFindingScalarWhereWithAggregatesInput | InspectionFindingScalarWhereWithAggregatesInput[]
-    OR?: InspectionFindingScalarWhereWithAggregatesInput[]
-    NOT?: InspectionFindingScalarWhereWithAggregatesInput | InspectionFindingScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    inspectionId?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    findingCode?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    category?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    severity?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    title?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    description?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    expected?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
-    actual?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
-    element?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
-    selector?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
-    recommendation?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    status?: StringWithAggregatesFilter<"InspectionFinding"> | string
-    notes?: StringNullableWithAggregatesFilter<"InspectionFinding"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"InspectionFinding"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"InspectionFinding"> | Date | string
-  }
-
   export type MediaFileWhereInput = {
     AND?: MediaFileWhereInput | MediaFileWhereInput[]
     OR?: MediaFileWhereInput[]
@@ -25635,6 +25192,449 @@ export namespace Prisma {
     mimetype?: StringWithAggregatesFilter<"MediaFile"> | string
     uploadedById?: StringNullableWithAggregatesFilter<"MediaFile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MediaFile"> | Date | string
+  }
+
+  export type PersonnelWhereInput = {
+    AND?: PersonnelWhereInput | PersonnelWhereInput[]
+    OR?: PersonnelWhereInput[]
+    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
+    id?: StringFilter<"Personnel"> | string
+    badgeNo?: StringFilter<"Personnel"> | string
+    username?: StringFilter<"Personnel"> | string
+    password?: StringFilter<"Personnel"> | string
+    role?: StringFilter<"Personnel"> | string
+    prefix?: StringFilter<"Personnel"> | string
+    firstName?: StringFilter<"Personnel"> | string
+    lastName?: StringFilter<"Personnel"> | string
+    position?: StringFilter<"Personnel"> | string
+    department?: StringFilter<"Personnel"> | string
+    subDepartment?: StringFilter<"Personnel"> | string
+    personnelType?: StringFilter<"Personnel"> | string
+    phone?: StringFilter<"Personnel"> | string
+    mobile?: StringFilter<"Personnel"> | string
+    email?: StringFilter<"Personnel"> | string
+    status?: StringFilter<"Personnel"> | string
+    avatarColor?: StringFilter<"Personnel"> | string
+    skills?: StringFilter<"Personnel"> | string
+    education?: StringFilter<"Personnel"> | string
+    experience?: StringFilter<"Personnel"> | string
+    notes?: StringNullableFilter<"Personnel"> | string | null
+    citizenId?: StringFilter<"Personnel"> | string
+    dateOfBirth?: StringFilter<"Personnel"> | string
+    bloodType?: StringFilter<"Personnel"> | string
+    religion?: StringFilter<"Personnel"> | string
+    officialId?: StringFilter<"Personnel"> | string
+    militaryBranch?: StringFilter<"Personnel"> | string
+    commissionDate?: StringFilter<"Personnel"> | string
+    currentAddress?: StringFilter<"Personnel"> | string
+    currentTambon?: StringFilter<"Personnel"> | string
+    currentAmphoe?: StringFilter<"Personnel"> | string
+    currentProvince?: StringFilter<"Personnel"> | string
+    currentZipcode?: StringFilter<"Personnel"> | string
+    emergencyContactName?: StringFilter<"Personnel"> | string
+    emergencyContactPhone?: StringFilter<"Personnel"> | string
+    emergencyContactRelation?: StringFilter<"Personnel"> | string
+    royalDecorations?: StringFilter<"Personnel"> | string
+    trainingHistory?: StringFilter<"Personnel"> | string
+    coverPhoto?: StringFilter<"Personnel"> | string
+    profileTheme?: StringFilter<"Personnel"> | string
+    mustChangePassword?: BoolFilter<"Personnel"> | boolean
+    failedLoginAttempts?: IntFilter<"Personnel"> | number
+    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
+    createdAt?: DateTimeFilter<"Personnel"> | Date | string
+    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
+    leaves?: LeaveRecordListRelationFilter
+    approvedLeaves?: LeaveRecordListRelationFilter
+    notifications?: NotificationListRelationFilter
+    notificationReads?: NotificationReadListRelationFilter
+    posts?: PostListRelationFilter
+    auditLogs?: AuditLogListRelationFilter
+    mediaFiles?: MediaFileListRelationFilter
+    passwordResetTokens?: PasswordResetTokenListRelationFilter
+    documents?: PersonnelDocumentListRelationFilter
+    inspections?: InspectionListRelationFilter
+    rpb1Records?: Rpb1RecordListRelationFilter
+  }
+
+  export type PersonnelOrderByWithRelationInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    leaves?: LeaveRecordOrderByRelationAggregateInput
+    approvedLeaves?: LeaveRecordOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
+    notificationReads?: NotificationReadOrderByRelationAggregateInput
+    posts?: PostOrderByRelationAggregateInput
+    auditLogs?: AuditLogOrderByRelationAggregateInput
+    mediaFiles?: MediaFileOrderByRelationAggregateInput
+    passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
+    documents?: PersonnelDocumentOrderByRelationAggregateInput
+    inspections?: InspectionOrderByRelationAggregateInput
+    rpb1Records?: Rpb1RecordOrderByRelationAggregateInput
+  }
+
+  export type PersonnelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    badgeNo?: string
+    username?: string
+    AND?: PersonnelWhereInput | PersonnelWhereInput[]
+    OR?: PersonnelWhereInput[]
+    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
+    password?: StringFilter<"Personnel"> | string
+    role?: StringFilter<"Personnel"> | string
+    prefix?: StringFilter<"Personnel"> | string
+    firstName?: StringFilter<"Personnel"> | string
+    lastName?: StringFilter<"Personnel"> | string
+    position?: StringFilter<"Personnel"> | string
+    department?: StringFilter<"Personnel"> | string
+    subDepartment?: StringFilter<"Personnel"> | string
+    personnelType?: StringFilter<"Personnel"> | string
+    phone?: StringFilter<"Personnel"> | string
+    mobile?: StringFilter<"Personnel"> | string
+    email?: StringFilter<"Personnel"> | string
+    status?: StringFilter<"Personnel"> | string
+    avatarColor?: StringFilter<"Personnel"> | string
+    skills?: StringFilter<"Personnel"> | string
+    education?: StringFilter<"Personnel"> | string
+    experience?: StringFilter<"Personnel"> | string
+    notes?: StringNullableFilter<"Personnel"> | string | null
+    citizenId?: StringFilter<"Personnel"> | string
+    dateOfBirth?: StringFilter<"Personnel"> | string
+    bloodType?: StringFilter<"Personnel"> | string
+    religion?: StringFilter<"Personnel"> | string
+    officialId?: StringFilter<"Personnel"> | string
+    militaryBranch?: StringFilter<"Personnel"> | string
+    commissionDate?: StringFilter<"Personnel"> | string
+    currentAddress?: StringFilter<"Personnel"> | string
+    currentTambon?: StringFilter<"Personnel"> | string
+    currentAmphoe?: StringFilter<"Personnel"> | string
+    currentProvince?: StringFilter<"Personnel"> | string
+    currentZipcode?: StringFilter<"Personnel"> | string
+    emergencyContactName?: StringFilter<"Personnel"> | string
+    emergencyContactPhone?: StringFilter<"Personnel"> | string
+    emergencyContactRelation?: StringFilter<"Personnel"> | string
+    royalDecorations?: StringFilter<"Personnel"> | string
+    trainingHistory?: StringFilter<"Personnel"> | string
+    coverPhoto?: StringFilter<"Personnel"> | string
+    profileTheme?: StringFilter<"Personnel"> | string
+    mustChangePassword?: BoolFilter<"Personnel"> | boolean
+    failedLoginAttempts?: IntFilter<"Personnel"> | number
+    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
+    createdAt?: DateTimeFilter<"Personnel"> | Date | string
+    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
+    leaves?: LeaveRecordListRelationFilter
+    approvedLeaves?: LeaveRecordListRelationFilter
+    notifications?: NotificationListRelationFilter
+    notificationReads?: NotificationReadListRelationFilter
+    posts?: PostListRelationFilter
+    auditLogs?: AuditLogListRelationFilter
+    mediaFiles?: MediaFileListRelationFilter
+    passwordResetTokens?: PasswordResetTokenListRelationFilter
+    documents?: PersonnelDocumentListRelationFilter
+    inspections?: InspectionListRelationFilter
+    rpb1Records?: Rpb1RecordListRelationFilter
+  }, "id" | "badgeNo" | "username">
+
+  export type PersonnelOrderByWithAggregationInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PersonnelCountOrderByAggregateInput
+    _avg?: PersonnelAvgOrderByAggregateInput
+    _max?: PersonnelMaxOrderByAggregateInput
+    _min?: PersonnelMinOrderByAggregateInput
+    _sum?: PersonnelSumOrderByAggregateInput
+  }
+
+  export type PersonnelScalarWhereWithAggregatesInput = {
+    AND?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
+    OR?: PersonnelScalarWhereWithAggregatesInput[]
+    NOT?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Personnel"> | string
+    badgeNo?: StringWithAggregatesFilter<"Personnel"> | string
+    username?: StringWithAggregatesFilter<"Personnel"> | string
+    password?: StringWithAggregatesFilter<"Personnel"> | string
+    role?: StringWithAggregatesFilter<"Personnel"> | string
+    prefix?: StringWithAggregatesFilter<"Personnel"> | string
+    firstName?: StringWithAggregatesFilter<"Personnel"> | string
+    lastName?: StringWithAggregatesFilter<"Personnel"> | string
+    position?: StringWithAggregatesFilter<"Personnel"> | string
+    department?: StringWithAggregatesFilter<"Personnel"> | string
+    subDepartment?: StringWithAggregatesFilter<"Personnel"> | string
+    personnelType?: StringWithAggregatesFilter<"Personnel"> | string
+    phone?: StringWithAggregatesFilter<"Personnel"> | string
+    mobile?: StringWithAggregatesFilter<"Personnel"> | string
+    email?: StringWithAggregatesFilter<"Personnel"> | string
+    status?: StringWithAggregatesFilter<"Personnel"> | string
+    avatarColor?: StringWithAggregatesFilter<"Personnel"> | string
+    skills?: StringWithAggregatesFilter<"Personnel"> | string
+    education?: StringWithAggregatesFilter<"Personnel"> | string
+    experience?: StringWithAggregatesFilter<"Personnel"> | string
+    notes?: StringNullableWithAggregatesFilter<"Personnel"> | string | null
+    citizenId?: StringWithAggregatesFilter<"Personnel"> | string
+    dateOfBirth?: StringWithAggregatesFilter<"Personnel"> | string
+    bloodType?: StringWithAggregatesFilter<"Personnel"> | string
+    religion?: StringWithAggregatesFilter<"Personnel"> | string
+    officialId?: StringWithAggregatesFilter<"Personnel"> | string
+    militaryBranch?: StringWithAggregatesFilter<"Personnel"> | string
+    commissionDate?: StringWithAggregatesFilter<"Personnel"> | string
+    currentAddress?: StringWithAggregatesFilter<"Personnel"> | string
+    currentTambon?: StringWithAggregatesFilter<"Personnel"> | string
+    currentAmphoe?: StringWithAggregatesFilter<"Personnel"> | string
+    currentProvince?: StringWithAggregatesFilter<"Personnel"> | string
+    currentZipcode?: StringWithAggregatesFilter<"Personnel"> | string
+    emergencyContactName?: StringWithAggregatesFilter<"Personnel"> | string
+    emergencyContactPhone?: StringWithAggregatesFilter<"Personnel"> | string
+    emergencyContactRelation?: StringWithAggregatesFilter<"Personnel"> | string
+    royalDecorations?: StringWithAggregatesFilter<"Personnel"> | string
+    trainingHistory?: StringWithAggregatesFilter<"Personnel"> | string
+    coverPhoto?: StringWithAggregatesFilter<"Personnel"> | string
+    profileTheme?: StringWithAggregatesFilter<"Personnel"> | string
+    mustChangePassword?: BoolWithAggregatesFilter<"Personnel"> | boolean
+    failedLoginAttempts?: IntWithAggregatesFilter<"Personnel"> | number
+    lockedUntil?: DateTimeNullableWithAggregatesFilter<"Personnel"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
+  }
+
+  export type DepartmentWhereInput = {
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    id?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    shortName?: StringNullableFilter<"Department"> | string | null
+    subDepartments?: StringFilter<"Department"> | string
+    sortOrder?: IntFilter<"Department"> | number
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+  }
+
+  export type DepartmentOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrderInput | SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    shortName?: StringNullableFilter<"Department"> | string | null
+    subDepartments?: StringFilter<"Department"> | string
+    sortOrder?: IntFilter<"Department"> | number
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+  }, "id" | "name">
+
+  export type DepartmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrderInput | SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentCountOrderByAggregateInput
+    _avg?: DepartmentAvgOrderByAggregateInput
+    _max?: DepartmentMaxOrderByAggregateInput
+    _min?: DepartmentMinOrderByAggregateInput
+    _sum?: DepartmentSumOrderByAggregateInput
+  }
+
+  export type DepartmentScalarWhereWithAggregatesInput = {
+    AND?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    OR?: DepartmentScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Department"> | string
+    name?: StringWithAggregatesFilter<"Department"> | string
+    shortName?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    subDepartments?: StringWithAggregatesFilter<"Department"> | string
+    sortOrder?: IntWithAggregatesFilter<"Department"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+  }
+
+  export type PersonnelDocumentWhereInput = {
+    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    OR?: PersonnelDocumentWhereInput[]
+    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    id?: StringFilter<"PersonnelDocument"> | string
+    personnelId?: StringFilter<"PersonnelDocument"> | string
+    category?: StringFilter<"PersonnelDocument"> | string
+    filename?: StringFilter<"PersonnelDocument"> | string
+    mimeType?: StringFilter<"PersonnelDocument"> | string
+    size?: IntFilter<"PersonnelDocument"> | number
+    storagePath?: StringFilter<"PersonnelDocument"> | string
+    uploadedBy?: StringFilter<"PersonnelDocument"> | string
+    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
+    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
+    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
+  }
+
+  export type PersonnelDocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    personnel?: PersonnelOrderByWithRelationInput
+  }
+
+  export type PersonnelDocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    OR?: PersonnelDocumentWhereInput[]
+    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    personnelId?: StringFilter<"PersonnelDocument"> | string
+    category?: StringFilter<"PersonnelDocument"> | string
+    filename?: StringFilter<"PersonnelDocument"> | string
+    mimeType?: StringFilter<"PersonnelDocument"> | string
+    size?: IntFilter<"PersonnelDocument"> | number
+    storagePath?: StringFilter<"PersonnelDocument"> | string
+    uploadedBy?: StringFilter<"PersonnelDocument"> | string
+    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
+    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
+    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
+  }, "id">
+
+  export type PersonnelDocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: PersonnelDocumentCountOrderByAggregateInput
+    _avg?: PersonnelDocumentAvgOrderByAggregateInput
+    _max?: PersonnelDocumentMaxOrderByAggregateInput
+    _min?: PersonnelDocumentMinOrderByAggregateInput
+    _sum?: PersonnelDocumentSumOrderByAggregateInput
+  }
+
+  export type PersonnelDocumentScalarWhereWithAggregatesInput = {
+    AND?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
+    OR?: PersonnelDocumentScalarWhereWithAggregatesInput[]
+    NOT?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    personnelId?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    category?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    filename?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    mimeType?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    size?: IntWithAggregatesFilter<"PersonnelDocument"> | number
+    storagePath?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    uploadedBy?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    notes?: StringNullableWithAggregatesFilter<"PersonnelDocument"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"PersonnelDocument"> | Date | string | null
   }
 
   export type SystemSettingCreateInput = {
@@ -26037,6 +26037,281 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InspectionCreateInput = {
+    id?: string
+    page: string
+    url: string
+    scanMode?: string
+    startedAt?: Date | string
+    completedAt?: Date | string
+    durationMs?: number
+    status?: string
+    overallResult?: string
+    criticalCount?: number
+    highCount?: number
+    mediumCount?: number
+    lowCount?: number
+    infoCount?: number
+    totalFindings?: number
+    createdAt?: Date | string
+    user: PersonnelCreateNestedOneWithoutInspectionsInput
+    findings?: InspectionFindingCreateNestedManyWithoutInspectionInput
+  }
+
+  export type InspectionUncheckedCreateInput = {
+    id?: string
+    page: string
+    url: string
+    scanMode?: string
+    userId: string
+    startedAt?: Date | string
+    completedAt?: Date | string
+    durationMs?: number
+    status?: string
+    overallResult?: string
+    criticalCount?: number
+    highCount?: number
+    mediumCount?: number
+    lowCount?: number
+    infoCount?: number
+    totalFindings?: number
+    createdAt?: Date | string
+    findings?: InspectionFindingUncheckedCreateNestedManyWithoutInspectionInput
+  }
+
+  export type InspectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    page?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    scanMode?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMs?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    overallResult?: StringFieldUpdateOperationsInput | string
+    criticalCount?: IntFieldUpdateOperationsInput | number
+    highCount?: IntFieldUpdateOperationsInput | number
+    mediumCount?: IntFieldUpdateOperationsInput | number
+    lowCount?: IntFieldUpdateOperationsInput | number
+    infoCount?: IntFieldUpdateOperationsInput | number
+    totalFindings?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: PersonnelUpdateOneRequiredWithoutInspectionsNestedInput
+    findings?: InspectionFindingUpdateManyWithoutInspectionNestedInput
+  }
+
+  export type InspectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    page?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    scanMode?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMs?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    overallResult?: StringFieldUpdateOperationsInput | string
+    criticalCount?: IntFieldUpdateOperationsInput | number
+    highCount?: IntFieldUpdateOperationsInput | number
+    mediumCount?: IntFieldUpdateOperationsInput | number
+    lowCount?: IntFieldUpdateOperationsInput | number
+    infoCount?: IntFieldUpdateOperationsInput | number
+    totalFindings?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    findings?: InspectionFindingUncheckedUpdateManyWithoutInspectionNestedInput
+  }
+
+  export type InspectionCreateManyInput = {
+    id?: string
+    page: string
+    url: string
+    scanMode?: string
+    userId: string
+    startedAt?: Date | string
+    completedAt?: Date | string
+    durationMs?: number
+    status?: string
+    overallResult?: string
+    criticalCount?: number
+    highCount?: number
+    mediumCount?: number
+    lowCount?: number
+    infoCount?: number
+    totalFindings?: number
+    createdAt?: Date | string
+  }
+
+  export type InspectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    page?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    scanMode?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMs?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    overallResult?: StringFieldUpdateOperationsInput | string
+    criticalCount?: IntFieldUpdateOperationsInput | number
+    highCount?: IntFieldUpdateOperationsInput | number
+    mediumCount?: IntFieldUpdateOperationsInput | number
+    lowCount?: IntFieldUpdateOperationsInput | number
+    infoCount?: IntFieldUpdateOperationsInput | number
+    totalFindings?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InspectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    page?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    scanMode?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMs?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    overallResult?: StringFieldUpdateOperationsInput | string
+    criticalCount?: IntFieldUpdateOperationsInput | number
+    highCount?: IntFieldUpdateOperationsInput | number
+    mediumCount?: IntFieldUpdateOperationsInput | number
+    lowCount?: IntFieldUpdateOperationsInput | number
+    infoCount?: IntFieldUpdateOperationsInput | number
+    totalFindings?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InspectionFindingCreateInput = {
+    id?: string
+    findingCode: string
+    category: string
+    severity: string
+    title: string
+    description: string
+    expected?: string | null
+    actual?: string | null
+    element?: string | null
+    selector?: string | null
+    recommendation: string
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    inspection: InspectionCreateNestedOneWithoutFindingsInput
+  }
+
+  export type InspectionFindingUncheckedCreateInput = {
+    id?: string
+    inspectionId: string
+    findingCode: string
+    category: string
+    severity: string
+    title: string
+    description: string
+    expected?: string | null
+    actual?: string | null
+    element?: string | null
+    selector?: string | null
+    recommendation: string
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InspectionFindingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    inspection?: InspectionUpdateOneRequiredWithoutFindingsNestedInput
+  }
+
+  export type InspectionFindingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inspectionId?: StringFieldUpdateOperationsInput | string
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InspectionFindingCreateManyInput = {
+    id?: string
+    inspectionId: string
+    findingCode: string
+    category: string
+    severity: string
+    title: string
+    description: string
+    expected?: string | null
+    actual?: string | null
+    element?: string | null
+    selector?: string | null
+    recommendation: string
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InspectionFindingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InspectionFindingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inspectionId?: StringFieldUpdateOperationsInput | string
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26485,560 +26760,6 @@ export namespace Prisma {
     notificationId?: StringFieldUpdateOperationsInput | string
     personnelId?: StringFieldUpdateOperationsInput | string
     readAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelCreateInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionCreateNestedManyWithoutUserInput
-    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelUncheckedCreateInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
-    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUpdateManyWithoutUserNestedInput
-    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
-  }
-
-  export type PersonnelUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
-    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
-  }
-
-  export type PersonnelCreateManyInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PersonnelUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentCreateInput = {
-    id?: string
-    name: string
-    shortName?: string | null
-    subDepartments?: string
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DepartmentUncheckedCreateInput = {
-    id?: string
-    name: string
-    shortName?: string | null
-    subDepartments?: string
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DepartmentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentCreateManyInput = {
-    id?: string
-    name: string
-    shortName?: string | null
-    subDepartments?: string
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DepartmentUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelDocumentCreateInput = {
-    id?: string
-    category: string
-    filename: string
-    mimeType: string
-    size: number
-    storagePath: string
-    uploadedBy?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    expiresAt?: Date | string | null
-    personnel: PersonnelCreateNestedOneWithoutDocumentsInput
-  }
-
-  export type PersonnelDocumentUncheckedCreateInput = {
-    id?: string
-    personnelId: string
-    category: string
-    filename: string
-    mimeType: string
-    size: number
-    storagePath: string
-    uploadedBy?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    expiresAt?: Date | string | null
-  }
-
-  export type PersonnelDocumentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    personnel?: PersonnelUpdateOneRequiredWithoutDocumentsNestedInput
-  }
-
-  export type PersonnelDocumentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    personnelId?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type PersonnelDocumentCreateManyInput = {
-    id?: string
-    personnelId: string
-    category: string
-    filename: string
-    mimeType: string
-    size: number
-    storagePath: string
-    uploadedBy?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    expiresAt?: Date | string | null
-  }
-
-  export type PersonnelDocumentUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type PersonnelDocumentUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    personnelId?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type Rpb1RecordCreateInput = {
@@ -28146,281 +27867,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type InspectionCreateInput = {
-    id?: string
-    page: string
-    url: string
-    scanMode?: string
-    startedAt?: Date | string
-    completedAt?: Date | string
-    durationMs?: number
-    status?: string
-    overallResult?: string
-    criticalCount?: number
-    highCount?: number
-    mediumCount?: number
-    lowCount?: number
-    infoCount?: number
-    totalFindings?: number
-    createdAt?: Date | string
-    user: PersonnelCreateNestedOneWithoutInspectionsInput
-    findings?: InspectionFindingCreateNestedManyWithoutInspectionInput
-  }
-
-  export type InspectionUncheckedCreateInput = {
-    id?: string
-    page: string
-    url: string
-    scanMode?: string
-    userId: string
-    startedAt?: Date | string
-    completedAt?: Date | string
-    durationMs?: number
-    status?: string
-    overallResult?: string
-    criticalCount?: number
-    highCount?: number
-    mediumCount?: number
-    lowCount?: number
-    infoCount?: number
-    totalFindings?: number
-    createdAt?: Date | string
-    findings?: InspectionFindingUncheckedCreateNestedManyWithoutInspectionInput
-  }
-
-  export type InspectionUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    page?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    scanMode?: StringFieldUpdateOperationsInput | string
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    durationMs?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    overallResult?: StringFieldUpdateOperationsInput | string
-    criticalCount?: IntFieldUpdateOperationsInput | number
-    highCount?: IntFieldUpdateOperationsInput | number
-    mediumCount?: IntFieldUpdateOperationsInput | number
-    lowCount?: IntFieldUpdateOperationsInput | number
-    infoCount?: IntFieldUpdateOperationsInput | number
-    totalFindings?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: PersonnelUpdateOneRequiredWithoutInspectionsNestedInput
-    findings?: InspectionFindingUpdateManyWithoutInspectionNestedInput
-  }
-
-  export type InspectionUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    page?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    scanMode?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    durationMs?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    overallResult?: StringFieldUpdateOperationsInput | string
-    criticalCount?: IntFieldUpdateOperationsInput | number
-    highCount?: IntFieldUpdateOperationsInput | number
-    mediumCount?: IntFieldUpdateOperationsInput | number
-    lowCount?: IntFieldUpdateOperationsInput | number
-    infoCount?: IntFieldUpdateOperationsInput | number
-    totalFindings?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    findings?: InspectionFindingUncheckedUpdateManyWithoutInspectionNestedInput
-  }
-
-  export type InspectionCreateManyInput = {
-    id?: string
-    page: string
-    url: string
-    scanMode?: string
-    userId: string
-    startedAt?: Date | string
-    completedAt?: Date | string
-    durationMs?: number
-    status?: string
-    overallResult?: string
-    criticalCount?: number
-    highCount?: number
-    mediumCount?: number
-    lowCount?: number
-    infoCount?: number
-    totalFindings?: number
-    createdAt?: Date | string
-  }
-
-  export type InspectionUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    page?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    scanMode?: StringFieldUpdateOperationsInput | string
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    durationMs?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    overallResult?: StringFieldUpdateOperationsInput | string
-    criticalCount?: IntFieldUpdateOperationsInput | number
-    highCount?: IntFieldUpdateOperationsInput | number
-    mediumCount?: IntFieldUpdateOperationsInput | number
-    lowCount?: IntFieldUpdateOperationsInput | number
-    infoCount?: IntFieldUpdateOperationsInput | number
-    totalFindings?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InspectionUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    page?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    scanMode?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    durationMs?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    overallResult?: StringFieldUpdateOperationsInput | string
-    criticalCount?: IntFieldUpdateOperationsInput | number
-    highCount?: IntFieldUpdateOperationsInput | number
-    mediumCount?: IntFieldUpdateOperationsInput | number
-    lowCount?: IntFieldUpdateOperationsInput | number
-    infoCount?: IntFieldUpdateOperationsInput | number
-    totalFindings?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InspectionFindingCreateInput = {
-    id?: string
-    findingCode: string
-    category: string
-    severity: string
-    title: string
-    description: string
-    expected?: string | null
-    actual?: string | null
-    element?: string | null
-    selector?: string | null
-    recommendation: string
-    status?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    inspection: InspectionCreateNestedOneWithoutFindingsInput
-  }
-
-  export type InspectionFindingUncheckedCreateInput = {
-    id?: string
-    inspectionId: string
-    findingCode: string
-    category: string
-    severity: string
-    title: string
-    description: string
-    expected?: string | null
-    actual?: string | null
-    element?: string | null
-    selector?: string | null
-    recommendation: string
-    status?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InspectionFindingUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inspection?: InspectionUpdateOneRequiredWithoutFindingsNestedInput
-  }
-
-  export type InspectionFindingUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    inspectionId?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InspectionFindingCreateManyInput = {
-    id?: string
-    inspectionId: string
-    findingCode: string
-    category: string
-    severity: string
-    title: string
-    description: string
-    expected?: string | null
-    actual?: string | null
-    element?: string | null
-    selector?: string | null
-    recommendation: string
-    status?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InspectionFindingUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InspectionFindingUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    inspectionId?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type MediaFileCreateInput = {
     id?: string
     filename: string
@@ -28488,6 +27934,560 @@ export namespace Prisma {
     mimetype?: StringFieldUpdateOperationsInput | string
     uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonnelCreateInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionCreateNestedManyWithoutUserInput
+    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelUncheckedCreateInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
+    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUpdateManyWithoutUserNestedInput
+    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
+    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelCreateManyInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PersonnelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonnelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentCreateInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    subDepartments?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUncheckedCreateInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    subDepartments?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentCreateManyInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    subDepartments?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonnelDocumentCreateInput = {
+    id?: string
+    category: string
+    filename: string
+    mimeType: string
+    size: number
+    storagePath: string
+    uploadedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    personnel: PersonnelCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type PersonnelDocumentUncheckedCreateInput = {
+    id?: string
+    personnelId: string
+    category: string
+    filename: string
+    mimeType: string
+    size: number
+    storagePath: string
+    uploadedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type PersonnelDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    personnel?: PersonnelUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type PersonnelDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personnelId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PersonnelDocumentCreateManyInput = {
+    id?: string
+    personnelId: string
+    category: string
+    filename: string
+    mimeType: string
+    size: number
+    storagePath: string
+    uploadedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type PersonnelDocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PersonnelDocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personnelId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -28779,6 +28779,185 @@ export namespace Prisma {
     phone?: SortOrder
     message?: SortOrder
     status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type InspectionFindingListRelationFilter = {
+    every?: InspectionFindingWhereInput
+    some?: InspectionFindingWhereInput
+    none?: InspectionFindingWhereInput
+  }
+
+  export type InspectionFindingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InspectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    page?: SortOrder
+    url?: SortOrder
+    scanMode?: SortOrder
+    userId?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    durationMs?: SortOrder
+    status?: SortOrder
+    overallResult?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InspectionAvgOrderByAggregateInput = {
+    durationMs?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+  }
+
+  export type InspectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    page?: SortOrder
+    url?: SortOrder
+    scanMode?: SortOrder
+    userId?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    durationMs?: SortOrder
+    status?: SortOrder
+    overallResult?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InspectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    page?: SortOrder
+    url?: SortOrder
+    scanMode?: SortOrder
+    userId?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    durationMs?: SortOrder
+    status?: SortOrder
+    overallResult?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InspectionSumOrderByAggregateInput = {
+    durationMs?: SortOrder
+    criticalCount?: SortOrder
+    highCount?: SortOrder
+    mediumCount?: SortOrder
+    lowCount?: SortOrder
+    infoCount?: SortOrder
+    totalFindings?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type InspectionRelationFilter = {
+    is?: InspectionWhereInput
+    isNot?: InspectionWhereInput
+  }
+
+  export type InspectionFindingCountOrderByAggregateInput = {
+    id?: SortOrder
+    inspectionId?: SortOrder
+    findingCode?: SortOrder
+    category?: SortOrder
+    severity?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    expected?: SortOrder
+    actual?: SortOrder
+    element?: SortOrder
+    selector?: SortOrder
+    recommendation?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InspectionFindingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    inspectionId?: SortOrder
+    findingCode?: SortOrder
+    category?: SortOrder
+    severity?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    expected?: SortOrder
+    actual?: SortOrder
+    element?: SortOrder
+    selector?: SortOrder
+    recommendation?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InspectionFindingMinOrderByAggregateInput = {
+    id?: SortOrder
+    inspectionId?: SortOrder
+    findingCode?: SortOrder
+    category?: SortOrder
+    severity?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    expected?: SortOrder
+    actual?: SortOrder
+    element?: SortOrder
+    selector?: SortOrder
+    recommendation?: SortOrder
+    status?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29101,366 +29280,6 @@ export namespace Prisma {
     notificationId?: SortOrder
     personnelId?: SortOrder
     readAt?: SortOrder
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type LeaveRecordListRelationFilter = {
-    every?: LeaveRecordWhereInput
-    some?: LeaveRecordWhereInput
-    none?: LeaveRecordWhereInput
-  }
-
-  export type NotificationListRelationFilter = {
-    every?: NotificationWhereInput
-    some?: NotificationWhereInput
-    none?: NotificationWhereInput
-  }
-
-  export type PostListRelationFilter = {
-    every?: PostWhereInput
-    some?: PostWhereInput
-    none?: PostWhereInput
-  }
-
-  export type AuditLogListRelationFilter = {
-    every?: AuditLogWhereInput
-    some?: AuditLogWhereInput
-    none?: AuditLogWhereInput
-  }
-
-  export type MediaFileListRelationFilter = {
-    every?: MediaFileWhereInput
-    some?: MediaFileWhereInput
-    none?: MediaFileWhereInput
-  }
-
-  export type PasswordResetTokenListRelationFilter = {
-    every?: PasswordResetTokenWhereInput
-    some?: PasswordResetTokenWhereInput
-    none?: PasswordResetTokenWhereInput
-  }
-
-  export type PersonnelDocumentListRelationFilter = {
-    every?: PersonnelDocumentWhereInput
-    some?: PersonnelDocumentWhereInput
-    none?: PersonnelDocumentWhereInput
-  }
-
-  export type InspectionListRelationFilter = {
-    every?: InspectionWhereInput
-    some?: InspectionWhereInput
-    none?: InspectionWhereInput
-  }
-
-  export type Rpb1RecordListRelationFilter = {
-    every?: Rpb1RecordWhereInput
-    some?: Rpb1RecordWhereInput
-    none?: Rpb1RecordWhereInput
-  }
-
-  export type LeaveRecordOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type NotificationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PostOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type AuditLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type MediaFileOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PasswordResetTokenOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PersonnelDocumentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InspectionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type Rpb1RecordOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PersonnelCountOrderByAggregateInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PersonnelAvgOrderByAggregateInput = {
-    failedLoginAttempts?: SortOrder
-  }
-
-  export type PersonnelMaxOrderByAggregateInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PersonnelMinOrderByAggregateInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PersonnelSumOrderByAggregateInput = {
-    failedLoginAttempts?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type DepartmentCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentAvgOrderByAggregateInput = {
-    sortOrder?: SortOrder
-  }
-
-  export type DepartmentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentSumOrderByAggregateInput = {
-    sortOrder?: SortOrder
-  }
-
-  export type PersonnelDocumentCountOrderByAggregateInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrder
-  }
-
-  export type PersonnelDocumentAvgOrderByAggregateInput = {
-    size?: SortOrder
-  }
-
-  export type PersonnelDocumentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrder
-  }
-
-  export type PersonnelDocumentMinOrderByAggregateInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrder
-  }
-
-  export type PersonnelDocumentSumOrderByAggregateInput = {
-    size?: SortOrder
   }
 
   export type Rpb1RecordCountOrderByAggregateInput = {
@@ -29959,158 +29778,6 @@ export namespace Prisma {
     order?: SortOrder
   }
 
-  export type InspectionFindingListRelationFilter = {
-    every?: InspectionFindingWhereInput
-    some?: InspectionFindingWhereInput
-    none?: InspectionFindingWhereInput
-  }
-
-  export type InspectionFindingOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InspectionCountOrderByAggregateInput = {
-    id?: SortOrder
-    page?: SortOrder
-    url?: SortOrder
-    scanMode?: SortOrder
-    userId?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    durationMs?: SortOrder
-    status?: SortOrder
-    overallResult?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type InspectionAvgOrderByAggregateInput = {
-    durationMs?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-  }
-
-  export type InspectionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    page?: SortOrder
-    url?: SortOrder
-    scanMode?: SortOrder
-    userId?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    durationMs?: SortOrder
-    status?: SortOrder
-    overallResult?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type InspectionMinOrderByAggregateInput = {
-    id?: SortOrder
-    page?: SortOrder
-    url?: SortOrder
-    scanMode?: SortOrder
-    userId?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    durationMs?: SortOrder
-    status?: SortOrder
-    overallResult?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type InspectionSumOrderByAggregateInput = {
-    durationMs?: SortOrder
-    criticalCount?: SortOrder
-    highCount?: SortOrder
-    mediumCount?: SortOrder
-    lowCount?: SortOrder
-    infoCount?: SortOrder
-    totalFindings?: SortOrder
-  }
-
-  export type InspectionRelationFilter = {
-    is?: InspectionWhereInput
-    isNot?: InspectionWhereInput
-  }
-
-  export type InspectionFindingCountOrderByAggregateInput = {
-    id?: SortOrder
-    inspectionId?: SortOrder
-    findingCode?: SortOrder
-    category?: SortOrder
-    severity?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    expected?: SortOrder
-    actual?: SortOrder
-    element?: SortOrder
-    selector?: SortOrder
-    recommendation?: SortOrder
-    status?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InspectionFindingMaxOrderByAggregateInput = {
-    id?: SortOrder
-    inspectionId?: SortOrder
-    findingCode?: SortOrder
-    category?: SortOrder
-    severity?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    expected?: SortOrder
-    actual?: SortOrder
-    element?: SortOrder
-    selector?: SortOrder
-    recommendation?: SortOrder
-    status?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InspectionFindingMinOrderByAggregateInput = {
-    id?: SortOrder
-    inspectionId?: SortOrder
-    findingCode?: SortOrder
-    category?: SortOrder
-    severity?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    expected?: SortOrder
-    actual?: SortOrder
-    element?: SortOrder
-    selector?: SortOrder
-    recommendation?: SortOrder
-    status?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
   export type MediaFileCountOrderByAggregateInput = {
     id?: SortOrder
     filename?: SortOrder
@@ -30146,6 +29813,339 @@ export namespace Prisma {
   }
 
   export type MediaFileSumOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type LeaveRecordListRelationFilter = {
+    every?: LeaveRecordWhereInput
+    some?: LeaveRecordWhereInput
+    none?: LeaveRecordWhereInput
+  }
+
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
+  export type PostListRelationFilter = {
+    every?: PostWhereInput
+    some?: PostWhereInput
+    none?: PostWhereInput
+  }
+
+  export type AuditLogListRelationFilter = {
+    every?: AuditLogWhereInput
+    some?: AuditLogWhereInput
+    none?: AuditLogWhereInput
+  }
+
+  export type MediaFileListRelationFilter = {
+    every?: MediaFileWhereInput
+    some?: MediaFileWhereInput
+    none?: MediaFileWhereInput
+  }
+
+  export type PasswordResetTokenListRelationFilter = {
+    every?: PasswordResetTokenWhereInput
+    some?: PasswordResetTokenWhereInput
+    none?: PasswordResetTokenWhereInput
+  }
+
+  export type PersonnelDocumentListRelationFilter = {
+    every?: PersonnelDocumentWhereInput
+    some?: PersonnelDocumentWhereInput
+    none?: PersonnelDocumentWhereInput
+  }
+
+  export type InspectionListRelationFilter = {
+    every?: InspectionWhereInput
+    some?: InspectionWhereInput
+    none?: InspectionWhereInput
+  }
+
+  export type Rpb1RecordListRelationFilter = {
+    every?: Rpb1RecordWhereInput
+    some?: Rpb1RecordWhereInput
+    none?: Rpb1RecordWhereInput
+  }
+
+  export type LeaveRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MediaFileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PasswordResetTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PersonnelDocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InspectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type Rpb1RecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PersonnelCountOrderByAggregateInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonnelAvgOrderByAggregateInput = {
+    failedLoginAttempts?: SortOrder
+  }
+
+  export type PersonnelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonnelMinOrderByAggregateInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonnelSumOrderByAggregateInput = {
+    failedLoginAttempts?: SortOrder
+  }
+
+  export type DepartmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type DepartmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type PersonnelDocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type PersonnelDocumentAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type PersonnelDocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type PersonnelDocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type PersonnelDocumentSumOrderByAggregateInput = {
     size?: SortOrder
   }
 
@@ -30193,6 +30193,84 @@ export namespace Prisma {
     upsert?: PersonnelUpsertWithoutPasswordResetTokensInput
     connect?: PersonnelWhereUniqueInput
     update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutPasswordResetTokensInput, PersonnelUpdateWithoutPasswordResetTokensInput>, PersonnelUncheckedUpdateWithoutPasswordResetTokensInput>
+  }
+
+  export type PersonnelCreateNestedOneWithoutInspectionsInput = {
+    create?: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutInspectionsInput
+    connect?: PersonnelWhereUniqueInput
+  }
+
+  export type InspectionFindingCreateNestedManyWithoutInspectionInput = {
+    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
+    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
+    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
+    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+  }
+
+  export type InspectionFindingUncheckedCreateNestedManyWithoutInspectionInput = {
+    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
+    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
+    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
+    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type PersonnelUpdateOneRequiredWithoutInspectionsNestedInput = {
+    create?: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutInspectionsInput
+    upsert?: PersonnelUpsertWithoutInspectionsInput
+    connect?: PersonnelWhereUniqueInput
+    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutInspectionsInput, PersonnelUpdateWithoutInspectionsInput>, PersonnelUncheckedUpdateWithoutInspectionsInput>
+  }
+
+  export type InspectionFindingUpdateManyWithoutInspectionNestedInput = {
+    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
+    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
+    upsert?: InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput | InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput[]
+    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
+    set?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    disconnect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    delete?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    update?: InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput | InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput[]
+    updateMany?: InspectionFindingUpdateManyWithWhereWithoutInspectionInput | InspectionFindingUpdateManyWithWhereWithoutInspectionInput[]
+    deleteMany?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
+  }
+
+  export type InspectionFindingUncheckedUpdateManyWithoutInspectionNestedInput = {
+    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
+    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
+    upsert?: InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput | InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput[]
+    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
+    set?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    disconnect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    delete?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
+    update?: InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput | InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput[]
+    updateMany?: InspectionFindingUpdateManyWithWhereWithoutInspectionInput | InspectionFindingUpdateManyWithWhereWithoutInspectionInput[]
+    deleteMany?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
+  }
+
+  export type InspectionCreateNestedOneWithoutFindingsInput = {
+    create?: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
+    connectOrCreate?: InspectionCreateOrConnectWithoutFindingsInput
+    connect?: InspectionWhereUniqueInput
+  }
+
+  export type InspectionUpdateOneRequiredWithoutFindingsNestedInput = {
+    create?: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
+    connectOrCreate?: InspectionCreateOrConnectWithoutFindingsInput
+    upsert?: InspectionUpsertWithoutFindingsInput
+    connect?: InspectionWhereUniqueInput
+    update?: XOR<XOR<InspectionUpdateToOneWithWhereWithoutFindingsInput, InspectionUpdateWithoutFindingsInput>, InspectionUncheckedUpdateWithoutFindingsInput>
   }
 
   export type PersonnelCreateNestedOneWithoutLeavesInput = {
@@ -30349,6 +30427,36 @@ export namespace Prisma {
     update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutNotificationReadsInput, PersonnelUpdateWithoutNotificationReadsInput>, PersonnelUncheckedUpdateWithoutNotificationReadsInput>
   }
 
+  export type PersonnelCreateNestedOneWithoutRpb1RecordsInput = {
+    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
+    connect?: PersonnelWhereUniqueInput
+  }
+
+  export type PersonnelUpdateOneRequiredWithoutRpb1RecordsNestedInput = {
+    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
+    upsert?: PersonnelUpsertWithoutRpb1RecordsInput
+    connect?: PersonnelWhereUniqueInput
+    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput, PersonnelUpdateWithoutRpb1RecordsInput>, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
+  }
+
+  export type PersonnelCreateNestedOneWithoutMediaFilesInput = {
+    create?: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutMediaFilesInput
+    connect?: PersonnelWhereUniqueInput
+  }
+
+  export type PersonnelUpdateOneWithoutMediaFilesNestedInput = {
+    create?: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutMediaFilesInput
+    upsert?: PersonnelUpsertWithoutMediaFilesInput
+    disconnect?: PersonnelWhereInput | boolean
+    delete?: PersonnelWhereInput | boolean
+    connect?: PersonnelWhereUniqueInput
+    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutMediaFilesInput, PersonnelUpdateWithoutMediaFilesInput>, PersonnelUncheckedUpdateWithoutMediaFilesInput>
+  }
+
   export type LeaveRecordCreateNestedManyWithoutPersonnelInput = {
     create?: XOR<LeaveRecordCreateWithoutPersonnelInput, LeaveRecordUncheckedCreateWithoutPersonnelInput> | LeaveRecordCreateWithoutPersonnelInput[] | LeaveRecordUncheckedCreateWithoutPersonnelInput[]
     connectOrCreate?: LeaveRecordCreateOrConnectWithoutPersonnelInput | LeaveRecordCreateOrConnectWithoutPersonnelInput[]
@@ -30501,14 +30609,6 @@ export namespace Prisma {
     connectOrCreate?: Rpb1RecordCreateOrConnectWithoutPersonnelInput | Rpb1RecordCreateOrConnectWithoutPersonnelInput[]
     createMany?: Rpb1RecordCreateManyPersonnelInputEnvelope
     connect?: Rpb1RecordWhereUniqueInput | Rpb1RecordWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type LeaveRecordUpdateManyWithoutPersonnelNestedInput = {
@@ -30833,106 +30933,6 @@ export namespace Prisma {
     update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutDocumentsInput, PersonnelUpdateWithoutDocumentsInput>, PersonnelUncheckedUpdateWithoutDocumentsInput>
   }
 
-  export type PersonnelCreateNestedOneWithoutRpb1RecordsInput = {
-    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
-    connect?: PersonnelWhereUniqueInput
-  }
-
-  export type PersonnelUpdateOneRequiredWithoutRpb1RecordsNestedInput = {
-    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
-    upsert?: PersonnelUpsertWithoutRpb1RecordsInput
-    connect?: PersonnelWhereUniqueInput
-    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput, PersonnelUpdateWithoutRpb1RecordsInput>, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
-  }
-
-  export type PersonnelCreateNestedOneWithoutInspectionsInput = {
-    create?: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutInspectionsInput
-    connect?: PersonnelWhereUniqueInput
-  }
-
-  export type InspectionFindingCreateNestedManyWithoutInspectionInput = {
-    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
-    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
-    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
-    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-  }
-
-  export type InspectionFindingUncheckedCreateNestedManyWithoutInspectionInput = {
-    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
-    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
-    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
-    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-  }
-
-  export type PersonnelUpdateOneRequiredWithoutInspectionsNestedInput = {
-    create?: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutInspectionsInput
-    upsert?: PersonnelUpsertWithoutInspectionsInput
-    connect?: PersonnelWhereUniqueInput
-    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutInspectionsInput, PersonnelUpdateWithoutInspectionsInput>, PersonnelUncheckedUpdateWithoutInspectionsInput>
-  }
-
-  export type InspectionFindingUpdateManyWithoutInspectionNestedInput = {
-    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
-    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
-    upsert?: InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput | InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput[]
-    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
-    set?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    disconnect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    delete?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    update?: InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput | InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput[]
-    updateMany?: InspectionFindingUpdateManyWithWhereWithoutInspectionInput | InspectionFindingUpdateManyWithWhereWithoutInspectionInput[]
-    deleteMany?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
-  }
-
-  export type InspectionFindingUncheckedUpdateManyWithoutInspectionNestedInput = {
-    create?: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput> | InspectionFindingCreateWithoutInspectionInput[] | InspectionFindingUncheckedCreateWithoutInspectionInput[]
-    connectOrCreate?: InspectionFindingCreateOrConnectWithoutInspectionInput | InspectionFindingCreateOrConnectWithoutInspectionInput[]
-    upsert?: InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput | InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput[]
-    createMany?: InspectionFindingCreateManyInspectionInputEnvelope
-    set?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    disconnect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    delete?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    connect?: InspectionFindingWhereUniqueInput | InspectionFindingWhereUniqueInput[]
-    update?: InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput | InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput[]
-    updateMany?: InspectionFindingUpdateManyWithWhereWithoutInspectionInput | InspectionFindingUpdateManyWithWhereWithoutInspectionInput[]
-    deleteMany?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
-  }
-
-  export type InspectionCreateNestedOneWithoutFindingsInput = {
-    create?: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
-    connectOrCreate?: InspectionCreateOrConnectWithoutFindingsInput
-    connect?: InspectionWhereUniqueInput
-  }
-
-  export type InspectionUpdateOneRequiredWithoutFindingsNestedInput = {
-    create?: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
-    connectOrCreate?: InspectionCreateOrConnectWithoutFindingsInput
-    upsert?: InspectionUpsertWithoutFindingsInput
-    connect?: InspectionWhereUniqueInput
-    update?: XOR<XOR<InspectionUpdateToOneWithWhereWithoutFindingsInput, InspectionUpdateWithoutFindingsInput>, InspectionUncheckedUpdateWithoutFindingsInput>
-  }
-
-  export type PersonnelCreateNestedOneWithoutMediaFilesInput = {
-    create?: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutMediaFilesInput
-    connect?: PersonnelWhereUniqueInput
-  }
-
-  export type PersonnelUpdateOneWithoutMediaFilesNestedInput = {
-    create?: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutMediaFilesInput
-    upsert?: PersonnelUpsertWithoutMediaFilesInput
-    disconnect?: PersonnelWhereInput | boolean
-    delete?: PersonnelWhereInput | boolean
-    connect?: PersonnelWhereUniqueInput
-    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutMediaFilesInput, PersonnelUpdateWithoutMediaFilesInput>, PersonnelUncheckedUpdateWithoutMediaFilesInput>
-  }
-
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -31055,6 +31055,33 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -31134,33 +31161,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type PersonnelCreateWithoutAuditLogsInput = {
@@ -31657,6 +31657,434 @@ export namespace Prisma {
     documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
     inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
     rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelCreateWithoutInspectionsInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
+    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelUncheckedCreateWithoutInspectionsInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
+    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelCreateOrConnectWithoutInspectionsInput = {
+    where: PersonnelWhereUniqueInput
+    create: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
+  }
+
+  export type InspectionFindingCreateWithoutInspectionInput = {
+    id?: string
+    findingCode: string
+    category: string
+    severity: string
+    title: string
+    description: string
+    expected?: string | null
+    actual?: string | null
+    element?: string | null
+    selector?: string | null
+    recommendation: string
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InspectionFindingUncheckedCreateWithoutInspectionInput = {
+    id?: string
+    findingCode: string
+    category: string
+    severity: string
+    title: string
+    description: string
+    expected?: string | null
+    actual?: string | null
+    element?: string | null
+    selector?: string | null
+    recommendation: string
+    status?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InspectionFindingCreateOrConnectWithoutInspectionInput = {
+    where: InspectionFindingWhereUniqueInput
+    create: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput>
+  }
+
+  export type InspectionFindingCreateManyInspectionInputEnvelope = {
+    data: InspectionFindingCreateManyInspectionInput | InspectionFindingCreateManyInspectionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PersonnelUpsertWithoutInspectionsInput = {
+    update: XOR<PersonnelUpdateWithoutInspectionsInput, PersonnelUncheckedUpdateWithoutInspectionsInput>
+    create: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
+    where?: PersonnelWhereInput
+  }
+
+  export type PersonnelUpdateToOneWithWhereWithoutInspectionsInput = {
+    where?: PersonnelWhereInput
+    data: XOR<PersonnelUpdateWithoutInspectionsInput, PersonnelUncheckedUpdateWithoutInspectionsInput>
+  }
+
+  export type PersonnelUpdateWithoutInspectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
+    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelUncheckedUpdateWithoutInspectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
+    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput = {
+    where: InspectionFindingWhereUniqueInput
+    update: XOR<InspectionFindingUpdateWithoutInspectionInput, InspectionFindingUncheckedUpdateWithoutInspectionInput>
+    create: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput>
+  }
+
+  export type InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput = {
+    where: InspectionFindingWhereUniqueInput
+    data: XOR<InspectionFindingUpdateWithoutInspectionInput, InspectionFindingUncheckedUpdateWithoutInspectionInput>
+  }
+
+  export type InspectionFindingUpdateManyWithWhereWithoutInspectionInput = {
+    where: InspectionFindingScalarWhereInput
+    data: XOR<InspectionFindingUpdateManyMutationInput, InspectionFindingUncheckedUpdateManyWithoutInspectionInput>
+  }
+
+  export type InspectionFindingScalarWhereInput = {
+    AND?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
+    OR?: InspectionFindingScalarWhereInput[]
+    NOT?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
+    id?: StringFilter<"InspectionFinding"> | string
+    inspectionId?: StringFilter<"InspectionFinding"> | string
+    findingCode?: StringFilter<"InspectionFinding"> | string
+    category?: StringFilter<"InspectionFinding"> | string
+    severity?: StringFilter<"InspectionFinding"> | string
+    title?: StringFilter<"InspectionFinding"> | string
+    description?: StringFilter<"InspectionFinding"> | string
+    expected?: StringNullableFilter<"InspectionFinding"> | string | null
+    actual?: StringNullableFilter<"InspectionFinding"> | string | null
+    element?: StringNullableFilter<"InspectionFinding"> | string | null
+    selector?: StringNullableFilter<"InspectionFinding"> | string | null
+    recommendation?: StringFilter<"InspectionFinding"> | string
+    status?: StringFilter<"InspectionFinding"> | string
+    notes?: StringNullableFilter<"InspectionFinding"> | string | null
+    createdAt?: DateTimeFilter<"InspectionFinding"> | Date | string
+    updatedAt?: DateTimeFilter<"InspectionFinding"> | Date | string
+  }
+
+  export type InspectionCreateWithoutFindingsInput = {
+    id?: string
+    page: string
+    url: string
+    scanMode?: string
+    startedAt?: Date | string
+    completedAt?: Date | string
+    durationMs?: number
+    status?: string
+    overallResult?: string
+    criticalCount?: number
+    highCount?: number
+    mediumCount?: number
+    lowCount?: number
+    infoCount?: number
+    totalFindings?: number
+    createdAt?: Date | string
+    user: PersonnelCreateNestedOneWithoutInspectionsInput
+  }
+
+  export type InspectionUncheckedCreateWithoutFindingsInput = {
+    id?: string
+    page: string
+    url: string
+    scanMode?: string
+    userId: string
+    startedAt?: Date | string
+    completedAt?: Date | string
+    durationMs?: number
+    status?: string
+    overallResult?: string
+    criticalCount?: number
+    highCount?: number
+    mediumCount?: number
+    lowCount?: number
+    infoCount?: number
+    totalFindings?: number
+    createdAt?: Date | string
+  }
+
+  export type InspectionCreateOrConnectWithoutFindingsInput = {
+    where: InspectionWhereUniqueInput
+    create: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
+  }
+
+  export type InspectionUpsertWithoutFindingsInput = {
+    update: XOR<InspectionUpdateWithoutFindingsInput, InspectionUncheckedUpdateWithoutFindingsInput>
+    create: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
+    where?: InspectionWhereInput
+  }
+
+  export type InspectionUpdateToOneWithWhereWithoutFindingsInput = {
+    where?: InspectionWhereInput
+    data: XOR<InspectionUpdateWithoutFindingsInput, InspectionUncheckedUpdateWithoutFindingsInput>
+  }
+
+  export type InspectionUpdateWithoutFindingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    page?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    scanMode?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMs?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    overallResult?: StringFieldUpdateOperationsInput | string
+    criticalCount?: IntFieldUpdateOperationsInput | number
+    highCount?: IntFieldUpdateOperationsInput | number
+    mediumCount?: IntFieldUpdateOperationsInput | number
+    lowCount?: IntFieldUpdateOperationsInput | number
+    infoCount?: IntFieldUpdateOperationsInput | number
+    totalFindings?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: PersonnelUpdateOneRequiredWithoutInspectionsNestedInput
+  }
+
+  export type InspectionUncheckedUpdateWithoutFindingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    page?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    scanMode?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    durationMs?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    overallResult?: StringFieldUpdateOperationsInput | string
+    criticalCount?: IntFieldUpdateOperationsInput | number
+    highCount?: IntFieldUpdateOperationsInput | number
+    mediumCount?: IntFieldUpdateOperationsInput | number
+    lowCount?: IntFieldUpdateOperationsInput | number
+    infoCount?: IntFieldUpdateOperationsInput | number
+    totalFindings?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PersonnelCreateWithoutLeavesInput = {
@@ -33001,6 +33429,502 @@ export namespace Prisma {
     posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
     mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
+    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelCreateWithoutRpb1RecordsInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionCreateNestedManyWithoutUserInput
+  }
+
+  export type PersonnelUncheckedCreateWithoutRpb1RecordsInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type PersonnelCreateOrConnectWithoutRpb1RecordsInput = {
+    where: PersonnelWhereUniqueInput
+    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+  }
+
+  export type PersonnelUpsertWithoutRpb1RecordsInput = {
+    update: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
+    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+    where?: PersonnelWhereInput
+  }
+
+  export type PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput = {
+    where?: PersonnelWhereInput
+    data: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
+  }
+
+  export type PersonnelUpdateWithoutRpb1RecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUpdateManyWithoutUserNestedInput
+  }
+
+  export type PersonnelUncheckedUpdateWithoutRpb1RecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type PersonnelCreateWithoutMediaFilesInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionCreateNestedManyWithoutUserInput
+    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelUncheckedCreateWithoutMediaFilesInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
+    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelCreateOrConnectWithoutMediaFilesInput = {
+    where: PersonnelWhereUniqueInput
+    create: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
+  }
+
+  export type PersonnelUpsertWithoutMediaFilesInput = {
+    update: XOR<PersonnelUpdateWithoutMediaFilesInput, PersonnelUncheckedUpdateWithoutMediaFilesInput>
+    create: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
+    where?: PersonnelWhereInput
+  }
+
+  export type PersonnelUpdateToOneWithWhereWithoutMediaFilesInput = {
+    where?: PersonnelWhereInput
+    data: XOR<PersonnelUpdateWithoutMediaFilesInput, PersonnelUncheckedUpdateWithoutMediaFilesInput>
+  }
+
+  export type PersonnelUpdateWithoutMediaFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUpdateManyWithoutUserNestedInput
+    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelUncheckedUpdateWithoutMediaFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
     documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
     inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
@@ -34430,376 +35354,7 @@ export namespace Prisma {
     rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
   }
 
-  export type PersonnelCreateWithoutRpb1RecordsInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionCreateNestedManyWithoutUserInput
-  }
-
-  export type PersonnelUncheckedCreateWithoutRpb1RecordsInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type PersonnelCreateOrConnectWithoutRpb1RecordsInput = {
-    where: PersonnelWhereUniqueInput
-    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-  }
-
-  export type PersonnelUpsertWithoutRpb1RecordsInput = {
-    update: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
-    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-    where?: PersonnelWhereInput
-  }
-
-  export type PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput = {
-    where?: PersonnelWhereInput
-    data: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
-  }
-
-  export type PersonnelUpdateWithoutRpb1RecordsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUpdateManyWithoutUserNestedInput
-  }
-
-  export type PersonnelUncheckedUpdateWithoutRpb1RecordsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type PersonnelCreateWithoutInspectionsInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
-    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelUncheckedCreateWithoutInspectionsInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
-    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelCreateOrConnectWithoutInspectionsInput = {
-    where: PersonnelWhereUniqueInput
-    create: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
-  }
-
-  export type InspectionFindingCreateWithoutInspectionInput = {
+  export type InspectionFindingCreateManyInspectionInput = {
     id?: string
     findingCode: string
     category: string
@@ -34817,541 +35372,58 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type InspectionFindingUncheckedCreateWithoutInspectionInput = {
-    id?: string
-    findingCode: string
-    category: string
-    severity: string
-    title: string
-    description: string
-    expected?: string | null
-    actual?: string | null
-    element?: string | null
-    selector?: string | null
-    recommendation: string
-    status?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InspectionFindingCreateOrConnectWithoutInspectionInput = {
-    where: InspectionFindingWhereUniqueInput
-    create: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput>
-  }
-
-  export type InspectionFindingCreateManyInspectionInputEnvelope = {
-    data: InspectionFindingCreateManyInspectionInput | InspectionFindingCreateManyInspectionInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type PersonnelUpsertWithoutInspectionsInput = {
-    update: XOR<PersonnelUpdateWithoutInspectionsInput, PersonnelUncheckedUpdateWithoutInspectionsInput>
-    create: XOR<PersonnelCreateWithoutInspectionsInput, PersonnelUncheckedCreateWithoutInspectionsInput>
-    where?: PersonnelWhereInput
-  }
-
-  export type PersonnelUpdateToOneWithWhereWithoutInspectionsInput = {
-    where?: PersonnelWhereInput
-    data: XOR<PersonnelUpdateWithoutInspectionsInput, PersonnelUncheckedUpdateWithoutInspectionsInput>
-  }
-
-  export type PersonnelUpdateWithoutInspectionsInput = {
+  export type InspectionFindingUpdateWithoutInspectionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
-    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
   }
 
-  export type PersonnelUncheckedUpdateWithoutInspectionsInput = {
+  export type InspectionFindingUncheckedUpdateWithoutInspectionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
-    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
   }
 
-  export type InspectionFindingUpsertWithWhereUniqueWithoutInspectionInput = {
-    where: InspectionFindingWhereUniqueInput
-    update: XOR<InspectionFindingUpdateWithoutInspectionInput, InspectionFindingUncheckedUpdateWithoutInspectionInput>
-    create: XOR<InspectionFindingCreateWithoutInspectionInput, InspectionFindingUncheckedCreateWithoutInspectionInput>
-  }
-
-  export type InspectionFindingUpdateWithWhereUniqueWithoutInspectionInput = {
-    where: InspectionFindingWhereUniqueInput
-    data: XOR<InspectionFindingUpdateWithoutInspectionInput, InspectionFindingUncheckedUpdateWithoutInspectionInput>
-  }
-
-  export type InspectionFindingUpdateManyWithWhereWithoutInspectionInput = {
-    where: InspectionFindingScalarWhereInput
-    data: XOR<InspectionFindingUpdateManyMutationInput, InspectionFindingUncheckedUpdateManyWithoutInspectionInput>
-  }
-
-  export type InspectionFindingScalarWhereInput = {
-    AND?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
-    OR?: InspectionFindingScalarWhereInput[]
-    NOT?: InspectionFindingScalarWhereInput | InspectionFindingScalarWhereInput[]
-    id?: StringFilter<"InspectionFinding"> | string
-    inspectionId?: StringFilter<"InspectionFinding"> | string
-    findingCode?: StringFilter<"InspectionFinding"> | string
-    category?: StringFilter<"InspectionFinding"> | string
-    severity?: StringFilter<"InspectionFinding"> | string
-    title?: StringFilter<"InspectionFinding"> | string
-    description?: StringFilter<"InspectionFinding"> | string
-    expected?: StringNullableFilter<"InspectionFinding"> | string | null
-    actual?: StringNullableFilter<"InspectionFinding"> | string | null
-    element?: StringNullableFilter<"InspectionFinding"> | string | null
-    selector?: StringNullableFilter<"InspectionFinding"> | string | null
-    recommendation?: StringFilter<"InspectionFinding"> | string
-    status?: StringFilter<"InspectionFinding"> | string
-    notes?: StringNullableFilter<"InspectionFinding"> | string | null
-    createdAt?: DateTimeFilter<"InspectionFinding"> | Date | string
-    updatedAt?: DateTimeFilter<"InspectionFinding"> | Date | string
-  }
-
-  export type InspectionCreateWithoutFindingsInput = {
-    id?: string
-    page: string
-    url: string
-    scanMode?: string
-    startedAt?: Date | string
-    completedAt?: Date | string
-    durationMs?: number
-    status?: string
-    overallResult?: string
-    criticalCount?: number
-    highCount?: number
-    mediumCount?: number
-    lowCount?: number
-    infoCount?: number
-    totalFindings?: number
-    createdAt?: Date | string
-    user: PersonnelCreateNestedOneWithoutInspectionsInput
-  }
-
-  export type InspectionUncheckedCreateWithoutFindingsInput = {
-    id?: string
-    page: string
-    url: string
-    scanMode?: string
-    userId: string
-    startedAt?: Date | string
-    completedAt?: Date | string
-    durationMs?: number
-    status?: string
-    overallResult?: string
-    criticalCount?: number
-    highCount?: number
-    mediumCount?: number
-    lowCount?: number
-    infoCount?: number
-    totalFindings?: number
-    createdAt?: Date | string
-  }
-
-  export type InspectionCreateOrConnectWithoutFindingsInput = {
-    where: InspectionWhereUniqueInput
-    create: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
-  }
-
-  export type InspectionUpsertWithoutFindingsInput = {
-    update: XOR<InspectionUpdateWithoutFindingsInput, InspectionUncheckedUpdateWithoutFindingsInput>
-    create: XOR<InspectionCreateWithoutFindingsInput, InspectionUncheckedCreateWithoutFindingsInput>
-    where?: InspectionWhereInput
-  }
-
-  export type InspectionUpdateToOneWithWhereWithoutFindingsInput = {
-    where?: InspectionWhereInput
-    data: XOR<InspectionUpdateWithoutFindingsInput, InspectionUncheckedUpdateWithoutFindingsInput>
-  }
-
-  export type InspectionUpdateWithoutFindingsInput = {
+  export type InspectionFindingUncheckedUpdateManyWithoutInspectionInput = {
     id?: StringFieldUpdateOperationsInput | string
-    page?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    scanMode?: StringFieldUpdateOperationsInput | string
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    durationMs?: IntFieldUpdateOperationsInput | number
+    findingCode?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    severity?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    expected?: NullableStringFieldUpdateOperationsInput | string | null
+    actual?: NullableStringFieldUpdateOperationsInput | string | null
+    element?: NullableStringFieldUpdateOperationsInput | string | null
+    selector?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
-    overallResult?: StringFieldUpdateOperationsInput | string
-    criticalCount?: IntFieldUpdateOperationsInput | number
-    highCount?: IntFieldUpdateOperationsInput | number
-    mediumCount?: IntFieldUpdateOperationsInput | number
-    lowCount?: IntFieldUpdateOperationsInput | number
-    infoCount?: IntFieldUpdateOperationsInput | number
-    totalFindings?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: PersonnelUpdateOneRequiredWithoutInspectionsNestedInput
-  }
-
-  export type InspectionUncheckedUpdateWithoutFindingsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    page?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    scanMode?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    durationMs?: IntFieldUpdateOperationsInput | number
-    status?: StringFieldUpdateOperationsInput | string
-    overallResult?: StringFieldUpdateOperationsInput | string
-    criticalCount?: IntFieldUpdateOperationsInput | number
-    highCount?: IntFieldUpdateOperationsInput | number
-    mediumCount?: IntFieldUpdateOperationsInput | number
-    lowCount?: IntFieldUpdateOperationsInput | number
-    infoCount?: IntFieldUpdateOperationsInput | number
-    totalFindings?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelCreateWithoutMediaFilesInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionCreateNestedManyWithoutUserInput
-    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelUncheckedCreateWithoutMediaFilesInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
-    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelCreateOrConnectWithoutMediaFilesInput = {
-    where: PersonnelWhereUniqueInput
-    create: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
-  }
-
-  export type PersonnelUpsertWithoutMediaFilesInput = {
-    update: XOR<PersonnelUpdateWithoutMediaFilesInput, PersonnelUncheckedUpdateWithoutMediaFilesInput>
-    create: XOR<PersonnelCreateWithoutMediaFilesInput, PersonnelUncheckedCreateWithoutMediaFilesInput>
-    where?: PersonnelWhereInput
-  }
-
-  export type PersonnelUpdateToOneWithWhereWithoutMediaFilesInput = {
-    where?: PersonnelWhereInput
-    data: XOR<PersonnelUpdateWithoutMediaFilesInput, PersonnelUncheckedUpdateWithoutMediaFilesInput>
-  }
-
-  export type PersonnelUpdateWithoutMediaFilesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
     notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUpdateManyWithoutUserNestedInput
-    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
-  }
-
-  export type PersonnelUncheckedUpdateWithoutMediaFilesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
-    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
   }
 
   export type NotificationReadCreateManyNotificationInput = {
@@ -36566,83 +36638,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type InspectionFindingCreateManyInspectionInput = {
-    id?: string
-    findingCode: string
-    category: string
-    severity: string
-    title: string
-    description: string
-    expected?: string | null
-    actual?: string | null
-    element?: string | null
-    selector?: string | null
-    recommendation: string
-    status?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InspectionFindingUpdateWithoutInspectionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InspectionFindingUncheckedUpdateWithoutInspectionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InspectionFindingUncheckedUpdateManyWithoutInspectionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    findingCode?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    severity?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    expected?: NullableStringFieldUpdateOperationsInput | string | null
-    actual?: NullableStringFieldUpdateOperationsInput | string | null
-    element?: NullableStringFieldUpdateOperationsInput | string | null
-    selector?: NullableStringFieldUpdateOperationsInput | string | null
-    recommendation?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
 
 
   /**
    * Aliases for legacy arg types
    */
+    /**
+     * @deprecated Use InspectionCountOutputTypeDefaultArgs instead
+     */
+    export type InspectionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use NotificationCountOutputTypeDefaultArgs instead
      */
@@ -36651,10 +36655,6 @@ export namespace Prisma {
      * @deprecated Use PersonnelCountOutputTypeDefaultArgs instead
      */
     export type PersonnelCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PersonnelCountOutputTypeDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InspectionCountOutputTypeDefaultArgs instead
-     */
-    export type InspectionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SystemSettingDefaultArgs instead
      */
@@ -36680,6 +36680,14 @@ export namespace Prisma {
      */
     export type ContactMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ContactMessageDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use InspectionDefaultArgs instead
+     */
+    export type InspectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use InspectionFindingDefaultArgs instead
+     */
+    export type InspectionFindingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionFindingDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use LeaveRecordDefaultArgs instead
      */
     export type LeaveRecordArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LeaveRecordDefaultArgs<ExtArgs>
@@ -36696,6 +36704,18 @@ export namespace Prisma {
      */
     export type NotificationReadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationReadDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use Rpb1RecordDefaultArgs instead
+     */
+    export type Rpb1RecordArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = Rpb1RecordDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ServiceDefaultArgs instead
+     */
+    export type ServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use MediaFileDefaultArgs instead
+     */
+    export type MediaFileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MediaFileDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use PersonnelDefaultArgs instead
      */
     export type PersonnelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PersonnelDefaultArgs<ExtArgs>
@@ -36707,26 +36727,6 @@ export namespace Prisma {
      * @deprecated Use PersonnelDocumentDefaultArgs instead
      */
     export type PersonnelDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PersonnelDocumentDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use Rpb1RecordDefaultArgs instead
-     */
-    export type Rpb1RecordArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = Rpb1RecordDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use ServiceDefaultArgs instead
-     */
-    export type ServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InspectionDefaultArgs instead
-     */
-    export type InspectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use InspectionFindingDefaultArgs instead
-     */
-    export type InspectionFindingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionFindingDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use MediaFileDefaultArgs instead
-     */
-    export type MediaFileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MediaFileDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

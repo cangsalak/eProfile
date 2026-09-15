@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import IDBadge from './IDBadge';
 
 interface PrintBadgeViewProps {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { requireAuth, requirePermission } from '@/lib/auth-guards';
+import { prisma } from '@/modules/core';
+import { requireAuth, requirePermission } from '@/modules/core';
 import { sendNotification } from '../lib/notification-sender';
 
 function isGlobal(n: { personnelId: string }) {

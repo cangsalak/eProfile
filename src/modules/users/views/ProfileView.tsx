@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 
 import PersonalInfoForm from '../components/forms/PersonalInfoForm';
 import MilitaryInfoForm from '../components/forms/MilitaryInfoForm';

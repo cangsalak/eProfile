@@ -1,12 +1,13 @@
 import assert from 'assert';
 import JSZip from 'jszip';
 import { SignJWT } from 'jose';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import { GET as getTemplate } from '../../src/app/api/modules/template/route';
-import { POST as installModule } from '../../src/app/api/modules/install/route';
+import { handleInstallModule as installModule } from '../../src/modules/module-manager/api';
 import { GET as getModules } from '../../src/app/api/modules/route';
 import { DELETE as uninstallModule } from '../../src/app/api/modules/[id]/route';
 
+const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';
 const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-super-secret-jwt-key-2026-change-in-production';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
@@ -77,19 +78,19 @@ export async function runModuleInstallerTests() {
   // 1. Template Download RBAC
   {
     // Anon
-    const anonReq = new Request('http://localhost:3000/api/modules/template');
+    const anonReq = new Request(`${BASE_URL}/api/modules/template`);
     const anonRes = await getTemplate(anonReq);
     assert.strictEqual(anonRes.status, 401, 'Anonymous must be blocked from downloading template');
 
     // User
-    const userReq = new Request('http://localhost:3000/api/modules/template', {
+    const userReq = new Request(`${BASE_URL}/api/modules/template`, {
       headers: { Authorization: `Bearer ${regularUserToken}` },
     });
     const userRes = await getTemplate(userReq);
     assert.strictEqual(userRes.status, 403, 'Regular user must be blocked from downloading template');
 
     // SuperAdmin
-    const saReq = new Request('http://localhost:3000/api/modules/template', {
+    const saReq = new Request(`${BASE_URL}/api/modules/template`, {
       headers: { Authorization: `Bearer ${superAdminToken}` },
     });
     const saRes = await getTemplate(saReq);
@@ -101,12 +102,12 @@ export async function runModuleInstallerTests() {
   // 2. Install Validation & Security Safeguards
   {
     // A. Anonymous upload blocked
-    const anonReq = new Request('http://localhost:3000/api/modules/install', { method: 'POST' });
+    const anonReq = new Request(`${BASE_URL}/api/modules/install`, { method: 'POST' });
     const anonRes = await installModule(anonReq);
     assert.strictEqual(anonRes.status, 401, 'Anonymous upload must return 401');
 
     // B. Regular user blocked
-    const userReq = new Request('http://localhost:3000/api/modules/install', {
+    const userReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${regularUserToken}` },
     });
@@ -117,7 +118,7 @@ export async function runModuleInstallerTests() {
     const textFormData = new FormData();
     const textBlob = new Blob(['sample text'], { type: 'text/plain' });
     textFormData.append('file', textBlob, 'badfile.txt');
-    const txtReq = new Request('http://localhost:3000/api/modules/install', {
+    const txtReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: textFormData,
@@ -129,7 +130,7 @@ export async function runModuleInstallerTests() {
     const fakeZipFormData = new FormData();
     const fakeZipBlob = new Blob(['not a real zip content header'], { type: 'application/zip' });
     fakeZipFormData.append('file', fakeZipBlob, 'fake.zip');
-    const fakeZipReq = new Request('http://localhost:3000/api/modules/install', {
+    const fakeZipReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: fakeZipFormData,
@@ -143,7 +144,7 @@ export async function runModuleInstallerTests() {
     const noManifestBuf = await noManifestZip.generateAsync({ type: 'nodebuffer' });
     const noManifestFormData = new FormData();
     noManifestFormData.append('file', new Blob([new Uint8Array(noManifestBuf)]), 'nomanifest.zip');
-    const noManifestReq = new Request('http://localhost:3000/api/modules/install', {
+    const noManifestReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: noManifestFormData,
@@ -162,7 +163,7 @@ export async function runModuleInstallerTests() {
     const coreOverrideBuf = await coreOverrideZip.generateAsync({ type: 'nodebuffer' });
     const coreOverrideFormData = new FormData();
     coreOverrideFormData.append('file', new Blob([new Uint8Array(coreOverrideBuf)]), 'override.zip');
-    const coreOverrideReq = new Request('http://localhost:3000/api/modules/install', {
+    const coreOverrideReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: coreOverrideFormData,
@@ -181,7 +182,7 @@ export async function runModuleInstallerTests() {
     const zipSlipBuf = await zipSlip.generateAsync({ type: 'nodebuffer' });
     const zipSlipFormData = new FormData();
     zipSlipFormData.append('file', new Blob([new Uint8Array(zipSlipBuf)]), 'slip.zip');
-    const zipSlipReq = new Request('http://localhost:3000/api/modules/install', {
+    const zipSlipReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: zipSlipFormData,
@@ -200,7 +201,7 @@ export async function runModuleInstallerTests() {
     const badExtBuf = await badExtZip.generateAsync({ type: 'nodebuffer' });
     const badExtFormData = new FormData();
     badExtFormData.append('file', new Blob([new Uint8Array(badExtBuf)]), 'badext.zip');
-    const badExtReq = new Request('http://localhost:3000/api/modules/install', {
+    const badExtReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: badExtFormData,
@@ -227,7 +228,7 @@ export async function runModuleInstallerTests() {
     const routeCollisionBuf = await routeCollisionZip.generateAsync({ type: 'nodebuffer' });
     const routeCollisionFormData = new FormData();
     routeCollisionFormData.append('file', new Blob([new Uint8Array(routeCollisionBuf)]), 'collision.zip');
-    const routeCollisionReq = new Request('http://localhost:3000/api/modules/install', {
+    const routeCollisionReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: routeCollisionFormData,
@@ -278,7 +279,7 @@ export async function runModuleInstallerTests() {
     const validFormData = new FormData();
     validFormData.append('file', new Blob([new Uint8Array(validBuf)]), 'equipment-loan-test.zip');
 
-    const installReq = new Request('http://localhost:3000/api/modules/install', {
+    const installReq = new Request(`${BASE_URL}/api/modules/install`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${superAdminToken}` },
       body: validFormData,
@@ -291,7 +292,7 @@ export async function runModuleInstallerTests() {
     assert.strictEqual(installData.manifest.id, 'equipment-loan-test');
 
     // Verify GET /api/modules includes the new module
-    const listReq = new Request('http://localhost:3000/api/modules', {
+    const listReq = new Request(`${BASE_URL}/api/modules`, {
       headers: { Authorization: `Bearer ${superAdminToken}` },
     });
     const listRes = await getModules(listReq);
@@ -317,7 +318,7 @@ export async function runModuleInstallerTests() {
   // 4. Uninstall Custom Module
   {
     // Attempting to delete core module blocked
-    const delCoreReq = new Request('http://localhost:3000/api/modules/personnel', {
+    const delCoreReq = new Request(`${BASE_URL}/api/modules/personnel`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${superAdminToken}` },
     });
@@ -325,7 +326,7 @@ export async function runModuleInstallerTests() {
     assert.strictEqual(delCoreRes.status, 400, 'Deleting core module must return 400');
 
     // Uninstall custom module succeeds
-    const delReq = new Request('http://localhost:3000/api/modules/equipment-loan-test', {
+    const delReq = new Request(`${BASE_URL}/api/modules/equipment-loan-test`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${superAdminToken}` },
     });

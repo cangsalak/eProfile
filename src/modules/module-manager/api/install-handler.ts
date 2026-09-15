@@ -4,10 +4,11 @@ import path from 'path';
 import { execSync } from 'child_process';
 import JSZip from 'jszip';
 import { z } from 'zod';
-import { prisma } from '@/lib/prisma';
-import { requireRole } from '@/lib/auth-guards';
-import { ALL_SYSTEM_MODULES } from '@/lib/modules';
-import { mergeSchemas } from '@/lib/schema-merger';
+import { prisma } from '@/modules/core';
+import { requireRole } from '@/modules/core';
+import { ALL_SYSTEM_MODULES } from '@/modules/core';
+import { mergeSchemas } from '@/modules/core';
+import { ModuleScriptsSchema, executeLifecycleScript } from './lifecycle-helper';
 
 const FORBIDDEN_EXTENSIONS = [
   '.exe', '.sh', '.bat', '.cmd', '.bin', '.elf', '.so', '.dylib', '.dll', '.com', '.vbs', '.ps1'
@@ -37,6 +38,7 @@ const ManifestSchema = z.object({
     name: z.string(),
     description: z.string(),
   })).default([]),
+  scripts: ModuleScriptsSchema,
 });
 
 export async function handleInstallModule(request: Request) {
@@ -106,8 +108,18 @@ export async function handleInstallModule(request: Request) {
     const manifest = parseResult.data;
 
     // 6. Core Module & Route collision protection
-    const coreIds = ALL_SYSTEM_MODULES.map(m => m.id);
-    if (coreIds.includes(manifest.id)) {
+    const RESERVED_CORE_MODULE_IDS = [
+      ...ALL_SYSTEM_MODULES.map(m => m.id),
+      'personnel',
+      'site-content',
+      'system-inspector',
+      'core',
+      'auth',
+      'settings',
+      'install',
+      'modules',
+    ];
+    if (RESERVED_CORE_MODULE_IDS.includes(manifest.id)) {
       return NextResponse.json({ error: `ไม่อนุญาตให้ติดตั้งทับ Core Module ของระบบ ("${manifest.id}")` }, { status: 400 });
     }
 
@@ -192,6 +204,19 @@ export async function handleInstallModule(request: Request) {
         console.error('Module schema migration failed:', schemaErr.message);
         return NextResponse.json({
           error: `ติดตั้ง schema ไม่สำเร็จ: ${schemaErr.stderr?.toString() || schemaErr.message}`,
+        }, { status: 500 });
+      }
+    }
+
+    // 8.6. Execute Install Hook Script if defined
+    if (manifest.scripts?.install) {
+      const scriptRes = executeLifecycleScript(manifest.scripts.install, targetModuleDir);
+      if (!scriptRes.success) {
+        // Rollback: remove extracted module files
+        fs.rmSync(targetModuleDir, { recursive: true, force: true });
+        console.error('Module install script execution failed:', scriptRes.error);
+        return NextResponse.json({
+          error: scriptRes.error || 'การประมวลผล Install Script ล้มเหลว',
         }, { status: 500 });
       }
     }

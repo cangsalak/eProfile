@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { getClientIp } from '@/lib/audit';
+import { getClientIp } from '@/modules/core';
 
 export interface ApproverScope {
   isGlobalViewer: boolean;

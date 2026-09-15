@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { requirePermission } from '@/lib/auth-guards';
+import { prisma } from '@/modules/core';
+import { requirePermission } from '@/modules/core';
 
 export async function handleGetPosts(req: Request) {
   try {

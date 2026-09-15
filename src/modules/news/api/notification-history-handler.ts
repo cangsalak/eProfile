@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { requireRole } from '@/lib/auth-guards';
+import { prisma } from '@/modules/core';
+import { requireRole } from '@/modules/core';
 
 export async function handleGetNotificationHistory(req: Request) {
   try {

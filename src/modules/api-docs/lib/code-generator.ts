@@ -1,4 +1,4 @@
-import { ApiEndpointDoc } from './scanner';
+import type { ApiEndpointDoc } from './scanner';
 
 export type SupportedLanguage = 'curl' | 'javascript' | 'typescript' | 'python' | 'php';
 

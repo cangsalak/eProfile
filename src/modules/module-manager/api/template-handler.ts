@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import JSZip from 'jszip';
-import { requireRole } from '@/lib/auth-guards';
+import { requireRole } from '@/modules/core';
 
 export async function handleGetModuleTemplate(request: Request) {
   try {

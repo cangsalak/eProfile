@@ -1,6 +1,6 @@
 import './globals.css';
 import React from 'react';
-import ToastProvider from '../components/ToastProvider';
+import ToastProvider from '@/components/ToastProvider';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

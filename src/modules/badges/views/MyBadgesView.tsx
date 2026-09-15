@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import IDBadge from '../components/IDBadge';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 import { Button, Badge, Card } from '@/components/ui';

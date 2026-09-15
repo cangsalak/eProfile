@@ -180,6 +180,45 @@ exports.Prisma.ContactMessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.InspectionScalarFieldEnum = {
+  id: 'id',
+  page: 'page',
+  url: 'url',
+  scanMode: 'scanMode',
+  userId: 'userId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  durationMs: 'durationMs',
+  status: 'status',
+  overallResult: 'overallResult',
+  criticalCount: 'criticalCount',
+  highCount: 'highCount',
+  mediumCount: 'mediumCount',
+  lowCount: 'lowCount',
+  infoCount: 'infoCount',
+  totalFindings: 'totalFindings',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InspectionFindingScalarFieldEnum = {
+  id: 'id',
+  inspectionId: 'inspectionId',
+  findingCode: 'findingCode',
+  category: 'category',
+  severity: 'severity',
+  title: 'title',
+  description: 'description',
+  expected: 'expected',
+  actual: 'actual',
+  element: 'element',
+  selector: 'selector',
+  recommendation: 'recommendation',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.LeaveRecordScalarFieldEnum = {
   id: 'id',
   personnelId: 'personnelId',
@@ -242,79 +281,6 @@ exports.Prisma.NotificationReadScalarFieldEnum = {
   notificationId: 'notificationId',
   personnelId: 'personnelId',
   readAt: 'readAt'
-};
-
-exports.Prisma.PersonnelScalarFieldEnum = {
-  id: 'id',
-  badgeNo: 'badgeNo',
-  username: 'username',
-  password: 'password',
-  role: 'role',
-  prefix: 'prefix',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  position: 'position',
-  department: 'department',
-  subDepartment: 'subDepartment',
-  personnelType: 'personnelType',
-  phone: 'phone',
-  mobile: 'mobile',
-  email: 'email',
-  status: 'status',
-  avatarColor: 'avatarColor',
-  skills: 'skills',
-  education: 'education',
-  experience: 'experience',
-  notes: 'notes',
-  citizenId: 'citizenId',
-  dateOfBirth: 'dateOfBirth',
-  bloodType: 'bloodType',
-  religion: 'religion',
-  officialId: 'officialId',
-  militaryBranch: 'militaryBranch',
-  commissionDate: 'commissionDate',
-  currentAddress: 'currentAddress',
-  currentTambon: 'currentTambon',
-  currentAmphoe: 'currentAmphoe',
-  currentProvince: 'currentProvince',
-  currentZipcode: 'currentZipcode',
-  emergencyContactName: 'emergencyContactName',
-  emergencyContactPhone: 'emergencyContactPhone',
-  emergencyContactRelation: 'emergencyContactRelation',
-  royalDecorations: 'royalDecorations',
-  trainingHistory: 'trainingHistory',
-  coverPhoto: 'coverPhoto',
-  profileTheme: 'profileTheme',
-  mustChangePassword: 'mustChangePassword',
-  failedLoginAttempts: 'failedLoginAttempts',
-  lockedUntil: 'lockedUntil',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.DepartmentScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  shortName: 'shortName',
-  subDepartments: 'subDepartments',
-  sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PersonnelDocumentScalarFieldEnum = {
-  id: 'id',
-  personnelId: 'personnelId',
-  category: 'category',
-  filename: 'filename',
-  mimeType: 'mimeType',
-  size: 'size',
-  storagePath: 'storagePath',
-  uploadedBy: 'uploadedBy',
-  notes: 'notes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  expiresAt: 'expiresAt'
 };
 
 exports.Prisma.Rpb1RecordScalarFieldEnum = {
@@ -475,45 +441,6 @@ exports.Prisma.ServiceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.InspectionScalarFieldEnum = {
-  id: 'id',
-  page: 'page',
-  url: 'url',
-  scanMode: 'scanMode',
-  userId: 'userId',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  durationMs: 'durationMs',
-  status: 'status',
-  overallResult: 'overallResult',
-  criticalCount: 'criticalCount',
-  highCount: 'highCount',
-  mediumCount: 'mediumCount',
-  lowCount: 'lowCount',
-  infoCount: 'infoCount',
-  totalFindings: 'totalFindings',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.InspectionFindingScalarFieldEnum = {
-  id: 'id',
-  inspectionId: 'inspectionId',
-  findingCode: 'findingCode',
-  category: 'category',
-  severity: 'severity',
-  title: 'title',
-  description: 'description',
-  expected: 'expected',
-  actual: 'actual',
-  element: 'element',
-  selector: 'selector',
-  recommendation: 'recommendation',
-  status: 'status',
-  notes: 'notes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.MediaFileScalarFieldEnum = {
   id: 'id',
   filename: 'filename',
@@ -522,6 +449,79 @@ exports.Prisma.MediaFileScalarFieldEnum = {
   mimetype: 'mimetype',
   uploadedById: 'uploadedById',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.PersonnelScalarFieldEnum = {
+  id: 'id',
+  badgeNo: 'badgeNo',
+  username: 'username',
+  password: 'password',
+  role: 'role',
+  prefix: 'prefix',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  position: 'position',
+  department: 'department',
+  subDepartment: 'subDepartment',
+  personnelType: 'personnelType',
+  phone: 'phone',
+  mobile: 'mobile',
+  email: 'email',
+  status: 'status',
+  avatarColor: 'avatarColor',
+  skills: 'skills',
+  education: 'education',
+  experience: 'experience',
+  notes: 'notes',
+  citizenId: 'citizenId',
+  dateOfBirth: 'dateOfBirth',
+  bloodType: 'bloodType',
+  religion: 'religion',
+  officialId: 'officialId',
+  militaryBranch: 'militaryBranch',
+  commissionDate: 'commissionDate',
+  currentAddress: 'currentAddress',
+  currentTambon: 'currentTambon',
+  currentAmphoe: 'currentAmphoe',
+  currentProvince: 'currentProvince',
+  currentZipcode: 'currentZipcode',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
+  emergencyContactRelation: 'emergencyContactRelation',
+  royalDecorations: 'royalDecorations',
+  trainingHistory: 'trainingHistory',
+  coverPhoto: 'coverPhoto',
+  profileTheme: 'profileTheme',
+  mustChangePassword: 'mustChangePassword',
+  failedLoginAttempts: 'failedLoginAttempts',
+  lockedUntil: 'lockedUntil',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DepartmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  shortName: 'shortName',
+  subDepartments: 'subDepartments',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PersonnelDocumentScalarFieldEnum = {
+  id: 'id',
+  personnelId: 'personnelId',
+  category: 'category',
+  filename: 'filename',
+  mimeType: 'mimeType',
+  size: 'size',
+  storagePath: 'storagePath',
+  uploadedBy: 'uploadedBy',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  expiresAt: 'expiresAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -542,18 +542,18 @@ exports.Prisma.ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   CalendarEvent: 'CalendarEvent',
   ContactMessage: 'ContactMessage',
+  Inspection: 'Inspection',
+  InspectionFinding: 'InspectionFinding',
   LeaveRecord: 'LeaveRecord',
   Post: 'Post',
   Notification: 'Notification',
   NotificationRead: 'NotificationRead',
-  Personnel: 'Personnel',
-  Department: 'Department',
-  PersonnelDocument: 'PersonnelDocument',
   Rpb1Record: 'Rpb1Record',
   Service: 'Service',
-  Inspection: 'Inspection',
-  InspectionFinding: 'InspectionFinding',
-  MediaFile: 'MediaFile'
+  MediaFile: 'MediaFile',
+  Personnel: 'Personnel',
+  Department: 'Department',
+  PersonnelDocument: 'PersonnelDocument'
 };
 
 /**

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import initialData from '../src/data/personnel.json';
+import initialData from '../src/modules/users/data/personnel.json';
 
 const prisma = new PrismaClient();
 

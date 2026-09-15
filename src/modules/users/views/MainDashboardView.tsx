@@ -157,11 +157,11 @@ export default function DashboardOverviewPage() {
       
       {/* Welcome Banner - Modern Ambient Glow */}
       <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-100/60 via-indigo-100/40 to-purple-100/30 dark:from-primary-950/40 dark:via-indigo-950/20 dark:to-purple-950/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-80 pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-primary-100/60 to-primary-100/20 dark:from-primary-950/40 dark:to-primary-950/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 opacity-80 pointer-events-none"></div>
 
         <div className="relative z-10 p-6 sm:p-9 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
           <div className="flex items-start space-x-5">
-            <div className="hidden sm:flex shrink-0 w-20 h-20 bg-gradient-to-br from-primary-500 via-indigo-600 to-purple-600 rounded-3xl items-center justify-center shadow-xl shadow-primary-500/25 text-white text-3xl font-black">
+            <div className="hidden sm:flex shrink-0 w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-3xl items-center justify-center shadow-xl shadow-primary-500/25 text-white text-3xl font-black">
               {currentUser.firstName ? currentUser.firstName.charAt(0) : 'U'}
             </div>
             <div>
@@ -208,9 +208,9 @@ export default function DashboardOverviewPage() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         
         {/* Card 1: Total Personnel (Views / Users) */}
-        <div className="p-6 rounded-2xl bg-white dark:bg-[#24303F] border border-slate-200 dark:border-[#2E3A47] shadow-sm flex flex-col justify-between space-y-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-[#5750F1]/10 text-[#5750F1] flex items-center justify-center text-lg">
+            <div className="w-10 h-10 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
               <i className="fa-solid fa-users"></i>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Card 2: Departments */}
-        <div className="p-6 rounded-2xl bg-white dark:bg-[#24303F] border border-slate-200 dark:border-[#2E3A47] shadow-sm flex flex-col justify-between space-y-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
           <div>
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-lg">
               <i className="fa-solid fa-building"></i>
@@ -248,7 +248,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Card 3: Active Leaves */}
-        <div className="p-6 rounded-2xl bg-white dark:bg-[#24303F] border border-slate-200 dark:border-[#2E3A47] shadow-sm flex flex-col justify-between space-y-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
           <div>
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg">
               <i className="fa-solid fa-file-signature"></i>
@@ -299,18 +299,18 @@ export default function DashboardOverviewPage() {
                 จัดการข้อมูลบุคลากร
               </div>
               <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 line-clamp-1">
-                ค้นหา เพิ่ม แก้ไขประวัติ และพิมพ์บัตรกำลังพล
+                เพิ่ม แก้ไข ค้นหา และดูรายละเอียดประวัติกำลังพล
               </p>
             </div>
           </Link>
 
-          {/* Leave System */}
+          {/* Leaves System */}
           <Link
-            href="/leave"
+            href="/leaves"
             className="group p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4"
           >
             <div className="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform">
-              <i className="fa-solid fa-calendar-check"></i>
+              <i className="fa-solid fa-calendar-days"></i>
             </div>
             <div>
               <div className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
@@ -325,9 +325,9 @@ export default function DashboardOverviewPage() {
           {/* Print Badges */}
           <Link
             href="/profile/badges"
-            className="group p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-purple-500/50 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4"
+            className="group p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-primary-500/50 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4"
           >
-            <div className="w-11 h-11 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform">
               <i className="fa-solid fa-id-card"></i>
             </div>
             <div>

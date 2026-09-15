@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { prisma, resetPrismaClient } from '@/lib/prisma';
+import { prisma, resetPrismaClient } from '@/modules/core';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
-import { installRequestSchema } from '@/lib/validations';
-import { ROLE_DEFINITIONS } from '@/lib/role-definitions';
+import { installRequestSchema } from '@/modules/core';
+import { ROLE_DEFINITIONS } from '@/modules/roles';
 import { seedDemoDataset } from '../lib/sample-data';
 import { execSync } from 'child_process';
 import fs from 'fs';
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
       leavePolicy: JSON.stringify({ 'ลาพักผ่อน': 10, 'ลากิจ': 45, 'ลาป่วย': 60, 'ลาคลอดบุตร': 90, 'ลาอุปสมบท': 120 }),
       vehicleTypes: JSON.stringify(['รถยนต์ส่วนบุคคล', 'รถจักรยานยนต์', 'รถยนต์ราชการ', 'รถจักรยานยนต์ราชการ']),
       bloodGroups: JSON.stringify(['A', 'B', 'AB', 'O']),
-      enabledModules: JSON.stringify(['dashboard', 'personnel', 'leaves', 'badges', 'calendar', 'news', 'contacts', 'system-inspector', 'api-docs', 'theme', 'backup']),
+      enabledModules: JSON.stringify(['dashboard', 'personnel', 'roles', 'leaves', 'badges', 'calendar', 'news', 'contacts', 'inspector', 'site', 'api-docs', 'theme', 'backup']),
       theme: String(theme || 'dark'),
       badgeColorMode: 'auto',
       badgeShowLogo: 'true',
@@ -140,7 +140,7 @@ export async function POST(req: Request) {
       try {
         const genScript = path.join(process.cwd(), 'scripts', 'generate-schemas.js');
         if (fs.existsSync(genScript)) {
-          require(genScript);
+          execSync(`node "${genScript}"`, { stdio: 'ignore' });
         }
       } catch (e) {
         console.error('Failed to run generate-schemas.js:', e);

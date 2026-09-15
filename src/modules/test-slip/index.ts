@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { TestSlipManifest } from './manifest';
 import PaySlipView from './views/PaySlipView';
 import ManageSlipView from './views/ManageSlipView';

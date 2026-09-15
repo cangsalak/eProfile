@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { prisma } from '../../src/lib/prisma';
+import { prisma } from '../../src/modules/core';
 import { SignJWT } from 'jose';
 
 const BASE_URL = process.env.TEST_BASE_URL || 'http://localhost:3000';

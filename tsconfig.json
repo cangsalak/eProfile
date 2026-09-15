@@ -20,6 +20,7 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@/components/*": ["./src/modules/core/components/*"],
       "@/*": ["./src/*"]
     }
   },

@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { UsersManifest } from './manifest';
 import MainDashboardView from './views/MainDashboardView';
 import ManagePersonnelView from './views/ManagePersonnelView';
@@ -8,6 +8,8 @@ import RoleSettingsView from './views/RoleSettingsView';
 import DepartmentsSettingsView from './views/DepartmentsSettingsView';
 
 export * from './manifest';
+export * from './types';
+export * from './lib/excelUtils';
 export { default as ManagePersonnelView } from './views/ManagePersonnelView';
 export { default as RoleSettingsView } from './views/RoleSettingsView';
 export { default as ProfileView } from './views/ProfileView';

@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { ModuleManagerManifest } from './manifest';
 import ManageModulesView from './views/ManageModulesView';
 import ManageMenusView from './views/ManageMenusView';

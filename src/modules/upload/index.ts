@@ -1,4 +1,4 @@
-import { ModuleDefinition } from '@/lib/modules/types';
+import { ModuleDefinition } from '@/modules/core/types';
 import { UploadManifest } from './manifest';
 import UploadGalleryView from './views/UploadGalleryView';
 import StorageSettingsView from './views/StorageSettingsView';

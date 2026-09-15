@@ -1,4 +1,4 @@
-import { ModuleManifest } from '@/lib/modules/types';
+import { ModuleManifest } from '@/modules/core/types';
 
 export const DashboardManifest: ModuleManifest = {
   id: 'dashboard',
@@ -41,5 +41,9 @@ export const DashboardManifest: ModuleManifest = {
     '/command-dashboard/:path*': '/modules/dashboard/command',
     '/dashboard': '/modules/dashboard',
     '/dashboard/command': '/modules/dashboard/command',
+  },
+  apiRewrites: {
+    '/api/dashboard': '/api/modules/dashboard',
+    '/api/dashboard/:path*': '/api/modules/dashboard/:path*',
   },
 };

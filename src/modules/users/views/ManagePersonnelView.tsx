@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Personnel } from '@/types/personnel';
+import { Personnel } from '@/modules/users';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AddPersonnelModal from '../components/AddPersonnelModal';
 import JSZip from 'jszip';
@@ -10,7 +10,7 @@ import PersonnelTable from '../components/PersonnelTable';
 import PersonnelPagination from '../components/PersonnelPagination';
 import PersonnelImportModal from '../components/PersonnelImportModal';
 import PersonnelDashboard from '../components/PersonnelDashboard';
-import { downloadPersonnelTemplate, exportPersonnelToExcel } from '@/lib/excelUtils';
+import { downloadPersonnelTemplate, exportPersonnelToExcel } from '../lib/excelUtils';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
 
