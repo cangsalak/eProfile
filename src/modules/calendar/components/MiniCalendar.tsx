@@ -15,7 +15,6 @@ import {
 } from 'date-fns';
 import { th } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
 
 interface MiniCalendarProps {
   currentDate: Date;
@@ -82,8 +81,8 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
   }
 
   return (
-    <Card variant="convex" className="p-4 rounded-[24px]">
-      <div className="flex items-center justify-between mb-3">
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-2.5">
         <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
           {format(miniDate, 'MMMM yyyy', { locale: th })}
         </span>
@@ -121,7 +120,7 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
       </div>
 
       <div>{rows}</div>
-    </Card>
+    </div>
   );
 };
 
