@@ -110,8 +110,11 @@ export default function InspectorModal({ isOpen, onClose, defaultProjectWide = t
       prompt += `- **แนวทางแก้ไขที่แนะนำ**: ${f.recommendation}\n\n`;
     });
 
-    prompt += `## 🎯 คำขอสำหรับการดำเนินการใน ChatGPT / AI Assistant:\n`;
-    prompt += `กรุณาช่วยวิเคราะห์ปัญหาข้างต้นทีละข้อ และเขียนขั้นตอนการแก้ไขพร้อมโค้ดตัวอย่างที่ถูกต้องตามมาตรฐาน Next.js App Router, Tailwind CSS และ TypeScript โดยคำนึงถึง Security, Clean Code และ Accessibility ครับ\n`;
+    prompt += `## 🎯 คำขอสำหรับการดำเนินการใน AI Assistant (อ้างอิง AGENTS.md, AI_GUIDE.md, DEV_CHECKLIST.md):\n`;
+    prompt += `กรุณาช่วยแก้ไขปัญหาข้างต้นตามกฎและมาตรฐานของระบบ eProfile ดังนี้:\n`;
+    prompt += `1. ปฏิบัติตาม **AGENTS.md**: ห้ามฮาร์ดโค้ดสีคงที่ (indigo/purple), ใช้คลาส \`primary-*\`, รองรับ Dark Mode (\`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800\`), และใช้ \`.form-control\`, \`.form-input\` จาก globals.css\n`;
+    prompt += `2. ปฏิบัติตาม **AI_GUIDE.md**: เรียกใช้ UI Components จาก \`@/components/ui\` (\`Button\`, \`Card\`, \`Badge\`, \`Modal\`, \`Input\`, ฯลฯ) และใช้ \`PageBreadcrumb\` + \`PageHeaderExtra\` เสมอ\n`;
+    prompt += `3. ปฏิบัติตาม **DEV_CHECKLIST.md**: รักษาความปลอดภัย Server-Side Guards, Zod Validation, Anti-Self Approval, และรันตรวจสอบ \`npx tsc --noEmit\` และ \`npm test\` ทุกครั้งก่อนส่งมอบงาน\n`;
 
     return prompt;
   };

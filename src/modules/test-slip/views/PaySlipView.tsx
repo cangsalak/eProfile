@@ -243,7 +243,7 @@ export default function PaySlipView() {
   return (
     <div className="space-y-6 pb-16 font-prompt animate-fade-in">
       {/* Action Header / Top Bar (Hidden during print) */}
-      <div className="print:hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-3xl shadow-sm">
+      <div className="no-print print:hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-3xl shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-2xl shadow-inner shrink-0">
             <i className="fa-solid fa-file-invoice-dollar"></i>
@@ -295,7 +295,7 @@ export default function PaySlipView() {
       </div>
 
       {/* Filter / Selector Bar (Hidden during print) */}
-      <div className="print:hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
+      <div className="no-print print:hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
         {/* Personnel Selector */}
         <div>
           <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">

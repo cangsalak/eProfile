@@ -32,7 +32,12 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   });
   const [customModules, setCustomModules] = useState<any[]>([]);
   const [menuOverrides, setMenuOverrides] = useState<MenuOverride[]>([]);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return getResolvedThemeMode() === 'dark';
+    }
+    return true;
+  });
   const [isMaintenanceActive, setIsMaintenanceActive] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -114,11 +119,15 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           const userHasExplicitPref = sessionStorage.getItem('user_theme_preference') || localStorage.getItem('user_theme_preference');
           if (!userHasExplicitPref && data.theme) {
             setIsDarkMode(data.theme === 'dark');
+            applyThemeSettings(data);
           } else {
-            setIsDarkMode(getResolvedThemeMode() === 'dark');
+            const currentResolved = getResolvedThemeMode();
+            setIsDarkMode(currentResolved === 'dark');
+            applyThemeSettings({
+              ...data,
+              theme: currentResolved,
+            });
           }
-
-          applyThemeSettings(data);
 
           if (data.menuOverrides) {
             try {
@@ -178,8 +187,10 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-color-scheme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-color-scheme', 'light');
     }
   }, [isDarkMode]);
 
@@ -187,6 +198,9 @@ export default function DashboardShell({ children }: DashboardShellProps) {
     const newVal = !isDarkMode;
     setIsDarkMode(newVal);
     applyThemeSettings({ theme: newVal ? 'dark' : 'light', userExplicit: true });
+    window.dispatchEvent(new CustomEvent('eprofile-theme-change', { 
+      detail: { theme: newVal ? 'dark' : 'light' } 
+    }));
   };
 
   const handleLoginSuccess = (user: Personnel) => {
@@ -226,7 +240,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       {/* Mobile Drawer Sidebar (< lg) */}
       {!isGuest && isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden no-print print:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -234,7 +248,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       {!isGuest && (
         <div
           className={cn(
-            'fixed inset-y-0 left-0 z-50 w-67.5 max-w-67.5 border-r border-card-border bg-card-surface-area transition-transform duration-300 ease-in-out lg:hidden',
+            'fixed inset-y-0 left-0 z-50 w-67.5 max-w-67.5 border-r border-card-border bg-card-surface-area transition-transform duration-300 ease-in-out lg:hidden no-print print:hidden',
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
           )}
         >
@@ -259,7 +273,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
             minWidth: !isSidebarCollapsed ? '270px' : '72px',
             transition: 'width 300ms cubic-bezier(0.4,0,0.2,1), min-width 300ms cubic-bezier(0.4,0,0.2,1)',
           }}
-          className="hidden shrink-0 overflow-hidden lg:block border-r border-card-border bg-card-surface-area"
+          className="hidden shrink-0 overflow-hidden lg:block border-r border-card-border bg-card-surface-area no-print print:hidden lg:print:hidden"
         >
           <NextAdminSidebar 
             isSidebarOpen={!isSidebarCollapsed} 
@@ -273,11 +287,11 @@ export default function DashboardShell({ children }: DashboardShellProps) {
       )}
 
       {/* Main Content Column with NextAdmin HQ Surface Container */}
-      <div className={cn('min-w-0 flex-1 flex flex-col overflow-hidden print:overflow-visible transition-all duration-300', !isGuest ? (!isSidebarCollapsed ? 'lg:p-4 lg:pr-4' : 'lg:py-4 lg:px-4') : '')}>
-        <div className="flex h-full flex-col overflow-hidden border-[0.5px] border-card-surface-border bg-card-surface-area lg:rounded-2xl lg:shadow-[0_3px_6px_-2px_rgba(0,0,0,0.02),0_1px_1px_0_rgba(0,0,0,0.04)]">
+      <div className={cn('min-w-0 flex-1 flex flex-col overflow-hidden print:overflow-visible print:p-0 print:m-0 print:border-none print:shadow-none print:bg-transparent transition-all duration-300', !isGuest ? (!isSidebarCollapsed ? 'lg:p-4 lg:pr-4' : 'lg:py-4 lg:px-4') : '')}>
+        <div className="flex h-full flex-col overflow-hidden border-[0.5px] border-card-surface-border bg-card-surface-area lg:rounded-2xl lg:shadow-[0_3px_6px_-2px_rgba(0,0,0,0.02),0_1px_1px_0_rgba(0,0,0,0.04)] print:border-none print:shadow-none print:rounded-none print:bg-transparent print:p-0 print:m-0">
           {/* Maintenance Mode Warning Banner for Admins */}
           {isMaintenanceActive && (
-            <div className="bg-amber-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between shadow-md shrink-0 z-50">
+            <div className="bg-amber-600 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between shadow-md shrink-0 z-50 no-print print:hidden">
               <div className="flex items-center gap-2">
                 <i className="fa-solid fa-triangle-exclamation text-amber-200"></i>
                 <span>⚠️ คำเตือน: ระบบกำลังเปิดใช้งาน <strong>"โหมดปิดปรับปรุงเว็บไซต์"</strong> — ผู้ใช้ทั่วไปจะไม่สามารถเข้าใช้งานหรือดูข้อมูลได้</span>
@@ -289,24 +303,26 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           )}
 
           {/* Header Inside Surface Container */}
-          <TopNavbar 
-            isGuest={isGuest}
-            systemSettings={systemSettings}
-            isSidebarOpen={isSidebarOpen}
-            setIsSidebarOpen={setIsSidebarOpen}
-            isSidebarCollapsed={isSidebarCollapsed}
-            setIsSidebarCollapsed={setIsSidebarCollapsed}
-            currentUser={currentUser}
-            handleLogout={handleLogout}
-            setIsLoginModalOpen={setIsLoginModalOpen}
-            isDarkMode={isDarkMode}
-            toggleDarkMode={toggleDarkMode}
-          />
+          <div className="no-print print:hidden">
+            <TopNavbar 
+              isGuest={isGuest}
+              systemSettings={systemSettings}
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              isSidebarCollapsed={isSidebarCollapsed}
+              setIsSidebarCollapsed={setIsSidebarCollapsed}
+              currentUser={currentUser}
+              handleLogout={handleLogout}
+              setIsLoginModalOpen={setIsLoginModalOpen}
+              isDarkMode={isDarkMode}
+              toggleDarkMode={toggleDarkMode}
+            />
+          </div>
 
           {/* Page Content Inside Surface Container */}
           <PageHeaderProvider>
-            <main className="scrollbar-thin flex-1 min-h-0 overflow-y-auto print:overflow-visible p-4 sm:p-6 lg:p-8 scroll-smooth">
-              <div className="mx-auto w-full max-w-384 pb-5">
+            <main className="scrollbar-thin flex-1 min-h-0 overflow-y-auto print:overflow-visible p-4 sm:p-6 lg:p-8 print:p-0 print:m-0 scroll-smooth">
+              <div className="mx-auto w-full max-w-384 pb-5 print:p-0 print:m-0 print:pb-0 print:max-w-none">
                 {!isGuest && <PageBreadcrumb />}
                 {children}
               </div>
@@ -315,7 +331,9 @@ export default function DashboardShell({ children }: DashboardShellProps) {
           {/* ============================================================
               ⚠️  DEVELOPER CREDIT FOOTER — DO NOT REMOVE OR MODIFY ⚠️
               ============================================================ */}
-          <DeveloperCreditFooter />
+          <div className="no-print print:hidden">
+            <DeveloperCreditFooter />
+          </div>
         </div>
       </div>
 
@@ -325,7 +343,9 @@ export default function DashboardShell({ children }: DashboardShellProps) {
         onLoginSuccess={handleLoginSuccess}
       />
 
-      <InspectorFloatingButton currentUser={currentUser} />
+      <div className="no-print print:hidden">
+        <InspectorFloatingButton currentUser={currentUser} />
+      </div>
     </div>
   );
 }

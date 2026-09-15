@@ -67,13 +67,13 @@ export async function runAuthSessionPersistenceTests() {
   );
   console.log('✔ Authenticated navigation to /login correctly redirects to /modules/personnel');
 
-  // 5. Unauthenticated Navigate to /modules/personnel -> Middleware redirects to /login
-  const protectedRedirectRes = await fetch(`${BASE_URL}/modules/personnel`, {
+  // 5. Unauthenticated Navigate to /modules/users -> Middleware redirects to /login
+  const protectedRedirectRes = await fetch(`${BASE_URL}/modules/users`, {
     redirect: 'manual',
   });
   assert.ok(
     [307, 308, 302].includes(protectedRedirectRes.status),
-    `Unauthenticated /modules/personnel should redirect to /login (got status ${protectedRedirectRes.status})`
+    `Unauthenticated /modules/users should redirect to /login (got status ${protectedRedirectRes.status})`
   );
   const protectedLocation = protectedRedirectRes.headers.get('location');
   assert.ok(protectedLocation?.includes('/login'), `Location should point to /login (got ${protectedLocation})`);

@@ -179,6 +179,16 @@ eprofile/
 
 ---
 
+# 8.5 การตรวจสอบความถูกต้องของ Design System และ UI Components (UI/UX Audit)
+
+- [ ] **Mandatory Component Library:** ทุกหน้าใช้คอมโพเนนต์จาก `@/components/ui` (`StatCard`, `Card`, `Button`, `Input`, `Select`, `Textarea`, `Badge`, `Modal`, `Tabs`) และไม่มีการเขียนกล่องสถิติหรือการ์ดแบบดิบ
+- [ ] **Multi-Surface Adaptation:** หน้าจอรองรับและปรับเปลี่ยนตาม 5 สไตล์พื้นผิว (`claymorphism`, `neumorphism`, `glass`, `shadow`, `flat`) ได้อย่างสวยงาม
+- [ ] **Dynamic Theme Colors:** ใช้คลาส `primary-*` สำหรับสีแบรนด์ และไม่พบการฮาร์ดโค้ดสี HEX หรือ `indigo-*` ในหน้าจอ UI ทั่วไป
+- [ ] **Dark & Light Mode Contrast:** แสดงผลคมชัดทั้งโหมดมืดและโหมดสว่าง ผ่านเกณฑ์มาตรฐาน WCAG AA (Contrast > 4.5:1 / 7:1)
+- [ ] **Tactile Interaction:** ปุ่มกดมีสัมผัส Squish Physics (`active:scale-[0.94]`) และช่องกรอกข้อมูลมีสถานะ Focus ชัดเจน
+
+---
+
 # 9. แบบฟอร์มรายงานผลการตรวจสอบระบบ (Audit Report Template)
 
 ```text

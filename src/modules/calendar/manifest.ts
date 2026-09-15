@@ -27,6 +27,7 @@ export const CalendarManifest: ModuleManifest = {
       path: '/modules/calendar/settings',
       requiredPermission: 'MANAGE_CALENDAR',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      isSetting: true,
       order: 21,
     },
   ],

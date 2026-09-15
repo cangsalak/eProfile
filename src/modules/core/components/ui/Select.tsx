@@ -21,9 +21,9 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
 }
 
 const sizeStyles = {
-  sm: 'py-1.5 pl-3 pr-8 text-xs rounded-xl',
-  md: 'py-2.5 pl-3.5 pr-10 text-xs sm:text-sm rounded-xl',
-  lg: 'py-3 pl-4 pr-10 text-sm sm:text-base rounded-2xl',
+  sm: 'py-2 pl-3.5 pr-8 text-xs rounded-xl',
+  md: 'py-2.5 pl-4 pr-10 text-xs sm:text-sm rounded-2xl',
+  lg: 'py-3.5 pl-5 pr-12 text-sm sm:text-base rounded-2xl',
 };
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
@@ -51,7 +51,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+            className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5"
           >
             {label}
             {props.required && <span className="text-rose-500 ml-1">*</span>}
@@ -70,9 +70,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             id={selectId}
             disabled={disabled}
             className={cn(
-              'w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all appearance-none cursor-pointer disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-900 disabled:cursor-not-allowed',
+              'w-full bg-slate-50/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/25 focus:border-primary-500 transition-all duration-200 appearance-none cursor-pointer disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-900 disabled:cursor-not-allowed',
               sizeStyles[size],
-              icon && 'pl-9 sm:pl-10',
+              icon && 'pl-10 sm:pl-11',
               error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20',
               className
             )}
@@ -99,7 +99,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         </div>
 
         {error && (
-          <p className="mt-1 text-xs text-rose-500 flex items-center gap-1">
+          <p className="mt-1.5 text-xs text-rose-500 flex items-center gap-1 font-bold">
             <i className="fa-solid fa-circle-exclamation text-[10px]" />
             <span>{error}</span>
           </p>

@@ -2,12 +2,12 @@
 
 export interface ThemeSettings {
   theme?: string;              // 'dark' | 'light'
-  systemColor?: string;        // 'indigo' | 'emerald' | 'ocean' | 'rose' | 'custom'
+  systemColor?: string;        // 'indigo' | 'emerald' | 'ocean' | 'rose' | 'nextadmin' | 'custom'
   customPrimaryColor?: string; // '#hex'
-  systemFont?: string;         // 'prompt' | 'sarabun' | 'kanit' | 'niramit'
+  systemFont?: string;         // 'prompt' | 'sarabun' | 'kanit' | 'niramit' | 'plusJakarta' | 'dmSans' | 'nunito'
   fontSizeScale?: string;      // '85' - '130' (percent)
   borderRadius?: string;       // 'sharp' | 'rounded' | 'pill'
-  surfaceStyle?: string;       // 'flat' | 'shadow' | 'glass'
+  surfaceStyle?: string;       // 'flat' | 'shadow' | 'glass' | 'neumorphism' | 'claymorphism'
   layoutDensity?: string;      // 'normal' | 'compact'
   toastPosition?: string;
   toastTheme?: string;
@@ -24,14 +24,14 @@ export function getResolvedThemeMode(systemDefaultTheme?: string): 'dark' | 'lig
   }
 
   try {
-    const sessionPref = sessionStorage.getItem('user_theme_preference');
-    if (sessionPref === 'dark' || sessionPref === 'light') {
-      return sessionPref;
-    }
-
     const localPref = localStorage.getItem('user_theme_preference');
     if (localPref === 'dark' || localPref === 'light') {
       return localPref;
+    }
+
+    const sessionPref = sessionStorage.getItem('user_theme_preference');
+    if (sessionPref === 'dark' || sessionPref === 'light') {
+      return sessionPref;
     }
 
     const localDarkMode = localStorage.getItem('darkMode');
@@ -69,8 +69,8 @@ export function applyThemeSettings(settings: Partial<ThemeSettings> & { userExpl
     const chosenMode = settings.theme;
     isDark = chosenMode === 'dark';
     try {
-      sessionStorage.setItem('user_theme_preference', chosenMode);
       localStorage.setItem('user_theme_preference', chosenMode);
+      sessionStorage.setItem('user_theme_preference', chosenMode);
       localStorage.setItem('darkMode', isDark ? 'true' : 'false');
       localStorage.setItem('theme_mode', chosenMode);
     } catch {}
@@ -139,6 +139,9 @@ export function applyThemeSettings(settings: Partial<ThemeSettings> & { userExpl
     sarabun: "'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     kanit: "'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     niramit: "'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    plusJakarta: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    dmSans: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    nunito: "'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   };
   const fontStack = fontVarMap[activeFont] || fontVarMap.prompt;
   root.setAttribute('data-font', activeFont);
@@ -182,6 +185,16 @@ export function applyThemeSettings(settings: Partial<ThemeSettings> & { userExpl
     root.style.setProperty('--surface-bg-dark', 'var(--surface-card)');
     root.style.setProperty('--surface-blur', '16px');
     root.style.setProperty('--surface-shadow', 'none');
+  } else if (activeSurface === 'neumorphism') {
+    root.style.setProperty('--surface-bg', '#E0E5EC');
+    root.style.setProperty('--surface-bg-dark', 'var(--surface-card)');
+    root.style.setProperty('--surface-blur', '0px');
+    root.style.setProperty('--surface-shadow', '9px 9px 16px rgb(163 177 198 / 0.6), -9px -9px 16px rgba(255, 255, 255, 0.6)');
+  } else if (activeSurface === 'claymorphism') {
+    root.style.setProperty('--surface-bg', 'rgba(255, 255, 255, 0.85)');
+    root.style.setProperty('--surface-bg-dark', 'rgba(30, 41, 59, 0.85)');
+    root.style.setProperty('--surface-blur', '16px');
+    root.style.setProperty('--surface-shadow', '16px 16px 32px rgba(160, 150, 180, 0.2), -10px -10px 24px rgba(255, 255, 255, 0.9)');
   }
 
   // 7. Layout Density

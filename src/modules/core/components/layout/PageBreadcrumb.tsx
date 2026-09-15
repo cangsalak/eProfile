@@ -232,7 +232,7 @@ export default function PageBreadcrumb() {
   const hasSubMenus = moduleMenus && moduleMenus.length > 1;
 
   return (
-    <div className="mb-6 animate-fade-in font-prompt">
+    <div className="mb-6 animate-fade-in font-prompt no-print print:hidden">
       {/* Small Top Breadcrumb Trail */}
       <nav className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2">
         {items.map((item, idx) => {

@@ -34,6 +34,7 @@ export const NewsManifest: ModuleManifest = {
       icon: 'fa-solid fa-paper-plane',
       path: '/modules/news/settings',
       requiredPermission: 'MANAGE_SYSTEM',
+      isSetting: true,
       order: 57,
     },
   ],

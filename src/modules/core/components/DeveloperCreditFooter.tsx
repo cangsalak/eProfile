@@ -112,7 +112,7 @@ export default function DeveloperCreditFooter() {
       <footer
         id="dev-credit-footer"
         data-integrity="required"
-        className="w-full border-t border-slate-200/60 dark:border-slate-700/40 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm print:hidden"
+        className="w-full border-t border-slate-200/60 dark:border-slate-700/40 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm no-print print:hidden"
       >
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] text-slate-400 dark:text-slate-500">
 

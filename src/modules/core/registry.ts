@@ -11,6 +11,7 @@ export interface MenuOverride {
   isCustom?: boolean;
   requiredRoles?: string[];
   requiredPermission?: string;
+  isSetting?: boolean;
   subItems?: { name: string; path: string; requiredPermission?: string }[];
 }
 
@@ -36,6 +37,8 @@ import { AuthManifest } from '@/modules/auth/manifest';
 import { InstallManifest } from '@/modules/install/manifest';
 import { SettingsManifest } from './manifest';
 
+import { PrintManifest } from '@/modules/print/manifest';
+
 export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   DashboardManifest,
   SettingsManifest,
@@ -49,6 +52,7 @@ export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   NewsManifest,
   ContactsManifest,
   UploadManifest,
+  PrintManifest,
   InspectorManifest,
   ApiDocsManifest,
   themeManifest,
@@ -59,7 +63,7 @@ export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   Rpb1Manifest,
 ];
 
-export { UsersManifest, PersonnelManifest, RolesManifest, SiteManifest, SiteContentManifest, InspectorManifest, SystemInspectorManifest, AuthManifest, InstallManifest, SettingsManifest };
+export { UsersManifest, PersonnelManifest, RolesManifest, SiteManifest, SiteContentManifest, InspectorManifest, SystemInspectorManifest, AuthManifest, InstallManifest, SettingsManifest, PrintManifest };
 
 export class ModuleRegistry {
   /**
@@ -115,6 +119,7 @@ export class ModuleRegistry {
       mod.menus.forEach((menu) => {
         const override = menuOverrides.find((item) => item.id === menu.id);
         if (override?.enabled === false) return;
+        if (override?.isSetting ?? menu.isSetting) return;
         const menuTitle = override?.title?.trim() || menu.title;
         const menuPath = override?.path?.trim() || menu.path;
         const menuOrder = override?.order ?? menu.order;
@@ -159,7 +164,7 @@ export class ModuleRegistry {
 
     // Add Custom Menus created by Admin
     menuOverrides.forEach((override) => {
-      if (override.isCustom && override.enabled !== false && override.title && override.path) {
+      if (override.isCustom && override.enabled !== false && !override.isSetting && override.title && override.path) {
         if (!allMenus.some((m) => m.path === override.path)) {
           let hasRole = true;
           if (override.requiredRoles && override.requiredRoles.length > 0) {

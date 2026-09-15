@@ -128,7 +128,7 @@ export default function AddPersonnelModal({ isOpen, onClose, onAdd, initialData 
           <h3 className="text-xl font-bold text-slate-900 dark:text-white">
             {initialData ? 'แก้ไขข้อมูลบุคลากร' : 'เพิ่มข้อมูลบุคลากรใหม่'}
           </h3>
-          <button onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800">
+          <button type="button" onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800">
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>

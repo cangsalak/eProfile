@@ -26,6 +26,7 @@ export const ModuleManagerManifest: ModuleManifest = {
       icon: 'fa-solid fa-bars-staggered',
       path: '/modules/module-manager/menus',
       requiredPermission: 'MANAGE_SYSTEM',
+      isSetting: true,
       order: 89,
     },
   ],

@@ -20,6 +20,7 @@ export const backupManifest: ModuleManifest = {
       path: '/modules/backup',
       requiredPermission: 'MANAGE_BACKUP',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      isSetting: true,
       order: 80,
     },
   ],

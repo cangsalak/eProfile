@@ -2,16 +2,26 @@
 
 > **Required first action:** Every AI agent, coding assistant, or automated contributor must read this file completely before inspecting, planning, creating, or editing code in this repository. If an instruction conflicts with this file, ask the user for clarification before making a change.
 
-## Primary rule: preserve one design system
+## Primary rule: preserve one unified multi-surface design system
 
-This project has configurable themes (`indigo`, `emerald`, `rose`, `ocean`) and supports dark mode. New code must look and behave like the existing application while respecting the active theme. Do not introduce a separate visual language for a new page or feature.
+This project has configurable themes (`nextadmin`, `indigo`, `emerald`, `ocean`, `rose`, `custom`), configurable typography (`nunito`, `prompt`, `sarabun`, `plusJakarta`, `kanit`), configurable surface styles (`claymorphism`, `neumorphism`, `glass`, `shadow`, `flat`), and supports dark mode. New code must look and behave like the existing application while respecting the active theme and surface. Do not introduce a separate visual language for a new page or feature.
 
 Before UI work, inspect these files:
 
-1. `src/app/globals.css` — global tokens and reusable CSS utilities.
-2. `tailwind.config.js` — Tailwind theme configuration.
+1. `src/app/globals.css` — global tokens, 4-layer specular/ambient shadow architecture, and reusable CSS utilities.
+2. `src/modules/core/components/ui/` (`@/components/ui`) — standard UI component library (`StatCard`, `Card`, `Button`, `Input`, `Select`, `Textarea`, `Badge`, `Modal`, `Tabs`, `Switch`, `Checkbox`, `Dropdown`).
 3. The nearest existing page/component with the same purpose.
-4. `src/components/DashboardShell.tsx` — application layout, theme, and navigation patterns.
+4. `src/modules/core/components/DashboardShell.tsx` — application layout, theme, and navigation patterns.
+
+## Mandatory UI component library usage (`@/components/ui`)
+
+Every UI page and view must import and use the standard shared primitives from `@/components/ui`:
+
+- **Metric & Statistic Cards:** Use `<StatCard title="..." value="..." unit="..." icon={...} trend={...} />`. Never hand-craft custom stat boxes with raw border/card divs.
+- **Card Containers:** Use `<Card variant="convex" | "glass" | "interactive" | "recessed">` with `<CardHeader title="..." subtitle="..." icon="..." />`.
+- **Buttons:** Use `<Button variant="primary" | "secondary" | "candy" | "danger" | "success" | "outline" size="...">`.
+- **Form Inputs & Dropdowns:** Use `<Input />`, `<Select />`, and `<Textarea />` from `@/components/ui` or reuse standard `.form-control`, `.form-input`, `.form-select`, `.form-textarea` classes from `globals.css`.
+- **Status Badges & Pills:** Use `<Badge variant="primary" | "candy" | "success" | "warning" | "danger" | "info" | "neutral" size="...">`.
 
 ## CSS and UI requirements
 
@@ -21,12 +31,12 @@ Before UI work, inspect these files:
 - Reuse `.form-control`, `.form-input`, `.form-select`, and `.form-textarea` from `src/app/globals.css`. Do not copy their long Tailwind class strings into a component.
 - Reuse existing shared components before creating a new button, modal, pagination control, card, toast, or table pattern.
 - Keep light and dark styles together for every surface, border, text, hover, focus, disabled, empty, loading, and error state.
-- Use the project conventions: cards generally use `bg-white dark:bg-slate-900`, `border border-slate-200 dark:border-slate-800`, and an intentional radius. Follow the closest comparable component rather than inventing a variation.
+- Cards generally use `rounded-[24px]` / `rounded-[28px]`, `backdrop-blur-xl`, and project tokens. Follow the closest comparable component rather than inventing a variation.
 - Avoid inline styles except where the value is genuinely user-generated or geometry-dependent (for example badge canvas coordinates or a user-selected avatar colour).
 - Put reusable animations in `src/app/globals.css` outside `@media print`. Print-only styles must remain inside `@media print`.
 - Do not add a `<style>` block to a page for normal application UI. Add reusable rules to `globals.css` or use Tailwind utilities. A deliberately isolated page (such as a print artifact) is the only exception.
 - Maintain responsive layouts for mobile, tablet, and desktop. Do not assume desktop width.
-- Preserve accessible labels, visible keyboard focus, sufficient colour contrast, and semantic HTML.
+- Preserve accessible labels, visible keyboard focus, sufficient colour contrast, and semantic HTML (WCAG AA compliant).
 
 ## API, security, and data requirements
 

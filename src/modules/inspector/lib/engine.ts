@@ -62,12 +62,20 @@ export async function fetchDynamicProjectRoutes(): Promise<ProjectRouteItem[]> {
     const res = await fetch('/api/admin/inspector/routes', { credentials: 'include' });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data.routes) && data.routes.length > 0) {
-        return data.routes.map((r: any) => ({
-          path: r.path,
-          name: r.name,
-          category: r.category,
-        }));
+      const rawList = Array.isArray(data.pageRoutes) && data.pageRoutes.length > 0
+        ? data.pageRoutes
+        : Array.isArray(data.routes)
+          ? data.routes.filter((r: any) => !r.path?.startsWith('/api/'))
+          : [];
+
+      if (rawList.length > 0) {
+        return rawList
+          .filter((r: any) => !r.path?.startsWith('/api/') && !r.isDynamic)
+          .map((r: any) => ({
+            path: r.path,
+            name: r.name || r.path,
+            category: r.category || 'Public',
+          }));
       }
     }
   } catch (err) {
@@ -75,17 +83,23 @@ export async function fetchDynamicProjectRoutes(): Promise<ProjectRouteItem[]> {
   }
   return [
     { path: '/dashboard', name: 'หน้าหลัก (Dashboard)', category: 'Core' },
-    { path: '/modules/users/directory', name: 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' },
-    { path: '/modules/users/manage', name: 'จัดการบุคลากร (Personnel Management)', category: 'Personnel' },
+    { path: '/modules/personnel/directory', name: 'ทำเนียบบุคลากร (Directory)', category: 'Personnel' },
+    { path: '/modules/personnel/manage', name: 'จัดการบุคลากร (Personnel Management)', category: 'Personnel' },
     { path: '/modules/leaves', name: 'ระบบการลา (Leave Management)', category: 'Personnel' },
     { path: '/modules/vehicles', name: 'ระบบยานพาหนะ (Vehicle Management)', category: 'Management' },
     { path: '/modules/badges', name: 'พิมพ์บัตรประจำตัว (Badge Studio)', category: 'Management' },
     { path: '/modules/calendar', name: 'ปฏิทินปฏิบัติงาน (Duty Calendar)', category: 'Core' },
     { path: '/modules/news', name: 'ระบบข่าวสารและประกาศ (News & Announcements)', category: 'Management' },
-    { path: '/modules/dashboard', name: 'หน้าหลักและแดชบอร์ด (Overview Dashboard)', category: 'Core' },
-    { path: '/modules/dashboard/command', name: 'ศูนย์บัญชาการ (Command Center)', category: 'Core' },
-    { path: '/modules/system-inspector', name: 'ตรวจสอบความปลอดภัยระบบ (System Inspector)', category: 'Management' },
+    { path: '/modules/contacts', name: 'สมุดโทรศัพท์และข้อมูลติดต่อ (Contacts)', category: 'Management' },
+    { path: '/modules/command-dashboard', name: 'ศูนย์บัญชาการ (Command Center)', category: 'Core' },
+    { path: '/modules/test-slip', name: 'สลิปเงินได้และเงินเดือน (Salary Slips)', category: 'Management' },
+    { path: '/modules/rpb1', name: 'แบบฟอร์ม รพบ.1 (RPB-1 Form)', category: 'Management' },
+    { path: '/modules/api-docs', name: 'ระบบเอกสารและจัดการ API (API Docs)', category: 'Settings' },
+    { path: '/modules/site-content', name: 'จัดการเนื้อหาหน้าเว็บ (Site Content CMS)', category: 'Settings' },
+    { path: '/modules/inspector', name: 'ตรวจสอบระบบ (System Inspector)', category: 'Settings' },
+    { path: '/modules/inspector/checklist', name: 'เกณฑ์ตรวจความพร้อม (Dev Checklist)', category: 'Settings' },
     { path: '/modules/module-manager', name: 'จัดการโมดูลส่วนเสริม (Module Manager)', category: 'Settings' },
+    { path: '/modules/menus', name: 'จัดการแถบนำทาง (Menu Management)', category: 'Settings' },
     { path: '/modules/theme', name: 'ตั้งค่าธีมและระบบทั่วไป (Theme & Branding)', category: 'Settings' },
     { path: '/modules/backup', name: 'สำรองและกู้คืนข้อมูล (Backup & Restore)', category: 'Settings' },
   ];
@@ -766,13 +780,19 @@ export async function runFullProjectInspection(
           recommendation: 'ตรวจสอบไฟล์เพจใน App Router ว่ามีข้อผิดพลาด Server-Side หรือเส้นทางไม่ถูกต้อง',
         });
       } else {
-        const html = await res.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json') || route.path.startsWith('/api/')) {
+          // Valid API JSON response, skip HTML DOM inspections
+          pageFindings = [];
+        } else {
+          const html = await res.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
 
-        const result = inspectDomDocument(doc, route.name, route.path, 'PROJECT', globalOffset);
-        pageFindings = result.findings;
-        globalOffset = result.nextOffset;
+          const result = inspectDomDocument(doc, route.name, route.path, 'PROJECT', globalOffset);
+          pageFindings = result.findings;
+          globalOffset = result.nextOffset;
+        }
       }
     } catch (err: any) {
       httpStatus = 0;

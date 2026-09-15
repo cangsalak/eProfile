@@ -64,7 +64,7 @@ export const backupPersonnelSchema = z.object({
   trainingHistory: z.string().optional().default(''),
   coverPhoto: z.string().optional().default(''),
   profileTheme: z.string().optional().default('indigo'),
-  mustChangePassword: z.boolean().optional().default(true),
+  mustChangePassword: z.boolean().optional().default(false),
   failedLoginAttempts: z.number().int().optional().default(0),
   lockedUntil: z.string().or(z.date()).nullable().optional(),
   createdAt: z.string().or(z.date()).optional(),

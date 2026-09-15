@@ -26,6 +26,7 @@ export const UploadManifest: ModuleManifest = {
       icon: 'fa-solid fa-server',
       path: '/modules/upload/settings',
       requiredPermission: 'MANAGE_SYSTEM',
+      isSetting: true,
       order: 71,
     },
   ],

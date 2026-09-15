@@ -18,7 +18,8 @@ import { Rpb1Module } from '@/modules/rpb1';
 import { ApiDocsModule } from '@/modules/api-docs';
 import { UploadModule } from '@/modules/upload';
 import { AuthModule } from '@/modules/auth';
-import { InstallModule, InstallManifest } from '@/modules/install';
+import { InstallModule } from '@/modules/install';
+import { PrintModule } from '@/modules/print';
 import { SettingsManifest } from './manifest';
 import SettingsView from './views/SettingsView';
 
@@ -45,6 +46,7 @@ export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'news': NewsModule,
   'contacts': ContactsModule,
   'upload': UploadModule,
+  'print': PrintModule,
   'system-inspector': InspectorModule,
   'inspector': InspectorModule,
   'api-docs': ApiDocsModule,
@@ -57,7 +59,7 @@ export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'rpb1': Rpb1Module,
 };
 
-export { UsersModule, PersonnelModule, RolesModule, SiteModule, SiteContentModule, InspectorModule, SystemInspectorModule, AuthModule };
+export { UsersModule, PersonnelModule, RolesModule, SiteModule, SiteContentModule, InspectorModule, SystemInspectorModule, AuthModule, PrintModule };
 
 export class ModuleViewRegistry {
   private static customDefinitions: Map<string, ModuleDefinition> = new Map();

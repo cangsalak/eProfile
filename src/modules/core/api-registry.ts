@@ -201,6 +201,7 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
       PATCH: InspectorApi.handleUpdateFinding as any,
     },
     'check-headers': { GET: InspectorApi.handleCheckHeaders as any },
+    'checklist': { GET: InspectorApi.handleGetChecklist as any },
   },
   'leaves': {
     '': {

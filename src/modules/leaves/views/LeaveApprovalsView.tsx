@@ -433,6 +433,7 @@ export default function LeaveApprovalsView() {
 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
+            type="button"
             onClick={() => fetchApprovals()}
             disabled={isLoading}
             className="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-xs"
@@ -522,6 +523,7 @@ export default function LeaveApprovalsView() {
             ].map(tab => (
               <button
                 key={tab.value}
+                type="button"
                 onClick={() => {
                   setStatusFilter(tab.value);
                   setPage(1);
@@ -693,6 +695,7 @@ export default function LeaveApprovalsView() {
             <i className="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
             <p className="text-sm font-semibold">{error}</p>
             <button
+              type="button"
               onClick={() => fetchApprovals()}
               className="mt-4 px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-200"
             >
@@ -815,6 +818,7 @@ export default function LeaveApprovalsView() {
                       <td className="px-5 py-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <button
+                            type="button"
                             onClick={() => handleOpenDetailModal(item)}
                             title="ดูรายละเอียดฉบับเต็ม"
                             className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
@@ -825,6 +829,7 @@ export default function LeaveApprovalsView() {
                           {isPending && (
                             <>
                               <button
+                                type="button"
                                 onClick={() => handleOpenActionModal(item, 'approve')}
                                 title="อนุมัติใบลา"
                                 className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1"
@@ -834,6 +839,7 @@ export default function LeaveApprovalsView() {
                               </button>
 
                               <button
+                                type="button"
                                 onClick={() => handleOpenActionModal(item, 'reject')}
                                 title="ไม่อนุมัติ"
                                 className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1"
@@ -889,6 +895,7 @@ export default function LeaveApprovalsView() {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setIsDetailModalOpen(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-xs transition"
               >
@@ -1041,6 +1048,7 @@ export default function LeaveApprovalsView() {
             {/* Modal Actions */}
             <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
               <button
+                type="button"
                 onClick={() => setIsDetailModalOpen(false)}
                 className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-300"
               >
@@ -1050,6 +1058,7 @@ export default function LeaveApprovalsView() {
               {selectedLeave.status === 'รออนุมัติ' && (
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={() => {
                       setIsDetailModalOpen(false);
                       handleOpenActionModal(selectedLeave, 'reject');
@@ -1059,6 +1068,7 @@ export default function LeaveApprovalsView() {
                     ไม่อนุมัติ
                   </button>
                   <button
+                    type="button"
                     onClick={() => {
                       setIsDetailModalOpen(false);
                       handleOpenActionModal(selectedLeave, 'approve');

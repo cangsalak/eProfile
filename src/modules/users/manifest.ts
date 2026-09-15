@@ -29,7 +29,7 @@ export const UsersManifest: ModuleManifest = {
       order: 70,
       subItems: [
         { name: 'ข้อมูลกำลังพล', path: '/modules/users/manage' },
-        { name: 'พิมพ์บัตรประจำตัว', path: '/modules/badges' },
+        { name: 'โครงสร้างหน่วยงาน', path: '/modules/users/departments' },
       ]
     }
   ],

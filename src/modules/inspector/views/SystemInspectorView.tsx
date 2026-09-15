@@ -5,6 +5,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import InspectorModal from '../components/InspectorModal';
 import ConfirmModal from '@/components/common/ConfirmModal';
+import InspectorLayout from './InspectorLayout';
 
 interface InspectionItem {
   id: string;
@@ -152,45 +153,51 @@ export default function SystemInspectorView() {
   const passCount = inspections.filter(i => i.overallResult === 'PASS').length;
 
   return (
-    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
-      
-      {/* Top Action Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
-        <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
-            SUPER_ADMIN ONLY
-          </span>
-          <span className="text-xs text-slate-500 dark:text-slate-400">
-            วินิจฉัย DOM, Broken Links, Accessibility และ Security Headers
-          </span>
+    <InspectorLayout
+      activeTab="scan"
+      title="ตรวจประเมินและสแกนระบบ (System Inspector UI)"
+      description="เครื่องมือวินิจฉัย DOM, Accessibility, Typography, Broken Links และ Security Headers ทั้งโปรเจกต์"
+      onRefresh={fetchInspections}
+      isRefreshing={isLoading}
+    >
+      <div className="space-y-6">
+        {/* Top Action Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
+              SUPER_ADMIN ONLY
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              วินิจฉัย DOM, Broken Links, Accessibility และ Security Headers
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link
+              href="/modules/api-docs"
+              className="px-3 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-xs shadow-xs flex items-center gap-2 transition-all"
+            >
+              <i className="fa-solid fa-book text-primary-500"></i>
+              <span>API Docs</span>
+            </Link>
+            <Link
+              href="/modules/inspector/audit-logs"
+              className="px-3 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-xs shadow-xs flex items-center gap-2 transition-all"
+            >
+              <i className="fa-solid fa-list-check text-primary-500"></i>
+              <span>Audit Logs</span>
+            </Link>
+            <button
+              onClick={() => setIsLiveModalOpen(true)}
+              className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold text-xs shadow-sm shadow-primary-500/20 flex items-center gap-2 transition-all"
+            >
+              <i className="fa-solid fa-play"></i>
+              <span>เริ่มต้นสแกนใหม่</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Link
-            href="/inspector/api-docs"
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-xs shadow-xs flex items-center gap-2 transition-all"
-          >
-            <i className="fa-solid fa-book text-primary-500"></i>
-            <span>API Docs</span>
-          </Link>
-          <Link
-            href="/inspector/audit-logs"
-            className="px-3 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-xs shadow-xs flex items-center gap-2 transition-all"
-          >
-            <i className="fa-solid fa-list-check text-primary-500"></i>
-            <span>Audit Logs</span>
-          </Link>
-          <button
-            onClick={() => setIsLiveModalOpen(true)}
-            className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold text-xs shadow-sm flex items-center gap-2 transition-all"
-          >
-            <i className="fa-solid fa-play"></i>
-            <span>เริ่มต้นสแกนใหม่</span>
-          </button>
-        </div>
-      </div>
-
-      {/* KPI Cards */}
+        {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
           <div className="text-xs font-semibold text-slate-500 mb-1">การตรวจทั้งหมด</div>
@@ -538,6 +545,7 @@ export default function SystemInspectorView() {
         }}
         onCancel={() => setDeleteTargetId(null)}
       />
-    </div>
+      </div>
+    </InspectorLayout>
   );
 }

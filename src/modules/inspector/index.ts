@@ -11,6 +11,7 @@ import EnvironmentView from './views/EnvironmentView';
 import SecurityScanView from './views/SecurityScanView';
 import SystemInspectorView from './views/SystemInspectorView';
 import DataCategorySettingsView from './views/DataCategorySettingsView';
+import DevChecklistView from './views/DevChecklistView';
 
 export * from './manifest';
 export * from './lib';
@@ -21,6 +22,7 @@ export { default as DataCategorySettings } from './components/DataCategorySettin
 
 export {
   HealthView,
+  DevChecklistView,
   PerformanceView,
   RouteMapView,
   ModuleHealthView,
@@ -38,6 +40,8 @@ export const InspectorModule: ModuleDefinition = {
   views: {
     '': HealthView,
     'health': HealthView,
+    'checklist': DevChecklistView,
+    'dev-checklist': DevChecklistView,
     'performance': PerformanceView,
     'routes': RouteMapView,
     'modules': ModuleHealthView,

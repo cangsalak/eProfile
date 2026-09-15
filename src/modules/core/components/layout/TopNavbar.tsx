@@ -8,6 +8,7 @@ import { Personnel } from '@/modules/users';
 import { SunIcon, MoonIcon, MenuIcon } from './icons';
 import { ThreeDots } from '@/components/common/sidebar/icon';
 import { cn } from '@/modules/core/lib/cn';
+import ThemeSwitcher from './ThemeSwitcher';
 
 interface TopNavbarProps {
   isGuest: boolean;
@@ -89,6 +90,9 @@ export default function TopNavbar({
 
               {/* Right Side - Actions */}
               <div className="flex items-center gap-2.5">
+                {/* Global Theme & Style Switcher */}
+                <ThemeSwitcher systemSettings={systemSettings} />
+
                 <button 
                   type="button"
                   onClick={toggleDarkMode}
@@ -126,6 +130,8 @@ export default function TopNavbar({
           <div className="flex items-center justify-between gap-2.5">
             <div className="flex items-center gap-2.5">
               <SearchBar currentUser={currentUser} systemSettings={systemSettings} />
+
+              <ThemeSwitcher systemSettings={systemSettings} />
 
               <button 
                 type="button"

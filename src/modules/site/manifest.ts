@@ -19,6 +19,7 @@ export const SiteManifest: ModuleManifest = {
       icon: 'fa-solid fa-window-maximize',
       path: '/modules/site',
       requiredPermission: 'MANAGE_SYSTEM',
+      isSetting: true,
       order: 95,
       subItems: [
         { name: 'หน้าแรก (Home)', path: '/modules/site' },

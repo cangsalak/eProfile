@@ -6,6 +6,8 @@ export const PUBLIC_SETTINGS_ALLOWLIST = new Set([
   'systemName',
   'systemLogo',
   'systemDescription',
+  'enabledModules',
+  'menuOverrides',
   'organizationName',
   'organizationAddress',
   'organizationPhone',

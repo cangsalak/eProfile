@@ -63,7 +63,7 @@ export default function InspectorFloatingButton({ currentUser }: InspectorFloati
               </div>
               <div>
                 <div className="font-bold">ตรวจสอบทั้งโปรเจค</div>
-                <div className="text-[10px] text-slate-400 font-normal">สแกนทุกเส้นทางและทุกหน้า (21 หน้า)</div>
+                <div className="text-[10px] text-slate-400 font-normal">สแกนทุกเส้นทางและทุกหน้า (ทั้งระบบ)</div>
               </div>
             </button>
 
@@ -86,37 +86,37 @@ export default function InspectorFloatingButton({ currentUser }: InspectorFloati
               </div>
             </button>
 
-            {/* 2. Inspector Dashboard Link */}
+            {/* 3. Inspector Dashboard Link */}
             <Link
-              href="/manage/inspector"
+              href="/modules/inspector"
               onClick={() => setIsMenuOpen(false)}
               className={`w-full flex items-center gap-2.5 px-3 py-2 text-left rounded-xl transition-colors ${
-                pathname === '/manage/inspector'
+                pathname.startsWith('/modules/inspector')
                   ? 'bg-primary-100 dark:bg-primary-950/60 text-primary-700 dark:text-primary-300 font-bold'
                   : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}
             >
               <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <i className="fa-solid fa-chart-line text-xs text-primary-500"></i>
+                <i className="fa-solid fa-gauge-high text-xs text-primary-500"></i>
               </div>
               <div>
-                <div className="font-bold">Inspector Dashboard</div>
-                <div className="text-[10px] text-slate-400 font-normal">ดูประวัติและจัดการ Findings</div>
+                <div className="font-bold">Runtime Inspector</div>
+                <div className="text-[10px] text-slate-400 font-normal">ดูสถานะ Health, Metrics & Logs</div>
               </div>
             </Link>
 
-            {/* 3. API Docs Link */}
+            {/* 4. API Docs Link */}
             <Link
-              href="/manage/api-docs"
+              href="/modules/api-docs"
               onClick={() => setIsMenuOpen(false)}
               className={`w-full flex items-center gap-2.5 px-3 py-2 text-left rounded-xl transition-colors ${
-                pathname === '/manage/api-docs'
+                pathname.startsWith('/modules/api-docs')
                   ? 'bg-primary-100 dark:bg-primary-950/60 text-primary-700 dark:text-primary-300 font-bold'
                   : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}
             >
               <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                <i className="fa-solid fa-plug text-xs text-primary-500"></i>
+                <i className="fa-solid fa-book text-xs text-primary-500"></i>
               </div>
               <div>
                 <div className="font-bold">เอกสาร API (API Docs)</div>

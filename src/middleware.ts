@@ -51,6 +51,31 @@ const protectedPagePrefixes = [
   '/manage',
 ];
 
+// Public page paths and prefixes (no authentication required)
+const publicPagePaths = [
+  '/',
+  '/login',
+  '/modules/auth/login',
+  '/register',
+  '/modules/auth/register',
+  '/forgot-password',
+  '/modules/auth/forgot-password',
+  '/install',
+  '/modules/install',
+  '/maintenance',
+  '/forbidden',
+  '/about',
+  '/contact',
+  '/services',
+  '/news',
+];
+const publicPagePrefixes = [
+  '/news/',
+  '/verify/',
+  '/badges/verify/',
+  '/modules/badges/verify/',
+];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('auth_token')?.value;
@@ -100,18 +125,29 @@ export async function middleware(request: NextRequest) {
   }
 
   // 1. If user is authenticated and tries to visit auth pages (/login, /register), redirect to /modules/users
-  if (isAuthenticated && (pathname === '/login' || pathname === '/register')) {
+  if (
+    isAuthenticated &&
+    (pathname === '/login' ||
+      pathname === '/register' ||
+      pathname === '/modules/auth/login' ||
+      pathname === '/modules/auth/register')
+  ) {
     return NextResponse.redirect(new URL('/modules/users', request.url));
   }
 
   // 2. For protected member page routes, require authentication
+  const isPublicPage =
+    publicPagePaths.includes(pathname) ||
+    publicPagePrefixes.some(prefix => pathname.startsWith(prefix));
+
   const isProtectedPage =
-    protectedPagePrefixes.some(
+    !isPublicPage &&
+    (protectedPagePrefixes.some(
       prefix => pathname === prefix || pathname.startsWith(prefix + '/')
     ) ||
-    ModuleRegistry.getAllModules().some(
-      m => pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
-    );
+      ModuleRegistry.getAllModules().some(
+        m => pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
+      ));
 
   if (isProtectedPage && !isAuthenticated) {
     const loginUrl = new URL('/login', request.url);

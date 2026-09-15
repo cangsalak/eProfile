@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import TablePagination from '@/components/common/TablePagination';
+import InspectorLayout from './InspectorLayout';
 
 interface AuditLogItem {
   id: string;
@@ -291,15 +292,22 @@ export default function ManageAuditLogsPage() {
   const indexOfLastItem = indexOfFirstItem + logs.length;
 
   return (
-    <div className="pb-16 space-y-6 animate-fade-in font-prompt">
-      {/* Action Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-primary-500 animate-pulse"></span>
-          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-            Security & Compliance Audit Trail
-          </span>
-        </div>
+    <InspectorLayout
+      activeTab="audit-logs"
+      title="บันทึกการใช้งานระบบ (Audit Logs)"
+      description="บันทึกประวัติการเข้าใช้งาน การเปลี่ยนแปลงข้อมูล และกิจกรรมความปลอดภัยทั้งหมดในระบบ"
+      onRefresh={fetchLogs}
+      isRefreshing={isLoading}
+    >
+      <div className="space-y-6">
+        {/* Action Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary-500 animate-pulse"></span>
+            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Security & Compliance Audit Trail
+            </span>
+          </div>
 
         {/* Action Toolbar Buttons */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -596,6 +604,7 @@ export default function ManageAuditLogsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </InspectorLayout>
   );
 }

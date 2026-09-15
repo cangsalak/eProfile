@@ -13,14 +13,18 @@ interface TabItem {
 }
 
 const TABS: TabItem[] = [
-  { id: 'health', name: 'ภาพรวมระบบ (Health)', icon: 'fa-solid fa-heart-pulse', path: '/modules/inspector' },
+  { id: 'health', name: 'ภาพรวมสถานะ (Health)', icon: 'fa-solid fa-heart-pulse', path: '/modules/inspector' },
+  { id: 'checklist', name: 'ความพร้อมระบบ (Checklist)', icon: 'fa-solid fa-clipboard-check', path: '/modules/inspector/checklist' },
   { id: 'performance', name: 'ประสิทธิภาพ (Performance)', icon: 'fa-solid fa-chart-line', path: '/modules/inspector/performance' },
   { id: 'routes', name: 'แผนผัง API (Route Map)', icon: 'fa-solid fa-network-wired', path: '/modules/inspector/routes' },
   { id: 'modules', name: 'สถานะโมดูล (Modules)', icon: 'fa-solid fa-cubes', path: '/modules/inspector/modules' },
-  { id: 'errors', name: 'บันทึกข้อผิดพลาด (Errors)', icon: 'fa-solid fa-triangle-exclamation', path: '/modules/inspector/errors' },
+  { id: 'audit-logs', name: 'บันทึกการใช้งาน (Audit Logs)', icon: 'fa-solid fa-clock-rotate-left', path: '/modules/inspector/audit-logs' },
+  { id: 'security', name: 'ความปลอดภัย (Security)', icon: 'fa-solid fa-shield-halved', path: '/modules/inspector/security' },
+  { id: 'scan', name: 'ตรวจประเมินระบบ (Scan)', icon: 'fa-solid fa-magnifying-glass-chart', path: '/modules/inspector/scan' },
+  { id: 'categories', name: 'ข้อมูลพื้นฐาน (Categories)', icon: 'fa-solid fa-list-check', path: '/modules/inspector/categories' },
   { id: 'database', name: 'ฐานข้อมูล (Database)', icon: 'fa-solid fa-database', path: '/modules/inspector/database' },
   { id: 'environment', name: 'สภาพแวดล้อม (Environment)', icon: 'fa-solid fa-server', path: '/modules/inspector/environment' },
-  { id: 'security', name: 'ความปลอดภัย (Security)', icon: 'fa-solid fa-shield-halved', path: '/modules/inspector/security' },
+  { id: 'errors', name: 'บันทึกข้อผิดพลาด (Errors)', icon: 'fa-solid fa-triangle-exclamation', path: '/modules/inspector/errors' },
 ];
 
 interface InspectorLayoutProps {
@@ -82,11 +86,11 @@ export default function InspectorLayout({
 
           <div className="flex items-center gap-2 shrink-0">
             <Link
-              href="/inspector"
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
+              href="/modules/inspector/scan"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold bg-primary-600 hover:bg-primary-500 text-white shadow-sm shadow-primary-500/25 transition-all"
             >
-              <i className="fa-solid fa-shield-halved text-primary-500"></i>
-              <span>System Inspector UI</span>
+              <i className="fa-solid fa-wand-magic-sparkles"></i>
+              <span>ตรวจประเมินระบบ (Scanner UI)</span>
             </Link>
           </div>
         </div>

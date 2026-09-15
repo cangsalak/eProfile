@@ -248,17 +248,22 @@ export default function BulkBadgePrintView() {
                   margin: 10mm;
                 }
                 body {
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
+                  -webkit-print-color-adjust: exact !important;
+                  print-color-adjust: exact !important;
                   background: white !important;
                 }
+                .no-print, .print\\:hidden, [class*="print:hidden"], [class*="no-print"] {
+                  display: none !important;
+                  visibility: hidden !important;
+                  height: 0 !important;
+                }
                 .cr80-card {
-                  width: 5.4cm;
-                  height: 8.6cm;
-                  overflow: hidden;
-                  position: relative;
-                  page-break-inside: avoid;
-                  break-inside: avoid;
+                  width: 5.4cm !important;
+                  height: 8.6cm !important;
+                  overflow: hidden !important;
+                  position: relative !important;
+                  page-break-inside: avoid !important;
+                  break-inside: avoid !important;
                 }
               }
               @media screen {
@@ -273,7 +278,7 @@ export default function BulkBadgePrintView() {
           }} />
 
           {/* Control Bar (Hidden on Print) */}
-          <Card className="print:hidden">
+          <Card className="no-print print:hidden">
             <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2.5">
@@ -311,11 +316,11 @@ export default function BulkBadgePrintView() {
           </Card>
 
           {/* Badges Layout Grid (Printable Area) */}
-          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-white print:border-none print:p-0">
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0">
             <div className="flex flex-wrap gap-6 print:gap-[5mm] justify-center print:justify-start">
               {personnelList.map((person) => (
                 <div key={person.id} className="flex flex-col items-center print:break-inside-avoid mb-4">
-                  <span className="print:hidden text-slate-500 dark:text-slate-400 text-xs mb-2 text-center font-medium truncate max-w-[216px]">
+                  <span className="no-print print:hidden text-slate-500 dark:text-slate-400 text-xs mb-2 text-center font-medium truncate max-w-[216px]">
                     {person.firstName} {person.lastName}
                   </span>
 

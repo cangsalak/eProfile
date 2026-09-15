@@ -81,17 +81,23 @@ export default function MyBadgesView() {
               margin: 10mm;
             }
             body {
-              -webkit-print-color-adjust: exact;
-              print-color-adjust: exact;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
               background: white !important;
             }
+            .no-print, .print\\:hidden, [class*="print:hidden"], [class*="no-print"] {
+              display: none !important;
+              visibility: hidden !important;
+              height: 0 !important;
+            }
             .cr80-card {
-              width: 5.4cm;
-              height: 8.6cm;
-              overflow: hidden;
-              position: relative;
-              page-break-inside: avoid;
-              break-inside: avoid;
+              width: 5.4cm !important;
+              height: 8.6cm !important;
+              overflow: hidden !important;
+              position: relative !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+              margin: 0 auto !important;
             }
           }
           @media screen {
@@ -106,7 +112,7 @@ export default function MyBadgesView() {
       }} />
 
       {/* Control Panel (Hidden on Print) */}
-      <Card className="print:hidden">
+      <Card className="no-print print:hidden">
         <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2.5">
@@ -158,8 +164,8 @@ export default function MyBadgesView() {
       </Card>
 
       {/* Badge View Area */}
-      <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-white print:border-none print:p-0 flex justify-center">
-        <div className="relative p-2 border border-dashed border-slate-300 dark:border-slate-700 print:border-none print:p-0 rounded-2xl bg-white dark:bg-slate-900 shadow-sm print:shadow-none">
+      <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0 print:m-0 flex justify-center">
+        <div className="relative p-2 border border-dashed border-slate-300 dark:border-slate-700 print:border-none print:p-0 print:m-0 rounded-2xl bg-white dark:bg-slate-900 shadow-sm print:shadow-none">
           <div className="cr80-card bg-white shadow-sm print:shadow-none rounded-xl overflow-hidden">
             <IDBadge
               personnel={currentUser}

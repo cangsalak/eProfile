@@ -129,24 +129,28 @@ export default function SystemSettingsForm({
 
           {/* Primary Color Theme */}
           <div>
-            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">2. ชุดสีและโทนหลักของ NextAdmin HQ (Primary Accent)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">2. ชุดสีและโทนหลักของระบบ (Primary Accent & System Tone)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {(() => {
                 const activeColor = settings.systemColor || 'nextadmin';
                 return [
-                  { id: 'nextadmin', name: 'NextAdmin Standard Blue (#5750F1)', desc: 'โทนสีหลักมาตรฐาน NextAdmin HQ Admin Dashboard', color: 'bg-[#5750F1]' },
-                  { id: 'custom', name: 'สีเน้นแต่งเอง (Custom Accent Hex)', desc: 'ปรับแต่งรหัสสีเน้นระบบตามองค์กร', color: 'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500' },
+                  { id: 'nextadmin', name: 'NextAdmin Blue (#5750F1)', desc: 'โทนสีหลักมาตรฐาน NextAdmin HQ', color: 'bg-[#5750F1]' },
+                  { id: 'indigo', name: 'Indigo (#6366F1)', desc: 'สีน้ำเงินอมม่วง คลาสสิกสุขุม', color: 'bg-indigo-600' },
+                  { id: 'emerald', name: 'Emerald (#10B981)', desc: 'สีเขียวมรกต สดใส สบายตา', color: 'bg-emerald-600' },
+                  { id: 'ocean', name: 'Ocean (#0EA5E9)', desc: 'สีฟ้าคราม สดชื่น โปร่งโล่ง', color: 'bg-sky-500' },
+                  { id: 'rose', name: 'Rose (#F43F5E)', desc: 'สีกุหลาบ อบอุ่น มีพลัง', color: 'bg-rose-500' },
+                  { id: 'custom', name: 'สีเน้นแต่งเอง (Custom Hex)', desc: 'ปรับแต่งรหัสสีเน้นระบบตามองค์กร', color: 'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500' },
                 ].map(c => {
                   const isSelected = activeColor === c.id;
                   return (
-                    <label key={c.id} className={`cursor-pointer border-2 rounded-2xl p-4 flex items-center gap-3 transition-all ${isSelected ? 'border-primary-500 bg-primary-500/10 shadow-md ring-2 ring-primary-500/20' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
+                    <label key={c.id} className={`cursor-pointer border-2 rounded-2xl p-3.5 flex items-center gap-3 transition-all ${isSelected ? 'border-primary-500 bg-primary-500/10 shadow-md ring-2 ring-primary-500/20' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
                       <input type="radio" name="systemColor" value={c.id} checked={isSelected} onChange={handleChange} className="sr-only" />
-                      <div className={`w-10 h-10 rounded-xl ${c.color} shadow-md flex items-center justify-center text-white text-xs shrink-0`}>
+                      <div className={`w-9 h-9 rounded-xl ${c.color} shadow-md flex items-center justify-center text-white text-xs shrink-0`}>
                         {isSelected && <i className="fa-solid fa-check text-sm"></i>}
                       </div>
                       <div>
-                        <span className="text-slate-900 dark:text-white font-bold text-xs sm:text-sm block">{c.name}</span>
-                        <span className="text-[11px] text-slate-500 dark:text-slate-400">{c.desc}</span>
+                        <span className="text-slate-900 dark:text-white font-bold text-xs block">{c.name}</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">{c.desc}</span>
                       </div>
                     </label>
                   );
@@ -155,7 +159,7 @@ export default function SystemSettingsForm({
             </div>
 
             {settings.systemColor === 'custom' && (
-              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mt-3 flex items-center space-x-4 animate-fade-in">
+              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mt-3 flex flex-wrap items-center gap-4 animate-fade-in">
                 <div>
                   <label htmlFor="customPrimaryColorHex" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                     เลือกสีเน้นแต่งเอง (Custom Hex Color)
@@ -164,6 +168,49 @@ export default function SystemSettingsForm({
                     <Input id="customPrimaryColorPicker" type="color" name="customPrimaryColor" value={settings.customPrimaryColor || '#5750F1'} onChange={handleChange} className="p-0.5 h-10 w-16 cursor-pointer" />
                     <Input id="customPrimaryColorHex" type="text" name="customPrimaryColor" value={settings.customPrimaryColor || '#5750F1'} onChange={handleChange} className="font-mono uppercase w-32" />
                   </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-4">
+                  <span className="text-[11px] text-slate-500">พรีเซ็ตแนะนำ (Candy Store & Clay):</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const e = { target: { name: 'customPrimaryColor', value: '#7C3AED', type: 'text' } } as any;
+                      handleChange(e);
+                    }}
+                    className="px-2.5 py-1 rounded-xl bg-[#7C3AED] text-white text-[11px] font-bold shadow-clay-button hover:-translate-y-0.5 transition-all flex items-center gap-1"
+                  >
+                    <span>Vivid Violet (#7C3AED)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const e = { target: { name: 'customPrimaryColor', value: '#DB2777', type: 'text' } } as any;
+                      handleChange(e);
+                    }}
+                    className="px-2.5 py-1 rounded-xl bg-[#DB2777] text-white text-[11px] font-bold shadow-clay-button hover:-translate-y-0.5 transition-all flex items-center gap-1"
+                  >
+                    <span>Hot Pink (#DB2777)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const e = { target: { name: 'customPrimaryColor', value: '#0EA5E9', type: 'text' } } as any;
+                      handleChange(e);
+                    }}
+                    className="px-2.5 py-1 rounded-xl bg-[#0EA5E9] text-white text-[11px] font-bold shadow-clay-button hover:-translate-y-0.5 transition-all flex items-center gap-1"
+                  >
+                    <span>Sky Blue (#0EA5E9)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const e = { target: { name: 'customPrimaryColor', value: '#6C63FF', type: 'text' } } as any;
+                      handleChange(e);
+                    }}
+                    className="px-2.5 py-1 rounded-xl bg-[#6C63FF] text-white text-[11px] font-bold shadow-sm flex items-center gap-1 hover:opacity-90"
+                  >
+                    <span>Soft Violet (#6C63FF)</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -189,14 +236,17 @@ export default function SystemSettingsForm({
           {/* Typography */}
           <div>
             <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">1. แบบตัวอักษร (Typography)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {(() => {
                 const activeFont = settings.systemFont || 'prompt';
                 return [
-                  { id: 'prompt', name: 'Prompt', desc: 'ทันสมัย อ่านง่าย' },
-                  { id: 'sarabun', name: 'Sarabun', desc: 'มาตรฐานราชการ' },
+                  { id: 'prompt', name: 'Prompt', desc: 'ทันสมัย อ่านง่าย สากล' },
+                  { id: 'sarabun', name: 'Sarabun', desc: 'มาตรฐานราชการ ชัดเจน' },
                   { id: 'kanit', name: 'Kanit', desc: 'ทรงเหลี่ยม เป็นทางการ' },
                   { id: 'niramit', name: 'Niramit', desc: 'สวยงาม คลาสสิก' },
+                  { id: 'plusJakarta', name: 'Plus Jakarta Sans', desc: 'Geometric Display ไฮเอนด์' },
+                  { id: 'dmSans', name: 'DM Sans', desc: 'Clean, Modern & Legible' },
+                  { id: 'nunito', name: 'Nunito', desc: 'ทรงกลมมน นุ่มนวล Playful Clay' },
                 ].map(font => {
                   const isSelected = activeFont === font.id;
                   return (
@@ -204,9 +254,9 @@ export default function SystemSettingsForm({
                       <input type="radio" name="systemFont" value={font.id} checked={isSelected} onChange={handleChange} className="sr-only" />
                       <div className="flex items-center gap-1.5">
                         {isSelected && <i className="fa-solid fa-circle-check text-primary-500 text-xs"></i>}
-                        <span className="text-slate-900 dark:text-white font-bold text-base" style={{ fontFamily: `var(--font-${font.id})` }}>{font.name}</span>
+                        <span className="text-slate-900 dark:text-white font-bold text-base">{font.name}</span>
                       </div>
-                      <span className="text-[11px] text-slate-500">{font.desc}</span>
+                      <span className="text-[11px] text-slate-500 text-center">{font.desc}</span>
                     </label>
                   );
                 });
@@ -323,22 +373,25 @@ export default function SystemSettingsForm({
           {/* Surface Style */}
           <div>
             <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2.5">4. สไตล์พื้นผิว (Surface Style)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
               {(() => {
                 const activeSurface = settings.surfaceStyle || 'shadow';
                 return [
-                  { id: 'flat', name: 'เรียบแบน (Flat)' },
-                  { id: 'shadow', name: 'มีเงา (Shadow)' },
-                  { id: 'glass', name: 'กระจกฝ้า (Glassmorphism)' },
+                  { id: 'flat', name: 'เรียบแบน (Flat)', desc: 'เน้นความเรียบง่าย ขอบบาง ไร้เงา' },
+                  { id: 'shadow', name: 'มีเงา (Shadow)', desc: 'มิติเงามุมตกกระทบมาตรฐาน' },
+                  { id: 'glass', name: 'กระจกฝ้า (Glass)', desc: 'โปร่งแสง แบ็คดรอปเบลอ นุ่มนวล' },
+                  { id: 'neumorphism', name: 'สัมผัส 3D (Neumorphic)', desc: 'แสง-เงาคู่ Tactile Soft UI' },
+                  { id: 'claymorphism', name: 'ดินเหนียว 3D (Clay)', desc: 'มิติฟูนุ่ม 4-Layer Light & Shadow' },
                 ].map(s => {
                   const isSelected = activeSurface === s.id;
                   return (
-                    <label key={s.id} className={`cursor-pointer border-2 rounded-2xl p-3 flex flex-col items-center justify-center gap-1.5 transition-all ${isSelected ? 'border-primary-500 bg-primary-500/10 shadow-md ring-2 ring-primary-500/20' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
+                    <label key={s.id} className={`cursor-pointer border-2 rounded-2xl p-3.5 flex flex-col items-center justify-center gap-1.5 transition-all ${isSelected ? 'border-primary-500 bg-primary-500/10 shadow-md ring-2 ring-primary-500/20' : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'}`}>
                       <input type="radio" name="surfaceStyle" value={s.id} checked={isSelected} onChange={handleChange} className="sr-only" />
                       <div className="flex items-center gap-1.5">
                         {isSelected && <i className="fa-solid fa-circle-check text-primary-500 text-xs"></i>}
-                        <span className="text-slate-900 dark:text-white font-semibold text-xs">{s.name}</span>
+                        <span className="text-slate-900 dark:text-white font-bold text-xs">{s.name}</span>
                       </div>
+                      <span className="text-[10px] text-slate-500 text-center">{s.desc}</span>
                     </label>
                   );
                 });

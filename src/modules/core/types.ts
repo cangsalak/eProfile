@@ -8,6 +8,7 @@ export interface ModuleMenu {
   requiredPermission?: string;
   requiredRoles?: string[];
   subItems?: { name: string; path: string; requiredPermission?: string }[];
+  isSetting?: boolean;
   order: number;
 }
 

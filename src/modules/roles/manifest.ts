@@ -20,6 +20,7 @@ export const RolesManifest: ModuleManifest = {
       path: '/modules/roles',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       requiredPermission: 'MANAGE_ROLES',
+      isSetting: true,
       order: 75,
     },
   ],

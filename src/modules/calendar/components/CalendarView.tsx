@@ -346,13 +346,19 @@ export function CalendarView() {
 
         {/* Center: Search input */}
         <div className="relative flex-1 max-w-md">
+          <label htmlFor="calendar-search" className="sr-only">
+            ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ
+          </label>
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
+            id="calendar-search"
+            name="calendarSearch"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ..."
-            className="form-input text-xs w-full pl-9 pr-4 py-2"
+            aria-label="ค้นหากิจกรรม กำลังพล หรือเวรปฏิบัติการ"
+            className="form-input text-xs w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-slate-800 dark:text-slate-100"
           />
         </div>
 

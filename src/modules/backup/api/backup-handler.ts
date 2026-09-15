@@ -98,10 +98,9 @@ export async function handleGetBackup(req: Request) {
       return !SENSITIVE_SETTING_PATTERNS.some((pattern) => pattern.test(s.key));
     });
 
-    // 2. Sanitize Personnel (Strip password hashes, sensitive lock fields)
+    // 2. Sanitize Personnel (Preserve password hashes for full restore, clear temporary lockout fields)
     const sanitizedPersonnel = rawPersonnelList.map((p: any) => {
       const {
-        password,
         failedLoginAttempts,
         lockedUntil,
         ...safePersonnel

@@ -5,10 +5,10 @@
 @import "./css/default.css";
 @import "./css/dark.css";
 
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Niramit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Niramit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;700&family=Nunito:wght@400;600;700;800;900&display=swap');
 
 
-/* ─── Global Design Tokens (NextAdmin HQ Unified Theme System) ─────────────── */
+/* ─── Global Design Tokens (NextAdmin HQ Unified Theme System & Claymorphic Engine) ─── */
 :root,
 [data-theme="nextadmin"] {
   --color-primary-50: 239 243 255;
@@ -31,6 +31,34 @@
   --font-sarabun: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-kanit: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-niramit: 'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-plus-jakarta: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-dm-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-nunito: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* High-Fidelity Claymorphism (Digital Clay) Design Tokens */
+  --clay-bg-canvas: #F4F1FA;
+  --clay-fg-primary: #332F3A;
+  --clay-fg-muted: #635F69;
+  --clay-accent-violet: #7C3AED;
+  --clay-accent-pink: #DB2777;
+  --clay-accent-blue: #0EA5E9;
+  --clay-accent-emerald: #10B981;
+  --clay-accent-amber: #F59E0B;
+
+  /* Neumorphism (Soft UI) Dual Opposing Shadow Tokens (RGBA Light & Dark) */
+  --neu-bg-light: #E0E5EC;
+  --neu-fg-light: #3D4852;
+  --neu-muted-light: #6B7280;
+  --neu-accent: #6C63FF;
+  --neu-accent-light: #8B84FF;
+  --neu-accent-teal: #38B2AC;
+
+  --neu-shadow-extruded: 9px 9px 16px rgb(163 177 198 / 0.6), -9px -9px 16px rgba(255, 255, 255, 0.6);
+  --neu-shadow-extruded-hover: 12px 12px 20px rgb(163 177 198 / 0.7), -12px -12px 20px rgba(255, 255, 255, 0.7);
+  --neu-shadow-extruded-sm: 5px 5px 10px rgb(163 177 198 / 0.6), -5px -5px 10px rgba(255, 255, 255, 0.5);
+  --neu-shadow-inset: inset 6px 6px 10px rgb(163 177 198 / 0.6), inset -6px -6px 10px rgba(255, 255, 255, 0.5);
+  --neu-shadow-inset-deep: inset 10px 10px 20px rgb(163 177 198 / 0.7), inset -10px -10px 20px rgba(255, 255, 255, 0.6);
+  --neu-shadow-inset-sm: inset 3px 3px 6px rgb(163 177 198 / 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.5);
 }
 
 [data-theme="indigo"] {
@@ -288,6 +316,33 @@ html[data-font="niramit"] textarea {
   font-family: 'Niramit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
+html[data-font="plusJakarta"],
+html[data-font="plusJakarta"] body,
+html[data-font="plusJakarta"] input,
+html[data-font="plusJakarta"] button,
+html[data-font="plusJakarta"] select,
+html[data-font="plusJakarta"] textarea {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="dmSans"],
+html[data-font="dmSans"] body,
+html[data-font="dmSans"] input,
+html[data-font="dmSans"] button,
+html[data-font="dmSans"] select,
+html[data-font="dmSans"] textarea {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html[data-font="nunito"],
+html[data-font="nunito"] body,
+html[data-font="nunito"] input,
+html[data-font="nunito"] button,
+html[data-font="nunito"] select,
+html[data-font="nunito"] textarea {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
 /* ─── Border Radius Themes ────────────────────────────────────────────────── */
 html[data-border="sharp"] button,
 html[data-border="sharp"] input,
@@ -359,6 +414,261 @@ html.dark[data-surface="glass"] .glass-card {
   background-color: rgba(15, 23, 42, 0.75) !important;
 }
 
+/* Neumorphism (Soft UI) Surface Styling */
+html[data-surface="neumorphism"] body:not(.dark) {
+  background-color: var(--neu-bg-light, #E0E5EC) !important;
+}
+
+html[data-surface="neumorphism"] .ui-card,
+html[data-surface="neumorphism"] .ui-card-glass,
+html[data-surface="neumorphism"] .glass-card,
+html[data-surface="neumorphism"] .bg-card-surface-area,
+html[data-surface="neumorphism"] aside,
+html[data-surface="neumorphism"] header {
+  background-color: #E0E5EC !important;
+  border-color: transparent !important;
+  box-shadow: 9px 9px 16px rgb(163 177 198 / 0.6), -9px -9px 16px rgba(255, 255, 255, 0.6) !important;
+}
+
+html.dark[data-surface="neumorphism"] .ui-card,
+html.dark[data-surface="neumorphism"] .ui-card-glass,
+html.dark[data-surface="neumorphism"] .glass-card,
+html.dark[data-surface="neumorphism"] .bg-card-surface-area,
+html.dark[data-surface="neumorphism"] aside,
+html.dark[data-surface="neumorphism"] header {
+  background-color: #1a222c !important;
+  border-color: transparent !important;
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.04) !important;
+}
+
+html[data-surface="neumorphism"] .form-control,
+html[data-surface="neumorphism"] .form-input,
+html[data-surface="neumorphism"] .form-select,
+html[data-surface="neumorphism"] .form-textarea {
+  background-color: #E0E5EC !important;
+  border-color: transparent !important;
+  box-shadow: inset 5px 5px 10px rgb(163 177 198 / 0.6), inset -5px -5px 10px rgba(255, 255, 255, 0.5) !important;
+}
+html.dark[data-surface="neumorphism"] .form-control,
+html.dark[data-surface="neumorphism"] .form-input,
+html.dark[data-surface="neumorphism"] .form-select,
+html.dark[data-surface="neumorphism"] .form-textarea {
+  background-color: #141c26 !important;
+  border-color: transparent !important;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.6), inset -4px -4px 8px rgba(255, 255, 255, 0.04) !important;
+}
+
+/* High-Fidelity Claymorphism Surface Styling (Deep Project-Wide) */
+html[data-surface="claymorphism"] body:not(.dark) {
+  background-color: var(--clay-bg-canvas, #F4F1FA) !important;
+  color: var(--clay-fg-primary, #332F3A);
+}
+
+html[data-surface="claymorphism"] .ui-card,
+html[data-surface="claymorphism"] .ui-card-glass,
+html[data-surface="claymorphism"] .glass-card {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 28px !important;
+  box-shadow: 16px 16px 32px rgba(160, 150, 180, 0.2), -10px -10px 24px rgba(255, 255, 255, 0.9), inset 6px 6px 12px rgba(139, 92, 246, 0.03), inset -6px -6px 12px rgba(255, 255, 255, 1) !important;
+}
+
+html.dark[data-surface="claymorphism"] .ui-card,
+html.dark[data-surface="claymorphism"] .ui-card-glass,
+html.dark[data-surface="claymorphism"] .glass-card {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 28px !important;
+  box-shadow: 16px 16px 32px rgba(0, 0, 0, 0.5), -8px -8px 20px rgba(255, 255, 255, 0.03), inset 4px 4px 8px rgba(255, 255, 255, 0.05), inset -4px -4px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-surface="claymorphism"] .bg-card-surface-area,
+html[data-surface="claymorphism"] aside {
+  border-radius: 28px !important;
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 12px 12px 28px rgba(160, 150, 180, 0.15), -8px -8px 20px rgba(255, 255, 255, 0.8) !important;
+}
+
+html.dark[data-surface="claymorphism"] .bg-card-surface-area,
+html.dark[data-surface="claymorphism"] aside {
+  border-radius: 28px !important;
+  background-color: rgba(26, 34, 44, 0.8) !important;
+  backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 12px 12px 28px rgba(0, 0, 0, 0.4), -6px -6px 16px rgba(255, 255, 255, 0.02) !important;
+}
+
+html[data-surface="claymorphism"] .form-control,
+html[data-surface="claymorphism"] .form-input,
+html[data-surface="claymorphism"] .form-select,
+html[data-surface="claymorphism"] .form-textarea {
+  border-radius: 18px !important;
+  border-color: rgba(139, 92, 246, 0.15) !important;
+  background-color: rgba(244, 241, 250, 0.8) !important;
+  box-shadow: inset 4px 4px 8px #d9d4e3, inset -4px -4px 8px #ffffff !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-surface="claymorphism"] .form-control:focus,
+html[data-surface="claymorphism"] .form-input:focus,
+html[data-surface="claymorphism"] .form-select:focus,
+html[data-surface="claymorphism"] .form-textarea:focus {
+  box-shadow: inset 4px 4px 8px #cdc6d9, inset -4px -4px 8px #ffffff, 0 0 0 3px rgba(139, 92, 246, 0.25) !important;
+}
+
+html.dark[data-surface="claymorphism"] .form-control,
+html.dark[data-surface="claymorphism"] .form-input,
+html.dark[data-surface="claymorphism"] .form-select,
+html.dark[data-surface="claymorphism"] .form-textarea {
+  border-radius: 18px !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.6), inset -4px -4px 8px rgba(255, 255, 255, 0.03) !important;
+}
+
+html[data-surface="claymorphism"] .ui-btn-primary,
+html[data-surface="claymorphism"] button[type="submit"] {
+  border-radius: 20px !important;
+  box-shadow: 8px 8px 18px rgba(139, 92, 246, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.4), inset 3px 3px 6px rgba(255, 255, 255, 0.4), inset -3px -3px 6px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-surface="claymorphism"] .ui-btn-primary:active,
+html[data-surface="claymorphism"] button[type="submit"]:active {
+  transform: scale(0.96) !important;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3), inset -4px -4px 8px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* High-Fidelity Claymorphism 4-Layer Shadow Architecture */
+.shadow-clay-surface {
+  box-shadow: 30px 30px 60px #cdc6d9, -30px -30px 60px #ffffff, inset 10px 10px 20px rgba(139, 92, 246, 0.05), inset -10px -10px 20px rgba(255, 255, 255, 0.8);
+}
+.dark .shadow-clay-surface {
+  box-shadow: 25px 25px 50px rgba(0, 0, 0, 0.6), -20px -20px 40px rgba(255, 255, 255, 0.02), inset 8px 8px 16px rgba(255, 255, 255, 0.04), inset -8px -8px 16px rgba(0, 0, 0, 0.6);
+}
+
+.shadow-clay-card {
+  box-shadow: 16px 16px 32px rgba(160, 150, 180, 0.2), -10px -10px 24px rgba(255, 255, 255, 0.9), inset 6px 6px 12px rgba(139, 92, 246, 0.03), inset -6px -6px 12px rgba(255, 255, 255, 1);
+}
+.dark .shadow-clay-card {
+  box-shadow: 16px 16px 32px rgba(0, 0, 0, 0.5), -8px -8px 20px rgba(255, 255, 255, 0.03), inset 4px 4px 8px rgba(255, 255, 255, 0.05), inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.shadow-clay-card-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shadow-clay-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 20px 20px 40px rgba(160, 150, 180, 0.3), -12px -12px 28px rgba(255, 255, 255, 1), inset 6px 6px 12px rgba(139, 92, 246, 0.05), inset -6px -6px 12px rgba(255, 255, 255, 1);
+}
+.dark .shadow-clay-card-hover:hover {
+  box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.6), -10px -10px 24px rgba(255, 255, 255, 0.04), inset 4px 4px 8px rgba(255, 255, 255, 0.06), inset -4px -4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.shadow-clay-button {
+  box-shadow: 12px 12px 24px rgba(139, 92, 246, 0.3), -8px -8px 16px rgba(255, 255, 255, 0.4), inset 4px 4px 8px rgba(255, 255, 255, 0.4), inset -4px -4px 8px rgba(0, 0, 0, 0.1);
+}
+.dark .shadow-clay-button {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5), -6px -6px 12px rgba(255, 255, 255, 0.08), inset 3px 3px 6px rgba(255, 255, 255, 0.2), inset -3px -3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.shadow-clay-button-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 16px 16px 30px rgba(139, 92, 246, 0.4), -10px -10px 20px rgba(255, 255, 255, 0.5), inset 4px 4px 8px rgba(255, 255, 255, 0.5), inset -4px -4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-clay-pressed {
+  box-shadow: inset 10px 10px 20px #d9d4e3, inset -10px -10px 20px #ffffff;
+}
+.dark .shadow-clay-pressed {
+  box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.7), inset -8px -8px 16px rgba(255, 255, 255, 0.04);
+}
+
+.shadow-clay-orb {
+  box-shadow: 8px 8px 16px rgba(160, 150, 180, 0.25), -6px -6px 12px rgba(255, 255, 255, 0.8), inset 3px 3px 6px rgba(255, 255, 255, 0.6), inset -3px -3px 6px rgba(0, 0, 0, 0.1);
+}
+.dark .shadow-clay-orb {
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.08), inset 2px 2px 4px rgba(255, 255, 255, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes clayFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+@keyframes clayBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.animate-clay-float {
+  animation: clayFloat 8s ease-in-out infinite;
+}
+
+.animate-clay-breathe {
+  animation: clayBreathe 6s ease-in-out infinite;
+}
+
+/* Neumorphic UI Helper Classes */
+.neu-extruded {
+  box-shadow: 9px 9px 16px rgb(163 177 198 / 0.6), -9px -9px 16px rgba(255, 255, 255, 0.6);
+}
+.dark .neu-extruded {
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5), -8px -8px 16px rgba(255, 255, 255, 0.04);
+}
+
+.neu-extruded-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neu-extruded-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 12px 12px 20px rgb(163 177 198 / 0.7), -12px -12px 20px rgba(255, 255, 255, 0.7);
+}
+.dark .neu-extruded-hover:hover {
+  box-shadow: 10px 10px 22px rgba(0, 0, 0, 0.6), -10px -10px 22px rgba(255, 255, 255, 0.06);
+}
+
+.neu-extruded-sm {
+  box-shadow: 5px 5px 10px rgb(163 177 198 / 0.6), -5px -5px 10px rgba(255, 255, 255, 0.5);
+}
+.dark .neu-extruded-sm {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.04);
+}
+
+.neu-inset {
+  box-shadow: inset 6px 6px 10px rgb(163 177 198 / 0.6), inset -6px -6px 10px rgba(255, 255, 255, 0.5);
+}
+.dark .neu-inset {
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.6), inset -5px -5px 10px rgba(255, 255, 255, 0.04);
+}
+
+.neu-inset-deep {
+  box-shadow: inset 10px 10px 20px rgb(163 177 198 / 0.7), inset -10px -10px 20px rgba(255, 255, 255, 0.6);
+}
+.dark .neu-inset-deep {
+  box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.7), inset -8px -8px 16px rgba(255, 255, 255, 0.05);
+}
+
+.neu-inset-sm {
+  box-shadow: inset 3px 3px 6px rgb(163 177 198 / 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.5);
+}
+.dark .neu-inset-sm {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.6), inset -2px -2px 5px rgba(255, 255, 255, 0.04);
+}
+
+@keyframes neuFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-neu-float {
+  animation: neuFloat 3s ease-in-out infinite;
+}
+
 /* Layout Density */
 html[data-density="compact"] .p-6 { padding: 1rem !important; }
 html[data-density="compact"] .py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
@@ -386,21 +696,135 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
 .flip-card-back { transform: rotateY(180deg); }
 
 /* ─── Print Specific Styles (Isolated from regular web layout) ────────────── */
+@page {
+  size: A4 portrait;
+  margin: 10mm 12mm 10mm 12mm;
+}
+
 @media print {
-  body {
-    background: white !important;
-    color: black !important;
+  /* 1. Global Reset to Pure White Paper */
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 13pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  .no-print {
+
+  /* 2. Hide ALL Web Navigation, Chrome, Dev Tools, Modals, and Interactive Overlays */
+  header,
+  aside,
+  nav,
+  footer,
+  .no-print,
+  .print-hidden,
+  .print\\:hidden,
+  [class*="print:hidden"],
+  [class*="no-print"],
+  [data-print-ignore="true"],
+  button:not(.print-include),
+  .inspector-btn,
+  .theme-switcher,
+  .top-navbar,
+  .sidebar,
+  .dev-checklist-banner,
+  .fixed-action-bar,
+  .bg-blobs,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .shadow-glass,
+  .shadow-clay-card,
+  .shadow-neu-flat,
+  .shadow-neu-inset,
+  .modal-backdrop {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
   }
+
+  /* 3. Document Canvas Display */
   .print-only {
     display: block !important;
   }
+
+  #printable-document-sheet,
+  .printable-document,
   .print-card {
-    border: 2px solid #000 !important;
+    display: block !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: none !important;
     box-shadow: none !important;
-    background: white !important;
-    color: black !important;
+    border-radius: 0 !important;
+    transform: none !important;
+  }
+
+  /* 4. Ensure Crisp Black Borders on Tables and Boxes */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto !important;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  .border-black,
+  .print-border {
+    border-color: #000000 !important;
+  }
+
+  /* 5. Typography and Contrast Preservation */
+  p, span, div, h1, h2, h3, h4, h5, h6, td, th {
+    color: #000000 !important;
+    text-shadow: none !important;
+  }
+
+  .text-muted,
+  .text-gray-500,
+  .text-slate-500 {
+    color: #4b5563 !important;
+  }
+
+  /* Prevent awkward splits on signature lines or official blocks */
+  .keep-together,
+  .signature-block,
+  .garuda-seal,
+  .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
+

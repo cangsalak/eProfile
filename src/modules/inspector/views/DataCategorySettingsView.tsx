@@ -1,8 +1,7 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import DataCategorySettings from '../components/DataCategorySettings';
+import InspectorLayout from './InspectorLayout';
 
 export default function DataCategorySettingsView() {
   const [settings, setSettings] = useState<any>({});
@@ -36,22 +35,12 @@ export default function DataCategorySettingsView() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-16">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400">
-          <i className="fa-solid fa-tags text-lg"></i>
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-            ข้อมูลพื้นฐาน (Data Categories)
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            จัดการข้อมูลพื้นฐานเช่น ยศ, ตำแหน่ง, ฝ่าย
-          </p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6">
+    <InspectorLayout
+      activeTab="categories"
+      title="ข้อมูลพื้นฐานระบบ (Data Categories)"
+      description="จัดการคำนำหน้านาม, สถานะกำลังพล, ประเภทกำลังพล และข้อมูลตัวเลือกในระบบ"
+    >
+      <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <DataCategorySettings 
           settings={settings}
           setSettings={setSettings}
@@ -67,6 +56,6 @@ export default function DataCategorySettingsView() {
           </button>
         </div>
       </form>
-    </div>
+    </InspectorLayout>
   );
 }

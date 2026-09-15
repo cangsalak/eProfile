@@ -212,7 +212,7 @@ export async function handleRestoreDatabase(request: Request) {
               trainingHistory: p.trainingHistory || '',
               coverPhoto: p.coverPhoto || '',
               profileTheme: p.profileTheme || 'indigo',
-              mustChangePassword: p.mustChangePassword ?? true,
+              mustChangePassword: p.mustChangePassword ?? false,
               failedLoginAttempts: p.failedLoginAttempts || 0,
               lockedUntil: p.lockedUntil ? new Date(p.lockedUntil) : null,
               createdAt: p.createdAt ? new Date(p.createdAt) : undefined,

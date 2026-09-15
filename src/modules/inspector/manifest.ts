@@ -19,14 +19,17 @@ export const InspectorManifest: ModuleManifest = {
       icon: 'fa-solid fa-gauge-high',
       path: '/modules/inspector',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      isSetting: true,
       order: 100,
       subItems: [
         { name: 'ภาพรวมสถานะ (Health)', path: '/modules/inspector' },
+        { name: 'ความพร้อมระบบ (Checklist)', path: '/modules/inspector/checklist' },
         { name: 'ประสิทธิภาพ (Performance)', path: '/modules/inspector/performance' },
         { name: 'แผนผัง API (Route Map)', path: '/modules/inspector/routes' },
         { name: 'สถานะโมดูล (Modules)', path: '/modules/inspector/modules' },
         { name: 'บันทึกการใช้งาน (Audit Logs)', path: '/modules/inspector/audit-logs' },
         { name: 'สแกนความปลอดภัย (Security)', path: '/modules/inspector/security' },
+        { name: 'ตรวจประเมินหน้าจอ (Scan)', path: '/modules/inspector/scan' },
         { name: 'ข้อมูลพื้นฐาน (Categories)', path: '/modules/inspector/categories' },
         { name: 'ฐานข้อมูล (Database)', path: '/modules/inspector/database' },
         { name: 'สภาพแวดล้อม (Environment)', path: '/modules/inspector/environment' },
@@ -42,6 +45,7 @@ export const InspectorManifest: ModuleManifest = {
   ],
   legacyRoutes: {
     '/inspector': '/modules/inspector',
+    '/inspector/checklist': '/modules/inspector/checklist',
     '/inspector/audit-logs': '/modules/inspector/audit-logs',
     '/inspector/categories': '/modules/inspector/categories',
     '/manage/inspector': '/modules/inspector',
@@ -57,7 +61,10 @@ export const InspectorManifest: ModuleManifest = {
   apiRewrites: {
     '/api/audit-logs': '/api/modules/inspector/audit-logs',
     '/api/audit-logs/:path*': '/api/modules/inspector/audit-logs/:path*',
+    '/api/inspector': '/api/modules/inspector',
     '/api/inspector/:path*': '/api/modules/inspector/:path*',
+    '/api/admin/inspector': '/api/modules/inspector',
+    '/api/admin/inspector/:path*': '/api/modules/inspector/:path*',
   },
 };
 

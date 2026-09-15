@@ -18,7 +18,7 @@ export const BadgesManifest: ModuleManifest = {
       title: 'พิมพ์บัตรประจำตัว',
       icon: 'fa-solid fa-print',
       path: '/modules/badges',
-      requiredRoles: ['SUPER_ADMIN', 'ADMIN', 'OFFICER', 'EDITOR', 'USER'],
+      requiredRoles: ['SUPER_ADMIN', 'ADMIN', 'OFFICER', 'EDITOR'],
       order: 35,
     },
     {
@@ -28,6 +28,7 @@ export const BadgesManifest: ModuleManifest = {
       path: '/modules/badges/settings',
       requiredPermission: 'MANAGE_BADGES',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      isSetting: true,
       order: 36,
     },
     {

@@ -14,9 +14,9 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
 }
 
 const sizeStyles = {
-  sm: 'py-1.5 px-3 text-xs rounded-xl',
-  md: 'py-2.5 px-3.5 text-xs sm:text-sm rounded-xl',
-  lg: 'py-3 px-4 text-sm sm:text-base rounded-2xl',
+  sm: 'py-2 px-3.5 text-xs rounded-xl',
+  md: 'py-2.5 px-4 text-xs sm:text-sm rounded-2xl',
+  lg: 'py-3.5 px-5 text-sm sm:text-base rounded-2xl',
 };
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -43,7 +43,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5"
+            className="block text-xs font-black text-slate-700 dark:text-slate-300 mb-1.5"
           >
             {label}
             {props.required && <span className="text-rose-500 ml-1">*</span>}
@@ -62,10 +62,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             disabled={disabled}
             className={cn(
-              'w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-900 disabled:cursor-not-allowed',
+              'w-full bg-slate-50/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/25 focus:border-primary-500 transition-all duration-200 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-900 disabled:cursor-not-allowed',
               sizeStyles[size],
-              icon && iconPosition === 'left' && 'pl-9 sm:pl-10',
-              icon && iconPosition === 'right' && 'pr-9 sm:pr-10',
+              icon && iconPosition === 'left' && 'pl-10 sm:pl-11',
+              icon && iconPosition === 'right' && 'pr-10 sm:pr-11',
               error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20',
               className
             )}
@@ -80,7 +80,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <p className="mt-1 text-xs text-rose-500 flex items-center gap-1">
+          <p className="mt-1.5 text-xs text-rose-500 flex items-center gap-1 font-bold">
             <i className="fa-solid fa-circle-exclamation text-[10px]" />
             <span>{error}</span>
           </p>
