@@ -10,6 +10,8 @@ import PersonnelFormView from './views/PersonnelFormView';
 
 export * from './manifest';
 export * from './types';
+export * from './constants';
+export * from './components/dropdowns';
 export * from './lib/excelUtils';
 export { default as ManagePersonnelView } from './views/ManagePersonnelView';
 export { default as RoleSettingsView } from './views/RoleSettingsView';

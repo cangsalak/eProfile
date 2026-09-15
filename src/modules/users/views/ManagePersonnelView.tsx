@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Personnel } from '@/modules/users';
+import { Personnel, PersonnelTypeSelect, PersonnelStatusSelect } from '@/modules/users';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AddPersonnelModal from '../components/AddPersonnelModal';
 import JSZip from 'jszip';
@@ -507,38 +507,38 @@ export default function ManagePersonnelView() {
 
           <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
             {/* Personnel Type Filter */}
-            <select
+            <PersonnelTypeSelect
               id="personnelTypeFilter"
               aria-label="กรองตามประเภทบุคลากร"
-              value={typeFilter}
+              value={typeFilter === 'all' ? '' : typeFilter}
               onChange={(e) => {
-                setTypeFilter(e.target.value);
+                setTypeFilter(e.target.value || 'all');
                 setCurrentPage(1);
               }}
-              className="px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer font-medium"
-            >
-              <option value="all">ประเภท: ทั้งหมด</option>
-              {personnelTypes.map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
+              personnelTypes={personnelTypes}
+              allowAll
+              allLabel="ประเภท: ทั้งหมด"
+              size="sm"
+              className="w-auto"
+              containerClassName="w-auto"
+            />
 
             {/* Status Filter */}
-            <select
+            <PersonnelStatusSelect
               id="personnelStatusFilter"
               aria-label="กรองตามสถานะบุคลากร"
-              value={statusFilter}
+              value={statusFilter === 'all' ? '' : statusFilter}
               onChange={(e) => {
-                setStatusFilter(e.target.value);
+                setStatusFilter(e.target.value || 'all');
                 setCurrentPage(1);
               }}
-              className="px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer font-medium"
-            >
-              <option value="all">สถานะ: ทั้งหมด</option>
-              {statusList.map((st) => (
-                <option key={st} value={st}>{st}</option>
-              ))}
-            </select>
+              statusList={statusList}
+              allowAll
+              allLabel="สถานะ: ทั้งหมด"
+              size="sm"
+              className="w-auto"
+              containerClassName="w-auto"
+            />
 
             {/* Bulk Print Badges button */}
             {selectedIds.length > 0 && (

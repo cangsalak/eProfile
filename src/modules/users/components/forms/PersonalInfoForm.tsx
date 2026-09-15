@@ -1,6 +1,6 @@
 import React from 'react';
-import { Personnel } from '@/modules/users';
-import { Input, Select } from '@/components/ui';
+import { Personnel, PrefixSelect, BloodTypeSelect } from '@/modules/users';
+import { Input } from '@/components/ui';
 
 interface PersonalInfoFormProps {
   formData: Partial<Personnel>;
@@ -12,8 +12,8 @@ interface PersonalInfoFormProps {
 export default function PersonalInfoForm({
   formData,
   setFormData,
-  prefixes = ['นาย', 'นาง', 'นางสาว', 'ร.ต.', 'ร.ท.', 'ร.อ.', 'พ.ต.', 'พ.ท.', 'พ.อ.', 'พล.ต.', 'พล.ท.', 'พล.อ.', 'ส.ต.', 'ส.ท.', 'ส.อ.', 'จ.ส.ต.', 'จ.ส.ท.', 'จ.ส.อ.'],
-  bloodGroups = ['A', 'B', 'AB', 'O'],
+  prefixes,
+  bloodGroups,
 }: PersonalInfoFormProps) {
   return (
     <div>
@@ -22,18 +22,12 @@ export default function PersonalInfoForm({
       </h4>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <Select
-          id="personal-prefix-select"
-          label="คำนำหน้า / ยศ"
+        <PrefixSelect
           value={formData.prefix || ''}
           onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
+          prefixes={prefixes}
           required
-        >
-          <option value="">-- เลือกคำนำหน้า/ยศ --</option>
-          {prefixes.map((p, idx) => (
-            <option key={idx} value={p}>{p}</option>
-          ))}
-        </Select>
+        />
 
         <Input
           id="personal-firstname-input"
@@ -78,17 +72,11 @@ export default function PersonalInfoForm({
           onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
         />
 
-        <Select
-          id="personal-bloodtype-select"
-          label="กรุ๊ปเลือด"
+        <BloodTypeSelect
           value={formData.bloodType || ''}
           onChange={(e) => setFormData({ ...formData, bloodType: e.target.value })}
-        >
-          <option value="">-- ไม่ระบุ / เลือกกรุ๊ปเลือด --</option>
-          {bloodGroups.map((bg, idx) => (
-            <option key={idx} value={bg}>{bg}</option>
-          ))}
-        </Select>
+          bloodGroups={bloodGroups}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
