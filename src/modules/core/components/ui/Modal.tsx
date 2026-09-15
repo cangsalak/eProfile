@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/modules/core/lib/cn';
 
 export interface ModalProps {
@@ -34,6 +35,12 @@ export const Modal: React.FC<ModalProps> = ({
   footer,
   className,
 }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -52,13 +59,13 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in font-prompt print:static print:p-0 print:m-0 print:w-full print:block print:overflow-visible">
+  const modalContent = (
+    <div className="fixed inset-0 z-99999 flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in font-prompt print:static print:p-0 print:m-0 print:w-full print:block print:overflow-visible">
       {/* Backdrop (Hidden on Print) */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity no-print print:hidden"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity no-print print:hidden"
         onClick={onClose}
       />
 
@@ -117,6 +124,8 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default Modal;
