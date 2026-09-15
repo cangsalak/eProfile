@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen || !mounted) return null;
 
   const modalContent = (
-    <div className="fixed inset-0 z-99999 flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in font-prompt print:static print:p-0 print:m-0 print:w-full print:block print:overflow-visible">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in font-prompt print:static print:p-0 print:m-0 print:w-full print:block print:overflow-visible">
       {/* Backdrop (Hidden on Print) */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity no-print print:hidden"
