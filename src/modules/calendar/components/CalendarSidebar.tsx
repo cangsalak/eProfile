@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Check, Download, RefreshCw, Layers, Radio } from 'lucide-react';
+import { Check, RefreshCw, Layers } from 'lucide-react';
 import { MiniCalendar } from './MiniCalendar';
 import { CalendarFilterState, CALENDAR_CATEGORY_CONFIG } from '../types';
 import { Card } from '@/components/ui/Card';
@@ -40,7 +40,7 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
   ];
 
   return (
-    <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-5 font-prompt">
+    <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-4 font-prompt">
       {/* ── Prominent Create Button ── */}
       <Button
         type="button"
@@ -48,7 +48,7 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
         size="lg"
         onClick={onCreateEvent}
         icon="fa-solid fa-plus"
-        className="w-full justify-center shadow-md hover:shadow-lg py-3.5 rounded-2xl text-sm font-bold"
+        className="w-full justify-center shadow-lg shadow-primary-500/25 py-3.5 rounded-[22px] text-sm font-bold"
       >
         สร้างกิจกรรม / ลงเวร
       </Button>
@@ -63,7 +63,7 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
       </div>
 
       {/* ── My Calendars / Category Filters ── */}
-      <Card className="p-4 space-y-3">
+      <Card variant="convex" className="p-4 sm:p-5 rounded-[24px] space-y-3.5">
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-primary-500" />
@@ -75,14 +75,14 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
               onClick={onSyncGoogle}
               disabled={isSyncing}
               title="ซิงค์ Google Calendar"
-              className="text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 p-1 rounded-md transition-colors"
+              className="text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 p-1 rounded-lg hover:bg-primary-50/60 dark:hover:bg-slate-800 transition-colors"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-primary-500' : ''}`} />
             </button>
           )}
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {filterKeys.map((key) => {
             const config = CALENDAR_CATEGORY_CONFIG[key];
             if (!config) return null;
@@ -91,13 +91,13 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             return (
               <label
                 key={key}
-                className="flex items-center gap-2.5 px-2 py-1.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors select-none text-xs font-medium text-slate-700 dark:text-slate-300"
+                className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl hover:bg-primary-50/40 dark:hover:bg-slate-800/60 cursor-pointer transition-colors select-none text-xs font-medium text-slate-700 dark:text-slate-200"
               >
                 <div
                   onClick={() => onToggleFilter(key)}
-                  className={`w-4 h-4 rounded-md border flex items-center justify-center transition-all ${
+                  className={`w-4 h-4 rounded-md border flex items-center justify-center transition-all duration-150 ${
                     isChecked
-                      ? `${config.dotColor} border-transparent text-white shadow-2xs`
+                      ? `${config.dotColor} border-transparent text-white shadow-2xs scale-105`
                       : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900'
                   }`}
                 >
@@ -119,7 +119,7 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             size="sm"
             onClick={onSubscribeFeed}
             icon="fa-solid fa-rss"
-            className="w-full justify-center text-primary-600 dark:text-primary-400 border-primary-200 dark:border-primary-800/60 bg-primary-50/50 dark:bg-primary-950/30 hover:bg-primary-100"
+            className="w-full justify-center rounded-xl py-2 text-xs font-semibold text-primary-600 dark:text-primary-400 border-primary-200 dark:border-primary-800/60 bg-primary-50/40 dark:bg-primary-950/20 hover:bg-primary-100/60"
           >
             สมัครรับปฏิทินสด (Live Sync)
           </Button>
@@ -132,7 +132,7 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
             size="sm"
             onClick={onExportIcal}
             icon="fa-solid fa-download"
-            className="w-full justify-center"
+            className="w-full justify-center rounded-xl py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             ส่งออกไฟล์ iCal (.ics)
           </Button>
@@ -141,3 +141,5 @@ export const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
     </aside>
   );
 };
+
+export default CalendarSidebar;

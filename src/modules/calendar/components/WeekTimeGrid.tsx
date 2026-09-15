@@ -12,6 +12,7 @@ import {
 import { th } from 'date-fns/locale';
 import { CalendarEventItem, CALENDAR_CATEGORY_CONFIG } from '../types';
 import { Clock, MapPin, Users } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 interface WeekTimeGridProps {
   currentDate: Date;
@@ -67,11 +68,11 @@ export const WeekTimeGrid: React.FC<WeekTimeGridProps> = ({
   const currentTimeTop = (currentMinutes / 60) * HOUR_ROW_HEIGHT;
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-xs">
+    <Card variant="convex" className="flex flex-col h-full overflow-hidden p-0 rounded-[24px] border border-card-surface-border shadow-clay-card">
       {/* ── Sticky Top Header with 7 Days ── */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-xs z-20">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-xs z-20">
         {/* Time gutter space (Left) */}
-        <div className="w-14 sm:w-16 shrink-0 border-r border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-medium">
+        <div className="w-14 sm:w-16 shrink-0 border-r border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-semibold">
           เวลา
         </div>
 
@@ -279,6 +280,6 @@ export const WeekTimeGrid: React.FC<WeekTimeGridProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

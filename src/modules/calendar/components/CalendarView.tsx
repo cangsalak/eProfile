@@ -304,240 +304,242 @@ export function CalendarView() {
     <div className="flex flex-col gap-5 max-w-full">
       <div className={`flex flex-col gap-5 max-w-full ${isPrintModalOpen ? 'no-print print:hidden' : ''}`}>
         {/* ── Top Google Calendar Navigation Bar ── */}
-        <Card className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 p-3 sm:p-4">
-        {/* Left: Today, Prev/Next, Month/Year Label */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleToday}
-          >
-            วันนี้
-          </Button>
-
-          <div className="flex items-center rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-2xs">
-            <button
+        <Card variant="convex" className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 p-4 sm:p-5 rounded-[24px]">
+          {/* Left: Today, Prev/Next, Month/Year Label */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <Button
               type="button"
-              onClick={handlePrev}
-              className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
-              title="ก่อนหน้า"
+              variant="outline"
+              size="sm"
+              onClick={handleToday}
+              className="rounded-xl font-bold"
             >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <div className="w-px h-4 bg-slate-200 dark:bg-slate-700" />
-            <button
-              type="button"
-              onClick={handleNext}
-              className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
-              title="ถัดไป"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+              วันนี้
+            </Button>
 
-          <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white capitalize ml-1">
-            {headerTitle}
-          </h1>
-
-          {isLoading && (
-            <RefreshCw className="w-4 h-4 text-primary-500 animate-spin ml-1" />
-          )}
-        </div>
-
-        {/* Center: Search input */}
-        <div className="relative flex-1 max-w-md">
-          <label htmlFor="calendar-search" className="sr-only">
-            ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ
-          </label>
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            id="calendar-search"
-            name="calendarSearch"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ..."
-            aria-label="ค้นหากิจกรรม กำลังพล หรือเวรปฏิบัติการ"
-            className="form-input text-xs w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-slate-800 dark:text-slate-100"
-          />
-        </div>
-
-        {/* Right: Print Button & View Mode Group */}
-        <div className="flex items-center gap-2 self-start md:self-auto flex-wrap">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setIsPrintModalOpen(true)}
-            icon="fa-solid fa-print"
-            title="พิมพ์ตารางเวรประจำเดือน A4"
-          >
-            <span className="hidden sm:inline">พิมพ์ตารางเวร (A4)</span>
-          </Button>
-
-          <Link
-            href="/modules/calendar/settings"
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-700 shadow-2xs"
-            title="ตั้งค่าปฏิทินและตำแหน่งหน้าที่"
-          >
-            <Settings className="w-4 h-4 text-slate-500 hover:text-primary-500 transition-colors" />
-          </Link>
-
-          <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-            {[
-              { id: 'month', label: 'เดือน' },
-              { id: 'week', label: 'สัปดาห์' },
-              { id: 'day', label: 'วัน' },
-              { id: 'agenda', label: 'กำหนดการ' },
-            ].map((mode) => (
+            <div className="flex items-center rounded-xl border border-slate-200 dark:border-slate-700/80 bg-white/60 dark:bg-slate-900/60 overflow-hidden shadow-2xs">
               <button
-                key={mode.id}
                 type="button"
-                onClick={() => setViewMode(mode.id as CalendarViewMode)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                  viewMode === mode.id
-                    ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-2xs font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
+                onClick={handlePrev}
+                className="p-2 hover:bg-primary-50/60 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors"
+                title="ก่อนหน้า"
               >
-                {mode.label}
+                <ChevronLeft className="w-4 h-4" />
               </button>
-            ))}
+              <div className="w-px h-4 bg-slate-200 dark:bg-slate-700" />
+              <button
+                type="button"
+                onClick={handleNext}
+                className="p-2 hover:bg-primary-50/60 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors"
+                title="ถัดไป"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white capitalize ml-1">
+              {headerTitle}
+            </h1>
+
+            {isLoading && (
+              <RefreshCw className="w-4 h-4 text-primary-500 animate-spin ml-1" />
+            )}
           </div>
-        </div>
-      </Card>
 
-      {/* ── Main Layout: Sidebar + Active View ── */}
-      <div className="flex flex-col lg:flex-row gap-5 items-start">
-        {/* Left Sidebar */}
-        <CalendarSidebar
-          currentDate={currentDate}
-          onDateSelect={(d) => {
-            setCurrentDate(d);
-          }}
-          onCreateEvent={handleOpenCreateModal}
-          filterState={filterState}
-          onToggleFilter={handleToggleFilter}
-          onExportIcal={handleExportIcal}
-          onSubscribeFeed={() => setIsSubscribeModalOpen(true)}
-          onSyncGoogle={fetchEvents}
-          isSyncing={isLoading}
-        />
+          {/* Center: Search input */}
+          <div className="relative flex-1 max-w-md">
+            <label htmlFor="calendar-search" className="sr-only">
+              ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ
+            </label>
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              id="calendar-search"
+              name="calendarSearch"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ค้นหากิจกรรม, กำลังพล, เวรปฏิบัติการ..."
+              aria-label="ค้นหากิจกรรม กำลังพล หรือเวรปฏิบัติการ"
+              className="form-input text-xs w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-slate-800 dark:text-slate-100"
+            />
+          </div>
 
-        {/* Right Calendar Viewport */}
-        <div className="flex-1 w-full min-w-0">
-          {/* 1. Month View */}
-          {viewMode === 'month' && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-xs">
-              {/* Day names header */}
-              <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 divide-x divide-slate-200 dark:divide-slate-800 text-center py-2.5">
-                {['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'].map(
-                  (dayName, i) => (
-                    <div
-                      key={dayName}
-                      className={`text-xs font-bold uppercase tracking-wider ${
-                        i === 0
-                          ? 'text-rose-500'
-                          : i === 6
-                          ? 'text-blue-500'
-                          : 'text-slate-600 dark:text-slate-400'
-                      }`}
-                    >
-                      {dayName}
-                    </div>
-                  )
-                )}
-              </div>
+          {/* Right: Print Button & View Mode Group */}
+          <div className="flex items-center gap-2 self-start md:self-auto flex-wrap">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsPrintModalOpen(true)}
+              icon="fa-solid fa-print"
+              title="พิมพ์ตารางเวรประจำเดือน A4"
+              className="rounded-xl font-semibold"
+            >
+              <span className="hidden sm:inline">พิมพ์ตารางเวร (A4)</span>
+            </Button>
 
-              {/* Month Grid Cells */}
-              <div className="grid grid-cols-7 divide-x divide-y divide-slate-100 dark:divide-slate-800/70 border-b border-slate-200 dark:border-slate-800">
-                {monthDays.map((day) => {
-                  const isCurrentMonth = isSameMonth(day, currentDate);
-                  const isToday = isSameDay(day, new Date());
-                  const dayStr = format(day, 'yyyy-MM-dd');
+            <Link
+              href="/modules/calendar/settings"
+              className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-800/80 hover:bg-primary-50/60 dark:hover:bg-slate-750 text-slate-600 dark:text-slate-300 hover:text-primary-600 text-xs font-semibold flex items-center justify-center transition-colors border border-slate-200 dark:border-slate-700 shadow-2xs"
+              title="ตั้งค่าปฏิทินและตำแหน่งหน้าที่"
+            >
+              <Settings className="w-4 h-4 text-slate-500 hover:text-primary-500 transition-colors" />
+            </Link>
 
-                  // Filter events on this day
-                  const dayEvents = filteredEvents.filter((ev) => {
-                    const sStr = format(new Date(ev.startDate), 'yyyy-MM-dd');
-                    const eStr = format(new Date(ev.endDate), 'yyyy-MM-dd');
-                    return dayStr >= sStr && dayStr <= eStr;
-                  });
+            <div className="flex items-center p-1 bg-slate-100/80 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80">
+              {[
+                { id: 'month', label: 'เดือน' },
+                { id: 'week', label: 'สัปดาห์' },
+                { id: 'day', label: 'วัน' },
+                { id: 'agenda', label: 'กำหนดการ' },
+              ].map((mode) => (
+                <button
+                  key={mode.id}
+                  type="button"
+                  onClick={() => setViewMode(mode.id as CalendarViewMode)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    viewMode === mode.id
+                      ? 'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 shadow-2xs font-bold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Card>
 
-                  return (
-                    <div
-                      key={day.toISOString()}
-                      onClick={() => handleSlotClick(day, 9)}
-                      className={`min-h-[110px] sm:min-h-[130px] p-1.5 transition-colors flex flex-col justify-between group cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-850/50 ${
-                        !isCurrentMonth
-                          ? 'bg-slate-50/30 dark:bg-slate-950/20 text-slate-300 dark:text-slate-600'
-                          : 'bg-white dark:bg-slate-900'
-                      } ${isToday ? 'ring-2 ring-primary-500/20 bg-primary-50/10' : ''}`}
-                    >
-                      {/* Top Day Number Row */}
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                            isToday
-                              ? 'bg-primary-600 text-white shadow-xs'
-                              : isCurrentMonth
-                              ? 'text-slate-700 dark:text-slate-300'
-                              : 'text-slate-400 dark:text-slate-600'
-                          }`}
-                        >
-                          {format(day, 'd')}
-                        </span>
+        {/* ── Main Layout: Sidebar + Active View ── */}
+        <div className="flex flex-col lg:flex-row gap-5 items-start">
+          {/* Left Sidebar */}
+          <CalendarSidebar
+            currentDate={currentDate}
+            onDateSelect={(d) => {
+              setCurrentDate(d);
+            }}
+            onCreateEvent={handleOpenCreateModal}
+            filterState={filterState}
+            onToggleFilter={handleToggleFilter}
+            onExportIcal={handleExportIcal}
+            onSubscribeFeed={() => setIsSubscribeModalOpen(true)}
+            onSyncGoogle={fetchEvents}
+            isSyncing={isLoading}
+          />
 
-                        {dayEvents.length > 0 && (
-                          <span className="text-[10px] font-semibold text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {dayEvents.length} รายการ
-                          </span>
-                        )}
+          {/* Right Calendar Viewport */}
+          <div className="flex-1 w-full min-w-0">
+            {/* 1. Month View */}
+            {viewMode === 'month' && (
+              <Card variant="convex" className="p-0 overflow-hidden rounded-[24px] border border-card-surface-border shadow-clay-card">
+                {/* Day names header */}
+                <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/90 divide-x divide-slate-200 dark:divide-slate-800 text-center py-3">
+                  {['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'].map(
+                    (dayName, i) => (
+                      <div
+                        key={dayName}
+                        className={`text-xs font-bold uppercase tracking-wider ${
+                          i === 0
+                            ? 'text-rose-500'
+                            : i === 6
+                            ? 'text-primary-500'
+                            : 'text-slate-700 dark:text-slate-300'
+                        }`}
+                      >
+                        {dayName}
                       </div>
+                    )
+                  )}
+                </div>
 
-                      {/* Event Chips List */}
-                      <div className="space-y-1 my-1 flex-1 overflow-hidden">
-                        {dayEvents.slice(0, 3).map((ev) => {
-                          const cat =
-                            CALENDAR_CATEGORY_CONFIG[ev.type] || CALENDAR_CATEGORY_CONFIG.general;
-                          return (
+                {/* Month Grid Cells */}
+                <div className="grid grid-cols-7 divide-x divide-y divide-slate-100 dark:divide-slate-800/70 border-b border-slate-200 dark:border-slate-800">
+                  {monthDays.map((day) => {
+                    const isCurrentMonth = isSameMonth(day, currentDate);
+                    const isToday = isSameDay(day, new Date());
+                    const dayStr = format(day, 'yyyy-MM-dd');
+
+                    // Filter events on this day
+                    const dayEvents = filteredEvents.filter((ev) => {
+                      const sStr = format(new Date(ev.startDate), 'yyyy-MM-dd');
+                      const eStr = format(new Date(ev.endDate), 'yyyy-MM-dd');
+                      return dayStr >= sStr && dayStr <= eStr;
+                    });
+
+                    return (
+                      <div
+                        key={day.toISOString()}
+                        onClick={() => handleSlotClick(day, 9)}
+                        className={`min-h-[110px] sm:min-h-[130px] p-2 transition-colors flex flex-col justify-between group cursor-pointer hover:bg-primary-50/30 dark:hover:bg-slate-850/50 ${
+                          !isCurrentMonth
+                            ? 'bg-slate-50/40 dark:bg-slate-950/20 text-slate-300 dark:text-slate-600'
+                            : 'bg-white/80 dark:bg-slate-900/80'
+                        } ${isToday ? 'ring-2 ring-primary-500/30 bg-primary-50/15' : ''}`}
+                      >
+                        {/* Top Day Number Row */}
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                              isToday
+                                ? 'bg-primary-600 text-white shadow-sm shadow-primary-500/30'
+                                : isCurrentMonth
+                                ? 'text-slate-700 dark:text-slate-200'
+                                : 'text-slate-400 dark:text-slate-600'
+                            }`}
+                          >
+                            {format(day, 'd')}
+                          </span>
+
+                          {dayEvents.length > 0 && (
+                            <span className="text-[10px] font-semibold text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                              {dayEvents.length} รายการ
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Event Chips List */}
+                        <div className="space-y-1 my-1 flex-1 overflow-hidden">
+                          {dayEvents.slice(0, 3).map((ev) => {
+                            const cat =
+                              CALENDAR_CATEGORY_CONFIG[ev.type] || CALENDAR_CATEGORY_CONFIG.general;
+                            return (
+                              <button
+                                key={`month-ev-${ev.id}`}
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSelectEvent(ev);
+                                }}
+                                className={`w-full text-left px-2 py-0.5 rounded-lg text-[11px] font-semibold truncate border shadow-2xs transition-all hover:scale-[1.01] hover:opacity-95 block ${cat.bgLight} ${cat.bgDark}`}
+                                title={ev.title}
+                              >
+                                <span className="truncate">{ev.title}</span>
+                              </button>
+                            );
+                          })}
+
+                          {dayEvents.length > 3 && (
                             <button
-                              key={`month-ev-${ev.id}`}
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleSelectEvent(ev);
+                                setCurrentDate(day);
+                                setViewMode('day');
                               }}
-                              className={`w-full text-left px-1.5 py-0.5 rounded-sm text-[11px] font-medium truncate border shadow-2xs transition-all hover:scale-[1.01] hover:opacity-90 block ${cat.bgLight} ${cat.bgDark}`}
-                              title={ev.title}
+                              className="text-[10px] font-semibold text-primary-600 dark:text-primary-400 hover:underline px-1 block"
                             >
-                              <span className="truncate">{ev.title}</span>
+                              +{dayEvents.length - 3} รายการเพิ่มเติม
                             </button>
-                          );
-                        })}
-
-                        {dayEvents.length > 3 && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCurrentDate(day);
-                              setViewMode('day');
-                            }}
-                            className="text-[10px] font-semibold text-primary-600 dark:text-primary-400 hover:underline px-1 block"
-                          >
-                            +{dayEvents.length - 3} รายการเพิ่มเติม
-                          </button>
-                        )}
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
 
-          {/* 2. Week View */}
+            {/* 2. Week View */}
           {viewMode === 'week' && (
             <WeekTimeGrid
               currentDate={currentDate}

@@ -5,6 +5,7 @@ import { format, isSameDay, parseISO, startOfMonth, endOfMonth, isWithinInterval
 import { th } from 'date-fns/locale';
 import { CalendarEventItem, CALENDAR_CATEGORY_CONFIG } from '../types';
 import { Calendar as CalendarIcon, Clock, MapPin, AlignLeft, ChevronRight, Users } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 interface AgendaViewProps {
   currentDate: Date;
@@ -53,7 +54,7 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
 
   if (groupKeys.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl min-h-[400px] text-center">
+      <Card variant="convex" className="flex flex-col items-center justify-center p-12 min-h-[400px] text-center rounded-[24px]">
         <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-4 shadow-inner">
           <CalendarIcon className="w-8 h-8" />
         </div>
@@ -61,15 +62,15 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
           ไม่มีกำหนดการในเดือน {format(currentDate, 'MMMM yyyy', { locale: th })}
         </h3>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
-          คุณสามารถกดปุ่ม "+ สร้างกิจกรรม" ด้านซ้ายเพื่อเพิ่มกิจกรรมหรือเวรปฏิบัติการใหม่ได้ทันที
+          คุณสามารถกดปุ่ม "+ สร้างกิจกรรม / ลงเวร" ด้านซ้ายเพื่อเพิ่มกิจกรรมหรือเวรปฏิบัติการใหม่ได้ทันที
         </p>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-xs divide-y divide-slate-200 dark:divide-slate-800">
-      <div className="p-4 bg-slate-50/80 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+    <Card variant="convex" className="p-0 overflow-hidden rounded-[24px] border border-card-surface-border shadow-clay-card divide-y divide-slate-200 dark:divide-slate-800">
+      <div className="p-4 sm:p-5 bg-slate-50/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <div>
           <h2 className="text-base font-bold text-slate-900 dark:text-white">
             กำหนดการทั้งหมดในเดือน {format(currentDate, 'MMMM yyyy', { locale: th })}
@@ -178,6 +179,6 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };

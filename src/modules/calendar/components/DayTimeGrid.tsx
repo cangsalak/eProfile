@@ -5,6 +5,7 @@ import { format, isSameDay, isWithinInterval } from 'date-fns';
 import { th } from 'date-fns/locale';
 import { CalendarEventItem, CALENDAR_CATEGORY_CONFIG } from '../types';
 import { Clock, MapPin, AlignLeft, Calendar, Users } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 interface DayTimeGridProps {
   currentDate: Date;
@@ -72,9 +73,9 @@ export const DayTimeGrid: React.FC<DayTimeGridProps> = ({
   const currentTimeTop = (currentMinutes / 60) * HOUR_ROW_HEIGHT;
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-xs">
+    <Card variant="convex" className="flex flex-col h-full overflow-hidden p-0 rounded-[24px] border border-card-surface-border shadow-clay-card">
       {/* ── Top Header Banner ── */}
-      <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-xs flex items-center justify-between">
+      <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-xs flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
             className={`w-12 h-12 rounded-2xl flex flex-col items-center justify-center font-bold shadow-xs ${
@@ -245,6 +246,6 @@ export const DayTimeGrid: React.FC<DayTimeGridProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
