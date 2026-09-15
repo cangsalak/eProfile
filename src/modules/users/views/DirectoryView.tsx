@@ -163,7 +163,7 @@ export default function EProfilePage() {
           )}
         </div>
 
-      <main className="no-print">
+      <main className="no-print print:hidden">
         <BannerSummary
           totalPersonnel={personnelList.length}
           totalDepartments={departments.length - 1}

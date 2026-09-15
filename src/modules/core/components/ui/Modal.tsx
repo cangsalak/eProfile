@@ -55,24 +55,24 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in font-prompt">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-fade-in font-prompt print:static print:p-0 print:m-0 print:w-full print:block print:overflow-visible">
+      {/* Backdrop (Hidden on Print) */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity no-print print:hidden"
         onClick={onClose}
       />
 
       {/* Modal Surface Container */}
       <div
         className={cn(
-          'relative w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl z-10 overflow-hidden my-auto',
+          'relative w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl z-10 overflow-hidden my-auto print:border-none print:shadow-none print:rounded-none print:bg-transparent print:p-0 print:m-0 print:max-w-none print:w-full print:overflow-visible',
           sizeStyles[size],
           className
         )}
       >
-        {/* Modal Header */}
+        {/* Modal Header (Hidden on Print) */}
         {(title || icon) && (
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-6 py-4 bg-slate-50/50 dark:bg-slate-800/30">
+          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-6 py-4 bg-slate-50/50 dark:bg-slate-800/30 no-print print:hidden">
             <div className="flex items-center gap-3 min-w-0">
               {icon && (
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900/50 text-sm shrink-0">
@@ -104,13 +104,13 @@ export const Modal: React.FC<ModalProps> = ({
         )}
 
         {/* Modal Body */}
-        <div className="p-6 max-h-[calc(85vh-130px)] overflow-y-auto scrollbar-thin">
+        <div className="p-6 max-h-[calc(85vh-130px)] overflow-y-auto scrollbar-thin print:p-0 print:m-0 print:max-h-none print:overflow-visible">
           {children}
         </div>
 
-        {/* Modal Footer */}
+        {/* Modal Footer (Hidden on Print) */}
         {footer && (
-          <div className="flex items-center justify-end gap-2.5 border-t border-slate-200 dark:border-slate-800 px-6 py-4 bg-slate-50/50 dark:bg-slate-800/30">
+          <div className="flex items-center justify-end gap-2.5 border-t border-slate-200 dark:border-slate-800 px-6 py-4 bg-slate-50/50 dark:bg-slate-800/30 no-print print:hidden">
             {footer}
           </div>
         )}

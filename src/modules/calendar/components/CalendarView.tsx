@@ -302,8 +302,9 @@ export function CalendarView() {
 
   return (
     <div className="flex flex-col gap-5 max-w-full">
-      {/* ── Top Google Calendar Navigation Bar ── */}
-      <Card className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 p-3 sm:p-4">
+      <div className={`flex flex-col gap-5 max-w-full ${isPrintModalOpen ? 'no-print print:hidden' : ''}`}>
+        {/* ── Top Google Calendar Navigation Bar ── */}
+        <Card className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 p-3 sm:p-4">
         {/* Left: Today, Prev/Next, Month/Year Label */}
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <Button
@@ -566,6 +567,7 @@ export function CalendarView() {
             />
           )}
         </div>
+      </div>
       </div>
 
       {/* ── Event Details / Create / Edit Modal ── */}

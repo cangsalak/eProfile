@@ -69,11 +69,20 @@ export const DutyRosterPrintModal: React.FC<DutyRosterPrintModalProps> = ({
         </div>
       }
     >
-      <div className="flex justify-center bg-slate-100/70 dark:bg-slate-950 p-2 sm:p-4 rounded-xl font-prompt overflow-x-auto">
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @media print {
+            @page {
+              size: A4 landscape;
+              margin: 10mm 12mm 10mm 12mm;
+            }
+          }
+        `
+      }} />
+      <div className="flex justify-center bg-slate-100/70 dark:bg-slate-950 p-2 sm:p-4 rounded-xl font-prompt overflow-x-auto print:bg-transparent print:p-0 print:m-0 print:border-none print:w-full">
         <div
           ref={printAreaRef}
-          className="w-full max-w-3xl bg-white text-black p-8 rounded-xl shadow-md border border-slate-300 print:shadow-none print:border-none print:p-0 print:m-0"
-          style={{ minHeight: '600px' }}
+          className="w-full max-w-3xl bg-white text-black p-8 rounded-xl shadow-md border border-slate-300 print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-none print:w-full print:min-h-0"
         >
           {/* ── Official Header ── */}
           <div className="text-center space-y-1 mb-6 border-b pb-4 border-black/30">
