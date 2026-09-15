@@ -11,6 +11,7 @@ import ProfileModal from '../components/ProfileModal';
 import AddPersonnelModal from '../components/AddPersonnelModal';
 import ScannerModal from '../components/ScannerModal';
 import PrintBadgeView from '@/modules/badges/components/PrintBadgeView';
+import { Button } from '@/components/ui/Button';
 
 export default function EProfilePage() {
   const searchParams = useSearchParams();
@@ -142,26 +143,32 @@ export default function EProfilePage() {
   };
 
   return (
-    <div className="pb-12 space-y-6">
-      <div className="flex justify-end items-center gap-3 no-print">
-          <button
-            onClick={() => setIsScannerOpen(true)}
-            className="px-4 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-700 text-slate-900 dark:text-white rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 transition-all font-medium flex items-center"
+    <div className="pb-12 space-y-5 font-prompt">
+      <div className="flex justify-end items-center gap-2.5 no-print">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => setIsScannerOpen(true)}
+          icon="fa-solid fa-barcode"
+          className="rounded-xl font-semibold shadow-xs"
+        >
+          สแกนตรวจสอบ
+        </Button>
+
+        {currentUser && (
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => setIsAddModalOpen(true)}
+            icon="fa-solid fa-plus"
+            className="rounded-xl font-bold shadow-md shadow-primary-500/20"
           >
-            <i className="fa-solid fa-barcode mr-2 text-primary-400"></i>
-            สแกนตรวจสอบ
-          </button>
-          
-          {currentUser && (
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg shadow-lg shadow-primary-500/30 transition-all font-medium flex items-center"
-            >
-              <i className="fa-solid fa-plus mr-2"></i>
-              เพิ่มบุคลากร
-            </button>
-          )}
-        </div>
+            เพิ่มบุคลากร
+          </Button>
+        )}
+      </div>
 
       <main className="no-print print:hidden">
         <BannerSummary

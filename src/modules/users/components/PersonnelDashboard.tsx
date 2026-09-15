@@ -12,6 +12,7 @@ import {
   ChevronUp, 
   RefreshCw 
 } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 interface StatsSummary {
   total: number;
@@ -59,14 +60,14 @@ export default function PersonnelDashboard() {
 
   if (isLoading && !stats) {
     return (
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm animate-pulse mb-6">
-        <div className="h-5 w-48 bg-slate-200 dark:bg-slate-800 rounded mb-4"></div>
+      <Card variant="convex" className="p-5 mb-6 rounded-[24px] animate-pulse">
+        <div className="h-5 w-48 bg-slate-200 dark:bg-slate-800 rounded-xl mb-4" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="h-20 bg-slate-100 dark:bg-slate-800/50 rounded-xl"></div>
-          <div className="h-20 bg-slate-100 dark:bg-slate-800/50 rounded-xl"></div>
-          <div className="h-20 bg-slate-100 dark:bg-slate-800/50 rounded-xl"></div>
+          <div className="h-20 bg-slate-100 dark:bg-slate-800/50 rounded-2xl" />
+          <div className="h-20 bg-slate-100 dark:bg-slate-800/50 rounded-2xl" />
+          <div className="h-20 bg-slate-100 dark:bg-slate-800/50 rounded-2xl" />
         </div>
-      </div>
+      </Card>
     );
   }
 
@@ -77,9 +78,9 @@ export default function PersonnelDashboard() {
     : 0;
 
   return (
-    <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden mb-6 transition-all duration-300">
+    <Card variant="convex" className="p-0 overflow-hidden mb-6 rounded-[24px] transition-all duration-300">
       {/* Header */}
-      <div className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+      <div className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/80 dark:bg-slate-900/60">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
             <Activity className="w-4 h-4" />
@@ -229,6 +230,6 @@ export default function PersonnelDashboard() {
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

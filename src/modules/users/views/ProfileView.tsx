@@ -9,6 +9,7 @@ import ContactInfoForm from '../components/forms/ContactInfoForm';
 import ExtendedHistoryForm from '../components/forms/ExtendedHistoryForm';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { Card, Button, Badge } from '@/components/ui';
 
 export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<Personnel | null>(null);
@@ -197,10 +198,10 @@ export default function ProfilePage() {
       {/* ======================================================== */}
       {/* 1. HERO PROFILE HEADER CARD */}
       {/* ======================================================== */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      <Card variant="convex" className="p-0 overflow-hidden rounded-[24px]">
         
         {/* Cover Photo */}
-        <div className="relative w-full h-48 sm:h-60 bg-gradient-to-r from-primary-600 via-indigo-600 to-purple-700 overflow-hidden">
+        <div className="relative w-full h-48 sm:h-60 bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 overflow-hidden">
           {(isEditing ? formData.coverPhoto : currentUser.coverPhoto) ? (
             <img
               src={(isEditing ? formData.coverPhoto : currentUser.coverPhoto) || undefined}
@@ -302,46 +303,44 @@ export default function ProfilePage() {
                     <span>พิมพ์บัตรประจำตัว</span>
                   </Link>
 
-                  <button
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
                     onClick={() => setIsEditing(true)}
-                    className="px-4 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-primary-500/20 transition-all flex items-center gap-2"
+                    icon="fa-solid fa-pen-to-square"
+                    className="text-xs sm:text-sm font-bold rounded-xl"
                   >
-                    <i className="fa-solid fa-pen-to-square"></i>
-                    <span>แก้ไขโปรไฟล์</span>
-                  </button>
+                    แก้ไขโปรไฟล์
+                  </Button>
                 </>
               ) : (
                 <div className="flex items-center gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="secondary"
+                    size="sm"
                     onClick={() => {
                       setIsEditing(false);
                       setFormData(currentUser);
                       setPassword('');
                       setConfirmPassword('');
                     }}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-xs sm:text-sm transition-colors"
+                    className="text-xs sm:text-sm font-bold rounded-xl"
                   >
                     ยกเลิก
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="primary"
+                    size="sm"
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="px-5 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-primary-500/25 transition-all flex items-center gap-2 disabled:opacity-50"
+                    icon={isSaving ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-check"}
+                    className="text-xs sm:text-sm font-bold rounded-xl"
                   >
-                    {isSaving ? (
-                      <>
-                        <i className="fa-solid fa-spinner fa-spin"></i>
-                        <span>กำลังบันทึก...</span>
-                      </>
-                    ) : (
-                      <>
-                        <i className="fa-solid fa-check"></i>
-                        <span>บันทึกข้อมูล</span>
-                      </>
-                    )}
-                  </button>
+                    {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
+                  </Button>
                 </div>
               )}
             </div>
@@ -360,6 +359,7 @@ export default function ProfilePage() {
             ].map((tab) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`py-3.5 px-4 font-bold text-xs sm:text-sm border-b-2 whitespace-nowrap transition-all flex items-center gap-2 ${
                   activeTab === tab.id
@@ -373,7 +373,7 @@ export default function ProfilePage() {
             ))}
           </div>
         )}
-      </div>
+      </Card>
 
       {/* ======================================================== */}
       {/* 2. VIEW MODE CONTENT TABS */}
@@ -386,9 +386,9 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
               
               {/* Personal Info Card */}
-              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-7 space-y-4">
+              <Card variant="convex" className="p-6 sm:p-7 rounded-[24px] space-y-4">
                 <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm">
+                  <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 flex items-center justify-center text-sm">
                     <i className="fa-solid fa-id-card-clip"></i>
                   </div>
                   <div>
@@ -426,10 +426,10 @@ export default function ProfilePage() {
                     {currentUser.currentAddress || '-'} {currentUser.currentTambon ? `ต.${currentUser.currentTambon}` : ''} {currentUser.currentAmphoe ? `อ.${currentUser.currentAmphoe}` : ''} {currentUser.currentProvince ? `จ.${currentUser.currentProvince}` : ''} {currentUser.currentZipcode || ''}
                   </p>
                 </div>
-              </div>
+              </Card>
 
               {/* Contact Info Card */}
-              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-7 space-y-4">
+              <Card variant="convex" className="p-6 sm:p-7 rounded-[24px] space-y-4">
                 <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
                     <i className="fa-solid fa-phone-volume"></i>
@@ -534,16 +534,16 @@ export default function ProfilePage() {
                   </div>
 
                 </div>
-              </div>
+              </Card>
 
             </div>
           )}
 
           {/* TAB 2: Official & Department */}
           {activeTab === 'official' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-7 space-y-6 animate-fade-in">
+            <Card variant="convex" className="p-6 sm:p-7 rounded-[24px] space-y-6 animate-fade-in">
               <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg">
+                <div className="w-10 h-10 rounded-2xl bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
                   <i className="fa-solid fa-sitemap"></i>
                 </div>
                 <div>
@@ -583,12 +583,12 @@ export default function ProfilePage() {
                   <span className="font-bold text-slate-900 dark:text-white">{currentUser.education || '-'}</span>
                 </div>
               </div>
-            </div>
+            </Card>
           )}
 
           {/* TAB 3: History & Bio */}
           {activeTab === 'history' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-7 space-y-6 animate-fade-in">
+            <Card variant="convex" className="p-6 sm:p-7 rounded-[24px] space-y-6 animate-fade-in">
               <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
                   <i className="fa-solid fa-award"></i>
@@ -611,7 +611,7 @@ export default function ProfilePage() {
 
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-2">
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                    <i className="fa-solid fa-graduation-cap text-indigo-500 mr-2"></i>ประวัติการฝึกอบรมและหลักสูตรพิเศษ
+                    <i className="fa-solid fa-graduation-cap text-primary-500 mr-2"></i>ประวัติการฝึกอบรมและหลักสูตรพิเศษ
                   </span>
                   <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">
                     {currentUser.trainingHistory || 'ยังไม่มีการบันทึกหลักสูตรการฝึกอบรม'}
@@ -627,14 +627,12 @@ export default function ProfilePage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </Card>
           )}
 
-
-
-          {/* TAB 5: Security & Account */}
+          {/* TAB 4: Security & Account */}
           {activeTab === 'security' && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-7 space-y-6 animate-fade-in">
+            <Card variant="convex" className="p-6 sm:p-7 rounded-[24px] space-y-6 animate-fade-in">
               <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="w-10 h-10 rounded-2xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg">
                   <i className="fa-solid fa-shield-halved"></i>
@@ -658,15 +656,18 @@ export default function ProfilePage() {
               </div>
 
               <div className="pt-2">
-                <button
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
                   onClick={() => setIsEditing(true)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md flex items-center gap-2"
+                  icon="fa-solid fa-key"
+                  className="text-xs sm:text-sm font-bold rounded-xl"
                 >
-                  <i className="fa-solid fa-key"></i>
-                  <span>เปลี่ยนรหัสผ่านของฉัน</span>
-                </button>
+                  เปลี่ยนรหัสผ่านของฉัน
+                </Button>
               </div>
-            </div>
+            </Card>
           )}
 
         </div>
@@ -679,7 +680,7 @@ export default function ProfilePage() {
         <form onSubmit={handleSave} className="space-y-6 animate-fade-in">
           
           {/* Personal Info Fieldset */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+          <Card variant="convex" className="p-6 sm:p-8 rounded-[24px] space-y-6">
             <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               <i className="fa-solid fa-user text-primary-500 text-sm"></i>
               <span>ข้อมูลส่วนบุคคล (Personal Information)</span>
@@ -690,12 +691,12 @@ export default function ProfilePage() {
               prefixes={prefixes}
               bloodGroups={bloodGroups}
             />
-          </div>
+          </Card>
 
           {/* Military & Official Fieldset */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+          <Card variant="convex" className="p-6 sm:p-8 rounded-[24px] space-y-6">
             <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
-              <i className="fa-solid fa-sitemap text-indigo-500 text-sm"></i>
+              <i className="fa-solid fa-sitemap text-primary-500 text-sm"></i>
               <span>ข้อมูลสังกัดและตำแหน่งงาน (Official & Position)</span>
             </h3>
             <MilitaryInfoForm
@@ -706,28 +707,28 @@ export default function ProfilePage() {
               statusList={[]}
               isProfile={true}
             />
-          </div>
+          </Card>
 
           {/* Contact Fieldset */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+          <Card variant="convex" className="p-6 sm:p-8 rounded-[24px] space-y-6">
             <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               <i className="fa-solid fa-phone text-emerald-500 text-sm"></i>
               <span>ข้อมูลการติดต่อและที่อยู่ (Contact & Address)</span>
             </h3>
             <ContactInfoForm formData={formData} setFormData={setFormData} />
-          </div>
+          </Card>
 
           {/* Extended History Fieldset */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+          <Card variant="convex" className="p-6 sm:p-8 rounded-[24px] space-y-6">
             <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               <i className="fa-solid fa-award text-amber-500 text-sm"></i>
               <span>ประวัติและผลงาน (History & Notes)</span>
             </h3>
             <ExtendedHistoryForm formData={formData} setFormData={setFormData} />
-          </div>
+          </Card>
 
           {/* Security & Password Fieldset */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+          <Card variant="convex" className="p-6 sm:p-8 rounded-[24px] space-y-6">
             <h3 className="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
               <i className="fa-solid fa-lock text-rose-500 text-sm"></i>
               <span>เปลี่ยนรหัสผ่าน (Change Password)</span>
@@ -759,7 +760,7 @@ export default function ProfilePage() {
                 />
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Sticky Bottom Bar */}
           <div className="sticky bottom-6 z-30 p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl flex justify-between items-center">
@@ -768,35 +769,30 @@ export default function ProfilePage() {
             </span>
 
             <div className="flex items-center gap-2.5">
-              <button
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => {
                   setIsEditing(false);
                   setFormData(currentUser);
                   setPassword('');
                   setConfirmPassword('');
                 }}
-                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-xs sm:text-sm transition-colors"
+                className="text-xs sm:text-sm font-bold rounded-xl"
               >
                 ยกเลิก
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
+                variant="primary"
+                size="sm"
                 disabled={isSaving}
-                className="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-primary-500/25 transition-all flex items-center gap-2 disabled:opacity-50"
+                icon={isSaving ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-check"}
+                className="text-xs sm:text-sm font-bold rounded-xl"
               >
-                {isSaving ? (
-                  <>
-                    <i className="fa-solid fa-spinner fa-spin"></i>
-                    <span>กำลังบันทึก...</span>
-                  </>
-                ) : (
-                  <>
-                    <i className="fa-solid fa-check"></i>
-                    <span>บันทึกการเปลี่ยนแปลง</span>
-                  </>
-                )}
-              </button>
+                {isSaving ? 'กำลังบันทึก...' : 'บันทึกการเปลี่ยนแปลง'}
+              </Button>
             </div>
           </div>
 

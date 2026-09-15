@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
+import { Card, Button, Badge } from '@/components/ui';
 
 export interface SubDepartment {
   name: string;
@@ -238,9 +239,9 @@ export default function DepartmentsManager() {
   };
 
   return (
-    <div className="space-y-6 pt-2">
+    <div className="space-y-6 pt-2 font-prompt">
       {/* Header Info & Add Main Unit Button */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <Card variant="convex" className="p-5 sm:p-6 rounded-[24px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <i className="fa-solid fa-sitemap text-primary-500"></i>
@@ -250,68 +251,78 @@ export default function DepartmentsManager() {
             จัดการกอง, ฝ่าย, กองร้อย พร้อมชื่อเต็ม คำย่อ และโครงสร้างแผนก/หมวด/ตอน/ชุด ภายในหน่วย
           </p>
         </div>
-        <button
+        <Button
+          type="button"
+          variant={isAdding ? "secondary" : "primary"}
+          size="sm"
           onClick={() => setIsAdding(!isAdding)}
-          className="px-4 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl shadow-lg shadow-primary-500/25 transition-all text-xs font-semibold flex items-center gap-2 shrink-0"
+          icon={isAdding ? "fa-solid fa-xmark" : "fa-solid fa-plus"}
+          className="text-xs font-semibold rounded-xl shrink-0"
         >
-          <i className={`fa-solid ${isAdding ? 'fa-xmark' : 'fa-plus'}`}></i>
-          <span>{isAdding ? 'ยกเลิก' : 'เพิ่มกอง / ฝ่าย / กองร้อย'}</span>
-        </button>
-      </div>
+          {isAdding ? 'ยกเลิก' : 'เพิ่มกอง / ฝ่าย / กองร้อย'}
+        </Button>
+      </Card>
 
       {/* Add Department Form Panel */}
       {isAdding && (
-        <form onSubmit={handleAddDepartment} className="bg-primary-50/50 dark:bg-primary-950/20 border border-primary-200 dark:border-primary-800/50 rounded-2xl p-5 shadow-sm animate-fade-in">
-          <h4 className="text-xs font-bold text-primary-900 dark:text-primary-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <i className="fa-solid fa-folder-plus"></i> เพิ่มกอง / ฝ่าย / กองร้อย ใหม่
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            <div className="md:col-span-2">
-              <label htmlFor="newDeptNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                ชื่อเต็ม (Full Name) <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="newDeptNameInput"
-                aria-label="ชื่อเต็มหน่วยงาน"
-                type="text"
-                value={newDeptName}
-                onChange={(e) => setNewDeptName(e.target.value)}
-                placeholder="เช่น กองการศึกษา, กองร้อยฝึกรบพิเศษที่ 1, ฝ่ายส่งกำลังบำรุง"
-                className="w-full h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
-                required
-              />
+        <Card variant="convex" className="p-5 sm:p-6 rounded-[24px] border-primary-200/50 dark:border-primary-800/50 animate-fade-in">
+          <form onSubmit={handleAddDepartment}>
+            <h4 className="text-xs font-bold text-primary-900 dark:text-primary-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <i className="fa-solid fa-folder-plus text-primary-500"></i> เพิ่มกอง / ฝ่าย / กองร้อย ใหม่
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+              <div className="md:col-span-2">
+                <label htmlFor="newDeptNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  ชื่อเต็ม (Full Name) <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="newDeptNameInput"
+                  aria-label="ชื่อเต็มหน่วยงาน"
+                  type="text"
+                  value={newDeptName}
+                  onChange={(e) => setNewDeptName(e.target.value)}
+                  placeholder="เช่น กองการศึกษา, กองร้อยฝึกรบพิเศษที่ 1, ฝ่ายส่งกำลังบำรุง"
+                  className="w-full h-11 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="newDeptShortNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  คำย่อ (Short Name / Abbr)
+                </label>
+                <input
+                  id="newDeptShortNameInput"
+                  aria-label="คำย่อหน่วยงาน"
+                  type="text"
+                  value={newDeptShortName}
+                  onChange={(e) => setNewDeptShortName(e.target.value)}
+                  placeholder="เช่น กศ., ร้อย.1, ฝกบ."
+                  className="w-full h-11 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="newDeptShortNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                คำย่อ (Short Name / Abbr)
-              </label>
-              <input
-                id="newDeptShortNameInput"
-                aria-label="คำย่อหน่วยงาน"
-                type="text"
-                value={newDeptShortName}
-                onChange={(e) => setNewDeptShortName(e.target.value)}
-                placeholder="เช่น กศ., ร้อย.1, ฝกบ."
-                className="w-full h-11 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 shadow-2xs"
-              />
+            <div className="flex justify-end gap-2 mt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsAdding(false)}
+                className="text-xs font-medium rounded-xl"
+              >
+                ยกเลิก
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                icon="fa-solid fa-check"
+                className="text-xs font-semibold rounded-xl"
+              >
+                บันทึกหน่วยงาน
+              </Button>
             </div>
-          </div>
-          <div className="flex justify-end gap-2 mt-4">
-            <button
-              type="button"
-              onClick={() => setIsAdding(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-medium"
-            >
-              ยกเลิก
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-primary-500/20"
-            >
-              บันทึกหน่วยงาน
-            </button>
-          </div>
-        </form>
+          </form>
+        </Card>
       )}
 
       {/* Departments List / Hierarchy Tree */}
@@ -321,11 +332,11 @@ export default function DepartmentsManager() {
           <p className="text-xs text-slate-500">กำลังโหลดโครงสร้างหน่วยงาน...</p>
         </div>
       ) : departments.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-slate-900/40 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-8">
+        <Card variant="convex" className="text-center py-16 rounded-[24px] border-dashed p-8">
           <i className="fa-solid fa-sitemap text-4xl text-slate-300 dark:text-slate-600 mb-3"></i>
           <p className="text-sm font-medium text-slate-700 dark:text-slate-300">ยังไม่มีข้อมูลหน่วยงาน</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">กดปุ่ม "เพิ่มกอง / ฝ่าย / กองร้อย" เพื่อเริ่มต้นสร้างโครงสร้างหน่วย</p>
-        </div>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {departments.map((dept) => {
@@ -334,9 +345,10 @@ export default function DepartmentsManager() {
             const isEditing = editingDeptId === dept.id;
 
             return (
-              <div
+              <Card
                 key={dept.id}
-                className="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all"
+                variant="convex"
+                className="p-5 rounded-[24px] transition-all"
               >
                 {/* Main Department Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
@@ -393,34 +405,45 @@ export default function DepartmentsManager() {
                   <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
                     {isEditing ? (
                       <>
-                        <button
+                        <Button
+                          type="button"
+                          variant="success"
+                          size="sm"
                           onClick={() => handleUpdateDepartment(dept.id)}
-                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1"
+                          icon="fa-solid fa-check"
+                          className="text-xs font-semibold rounded-lg"
                         >
-                          <i className="fa-solid fa-check"></i> บันทึก
-                        </button>
-                        <button
+                          บันทึก
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
                           onClick={() => setEditingDeptId(null)}
-                          className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-medium"
+                          className="text-xs font-medium rounded-lg"
                         >
                           ยกเลิก
-                        </button>
+                        </Button>
                       </>
                     ) : (
                       <>
-                        <button
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
                           onClick={() => {
                             setActiveDeptForSub(dept);
                             setNewSubName('');
                             setNewSubShortName('');
                           }}
-                          className="px-2.5 py-1.5 bg-primary-50 dark:bg-primary-950/50 hover:bg-primary-100 dark:hover:bg-primary-900/60 text-primary-600 dark:text-primary-300 rounded-lg text-xs font-medium flex items-center gap-1 border border-primary-200/50 dark:border-primary-800/50 transition-all"
+                          icon="fa-solid fa-plus"
+                          className="text-xs font-medium rounded-lg"
                           title="เพิ่มแผนก/หมวดย่อย"
                         >
-                          <i className="fa-solid fa-plus text-[10px]"></i>
-                          <span>เพิ่มแผนกย่อย</span>
-                        </button>
+                          เพิ่มแผนกย่อย
+                        </Button>
                         <button
+                          type="button"
                           onClick={() => {
                             setEditingDeptId(dept.id);
                             setEditDeptName(dept.name);
@@ -432,6 +455,7 @@ export default function DepartmentsManager() {
                           <i className="fa-solid fa-pen-to-square text-xs"></i>
                         </button>
                         <button
+                          type="button"
                           onClick={() => setDeleteTarget({ type: 'dept', id: dept.id, name: dept.name })}
                           className="p-1.5 text-rose-500 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all"
                           title="ลบหน่วยงาน"
@@ -481,7 +505,7 @@ export default function DepartmentsManager() {
                     </div>
                   )}
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>
@@ -489,14 +513,15 @@ export default function DepartmentsManager() {
 
       {/* Add Sub-department Modal */}
       {activeDeptForSub && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <Card variant="convex" className="w-full max-w-md p-6 rounded-[24px] shadow-2xl relative">
             <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <i className="fa-solid fa-plus-circle text-primary-500"></i>
                 เพิ่มแผนก/หมวดย่อย
               </h3>
               <button 
+                type="button"
                 onClick={() => setActiveDeptForSub(null)}
                 className="w-7 h-7 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs"
               >
@@ -545,22 +570,27 @@ export default function DepartmentsManager() {
               </div>
 
               <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setActiveDeptForSub(null)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-medium"
+                  className="text-xs font-medium rounded-xl"
                 >
                   ปิด
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-primary-500/25"
+                  variant="primary"
+                  size="sm"
+                  icon="fa-solid fa-plus"
+                  className="text-xs font-semibold rounded-xl"
                 >
-                  + เพิ่มแผนกย่อย
-                </button>
+                  เพิ่มแผนกย่อย
+                </Button>
               </div>
             </form>
-          </div>
+          </Card>
         </div>
       )}
 

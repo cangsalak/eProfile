@@ -240,7 +240,7 @@ export default function PersonnelTable({
                         setEditingPerson(person);
                         setIsAddModalOpen(true);
                       }}
-                      className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-400 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-800/50 transition-all flex items-center justify-center"
+                      className="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 hover:bg-primary-100 dark:bg-primary-950/40 dark:text-primary-400 dark:hover:bg-primary-900/50 border border-primary-200 dark:border-primary-800/50 transition-all flex items-center justify-center"
                       title="แก้ไข"
                       aria-label={`แก้ไขข้อมูล ${person.firstName} ${person.lastName}`}
                     >

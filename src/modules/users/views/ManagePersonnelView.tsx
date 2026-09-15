@@ -13,6 +13,8 @@ import PersonnelDashboard from '../components/PersonnelDashboard';
 import { downloadPersonnelTemplate, exportPersonnelToExcel } from '../lib/excelUtils';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
+import { Card, Button, Badge } from '@/components/ui';
+import { Download, Upload, Image, FileSpreadsheet, Plus, Search, Filter } from 'lucide-react';
 
 interface SubDepartmentItem {
   name: string;
@@ -315,36 +317,48 @@ export default function ManagePersonnelView() {
   return (
     <div className="pb-16 space-y-6 animate-fade-in font-prompt">
       {/* Top Action Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+      <Card variant="convex" className="p-4 sm:p-5 rounded-[24px] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
             กำลังพลในระบบทั้งหมด {totalItems.toLocaleString()} นาย
           </span>
         </div>
         
         <div className="flex flex-wrap items-center gap-2">
-          <button
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
             onClick={downloadPersonnelTemplate}
-            className="px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700 shadow-xs"
+            icon="fa-solid fa-file-excel"
+            className="text-xs font-semibold rounded-xl"
           >
-            <i className="fa-solid fa-file-excel mr-1.5 text-green-600 text-xs"></i> โหลดฟอร์ม
-          </button>
+            โหลดฟอร์ม
+          </Button>
           
-          <button
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
             onClick={() => setIsImportModalOpen(true)}
-            className="px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700 shadow-xs"
+            icon="fa-solid fa-file-import"
+            className="text-xs font-semibold rounded-xl"
           >
-            <i className="fa-solid fa-file-import mr-1.5 text-blue-600 text-xs"></i> นำเข้า Excel
-          </button>
+            นำเข้า Excel
+          </Button>
 
-          <button
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
             onClick={() => zipInputRef.current?.click()}
-            className="px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700 shadow-xs"
+            icon="fa-solid fa-file-image"
             title="อัปโหลดไฟล์ ZIP ที่ตั้งชื่อรูปภาพตามรหัสบัตร/เลขบัตรประชาชน"
+            className="text-xs font-semibold rounded-xl"
           >
-            <i className="fa-solid fa-file-image mr-1.5 text-purple-600 text-xs"></i> นำเข้ารูป (ZIP)
-          </button>
+            นำเข้ารูป (ZIP)
+          </Button>
           <input 
             id="personnelZipUploadInput"
             type="file" 
@@ -355,30 +369,38 @@ export default function ManagePersonnelView() {
             onChange={handleImportZip} 
           />
 
-          <button
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
             onClick={handleServerExport}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl transition-all font-medium text-xs flex items-center border border-slate-200 dark:border-slate-700"
+            icon="fa-solid fa-file-export"
+            className="text-xs font-semibold rounded-xl"
           >
-            <i className="fa-solid fa-file-export mr-2 text-green-600 text-sm"></i> ส่งออก Excel
-          </button>
+            ส่งออก Excel
+          </Button>
 
-          <button
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
             onClick={() => {
               setEditingPerson(null);
               setIsAddModalOpen(true);
             }}
-            className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl shadow-sm hover:shadow transition-all font-medium text-xs flex items-center gap-1.5"
+            icon="fa-solid fa-user-plus"
+            className="text-xs font-bold rounded-xl shadow-md shadow-primary-500/20"
           >
-            <i className="fa-solid fa-user-plus text-sm"></i> เพิ่มกำลังพลใหม่
-          </button>
+            เพิ่มกำลังพลใหม่
+          </Button>
         </div>
-      </div>
+      </Card>
 
       {/* Personnel Intelligence Dashboard Component */}
       <PersonnelDashboard />
 
       {/* Main Filter & Table Card */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+      <Card variant="convex" className="p-0 overflow-hidden rounded-[24px]">
         
         {/* Tier 1: Major Department Selection */}
         <div className="px-5 pt-4 pb-3 border-b border-slate-200/70 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
@@ -387,6 +409,7 @@ export default function ManagePersonnelView() {
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
             <button
+              type="button"
               onClick={() => {
                 setDeptFilter('all');
                 setSubDeptFilter('all');
@@ -403,6 +426,7 @@ export default function ManagePersonnelView() {
             {departments.map((dept) => (
               <button
                 key={dept.id}
+                type="button"
                 onClick={() => {
                   setDeptFilter(dept.name);
                   setSubDeptFilter('all');
@@ -422,19 +446,20 @@ export default function ManagePersonnelView() {
 
         {/* Tier 2: Sub-Department (แผนก / หมวด / ตอน / ชุด) */}
         {deptFilter !== 'all' && currentSubDepts.length > 0 && (
-          <div className="px-5 py-2.5 bg-blue-50/40 dark:bg-blue-950/20 border-b border-blue-100 dark:border-blue-900/30 flex items-center gap-2 overflow-x-auto scrollbar-none">
-            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 shrink-0 mr-1 flex items-center gap-1">
+          <div className="px-5 py-2.5 bg-primary-50/30 dark:bg-primary-950/20 border-b border-primary-100 dark:border-primary-900/30 flex items-center gap-2 overflow-x-auto scrollbar-none">
+            <span className="text-xs font-semibold text-primary-600 dark:text-primary-400 shrink-0 mr-1 flex items-center gap-1">
               <i className="fa-solid fa-code-branch text-[10px]"></i> แผนก/หมวด:
             </span>
             <button
+              type="button"
               onClick={() => {
                 setSubDeptFilter('all');
                 setCurrentPage(1);
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                 subDeptFilter === 'all'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 border border-blue-200 dark:border-blue-800/40'
+                  ? 'bg-primary-600 text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
               }`}
             >
               ทั้งหมดใน{deptFilter}
@@ -442,14 +467,15 @@ export default function ManagePersonnelView() {
             {currentSubDepts.map((sub, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => {
                   setSubDeptFilter(sub.name);
                   setCurrentPage(1);
                 }}
                 className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                   subDeptFilter === sub.name
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-700 border border-blue-200 dark:border-blue-800/40'
+                    ? 'bg-primary-600 text-white shadow-xs'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                 }`}
               >
                 {sub.shortName ? `${sub.shortName} (${sub.name})` : sub.name}
@@ -473,6 +499,7 @@ export default function ManagePersonnelView() {
             />
             {searchQuery && (
               <button 
+                type="button"
                 onClick={() => setSearchQuery('')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs"
               >
@@ -518,12 +545,16 @@ export default function ManagePersonnelView() {
 
             {/* Bulk Print Badges button */}
             {selectedIds.length > 0 && (
-              <button
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
                 onClick={handleBulkPrint}
-                className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all animate-fade-in"
+                icon="fa-solid fa-id-card"
+                className="text-xs font-semibold rounded-xl"
               >
-                <i className="fa-solid fa-id-card"></i> พิมพ์บัตร ({selectedIds.length})
-              </button>
+                พิมพ์บัตร ({selectedIds.length})
+              </Button>
             )}
           </div>
         </div>
@@ -556,7 +587,7 @@ export default function ManagePersonnelView() {
           setPageSize={setPageSize}
           setCurrentPage={setCurrentPage}
         />
-      </div>
+      </Card>
 
       {/* Modals */}
       {isAddModalOpen && (
