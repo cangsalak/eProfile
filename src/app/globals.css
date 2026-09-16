@@ -703,6 +703,14 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
 
 @media print {
   /* 1. Global Reset to Pure White Paper */
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
   html, body {
     background: #ffffff !important;
     background-color: #ffffff !important;
@@ -764,8 +772,12 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
 
   #printable-document-sheet,
   .printable-document,
-  .print-card {
-    display: block !important;
+  .print-card,
+  #printable-badge-sheet,
+  .badge-print-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
     position: relative !important;
     top: 0 !important;
     left: 0 !important;
@@ -773,7 +785,8 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: #ffffff !important;
+    background: transparent !important;
+    background-color: transparent !important;
     color: #000000 !important;
     border: none !important;
     box-shadow: none !important;
@@ -825,6 +838,40 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
   .print-avoid-break {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+  }
+
+  /* 6. CR80 Standard ID Card Exact Physical Sizing (ISO/IEC 7810 ID-1: 53.98mm x 85.60mm) */
+  .cr80-card {
+    display: block !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
+    border-radius: 3.18mm !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* Force exact millimeters for portrait/landscape badges */
+  .cr80-card:not(.cr80-landscape) {
+    width: 53.98mm !important;
+    min-width: 53.98mm !important;
+    max-width: 53.98mm !important;
+    height: 85.60mm !important;
+    min-height: 85.60mm !important;
+    max-height: 85.60mm !important;
+  }
+
+  .cr80-card.cr80-landscape {
+    width: 85.60mm !important;
+    min-width: 85.60mm !important;
+    max-width: 85.60mm !important;
+    height: 53.98mm !important;
+    min-height: 53.98mm !important;
+    max-height: 53.98mm !important;
   }
 }
 

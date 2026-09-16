@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Personnel } from '@/modules/users';
 import IDBadge from '../components/IDBadge';
+import CR80Pair from '../components/CR80Pair';
+import PrintPreviewModal from '@/modules/print/components/PrintPreviewModal';
 import toast from 'react-hot-toast';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 import { Button, Badge, Card, CardHeader, Input, Checkbox } from '@/components/ui';
@@ -16,24 +18,36 @@ export default function BulkBadgePrintView() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [settings, setSettings] = useState<any>({});
-  const [isLoading, setIsLoading] = useState(true);
   const [isPickingMode, setIsPickingMode] = useState(false);
+  const [printSide, setPrintSide] = useState<'pair' | 'front' | 'back'>('pair');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
-    const storedIds = sessionStorage.getItem('bulkPrintIds');
+    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const queryId = urlParams?.get('id');
+    const queryIds = urlParams?.get('ids');
+
     let idsToPrint: string[] = [];
-    if (storedIds) {
-      try {
-        idsToPrint = JSON.parse(storedIds);
-      } catch (e) {
-        console.error(e);
+    if (queryId) {
+      idsToPrint = [queryId];
+    } else if (queryIds) {
+      idsToPrint = queryIds.split(',').map((s) => s.trim()).filter(Boolean);
+    } else {
+      const storedIds = sessionStorage.getItem('bulkPrintIds');
+      if (storedIds) {
+        try {
+          idsToPrint = JSON.parse(storedIds);
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
 
-    // Fetch settings and personnel
+    // Fetch settings and personnel (Always fresh)
     Promise.all([
-      fetch('/api/settings', { cache: 'no-store' }).then((res) => res.json()),
-      fetch('/api/personnel?all=true', { cache: 'no-store' }).then((res) => res.json()),
+      fetch(`/api/settings?_t=${Date.now()}`, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', Pragma: 'no-cache' } }).then((res) => res.json()),
+      fetch(`/api/personnel?all=true&_t=${Date.now()}`, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', Pragma: 'no-cache' } }).then((res) => res.json()),
     ])
       .then(([settingsData, personnelData]) => {
         if (!settingsData.error) setSettings(settingsData);
@@ -43,10 +57,12 @@ export default function BulkBadgePrintView() {
           setAllPersonnel(pList);
           if (idsToPrint.length > 0) {
             const filtered = pList.filter((p: Personnel) => idsToPrint.includes(p.id));
-            setPersonnelList(filtered);
-            setSelectedIds(idsToPrint);
+            setPersonnelList(filtered.length > 0 ? filtered : pList.slice(0, 4));
+            setSelectedIds(filtered.length > 0 ? idsToPrint : pList.slice(0, 4).map((p) => p.id));
           } else {
-            setIsPickingMode(true);
+            const defaultSet = pList.slice(0, 4);
+            setPersonnelList(defaultSet);
+            setSelectedIds(defaultSet.map((p) => p.id));
           }
         }
       })
@@ -133,7 +149,7 @@ export default function BulkBadgePrintView() {
       {/* Picking Mode / Empty State View */}
       {isPickingMode || personnelList.length === 0 ? (
         <div className="space-y-6">
-          <Card>
+          <Card className="no-print print:hidden">
             <CardHeader
               title="เลือกรายชื่อสำหรับพิมพ์บัตรประจำตัว"
               subtitle="เลือกรายชื่อกำลังพลที่ต้องการสั่งพิมพ์ หรือเลือกทั้งหมดเพื่อพิมพ์เป็นชุด"
@@ -244,18 +260,25 @@ export default function BulkBadgePrintView() {
             __html: `
               @media print {
                 @page {
-                  size: A4;
-                  margin: 10mm;
+                  size: A4 portrait;
+                  margin: 8mm 6mm !important;
                 }
-                body {
+                html, body, #__next, main, .main-content {
+                  background: white !important;
+                  background-color: white !important;
                   -webkit-print-color-adjust: exact !important;
                   print-color-adjust: exact !important;
-                  background: white !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
+                  border: none !important;
+                  box-shadow: none !important;
                 }
-                .no-print, .print\\:hidden, [class*="print:hidden"], [class*="no-print"] {
+                header, nav, aside, footer, .sidebar, .navbar, .page-header, .page-header-extra, .no-print, .print\\:hidden, [class*="print:hidden"], [class*="no-print"] {
                   display: none !important;
                   visibility: hidden !important;
                   height: 0 !important;
+                  margin: 0 !important;
+                  padding: 0 !important;
                 }
                 .cr80-card {
                   width: 5.4cm !important;
@@ -279,7 +302,7 @@ export default function BulkBadgePrintView() {
 
           {/* Control Bar (Hidden on Print) */}
           <Card className="no-print print:hidden">
-            <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2.5">
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -294,6 +317,44 @@ export default function BulkBadgePrintView() {
                 </p>
               </div>
 
+              {/* Print Side Selector */}
+              <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setPrintSide('pair')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                    printSide === 'pair'
+                      ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <i className="fa-solid fa-table-columns text-xs" />
+                  <span>หน้า-หลังคู่กัน (0.05 มม.)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPrintSide('front')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                    printSide === 'front'
+                      ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <span>เฉพาะหน้า</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPrintSide('back')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                    printSide === 'back'
+                      ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <span>เฉพาะหลัง</span>
+                </button>
+              </div>
+
               <div className="flex items-center gap-2.5 flex-wrap">
                 <Button
                   variant="secondary"
@@ -304,10 +365,18 @@ export default function BulkBadgePrintView() {
                   เลือกรายชื่อเพิ่ม
                 </Button>
                 <Button
+                  variant="outline"
+                  size="sm"
+                  icon="fa-solid fa-eye"
+                  onClick={() => setIsPreviewOpen(true)}
+                >
+                  ดูตัวอย่างก่อนพิมพ์
+                </Button>
+                <Button
                   variant="primary"
                   size="md"
                   icon="fa-solid fa-print"
-                  onClick={() => window.print()}
+                  onClick={() => setIsPreviewOpen(true)}
                 >
                   สั่งพิมพ์ทันที (Print)
                 </Button>
@@ -316,28 +385,101 @@ export default function BulkBadgePrintView() {
           </Card>
 
           {/* Badges Layout Grid (Printable Area) */}
-          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0">
-            <div className="flex flex-wrap gap-6 print:gap-[5mm] justify-center print:justify-start">
+          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0 print:shadow-none print:rounded-none">
+            <div className="flex flex-wrap gap-6 print:gap-[6mm] justify-center print:justify-start">
               {personnelList.map((person) => (
                 <div key={person.id} className="flex flex-col items-center print:break-inside-avoid mb-4">
                   <span className="no-print print:hidden text-slate-500 dark:text-slate-400 text-xs mb-2 text-center font-medium truncate max-w-[216px]">
                     {person.firstName} {person.lastName}
                   </span>
 
-                  {/* Cut Lines & CR80 Container */}
-                  <div className="relative p-2 border border-dashed border-slate-300 dark:border-slate-700 print:border-none print:p-0 rounded-2xl bg-white dark:bg-slate-900 shadow-sm print:shadow-none">
-                    <div className="cr80-card bg-white shadow-sm print:shadow-none rounded-xl overflow-hidden">
+                  {/* Print Card Container with exact 0.05mm gap between front and back */}
+                  {printSide === 'pair' ? (
+                    <CR80Pair
+                      front={
+                        <IDBadge
+                          personnel={person}
+                          settings={settings}
+                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                        />
+                      }
+                      back={
+                        <IDBadge
+                          personnel={person}
+                          settings={settings}
+                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                          isBack={true}
+                        />
+                      }
+                    />
+                  ) : (
+                    <div className="relative p-2 border border-dashed border-slate-300 dark:border-slate-700 print:border-none print:p-0 rounded-2xl bg-white dark:bg-slate-900 shadow-sm print:shadow-none">
                       <IDBadge
                         personnel={person}
                         settings={settings}
                         qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                        isBack={printSide === 'back'}
                       />
                     </div>
-                  </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Print Preview Modal */}
+          <PrintPreviewModal
+            isOpen={isPreviewOpen}
+            onClose={() => setIsPreviewOpen(false)}
+            onConfirmPrint={() => window.print()}
+            title={`พิมพ์บัตรประจำตัว (${personnelList.length} รายการ)`}
+            paperSettings={{
+              pageSize: 'A4',
+              orientation: 'portrait',
+              margin: '8mm',
+              showGaruda: false,
+              watermark: 'none',
+              showSignature: false,
+              unitName: 'CR80 Badge Print Sheet',
+            }}
+          >
+            <div className="p-6 flex flex-wrap gap-6 justify-center">
+              {personnelList.map((person) => (
+                <div key={person.id} className="flex flex-col items-center">
+                  <span className="text-slate-500 text-xs mb-2 font-medium">
+                    {person.firstName} {person.lastName}
+                  </span>
+                  {printSide === 'pair' ? (
+                    <CR80Pair
+                      showCropMarks={false}
+                      front={
+                        <IDBadge
+                          personnel={person}
+                          settings={settings}
+                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                        />
+                      }
+                      back={
+                        <IDBadge
+                          personnel={person}
+                          settings={settings}
+                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                          isBack={true}
+                        />
+                      }
+                    />
+                  ) : (
+                    <IDBadge
+                      personnel={person}
+                      settings={settings}
+                      qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                      isBack={printSide === 'back'}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </PrintPreviewModal>
         </div>
       )}
     </div>

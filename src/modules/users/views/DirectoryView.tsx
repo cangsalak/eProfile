@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Personnel } from '@/modules/users';
 import Navbar from '@/components/Navbar';
@@ -11,10 +11,13 @@ import PersonnelCard from '../components/PersonnelCard';
 import ProfileModal from '../components/ProfileModal';
 import AddPersonnelModal from '../components/AddPersonnelModal';
 import ScannerModal from '../components/ScannerModal';
-import PrintBadgeView from '@/modules/badges/components/PrintBadgeView';
+import PrintPreviewModal from '@/modules/print/components/PrintPreviewModal';
+import IDBadge from '@/modules/badges/components/IDBadge';
+import CR80Pair from '@/modules/badges/components/CR80Pair';
 import { Button } from '@/components/ui/Button';
 
 export default function EProfilePage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [personnelList, setPersonnelList] = useState<Personnel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +31,7 @@ export default function EProfilePage() {
     }
   }, [searchParams]);
   const [activeProfile, setActiveProfile] = useState<Personnel | null>(null);
+  const [printPreviewPerson, setPrintPreviewPerson] = useState<Personnel | null>(null);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<Personnel | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -42,17 +46,23 @@ export default function EProfilePage() {
     }
   }, []);
 
-  // Load personnel from SQLite API
+  // Load personnel from SQLite API (Always fresh with no-store)
   const fetchPersonnel = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch('/api/personnel?all=true');
+      const res = await fetch(`/api/personnel?all=true&_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache'
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         setPersonnelList(Array.isArray(data) ? data : data.data || []);
       }
     } catch (err) {
-      console.error('Failed to load personnel from SQLite DB', err);
+      console.error('Failed to load personnel from DB', err);
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +71,13 @@ export default function EProfilePage() {
   // Load settings
   const fetchSettings = async () => {
     try {
-      const res = await fetch('/api/settings', { cache: 'no-store' });
+      const res = await fetch(`/api/settings?_t=${Date.now()}`, { 
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache'
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         setSettings(data);
@@ -78,9 +94,23 @@ export default function EProfilePage() {
     const handleSettingsChange = () => {
       fetchSettings();
     };
+
+    const handlePersonnelChange = () => {
+      fetchPersonnel();
+    };
+
+    const handleFocus = () => {
+      fetchPersonnel();
+    };
+
     window.addEventListener('eprofile-settings-change', handleSettingsChange);
+    window.addEventListener('eprofile-personnel-change', handlePersonnelChange);
+    window.addEventListener('focus', handleFocus);
+
     return () => {
       window.removeEventListener('eprofile-settings-change', handleSettingsChange);
+      window.removeEventListener('eprofile-personnel-change', handlePersonnelChange);
+      window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
@@ -137,10 +167,7 @@ export default function EProfilePage() {
   };
 
   const handlePrintCard = (person: Personnel) => {
-    setActiveProfile(person);
-    setTimeout(() => {
-      window.print();
-    }, 300);
+    setPrintPreviewPerson(person);
   };
 
   return (
@@ -172,7 +199,7 @@ export default function EProfilePage() {
         )}
       </div>
 
-      <main className="no-print print:hidden">
+      <main>
         <BannerSummary
           totalPersonnel={personnelList.length}
           totalDepartments={departments.length - 1}
@@ -244,7 +271,48 @@ export default function EProfilePage() {
         isGuest={!currentUser}
       />
 
-      <PrintBadgeView person={activeProfile} />
+      {/* Direct Card Print Preview Modal */}
+      {printPreviewPerson && (
+        <PrintPreviewModal
+          isOpen={Boolean(printPreviewPerson)}
+          onClose={() => setPrintPreviewPerson(null)}
+          onConfirmPrint={() => {
+            sessionStorage.setItem('bulkPrintIds', JSON.stringify([printPreviewPerson.id]));
+            router.push(`/modules/badges?id=${printPreviewPerson.id}`);
+          }}
+          title={`บัตรประจำตัว: ${printPreviewPerson.prefix || ''}${printPreviewPerson.firstName} ${printPreviewPerson.lastName}`}
+          paperSettings={{
+            pageSize: 'A4',
+            orientation: 'portrait',
+            margin: '8mm',
+            showGaruda: false,
+            watermark: 'none',
+            showSignature: false,
+            unitName: printPreviewPerson.department || '',
+          }}
+        >
+          <div className="p-4 flex flex-col items-center">
+            <CR80Pair
+              showCropMarks={false}
+              front={
+                <IDBadge
+                  personnel={printPreviewPerson}
+                  settings={settings}
+                  qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${printPreviewPerson.id}` : ''}
+                />
+              }
+              back={
+                <IDBadge
+                  personnel={printPreviewPerson}
+                  settings={settings}
+                  qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${printPreviewPerson.id}` : ''}
+                  isBack={true}
+                />
+              }
+            />
+          </div>
+        </PrintPreviewModal>
+      )}
     </div>
   );
 }

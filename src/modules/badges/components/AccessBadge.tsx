@@ -1,8 +1,7 @@
-'use client';
-
 import React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Personnel } from '@/modules/users';
+import CR80Card from './CR80Card';
 
 interface AccessBadgeProps {
   personnel: Personnel;
@@ -14,10 +13,7 @@ export default function AccessBadge({ personnel }: AccessBadgeProps) {
     : null;
 
   return (
-    <div 
-      className="relative overflow-hidden bg-white text-slate-900 border border-slate-300 shadow-md"
-      style={{ width: '54mm', height: '86mm', boxSizing: 'border-box', printColorAdjust: 'exact', WebkitPrintColorAdjust: 'exact' }}
-    >
+    <CR80Card className="text-slate-900 border border-slate-300">
       {/* Background Graphic */}
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500 rounded-full opacity-20"></div>
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary-500 rounded-full opacity-10"></div>
@@ -68,6 +64,6 @@ export default function AccessBadge({ personnel }: AccessBadgeProps) {
       <div className="absolute bottom-0 left-0 right-0 h-5 bg-white dark:bg-slate-900 flex items-center justify-center">
         <p className="text-[7px] text-slate-900 dark:text-white font-medium tracking-widest opacity-80">SCAN TO ACCESS</p>
       </div>
-    </div>
+    </CR80Card>
   );
 }

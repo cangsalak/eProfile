@@ -120,6 +120,7 @@ export default function PersonnelFormView() {
         });
 
         if (res.ok) {
+          window.dispatchEvent(new CustomEvent('eprofile-personnel-change'));
           toast.success('เพิ่มข้อมูลกำลังพลใหม่สำเร็จ');
           router.push('/modules/users/manage');
         } else {
@@ -134,6 +135,7 @@ export default function PersonnelFormView() {
         });
 
         if (res.ok) {
+          window.dispatchEvent(new CustomEvent('eprofile-personnel-change'));
           toast.success('บันทึกการแก้ไขข้อมูลสำเร็จ');
           router.push('/modules/users/manage');
         } else {

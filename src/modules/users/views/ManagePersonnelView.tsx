@@ -94,7 +94,13 @@ export default function ManagePersonnelView() {
         sortOrder,
       });
 
-      const res = await fetch(`/api/personnel?${params.toString()}`);
+      const res = await fetch(`/api/personnel?${params.toString()}&_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache'
+        }
+      });
       if (res.ok) {
         const result = await res.json();
         if (result.data && result.pagination) {
@@ -181,7 +187,7 @@ export default function ManagePersonnelView() {
   const handleBulkPrint = () => {
     if (selectedIds.length === 0) return;
     sessionStorage.setItem('bulkPrintIds', JSON.stringify(selectedIds));
-    router.push('/manage/personnel/print-badges');
+    router.push('/modules/badges');
   };
 
   const handleServerExport = async () => {

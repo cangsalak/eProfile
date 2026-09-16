@@ -167,6 +167,7 @@ export default function ProfilePage() {
         setCurrentUser(updatedUser);
         setFormData(updatedUser);
         localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        window.dispatchEvent(new CustomEvent('eprofile-personnel-change'));
         setIsEditing(false);
         setPassword('');
         setConfirmPassword('');
