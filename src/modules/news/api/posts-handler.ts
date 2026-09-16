@@ -18,8 +18,8 @@ export async function handleGetPosts(req: Request) {
     }
     if (query.trim()) {
       where.OR = [
-        { title: { contains: query.trim(), mode: 'insensitive' } },
-        { content: { contains: query.trim(), mode: 'insensitive' } },
+        { title: { contains: query.trim() } },
+        { content: { contains: query.trim() } },
       ];
     }
 

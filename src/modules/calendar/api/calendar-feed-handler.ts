@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/modules/core';
+import { prisma, verifyAuth } from '@/modules/core';
 
-export async function handleGetCalendarFeed() {
+export async function handleGetCalendarFeed(req: Request) {
   try {
+    const authUser = await verifyAuth(req);
+    if (!authUser) {
+      return NextResponse.json({ error: 'Unauthorized: ต้องเข้าสู่ระบบเพื่อเข้าถึง Calendar Feed' }, { status: 401 });
+    }
     // 1. Fetch CalendarEvents
     const events = await prisma.calendarEvent.findMany({
       orderBy: { startDate: 'asc' },

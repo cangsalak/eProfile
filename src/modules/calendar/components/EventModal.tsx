@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
+import { DatePicker } from '@/components/ui/DatePicker';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -360,15 +361,17 @@ export const EventModal: React.FC<EventModalProps> = ({
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
                 วันและเวลาเริ่มต้น
               </label>
-              <div className="flex gap-2">
-                <Input
-                  type="date"
-                  required
-                  disabled={isReadOnly}
-                  value={startDateStr}
-                  onChange={(e) => setStartDateStr(e.target.value)}
-                  className="text-xs flex-1"
-                />
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <DatePicker
+                    id="event-startDate"
+                    value={startDateStr}
+                    onChange={(val) => setStartDateStr(val)}
+                    disabled={isReadOnly}
+                    placeholder="เลือกวันที่ (พ.ศ.)"
+                    required
+                  />
+                </div>
                 {!allDay && (
                   <Input
                     type="time"
@@ -386,15 +389,17 @@ export const EventModal: React.FC<EventModalProps> = ({
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-400">
                 วันและเวลาสิ้นสุด
               </label>
-              <div className="flex gap-2">
-                <Input
-                  type="date"
-                  required
-                  disabled={isReadOnly}
-                  value={endDateStr}
-                  onChange={(e) => setEndDateStr(e.target.value)}
-                  className="text-xs flex-1"
-                />
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <DatePicker
+                    id="event-endDate"
+                    value={endDateStr}
+                    onChange={(val) => setEndDateStr(val)}
+                    disabled={isReadOnly}
+                    placeholder="เลือกวันที่ (พ.ศ.)"
+                    required
+                  />
+                </div>
                 {!allDay && (
                   <Input
                     type="time"

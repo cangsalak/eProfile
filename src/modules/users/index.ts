@@ -7,6 +7,7 @@ import ProfileView from './views/ProfileView';
 import RoleSettingsView from './views/RoleSettingsView';
 import DepartmentsSettingsView from './views/DepartmentsSettingsView';
 import PersonnelFormView from './views/PersonnelFormView';
+import Rpb1FormView from './views/rpb1/Rpb1FormView';
 
 export * from './manifest';
 export * from './types';
@@ -21,6 +22,8 @@ export { default as MainDashboardView } from './views/MainDashboardView';
 export { default as DepartmentsSettingsView } from './views/DepartmentsSettingsView';
 export { default as DepartmentsManager } from './settings/DepartmentsManager';
 export { default as PersonnelFormView } from './views/PersonnelFormView';
+export { default as Rpb1FormView } from './views/rpb1/Rpb1FormView';
+export { default as Rpb1ProgressSection, calculateRpb1Progress } from './components/rpb1/Rpb1ProgressSection';
 
 export const UsersModule: ModuleDefinition = {
   manifest: UsersManifest,
@@ -36,6 +39,7 @@ export const UsersModule: ModuleDefinition = {
     'edit': PersonnelFormView,
     'manage/edit': PersonnelFormView,
     'form': PersonnelFormView,
+    'rpb1/form': Rpb1FormView,
   },
 };
 

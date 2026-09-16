@@ -95,28 +95,6 @@ export default function MediaGallery({
 
   return (
     <div className="space-y-6 font-prompt animate-fade-in">
-      {/* Top Banner (Only in non-picker mode) */}
-      {!isPickerMode && (
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-600 via-primary-700 to-primary-900 p-6 sm:p-8 text-white shadow-xl">
-          <div className="relative z-10 max-w-2xl space-y-2.5">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-md">
-              <Sparkles className="h-3.5 w-3.5 text-primary-200" />
-              <span>ระบบคลังไฟล์ รูปภาพ เสียง และเอกสารระบบ</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              คลังไฟล์และสื่อ (Media & File Storage)
-            </h1>
-            <p className="text-sm sm:text-base text-primary-100 leading-relaxed">
-              อัปโหลด จัดการ และนำไฟล์ไปใช้งานได้ทันทีในทุกโมดูล
-              รองรับทั้งการจัดเก็บบนเครื่องแม่ข่ายและ Cloud Object Storage (S3 / MinIO / Cloudflare R2)
-            </p>
-          </div>
-
-          <div className="absolute -right-8 -bottom-10 opacity-15 pointer-events-none">
-            <UploadCloud className="h-64 w-64 text-white" />
-          </div>
-        </div>
-      )}
 
       {/* Control Bar */}
       <Card className="p-4 sm:p-5 space-y-4">

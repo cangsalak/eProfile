@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Rpb1FormData } from '../types';
+import { Rpb1FormData } from '../../rpb1-types';
 
 interface PrintDocumentProps {
   data: Rpb1FormData;
@@ -85,13 +85,13 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
       />
 
       {/* ─────────────────────────────────────────────────────────────
-          PAGE 1 (หมวด ๑ - ๗)
+          PAGE 1 (หมวด 1 - 7)
       ───────────────────────────────────────────────────────────── */}
       <div className="rpb1-page flex flex-col justify-between">
         <div>
           {/* Top Classification Header & Top-Right Label */}
           <div className="relative mb-2">
-            <div className="text-right font-normal text-base pr-2">รปภ.๑</div>
+            <div className="text-right font-normal text-base pr-2">รปภ. 1</div>
             <div className="text-center">
               <div className="text-sm">.............................</div>
               <div className="text-sm">({classification || 'ชั้นความลับ'})</div>
@@ -106,7 +106,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
                   <>
                     <p className="font-normal">ติดภาพถ่ายครึ่งตัว</p>
                     <p className="font-normal mt-0.5">หน้าตรงไม่สวมหมวก</p>
-                    <p className="font-normal mt-4">ขนาด ๔.๕ x ๖ ซ.ม.</p>
+                    <p className="font-normal mt-4">ขนาด 4.5 x 6 ซม.</p>
                   </>
                 )}
               </div>
@@ -124,9 +124,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Form Content Lines matching official layout */}
           <div className="space-y-2 text-[14.5px] leading-snug">
-            {/* ๑. คำนำหน้านาม/ยศ */}
+            {/* 1. คำนำหน้านาม/ยศ */}
             <div className="flex items-baseline gap-2">
-              <Dot label="๑. คำนำหน้านาม/ยศ" value={data.titleRank} className="w-[32%]" />
+              <Dot label="1. คำนำหน้านาม/ยศ" value={data.titleRank} className="w-[32%]" />
               <Dot label="ชื่อตัว" value={data.firstName} className="w-[35%]" />
               <Dot label="ชื่อรอง" value={data.middleName} className="w-[33%]" />
             </div>
@@ -137,9 +137,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
               <Dot label="อายุ" value={data.age} suffix="ปี" className="w-[30%]" />
             </div>
 
-            {/* ๒. ชื่อตัวเดิม */}
+            {/* 2. ชื่อตัวเดิม */}
             <div className="flex items-baseline gap-2">
-              <Dot label="๒. ชื่อตัวเดิม" value={data.formerFirstName} className="w-[45%]" />
+              <Dot label="2. ชื่อตัวเดิม" value={data.formerFirstName} className="w-[45%]" />
               <Dot label="หลักฐานการเปลี่ยนชื่อ" value={data.nameChangeDoc} className="w-[55%]" />
             </div>
 
@@ -152,14 +152,14 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
               <Dot label="ชื่อเล่นหรือชื่ออื่น ๆ (ถ้ามี)" value={data.nickname} className="w-full" />
             </div>
 
-            {/* ๓. เลขประจำตัวประชาชน */}
+            {/* 3. เลขประจำตัวประชาชน */}
             <div className="flex items-baseline gap-2">
-              <Dot label="๓. เลขประจำตัวประชาชน" value={data.citizenId} className="w-full" />
+              <Dot label="3. เลขประจำตัวประชาชน" value={data.citizenId} className="w-full" />
             </div>
 
-            {/* ๔. วัน เดือน ปี เกิด */}
+            {/* 4. วัน เดือน ปี เกิด */}
             <div className="flex items-baseline gap-2">
-              <Dot label="๔. วัน เดือน ปี เกิด" value={data.dateOfBirth} className="w-[42%]" />
+              <Dot label="4. วัน เดือน ปี เกิด" value={data.dateOfBirth} className="w-[42%]" />
               <Dot label="สถานที่จดทะเบียนเกิด/โรงพยาบาลที่เกิด" value={data.birthPlaceHospital} className="w-[58%]" />
             </div>
 
@@ -175,9 +175,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
               <Dot label="หลักฐานการแปลงสัญชาติ" value={data.naturalizationDoc} className="w-[65%]" />
             </div>
 
-            {/* ๕. ที่อยู่ตามทะเบียนบ้าน */}
+            {/* 5. ที่อยู่ตามทะเบียนบ้าน */}
             <div className="flex items-baseline gap-2">
-              <Dot label="๕. ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่" value={regAddress.cleanHouseNo} className="w-[38%]" />
+              <Dot label="5. ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่" value={regAddress.cleanHouseNo} className="w-[38%]" />
               <Dot label="หมู่บ้าน" value={data.registeredVillage} className="w-[37%]" />
               <Dot label="หมู่ที่" value={regAddress.cleanMoo} className="w-[25%]" />
             </div>
@@ -194,9 +194,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
               <Dot label="โทรศัพท์" value={data.registeredPhone} className="w-[34%]" />
             </div>
 
-            {/* ๖. ที่อยู่ปัจจุบัน */}
+            {/* 6. ที่อยู่ปัจจุบัน */}
             <div className="flex items-baseline gap-2">
-              <Dot label="๖. ที่อยู่ปัจจุบัน บ้านเลขที่" value={curAddress.cleanHouseNo} className="w-[38%]" />
+              <Dot label="6. ที่อยู่ปัจจุบัน บ้านเลขที่" value={curAddress.cleanHouseNo} className="w-[38%]" />
               <Dot label="หมู่บ้าน" value={data.currentVillage} className="w-[37%]" />
               <Dot label="หมู่ที่" value={curAddress.cleanMoo} className="w-[25%]" />
             </div>
@@ -230,9 +230,9 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
               <Dot label="อื่น ๆ" value={data.otherContact} className="w-full" />
             </div>
 
-            {/* ๗. ถ้าเป็นต่างด้าว / บุคคลบนพื้นที่สูง */}
+            {/* 7. ถ้าเป็นต่างด้าว / บุคคลบนพื้นที่สูง */}
             <div className="pt-1 space-y-1.5">
-              <div>๗. ถ้าเป็นต่างด้าว/บุคคลบนพื้นที่สูง</div>
+              <div>7. ถ้าเป็นต่างด้าว/บุคคลบนพื้นที่สูง</div>
               <div className="space-y-1.5 pl-4">
                 <div className="flex items-baseline gap-2">
                   <Dot label="ใบสำคัญประจำตัวคนต่างด้าวเลขที่" value={data.alienCardNo} className="w-[60%]" />
@@ -284,12 +284,12 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๒ -</div>
+            <div className="text-right font-bold text-sm">- 2 -</div>
           </div>
 
           {/* Section 8 */}
           <div className="grid grid-cols-4 gap-2 mb-3">
-            <div><strong>๘. ส่วนสูง</strong> {data.height ? `${data.height} ซม.` : '..... ซม.'}</div>
+            <div><strong>8. ส่วนสูง</strong> {data.height ? `${data.height} ซม.` : '..... ซม.'}</div>
             <div><strong>น้ำหนัก</strong> {data.weight ? `${data.weight} กก.` : '..... กก.'}</div>
             <div><strong>ตำหนิ</strong> {data.scarsDistinguishingMarks || 'ไม่มี'}</div>
             <div><strong>กลุ่มเลือด</strong> {data.bloodGroup || '.....'}</div>
@@ -297,7 +297,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 9 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๙. ที่อยู่ในระยะ ๑๕ ปี ที่ผ่านมา (ให้กรอกตามลำดับก่อนหลัง)</div>
+            <div className="font-bold mb-1">9. ที่อยู่ในระยะ 15 ปี ที่ผ่านมา (ให้กรอกตามลำดับก่อนหลัง)</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -330,7 +330,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 10 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๑๐. การศึกษา (ให้กรอกตามลำดับก่อนหลัง)</div>
+            <div className="font-bold mb-1">10. การศึกษา (ให้กรอกตามลำดับก่อนหลัง)</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -363,7 +363,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 11 */}
           <div>
-            <div className="font-bold mb-1">๑๑. กิจกรรมพิเศษในสถานศึกษา</div>
+            <div className="font-bold mb-1">11. กิจกรรมพิเศษในสถานศึกษา</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -404,12 +404,12 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๓ -</div>
+            <div className="text-right font-bold text-sm">- 3 -</div>
           </div>
 
           {/* Section 12 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๑๒. รู้ภาษาไทยถิ่นต่าง ๆ และภาษาต่างประเทศ (ดีมาก, ดี, พอใช้)</div>
+            <div className="font-bold mb-1">12. รู้ภาษาไทยถิ่นต่าง ๆ และภาษาต่างประเทศ (ดีมาก, ดี, พอใช้)</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -436,7 +436,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 13 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๑๓. ประวัติการทำงานหรือการรับราชการ (ให้กรอกตามลำดับก่อนหลัง)</div>
+            <div className="font-bold mb-1">13. ประวัติการทำงานหรือการรับราชการ (ให้กรอกตามลำดับก่อนหลัง)</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -472,12 +472,12 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 14 */}
           <div className="mb-3 text-[14px]">
-            <strong>๑๔. อาชีพพิเศษอื่น ๆ และงานอดิเรก:</strong> {data.specialOccupationsHobbies || 'ไม่มี'}
+            <strong>14. อาชีพพิเศษอื่น ๆ และงานอดิเรก:</strong> {data.specialOccupationsHobbies || 'ไม่มี'}
           </div>
 
           {/* Section 15 */}
           <div className="space-y-1 text-[14px]">
-            <div className="font-bold">๑๕. การรับราชการทหาร</div>
+            <div className="font-bold">15. การรับราชการทหาร</div>
             <div className="grid grid-cols-2 gap-1 pl-4">
               <div>ปัจจุบันเป็น: {data.militaryStatus || 'ทหารประจำการ'}</div>
               <div>ยศ: {data.militaryRank || '-'}</div>
@@ -503,13 +503,13 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๔ -</div>
+            <div className="text-right font-bold text-sm">- 4 -</div>
           </div>
 
           {/* Section 16 */}
           <div className="mb-4 text-[14px]">
             <div className="font-bold mb-1">
-              ๑๖. การเป็นนักเขียน นามปากกา และการสื่อสารผ่านสื่อสังคมออนไลน์
+              16. การเป็นนักเขียน นามปากกา และการสื่อสารผ่านสื่อสังคมออนไลน์
             </div>
             <div className="p-2 border border-black min-h-[50px]">
               {data.writerDetails || 'ไม่มี'}
@@ -519,7 +519,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           {/* Section 17 */}
           <div className="mb-4">
             <div className="font-bold mb-1">
-              ๑๗. การเป็นสมาชิกในพรรคการเมือง สมาคม สโมสร องค์กร หรือกลุ่มสื่อสังคมออนไลน์
+              17. การเป็นสมาชิกในพรรคการเมือง สมาคม สโมสร องค์กร หรือกลุ่มสื่อสังคมออนไลน์
             </div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
@@ -553,7 +553,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 18 */}
           <div>
-            <div className="font-bold mb-1">๑๘. การเดินทางไปต่างประเทศ (ให้กรอกตามลำดับก่อนหลัง)</div>
+            <div className="font-bold mb-1">18. การเดินทางไปต่างประเทศ (ให้กรอกตามลำดับก่อนหลัง)</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -594,12 +594,12 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๕ -</div>
+            <div className="text-right font-bold text-sm">- 5 -</div>
           </div>
 
           {/* Section 19 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๑๙. หนังสือสำคัญแสดงตน (บัตรข้าราชการ, ใบขับขี่, Passport ฯลฯ)</div>
+            <div className="font-bold mb-1">19. หนังสือสำคัญแสดงตน (บัตรข้าราชการ, ใบขับขี่, Passport ฯลฯ)</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -632,7 +632,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 20 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๒๐. การถูกจับ หรือถูกฟ้องศาล และการถูกลงโทษทางวินัย</div>
+            <div className="font-bold mb-1">20. การถูกจับ หรือถูกฟ้องศาล และการถูกลงโทษทางวินัย</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -668,7 +668,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 21 */}
           <div>
-            <div className="font-bold mb-1">๒๑. ข้อมูลบิดามารดา</div>
+            <div className="font-bold mb-1">21. ข้อมูลบิดามารดา</div>
             <div className="grid grid-cols-2 gap-3 text-[13px]">
               {/* Father */}
               <div className="p-2 border border-black space-y-0.5">
@@ -708,13 +708,13 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๖ -</div>
+            <div className="text-right font-bold text-sm">- 6 -</div>
           </div>
 
           {/* Section 22 */}
           <div className="mb-4">
             <div className="font-bold mb-1">
-              ๒๒. การสมรส (สถานภาพ: <span className="underline">{data.maritalStatus || 'โสด'}</span>)
+              22. การสมรส (สถานภาพ: <span className="underline">{data.maritalStatus || 'โสด'}</span>)
             </div>
 
             {data.maritalStatus !== 'โสด' && (
@@ -737,7 +737,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 23 */}
           <div>
-            <div className="font-bold mb-1">๒๓. ข้อมูลบุตร</div>
+            <div className="font-bold mb-1">23. ข้อมูลบุตร</div>
             <table className="w-full border-collapse border border-black text-[13px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -784,12 +784,12 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๗ -</div>
+            <div className="text-right font-bold text-sm">- 7 -</div>
           </div>
 
           {/* Section 24 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๒๔. พี่น้องร่วมบิดาหรือร่วมมารดา รวมทั้งสามีหรือภรรยา</div>
+            <div className="font-bold mb-1">24. พี่น้องร่วมบิดาหรือร่วมมารดา รวมทั้งสามีหรือภรรยา</div>
             <table className="w-full border-collapse border border-black text-[12px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -837,7 +837,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 25 */}
           <div className="mb-4">
-            <div className="font-bold mb-1">๒๕. ญาติที่รับราชการหรือทำงานในองค์การรัฐบาล</div>
+            <div className="font-bold mb-1">25. ญาติที่รับราชการหรือทำงานในองค์การรัฐบาล</div>
             <table className="w-full border-collapse border border-black text-[12px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -870,7 +870,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 26 */}
           <div>
-            <div className="font-bold mb-1">๒๖. ญาติ เพื่อน หรือผู้ที่คุ้นเคยในต่างประเทศ</div>
+            <div className="font-bold mb-1">26. ญาติ เพื่อน หรือผู้ที่คุ้นเคยในต่างประเทศ</div>
             <table className="w-full border-collapse border border-black text-[12px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -913,12 +913,12 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๘ -</div>
+            <div className="text-right font-bold text-sm">- 8 -</div>
           </div>
 
           {/* Section 27 */}
           <div className="mb-3">
-            <div className="font-bold mb-1">๒๗. ผู้ร่วมอาศัยในที่อยู่ปัจจุบัน</div>
+            <div className="font-bold mb-1">27. ผู้ร่วมอาศัยในที่อยู่ปัจจุบัน</div>
             <div className="text-[13px] pl-4 space-y-0.5">
               {data.cohabitants.length === 0 ? (
                 <div>- ไม่มี -</div>
@@ -934,7 +934,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 28 */}
           <div className="mb-3">
-            <div className="font-bold mb-1">๒๘. ผู้ใกล้ชิดสนิทสนมและบุคคลที่ติดต่อด้วยเสมอ (บุคคลอ้างอิง)</div>
+            <div className="font-bold mb-1">28. ผู้ใกล้ชิดสนิทสนมและบุคคลที่ติดต่อด้วยเสมอ (บุคคลอ้างอิง)</div>
             <table className="w-full border-collapse border border-black text-[12px]">
               <thead>
                 <tr className="bg-slate-100 text-center">
@@ -967,7 +967,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 29 */}
           <div className="mb-3 text-[13px]">
-            <div className="font-bold mb-1">๒๙. ผู้อุปการะช่วยเหลือ สนับสนุน (เว้นบิดามารดา)</div>
+            <div className="font-bold mb-1">29. ผู้อุปการะช่วยเหลือ สนับสนุน (เว้นบิดามารดา)</div>
             <div className="pl-4">
               {data.supporters.length === 0 ? (
                 <div>- ไม่มี -</div>
@@ -983,13 +983,13 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
 
           {/* Section 30 */}
           <div className="space-y-2 text-[13px]">
-            <div className="font-bold">๓๐. ประวัติคำชี้แจงอื่น ๆ</div>
+            <div className="font-bold">30. ประวัติคำชี้แจงอื่น ๆ</div>
             <div className="p-2 border border-black min-h-[40px]">
               {data.additionalExplanations || 'ไม่มี'}
             </div>
 
             <p className="leading-relaxed indent-8 mt-2">
-              ข้าพเจ้าขอรับรองว่า ข้อความดังกล่าวข้างต้นเป็นความจริงทุกประการ และรับทราบว่าหน่วยงานสามารถจัดเก็บ ใช้ ข้อมูลจากแบบประวัติบุคคลนี้ เพื่อพิจารณาดำเนินการตามระเบียบสำนักนายกรัฐมนตรี ว่าด้วยการรักษาความปลอดภัยแห่งชาติ พ.ศ.๒๕๕๒ และที่แก้ไขเพิ่มเติม
+              ข้าพเจ้าขอรับรองว่า ข้อความดังกล่าวข้างต้นเป็นความจริงทุกประการ และรับทราบว่าหน่วยงานสามารถจัดเก็บ ใช้ ข้อมูลจากแบบประวัติบุคคลนี้ เพื่อพิจารณาดำเนินการตามระเบียบสำนักนายกรัฐมนตรี ว่าด้วยการรักษาความปลอดภัยแห่งชาติ พ.ศ. 2552 และที่แก้ไขเพิ่มเติม
             </p>
 
             {/* Signature Blocks */}
@@ -1022,7 +1022,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๙ -</div>
+            <div className="text-right font-bold text-sm">- 9 -</div>
           </div>
 
           <div className="text-center font-bold text-lg mb-3">
@@ -1078,7 +1078,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
           <div className="flex justify-between items-start mb-2">
             <div className="w-16"></div>
             <div className="text-center font-bold">({classification})</div>
-            <div className="text-right font-bold text-sm">- ๑๐ -</div>
+            <div className="text-right font-bold text-sm">- 10 -</div>
           </div>
 
           <div className="text-center font-bold text-lg mb-4">
@@ -1089,19 +1089,19 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
             {/* Left 8 cols: Personal Summary */}
             <div className="col-span-8 space-y-2 text-[14px]">
               <div>
-                <strong>๑. คำนำหน้าชื่อ/ชื่อ/นามสกุล:</strong> {data.extraTitleName || `${data.titleRank} ${data.firstName} ${data.lastName}`}
+                <strong>1. คำนำหน้าชื่อ/ชื่อ/นามสกุล:</strong> {data.extraTitleName || `${data.titleRank} ${data.firstName} ${data.lastName}`}
               </div>
               <div>
-                <strong>เพศ:</strong> {data.extraGender || data.gender || '-'} <strong>๒. กรุ๊ปเลือด:</strong> {data.extraBloodGroup || data.bloodGroup || '-'}
+                <strong>เพศ:</strong> {data.extraGender || data.gender || '-'} <strong>2. กรุ๊ปเลือด:</strong> {data.extraBloodGroup || data.bloodGroup || '-'}
               </div>
               <div>
-                <strong>๓. ที่อยู่ตามทะเบียนบ้าน:</strong> {data.extraRegisteredAddress || `${data.registeredHouseNo} ${data.registeredSubdistrict} ${data.registeredDistrict} ${data.registeredProvince}`}
+                <strong>3. ที่อยู่ตามทะเบียนบ้าน:</strong> {data.extraRegisteredAddress || `${data.registeredHouseNo} ${data.registeredSubdistrict} ${data.registeredDistrict} ${data.registeredProvince}`}
               </div>
               <div>
-                <strong>๔. ที่อยู่จริงปัจจุบัน:</strong> {data.extraIsSameAddress ? 'ที่เดียวกับทะเบียนบ้าน' : data.extraCurrentAddress}
+                <strong>4. ที่อยู่จริงปัจจุบัน:</strong> {data.extraIsSameAddress ? 'ที่เดียวกับทะเบียนบ้าน' : data.extraCurrentAddress}
               </div>
               <div className="pt-1">
-                <strong>๕. หมายเลขโทรศัพท์ที่ติดต่อได้:</strong>
+                <strong>5. หมายเลขโทรศัพท์ที่ติดต่อได้:</strong>
                 <div className="pl-4 space-y-0.5">
                   <div>โทรศัพท์มือถือ: {data.extraMobilePhone || data.phoneMobile || '-'}</div>
                   <div>โทรศัพท์บ้าน: {data.extraHomePhone || data.phoneLandline || '-'}</div>
@@ -1125,7 +1125,7 @@ export default function Rpb1PrintDocument({ data }: PrintDocumentProps) {
                   <>
                     <div>ติดภาพถ่ายครึ่งตัว</div>
                     <div>หน้าตรงไม่สวมหมวก</div>
-                    <div>ขนาด ๔.๕ x ๖ ซ.ม.</div>
+                    <div>ขนาด 4.5 x 6 ซม.</div>
                   </>
                 )}
               </div>

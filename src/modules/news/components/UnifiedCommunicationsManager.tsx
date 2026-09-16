@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import TablePagination from '@/components/common/TablePagination';
 import RichTextEditor from '@/components/common/RichTextEditor';
+import { Modal, Button, Badge } from '@/components/ui';
 import DOMPurify from 'isomorphic-dompurify';
 
 interface NotificationHistory {
@@ -863,284 +864,250 @@ export default function UnifiedCommunicationsManager({ initialTab = 'notificatio
 
       {/* Post Modal Form */}
       {isPostModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-4xl max-h-[92vh] flex flex-col border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden animate-scale-up">
-            <div className="px-6 py-4.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900/40 flex items-center justify-center text-sm font-bold shadow-xs">
-                  <i className={editingPostId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}></i>
-                </div>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                    {editingPostId ? 'แก้ไขข่าวสาร/บทความ' : 'เพิ่มข่าวสาร/บทความใหม่'}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">ระบบจัดการเนื้อหาพร้อมเครื่องมือ Rich Text Tool Editor</p>
-                </div>
-              </div>
-              <button
+        <Modal
+          isOpen={isPostModalOpen}
+          onClose={() => setIsPostModalOpen(false)}
+          title={editingPostId ? 'แก้ไขข่าวสาร/บทความ' : 'เพิ่มข่าวสาร/บทความใหม่'}
+          subtitle="ระบบจัดการเนื้อหาพร้อมเครื่องมือ Rich Text Tool Editor"
+          icon={editingPostId ? 'fa-solid fa-pen-to-square' : 'fa-solid fa-plus'}
+          size="xl"
+          footer={
+            <div className="flex justify-end gap-2.5 w-full">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setIsPostModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                title="ปิด"
               >
-                <i className="fa-solid fa-xmark text-sm"></i>
-              </button>
+                ยกเลิก
+              </Button>
+              <Button
+                type="submit"
+                form="post-form-unified"
+                variant="primary"
+                size="sm"
+                disabled={isPostSubmitting}
+                icon={isPostSubmitting ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-check'}
+              >
+                {isPostSubmitting ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
+              </Button>
+            </div>
+          }
+        >
+          <form id="post-form-unified" onSubmit={handlePostSubmit} className="space-y-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-2">
+                <label htmlFor="post-title-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                  หัวข้อข่าวสาร <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  id="post-title-unified"
+                  type="text"
+                  required
+                  value={postFormData.title}
+                  onChange={(e) => setPostFormData({ ...postFormData, title: e.target.value })}
+                  placeholder="เช่น กำหนดการจัดกิจกรรมประจำปี 2569"
+                  className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="post-category-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                  หมวดหมู่/หัวข้อข่าว <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  id="post-category-unified"
+                  type="text"
+                  required
+                  list="post-category-presets"
+                  value={postFormData.category}
+                  onChange={(e) => setPostFormData({ ...postFormData, category: e.target.value })}
+                  placeholder="เลือกหรือพิมพ์หมวดหมู่..."
+                  className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
+                />
+                <datalist id="post-category-presets">
+                  <option value="ข่าวทั่วไป" />
+                  <option value="ประกาศสำคัญ" />
+                  <option value="ข่าวกิจกรรม" />
+                  <option value="จัดซื้อจัดจ้าง" />
+                  <option value="สาระน่ารู้" />
+                  <option value="คำสั่งและระเบียบ" />
+                </datalist>
+              </div>
             </div>
 
-            <form onSubmit={handlePostSubmit} className="p-6 space-y-4 text-xs overflow-y-auto flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="sm:col-span-2">
-                  <label htmlFor="post-title-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
-                    หัวข้อข่าวสาร <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="post-title-unified"
-                    type="text"
-                    required
-                    value={postFormData.title}
-                    onChange={(e) => setPostFormData({ ...postFormData, title: e.target.value })}
-                    placeholder="เช่น กำหนดการจัดกิจกรรมประจำปี 2569"
-                    className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
-                  />
-                </div>
+            {/* Quick Category Selector Pills */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              <span className="text-xs text-slate-400 font-medium mr-1">เลือกด่วน:</span>
+              {['ข่าวทั่วไป', 'ประกาศสำคัญ', 'ข่าวกิจกรรม', 'จัดซื้อจัดจ้าง', 'สาระน่ารู้', 'คำสั่งและระเบียบ'].map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setPostFormData({ ...postFormData, category: cat })}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
+                    postFormData.category === cat
+                      ? 'bg-primary-500 text-white border-primary-500 shadow-xs ring-2 ring-primary-500/20'
+                      : 'bg-white hover:bg-primary-50/60 text-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-700 hover:text-primary-600 dark:hover:text-primary-400'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-                <div>
-                  <label htmlFor="post-category-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
-                    หมวดหมู่/หัวข้อข่าว <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="post-category-unified"
-                    type="text"
-                    required
-                    list="post-category-presets"
-                    value={postFormData.category}
-                    onChange={(e) => setPostFormData({ ...postFormData, category: e.target.value })}
-                    placeholder="เลือกหรือพิมพ์หมวดหมู่..."
-                    className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
-                  />
-                  <datalist id="post-category-presets">
-                    <option value="ข่าวทั่วไป" />
-                    <option value="ประกาศสำคัญ" />
-                    <option value="ข่าวกิจกรรม" />
-                    <option value="จัดซื้อจัดจ้าง" />
-                    <option value="สาระน่ารู้" />
-                    <option value="คำสั่งและระเบียบ" />
-                  </datalist>
-                </div>
-              </div>
-
-              {/* Quick Category Selector Pills */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                <span className="text-xs text-slate-400 font-medium mr-1">เลือกด่วน:</span>
-                {['ข่าวทั่วไป', 'ประกาศสำคัญ', 'ข่าวกิจกรรม', 'จัดซื้อจัดจ้าง', 'สาระน่ารู้', 'คำสั่งและระเบียบ'].map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setPostFormData({ ...postFormData, category: cat })}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all border ${
-                      postFormData.category === cat
-                        ? 'bg-primary-500 text-white border-primary-500 shadow-xs ring-2 ring-primary-500/20'
-                        : 'bg-white hover:bg-primary-50/60 text-slate-600 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-700 hover:text-primary-600 dark:hover:text-primary-400'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
-              <div>
-                <label htmlFor="post-image-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
-                  ลิงก์รูปภาพหน้าปก / รูปภาพประกอบ <span className="text-slate-400 font-normal">(ไม่บังคับ)</span>
-                </label>
-                <div className="relative">
-                  <i className="fa-solid fa-image absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                  <input
-                    id="post-image-unified"
-                    type="text"
-                    value={postFormData.image}
-                    onChange={(e) => setPostFormData({ ...postFormData, image: e.target.value })}
-                    placeholder="https://... หรือ /uploads/..."
-                    className="w-full pl-9 pr-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
-                  เนื้อหาข่าวสาร/บทความ <span className="text-rose-500">*</span>
-                </label>
-                <RichTextEditor
-                  value={postFormData.content}
-                  onChange={(content) => setPostFormData({ ...postFormData, content })}
-                  placeholder="เขียนเนื้อหา จัดรูปแบบข้อความ แทรกลิงก์ รูปภาพ และหัวข้อข่าวสาร..."
-                  minHeight="260px"
+            <div>
+              <label htmlFor="post-image-unified" className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                ลิงก์รูปภาพหน้าปก / รูปภาพประกอบ <span className="text-slate-400 font-normal">(ไม่บังคับ)</span>
+              </label>
+              <div className="relative">
+                <i className="fa-solid fa-image absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input
+                  id="post-image-unified"
+                  type="text"
+                  value={postFormData.image}
+                  onChange={(e) => setPostFormData({ ...postFormData, image: e.target.value })}
+                  placeholder="https://... หรือ /uploads/..."
+                  className="w-full pl-9 pr-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-xs"
                 />
               </div>
+            </div>
 
-              <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">
+                เนื้อหาข่าวสาร / รายละเอียด <span className="text-rose-500">*</span>
+              </label>
+              <RichTextEditor
+                value={postFormData.content}
+                onChange={(html) => setPostFormData({ ...postFormData, content: html })}
+                placeholder="เขียนเนื้อหาข่าวสารที่นี่..."
+                minHeight="280px"
+              />
+            </div>
+
+            <div className="pt-2 flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-700/60">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
+                  <i className="fa-solid fa-globe"></i>
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200">สถานะการเผยแพร่</div>
+                  <div className="text-[11px] text-slate-500">หากปิดไว้ จะบันทึกเป็นฉบับร่าง (Draft) เท่านั้น</div>
+                </div>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  id="post-published-unified"
                   checked={postFormData.published}
                   onChange={(e) => setPostFormData({ ...postFormData, published: e.target.checked })}
-                  className="w-4 h-4 text-primary-600 rounded border-slate-300 focus:ring-primary-500 cursor-pointer"
+                  className="sr-only peer"
                 />
-                <label htmlFor="post-published-unified" className="font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-200 cursor-pointer">
-                  เผยแพร่ทันที (เปิดให้แสดงผลในหน้าข่าวสารและหน้าหลัก)
-                </label>
-              </div>
-
-              <div className="pt-3 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setIsPostModalOpen(false)}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs sm:text-sm font-bold transition-colors"
-                >
-                  ยกเลิก
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPostSubmitting}
-                  className="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30 transition-all disabled:opacity-50 flex items-center gap-2"
-                >
-                  {isPostSubmitting ? (
-                    <>
-                      <i className="fa-solid fa-spinner fa-spin"></i>
-                      <span>กำลังบันทึก...</span>
-                    </>
-                  ) : (
-                    <>
-                      <i className="fa-solid fa-check"></i>
-                      <span>บันทึกข้อมูล</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
+          </form>
+        </Modal>
       )}
 
       {/* View / Read Post Modal */}
       {viewingPost && (
-        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden animate-scale-up">
-            {/* Modal Header */}
-            <div className="px-6 py-4.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 text-primary-700 border border-primary-200/80 dark:bg-primary-950/40 dark:text-primary-300 dark:border-primary-800/60">
-                  {viewingPost.category || 'ข่าวทั่วไป'}
-                </span>
-                {viewingPost.published ? (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> เผยแพร่แล้ว
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ฉบับร่าง
-                  </span>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={() => setViewingPost(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                title="ปิด"
+        <Modal
+          isOpen={!!viewingPost}
+          onClose={() => setViewingPost(null)}
+          title={viewingPost.title}
+          subtitle={`หมวดหมู่: ${viewingPost.category || 'ข่าวทั่วไป'} • เผยแพร่เมื่อ ${new Date(viewingPost.createdAt).toLocaleDateString('th-TH')}`}
+          icon="fa-solid fa-newspaper"
+          size="xl"
+          footer={
+            <div className="flex items-center justify-between w-full">
+              <Link
+                href={`/news/${viewingPost.id}`}
+                target="_blank"
+                className="inline-flex"
               >
-                <i className="fa-solid fa-xmark text-sm"></i>
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 overflow-y-auto space-y-6 flex-1">
-              {/* Cover Image if any */}
-              {viewingPost.image && (
-                <div className="w-full h-56 sm:h-72 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
-                  <img
-                    src={viewingPost.image}
-                    alt={viewingPost.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-
-              {/* Title & Metadata */}
-              <div className="space-y-3">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">
-                  {viewingPost.title}
-                </h2>
-                <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pb-4 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
-                      style={{ backgroundColor: viewingPost.author?.avatarColor || '#3b82f6' }}
-                    >
-                      {viewingPost.author?.firstName?.[0] || 'U'}
-                    </div>
-                    <span className="font-medium text-slate-700 dark:text-slate-300">
-                      {viewingPost.author ? `${viewingPost.author.firstName} ${viewingPost.author.lastName}` : 'ผู้ดูแลระบบ'}
-                    </span>
-                  </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1.5">
-                    <i className="fa-regular fa-calendar text-xs"></i>
-                    <span>
-                      {new Date(viewingPost.createdAt).toLocaleDateString('th-TH', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Post Content */}
-              <div
-                className="prose dark:prose-invert prose-slate max-w-none text-sm sm:text-base leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(viewingPost.content) }}
-              />
-            </div>
-
-            {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 shrink-0">
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/news/${viewingPost.id}`}
-                  target="_blank"
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  icon="fa-solid fa-arrow-up-right-from-square"
                 >
-                  <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                  <span>เปิดดูหน้าเว็บสาธารณะ</span>
-                </Link>
-              </div>
-              <div className="flex items-center gap-2.5">
+                  เปิดดูหน้าเว็บสาธารณะ
+                </Button>
+              </Link>
+              <div className="flex items-center gap-2">
                 {canManagePosts && (
-                  <button
+                  <Button
                     type="button"
+                    variant="primary"
+                    size="sm"
+                    icon="fa-solid fa-pen"
                     onClick={() => {
                       const postToEdit = viewingPost;
                       setViewingPost(null);
                       handleOpenPostEdit(postToEdit);
                     }}
-                    className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
                   >
-                    <i className="fa-solid fa-pen"></i>
-                    <span>แก้ไขบทความนี้</span>
-                  </button>
+                    แก้ไขบทความนี้
+                  </Button>
                 )}
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setViewingPost(null)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-colors"
                 >
                   ปิด
-                </button>
+                </Button>
               </div>
             </div>
+          }
+        >
+          <div className="space-y-6">
+            {/* Cover Image if any */}
+            {viewingPost.image && (
+              <div className="w-full h-56 sm:h-72 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner">
+                <img
+                  src={viewingPost.image}
+                  alt={viewingPost.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            {/* Author info & date */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
+                  style={{ backgroundColor: viewingPost.author?.avatarColor || '#3b82f6' }}
+                >
+                  {viewingPost.author?.firstName?.[0] || 'U'}
+                </div>
+                <span className="font-medium text-slate-700 dark:text-slate-300">
+                  {viewingPost.author ? `${viewingPost.author.firstName} ${viewingPost.author.lastName}` : 'ผู้ดูแลระบบ'}
+                </span>
+              </div>
+              <span>•</span>
+              <div className="flex items-center gap-1.5">
+                <i className="fa-regular fa-calendar text-xs"></i>
+                <span>
+                  {new Date(viewingPost.createdAt).toLocaleDateString('th-TH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </div>
+            </div>
+
+            {/* Post Content */}
+            <div
+              className="prose dark:prose-invert prose-slate max-w-none text-sm sm:text-base leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(viewingPost.content) }}
+            />
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Notifications Confirm Modal */}

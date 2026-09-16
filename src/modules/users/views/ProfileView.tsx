@@ -9,21 +9,33 @@ import ContactInfoForm from '../components/forms/ContactInfoForm';
 import ExtendedHistoryForm from '../components/forms/ExtendedHistoryForm';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { Card, Button, Badge } from '@/components/ui';
+import { Card, Button, Badge, Modal, WebcamCaptureModal, MediaPickerModal } from '@/components/ui';
+import Rpb1ProgressSection from '../components/rpb1/Rpb1ProgressSection';
+import { uploadFileToServer, base64ToFile } from '@/modules/upload/lib/client-upload';
+import {
+  Camera,
+  Upload,
+  FolderOpen,
+  Trash2,
+  Image as ImageIcon,
+  Check,
+} from 'lucide-react';
 
 export default function ProfilePage() {
   const [currentUser, setCurrentUser] = useState<Personnel | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'info' | 'official' | 'history' | 'security'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'official' | 'history' | 'security' | 'rpb1'>('info');
   
   const [formData, setFormData] = useState<Partial<Personnel>>({});
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  const [departments, setDepartments] = useState<any[]>([]);
-  const [prefixes, setPrefixes] = useState<string[]>([]);
-  const [bloodGroups, setBloodGroups] = useState<string[]>([]);
+  const [isAvatarWebcamOpen, setIsAvatarWebcamOpen] = useState(false);
+  const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
+  const [isCoverPickerOpen, setIsCoverPickerOpen] = useState(false);
+  const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
+  const [isCoverMenuOpen, setIsCoverMenuOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -32,53 +44,32 @@ export default function ProfilePage() {
     // 1. Fetch current auth user
     fetch('/api/auth/me')
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.user) {
-          setCurrentUser(data.user);
-          setFormData(data.user);
-          localStorage.setItem('currentUser', JSON.stringify(data.user));
-        } else {
-          const savedUser = localStorage.getItem('currentUser');
-          if (savedUser) {
-            const parsed = JSON.parse(savedUser);
-            setCurrentUser(parsed);
-            setFormData(parsed);
-          }
-        }
-      })
-      .catch(() => {
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-          const parsed = JSON.parse(savedUser);
-          setCurrentUser(parsed);
-          setFormData(parsed);
-        }
-      });
+      .then((authData) => {
+        const userId = authData?.user?.id;
+        if (!userId) return;
 
-    // 2. Fetch departments
-    fetch('/api/departments')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (Array.isArray(data)) setDepartments(data);
+        // 2. Fetch full personnel profile for this user
+        fetch(`/api/personnel/${userId}`)
+          .then((res) => (res.ok ? res.json() : null))
+          .then((personnelData) => {
+            if (personnelData && !personnelData.error) {
+              setCurrentUser(personnelData);
+              setFormData(personnelData);
+              localStorage.setItem('currentUser', JSON.stringify(personnelData));
+            } else if (authData?.user) {
+              setCurrentUser(authData.user);
+              setFormData(authData.user);
+            }
+          })
+          .catch((err) => {
+            console.error('Failed to fetch full profile:', err);
+            if (authData?.user) {
+              setCurrentUser(authData.user);
+              setFormData(authData.user);
+            }
+          });
       })
-      .catch(console.error);
-
-    // 3. Fetch settings
-    fetch('/api/settings')
-      .then((res) => (res.ok ? res.json() : {}))
-      .then((settings: any) => {
-        if (settings?.prefixes) {
-          try {
-            setPrefixes(JSON.parse(settings.prefixes));
-          } catch {}
-        }
-        if (settings?.bloodGroups) {
-          try {
-            setBloodGroups(JSON.parse(settings.bloodGroups));
-          } catch {}
-        }
-      })
-      .catch(console.error);
+      .catch((err) => console.error('Failed to fetch auth me:', err));
   }, []);
 
   if (!currentUser) {
@@ -90,49 +81,64 @@ export default function ProfilePage() {
     );
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 400;
-          const scaleSize = MAX_WIDTH / img.width;
-          canvas.width = MAX_WIDTH;
-          canvas.height = img.height * scaleSize;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const base64 = canvas.toDataURL('image/jpeg', 0.85);
-          setFormData((prev) => ({ ...prev, avatarColor: base64 }));
-        };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      toast.loading('กำลังอัปโหลดรูปโปรไฟล์...', { id: 'avatar-upload' });
+      const res = await uploadFileToServer(file);
+      if (res.success && res.data) {
+        setFormData((prev) => ({ ...prev, avatarColor: res.data!.url }));
+        toast.success('อัปโหลดรูปโปรไฟล์สำเร็จ', { id: 'avatar-upload' });
+      } else {
+        toast.error(res.error || 'อัปโหลดรูปโปรไฟล์ไม่สำเร็จ', { id: 'avatar-upload' });
+      }
     }
   };
 
-  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarWebcamCapture = async (imageSrc: string) => {
+    toast.loading('กำลังบันทึกรูปโปรไฟล์...', { id: 'avatar-upload' });
+    const filename = `avatar-${currentUser?.id || Date.now()}.jpg`;
+    const file = base64ToFile(imageSrc, filename);
+    const res = await uploadFileToServer(file);
+    if (res.success && res.data) {
+      setFormData((prev) => ({ ...prev, avatarColor: res.data!.url }));
+      toast.success('อัปโหลดรูปโปรไฟล์สำเร็จ', { id: 'avatar-upload' });
+    } else {
+      toast.error(res.error || 'อัปโหลดรูปโปรไฟล์ไม่สำเร็จ', { id: 'avatar-upload' });
+    }
+  };
+
+  const handleAvatarSelect = (selectedFile: { url: string; filename: string }) => {
+    setFormData((prev) => ({ ...prev, avatarColor: selectedFile.url }));
+    toast.success('เลือกรูปโปรไฟล์จากคลังสื่อเรียบร้อย');
+  };
+
+  const handleCoverSelect = (selectedFile: { url: string; filename: string }) => {
+    setFormData((prev) => ({ ...prev, coverPhoto: selectedFile.url }));
+    toast.success('เลือกรูปหน้าปกจากคลังสื่อเรียบร้อย');
+  };
+
+  const handleRemoveAvatar = () => {
+    setFormData((prev) => ({ ...prev, avatarColor: '' }));
+    toast.success('คืนค่ารูปโปรไฟล์เริ่มต้นเรียบร้อย');
+  };
+
+  const handleRemoveCover = () => {
+    setFormData((prev) => ({ ...prev, coverPhoto: '' }));
+    toast.success('คืนค่ารูปหน้าปกเริ่มต้นเรียบร้อย');
+  };
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1200;
-          const scaleSize = MAX_WIDTH / img.width;
-          canvas.width = MAX_WIDTH;
-          canvas.height = img.height * scaleSize;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const base64 = canvas.toDataURL('image/jpeg', 0.85);
-          setFormData((prev) => ({ ...prev, coverPhoto: base64 }));
-        };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      toast.loading('กำลังอัปโหลดรูปหน้าปก...', { id: 'cover-upload' });
+      const res = await uploadFileToServer(file);
+      if (res.success && res.data) {
+        setFormData((prev) => ({ ...prev, coverPhoto: res.data!.url }));
+        toast.success('อัปโหลดรูปหน้าปกสำเร็จ', { id: 'cover-upload' });
+      } else {
+        toast.error(res.error || 'อัปโหลดรูปหน้าปกไม่สำเร็จ', { id: 'cover-upload' });
+      }
     }
   };
 
@@ -214,16 +220,42 @@ export default function ProfilePage() {
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
 
-          {/* Change Cover Button (in Edit Mode) */}
+          {/* Change Cover Button Group (in Edit Mode) */}
           {isEditing && (
-            <button
-              type="button"
-              onClick={() => coverInputRef.current?.click()}
-              className="absolute top-4 right-4 px-3.5 py-2 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-xl text-white font-bold text-xs shadow-lg transition-all flex items-center gap-2"
-            >
-              <i className="fa-solid fa-camera"></i>
-              <span>เปลี่ยนรูปหน้าปก</span>
-            </button>
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <div className="flex items-center gap-1.5 bg-black/60 hover:bg-black/75 backdrop-blur-md p-1 rounded-2xl border border-white/20 shadow-xl transition-all">
+                <button
+                  type="button"
+                  onClick={() => coverInputRef.current?.click()}
+                  className="px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition flex items-center gap-1.5"
+                  title="อัปโหลดรูปหน้าปกจากเครื่อง"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>เลือกไฟล์</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCoverPickerOpen(true)}
+                  className="px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition flex items-center gap-1.5"
+                  title="เลือกรูปหน้าปกจากคลังสื่อ"
+                >
+                  <FolderOpen className="w-3.5 h-3.5" />
+                  <span>คลังสื่อ</span>
+                </button>
+
+                {formData.coverPhoto && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveCover}
+                    className="p-1.5 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white text-xs transition"
+                    title="คืนค่าหน้าปกเริ่มต้น"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
           )}
           <input
             id="profileCoverUploadInput"
@@ -248,14 +280,55 @@ export default function ProfilePage() {
                 </div>
 
                 {isEditing && (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-2 right-2 w-9 h-9 bg-primary-600 hover:bg-primary-700 text-white rounded-xl flex items-center justify-center shadow-lg transition-transform hover:scale-110"
-                    title="เปลี่ยนรูปโปรไฟล์"
-                  >
-                    <i className="fa-solid fa-camera text-xs"></i>
-                  </button>
+                  <>
+                    {/* Camera Floating Trigger Badge */}
+                    <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center shadow-lg border-2 border-white dark:border-slate-900 pointer-events-none group-hover:opacity-0 transition-opacity">
+                      <Camera className="w-4 h-4" />
+                    </div>
+
+                    {/* Hover Action Overlay */}
+                    <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[2px] rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-200 flex flex-col items-center justify-center p-2">
+                      <p className="text-[10px] text-white/90 font-bold mb-1.5 drop-shadow-xs">
+                        เปลี่ยนรูปโปรไฟล์
+                      </p>
+                      <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-2xl border border-slate-700/80 shadow-xl">
+                        <button
+                          type="button"
+                          onClick={() => setIsAvatarWebcamOpen(true)}
+                          className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-xs transition transform hover:scale-105"
+                          title="ถ่ายรูปจากกล้อง (Webcam)"
+                        >
+                          <Camera className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="p-2 rounded-xl bg-primary-600 hover:bg-primary-500 text-white shadow-xs transition transform hover:scale-105"
+                          title="อัปโหลดไฟล์จากเครื่อง"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsAvatarPickerOpen(true)}
+                          className="p-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white shadow-xs transition transform hover:scale-105"
+                          title="เลือกจากคลังสื่อ"
+                        >
+                          <FolderOpen className="w-3.5 h-3.5" />
+                        </button>
+                        {formData.avatarColor && (
+                          <button
+                            type="button"
+                            onClick={handleRemoveAvatar}
+                            className="p-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white shadow-xs transition transform hover:scale-105"
+                            title="คืนค่ารูปโปรไฟล์เริ่มต้น"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </>
                 )}
                 <input
                   id="profileAvatarUploadInput"
@@ -356,6 +429,7 @@ export default function ProfilePage() {
               { id: 'official', name: 'ข้อมูลตำแหน่ง & สังกัด', icon: 'fa-solid fa-sitemap' },
               { id: 'history', name: 'ประวัติและผลงาน', icon: 'fa-solid fa-award' },
               { id: 'security', name: 'ความปลอดภัย & รหัสผ่าน', icon: 'fa-solid fa-shield-halved' },
+              { id: 'rpb1', name: 'แบบประวัติ รปภ. 1', icon: 'fa-solid fa-file-shield' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -670,6 +744,11 @@ export default function ProfilePage() {
             </Card>
           )}
 
+          {/* TAB 5: RPB-1 */}
+          {activeTab === 'rpb1' && currentUser && (
+            <Rpb1ProgressSection personnelId={currentUser.id} />
+          )}
+
         </div>
       )}
 
@@ -688,8 +767,6 @@ export default function ProfilePage() {
             <PersonalInfoForm
               formData={formData}
               setFormData={setFormData}
-              prefixes={prefixes}
-              bloodGroups={bloodGroups}
             />
           </Card>
 
@@ -702,9 +779,6 @@ export default function ProfilePage() {
             <MilitaryInfoForm
               formData={formData}
               setFormData={setFormData}
-              departments={departments}
-              personnelTypes={[]}
-              statusList={[]}
               isProfile={true}
             />
           </Card>
@@ -797,6 +871,37 @@ export default function ProfilePage() {
           </div>
 
         </form>
+      )}
+
+      {/* Avatar Webcam Capture Modal */}
+      <WebcamCaptureModal
+        isOpen={isAvatarWebcamOpen}
+        onClose={() => setIsAvatarWebcamOpen(false)}
+        onCapture={handleAvatarWebcamCapture}
+        variant="avatar"
+        title="ถ่ายภาพโปรไฟล์จากกล้อง (Avatar Capture)"
+      />
+
+      {/* Avatar Media Picker Modal */}
+      {isAvatarPickerOpen && (
+        <MediaPickerModal
+          isOpen={isAvatarPickerOpen}
+          onClose={() => setIsAvatarPickerOpen(false)}
+          onSelect={handleAvatarSelect}
+          filterCategory="image"
+          title="เลือกรูปโปรไฟล์จากคลังสื่อ"
+        />
+      )}
+
+      {/* Cover Media Picker Modal */}
+      {isCoverPickerOpen && (
+        <MediaPickerModal
+          isOpen={isCoverPickerOpen}
+          onClose={() => setIsCoverPickerOpen(false)}
+          onSelect={handleCoverSelect}
+          filterCategory="image"
+          title="เลือกรูปหน้าปกจากคลังสื่อ"
+        />
       )}
 
     </div>

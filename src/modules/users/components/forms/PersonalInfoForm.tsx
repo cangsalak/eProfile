@@ -1,19 +1,15 @@
 import React from 'react';
 import { Personnel, PrefixSelect, BloodTypeSelect } from '@/modules/users';
-import { Input } from '@/components/ui';
+import { Input, DatePicker } from '@/components/ui';
 
 interface PersonalInfoFormProps {
   formData: Partial<Personnel>;
   setFormData: (data: Partial<Personnel>) => void;
-  prefixes?: string[];
-  bloodGroups?: string[];
 }
 
 export default function PersonalInfoForm({
   formData,
   setFormData,
-  prefixes,
-  bloodGroups,
 }: PersonalInfoFormProps) {
   return (
     <div>
@@ -25,7 +21,6 @@ export default function PersonalInfoForm({
         <PrefixSelect
           value={formData.prefix || ''}
           onChange={(e) => setFormData({ ...formData, prefix: e.target.value })}
-          prefixes={prefixes}
           required
         />
 
@@ -63,19 +58,17 @@ export default function PersonalInfoForm({
           required
         />
 
-        <Input
+        <DatePicker
           id="personal-birthdate-input"
           label="วัน/เดือน/ปีเกิด"
-          type="text"
-          placeholder="เช่น 15/01/2535"
+          placeholder="เลือกวันเกิด (พ.ศ.)"
           value={formData.dateOfBirth || ''}
-          onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+          onChange={(val) => setFormData({ ...formData, dateOfBirth: val })}
         />
 
         <BloodTypeSelect
           value={formData.bloodType || ''}
           onChange={(e) => setFormData({ ...formData, bloodType: e.target.value })}
-          bloodGroups={bloodGroups}
         />
       </div>
 

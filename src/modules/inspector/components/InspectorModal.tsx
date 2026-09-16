@@ -9,6 +9,7 @@ import {
 } from '@/modules/inspector/lib/engine';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { Modal, Button, Badge } from '@/components/ui';
 
 interface InspectorModalProps {
   isOpen: boolean;
@@ -161,36 +162,47 @@ export default function InspectorModal({ isOpen, onClose, defaultProjectWide = t
   const categories = Array.from(new Set(report?.findings.map(f => f.category) || []));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-md no-inspect animate-fade-in">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-6xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
-        
-        {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/80 dark:bg-slate-900/80 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary-600 flex items-center justify-center text-white shadow-lg shadow-primary-500/20 shrink-0">
-              <i className="fa-solid fa-microscope text-lg"></i>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Super Admin System Inspector
-                </h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
-                  SUPER_ADMIN ONLY
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {scanType === 'PROJECT'
-                  ? 'ตรวจสอบและวินิจฉัยทุกเส้นทางและโครงสร้างทั้งโปรเจค (All Routes Scanner)'
-                  : 'ตรวจสอบและวินิจฉัยโครงสร้างหน้าปัจจุบัน (Current Page Scanner)'}
-              </p>
-            </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Super Admin System Inspector"
+      subtitle={
+        scanType === 'PROJECT'
+          ? 'ตรวจสอบและวินิจฉัยทุกเส้นทางและโครงสร้างทั้งโปรเจค (All Routes Scanner)'
+          : 'ตรวจสอบและวินิจฉัยโครงสร้างหน้าปัจจุบัน (Current Page Scanner)'
+      }
+      icon="fa-solid fa-microscope"
+      size="full"
+      footer={
+        <div className="flex justify-between items-center w-full text-xs text-slate-500">
+          <div>
+            * ระบบ Inspector เป็นเครื่องมือตรวจวิเคราะห์เท่านั้น จะไม่มีการแก้ไข Source Code หรือฐานข้อมูลโดยอัตโนมัติ
+          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={onClose}
+          >
+            ปิดหน้าต่าง
+          </Button>
+        </div>
+      }
+    >
+      <div className="space-y-6">
+        {/* Top Control Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/60">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
+              SUPER_ADMIN ONLY
+            </span>
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto flex-wrap">
             {/* Toggle Scan Type */}
             <div className="flex bg-slate-200/70 dark:bg-slate-800 p-1 rounded-xl text-xs font-semibold">
               <button
+                type="button"
                 onClick={() => performScan('PROJECT')}
                 disabled={isScanning}
                 className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
@@ -203,6 +215,7 @@ export default function InspectorModal({ isOpen, onClose, defaultProjectWide = t
                 <span>ทั้งโปรเจค (All Pages)</span>
               </button>
               <button
+                type="button"
                 onClick={() => performScan('CURRENT')}
                 disabled={isScanning}
                 className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
@@ -216,26 +229,18 @@ export default function InspectorModal({ isOpen, onClose, defaultProjectWide = t
               </button>
             </div>
 
-            <button
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
               onClick={() => performScan(scanType)}
               disabled={isScanning}
-              className="px-3 py-1.5 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
+              icon={isScanning ? 'fa-solid fa-rotate-right animate-spin' : 'fa-solid fa-rotate-right'}
             >
-              <i className={`fa-solid fa-rotate-right ${isScanning ? 'animate-spin' : ''}`}></i>
-              <span>{isScanning ? 'กำลังตรวจ...' : 'ตรวจอีกครั้ง'}</span>
-            </button>
-
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors ml-1"
-            >
-              ✕
-            </button>
+              {isScanning ? 'กำลังตรวจ...' : 'ตรวจอีกครั้ง'}
+            </Button>
           </div>
         </div>
-
-        {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {isScanning ? (
             <div className="py-16 flex flex-col items-center justify-center text-center space-y-5">
               <div className="relative">
@@ -577,78 +582,50 @@ export default function InspectorModal({ isOpen, onClose, defaultProjectWide = t
           ) : null}
         </div>
 
-        {/* Modal Footer */}
-        <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center text-xs text-slate-500">
-          <div>
-            * ระบบ Inspector เป็นเครื่องมือตรวจวิเคราะห์เท่านั้น จะไม่มีการแก้ไข Source Code หรือฐานข้อมูลโดยอัตโนมัติ
-          </div>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl font-semibold transition-all"
-          >
-            ปิดหน้าต่าง
-          </button>
-        </div>
-      </div>
-
       {/* ChatGPT Prompt Preview Modal */}
       {isPromptModalOpen && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-3xl flex flex-col max-h-[85vh] shadow-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/80 dark:bg-slate-900/80">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-primary-600 text-white flex items-center justify-center text-sm shadow-sm">
-                  <i className="fa-solid fa-robot"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                    ChatGPT Prompt สำหรับแก้ไขปัญหา
-                  </h4>
-                  <p className="text-[11px] text-slate-500">
-                    คัดลอกข้อความด้านล่างไปวางใน ChatGPT หรือ AI เพื่อขอคำแนะนำและโค้ดตัวอย่างในการแก้ไข
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsPromptModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-5">
-              <textarea
-                readOnly
-                value={generateAIPrompt()}
-                rows={16}
-                className="w-full p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl font-mono text-xs text-slate-800 dark:text-slate-200 focus:outline-none select-all"
-              />
-            </div>
-
-            <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
+        <Modal
+          isOpen={isPromptModalOpen}
+          onClose={() => setIsPromptModalOpen(false)}
+          title="ChatGPT Prompt สำหรับแก้ไขปัญหา"
+          subtitle="คัดลอกข้อความด้านล่างไปวางใน ChatGPT หรือ AI เพื่อขอคำแนะนำและโค้ดตัวอย่างในการแก้ไข"
+          icon="fa-solid fa-robot"
+          size="lg"
+          footer={
+            <div className="flex justify-between items-center w-full">
               <span className="text-xs text-slate-500">
                 ความยาว: {generateAIPrompt().length} ตัวอักษร
               </span>
               <div className="flex gap-2">
-                <button
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setIsPromptModalOpen(false)}
-                  className="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-semibold"
                 >
                   ปิด
-                </button>
-                <button
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
                   onClick={handleCopyPrompt}
-                  className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-primary-600/20"
+                  icon="fa-solid fa-copy"
                 >
-                  <i className="fa-solid fa-copy"></i>
-                  <span>คัดลอก Prompt</span>
-                </button>
+                  คัดลอก Prompt
+                </Button>
               </div>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <textarea
+            readOnly
+            value={generateAIPrompt()}
+            rows={14}
+            className="w-full p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl font-mono text-xs text-slate-800 dark:text-slate-200 focus:outline-none select-all resize-none"
+          />
+        </Modal>
       )}
-    </div>
+    </Modal>
   );
 }

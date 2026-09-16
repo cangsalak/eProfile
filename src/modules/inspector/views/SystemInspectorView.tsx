@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import InspectorModal from '../components/InspectorModal';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import InspectorLayout from './InspectorLayout';
+import { Modal, Button, Badge } from '@/components/ui';
 
 interface InspectionItem {
   id: string;
@@ -365,159 +366,144 @@ export default function SystemInspectorView() {
 
       {/* Findings Detail Modal / Drawer */}
       {selectedInspection && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-            
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50/80 dark:bg-slate-900/80">
-              <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <i className="fa-solid fa-clipboard-check text-primary-600"></i> ผลการตรวจ: {selectedInspection.page}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">
-                  URL: {selectedInspection.url} • ตรวจเมื่อ: {new Date(selectedInspection.startedAt).toLocaleString('th-TH')}
-                </p>
-              </div>
+        <Modal
+          isOpen={!!selectedInspection}
+          onClose={() => setSelectedInspection(null)}
+          title={`ผลการตรวจ: ${selectedInspection.page}`}
+          subtitle={`URL: ${selectedInspection.url} • ตรวจเมื่อ: ${new Date(selectedInspection.startedAt).toLocaleString('th-TH')}`}
+          icon="fa-solid fa-clipboard-check"
+          size="xl"
+          footer={
+            <div className="flex justify-between items-center w-full">
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                icon="fa-solid fa-copy"
+                onClick={() => {
+                  let prompt = `# 🚀 คำสั่งสำหรับแก้ไขข้อบกพร่องของระบบ (eProfile System Fix Prompt)\n\n`;
+                  prompt += `## ข้อมูลหน้าเว็บที่ตรวจสอบ:\n`;
+                  prompt += `- **โครงการ**: eProfile System (Next.js 14 App Router, TypeScript, Tailwind CSS, Prisma, SQLite)\n`;
+                  prompt += `- **หน้าเว็บ**: ${selectedInspection.page}\n`;
+                  prompt += `- **URL**: ${selectedInspection.url}\n`;
+                  prompt += `- **เวลาตรวจสอบ**: ${new Date(selectedInspection.startedAt).toLocaleString('th-TH')}\n`;
+                  prompt += `- **สรุปผลการตรวจ**: ${selectedInspection.overallResult} (CRITICAL: ${selectedInspection.criticalCount}, HIGH: ${selectedInspection.highCount}, MEDIUM: ${selectedInspection.mediumCount}, LOW: ${selectedInspection.lowCount})\n\n`;
+                  prompt += `## รายการข้อบกพร่องที่ต้องแก้ไข (${findingsList.length} รายการ):\n\n`;
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    let prompt = `# 🚀 คำสั่งสำหรับแก้ไขข้อบกพร่องของระบบ (eProfile System Fix Prompt)\n\n`;
-                    prompt += `## ข้อมูลหน้าเว็บที่ตรวจสอบ:\n`;
-                    prompt += `- **โครงการ**: eProfile System (Next.js 14 App Router, TypeScript, Tailwind CSS, Prisma, SQLite)\n`;
-                    prompt += `- **หน้าเว็บ**: ${selectedInspection.page}\n`;
-                    prompt += `- **URL**: ${selectedInspection.url}\n`;
-                    prompt += `- **เวลาตรวจสอบ**: ${new Date(selectedInspection.startedAt).toLocaleString('th-TH')}\n`;
-                    prompt += `- **สรุปผลการตรวจ**: ${selectedInspection.overallResult} (CRITICAL: ${selectedInspection.criticalCount}, HIGH: ${selectedInspection.highCount}, MEDIUM: ${selectedInspection.mediumCount}, LOW: ${selectedInspection.lowCount})\n\n`;
-                    prompt += `## รายการข้อบกพร่องที่ต้องแก้ไข (${findingsList.length} รายการ):\n\n`;
+                  findingsList.forEach((f, idx) => {
+                    prompt += `### ${idx + 1}. [${f.findingCode}] ${f.title} (${f.severity} - ${f.category})\n`;
+                    prompt += `- **คำอธิบายปัญหา**: ${f.description}\n`;
+                    if (f.element) prompt += `- **Element ที่เกี่ยวข้อง**: \`<${f.element}>\`\n`;
+                    if (f.actual) prompt += `- **สิ่งที่พบปัจจุบัน (Actual)**: \`${f.actual}\`\n`;
+                    if (f.expected) prompt += `- **ผลลัพธ์ที่ถูกต้อง (Expected)**: \`${f.expected}\`\n`;
+                    prompt += `- **แนวทางแก้ไขที่แนะนำ**: ${f.recommendation}\n\n`;
+                  });
 
-                    findingsList.forEach((f, idx) => {
-                      prompt += `### ${idx + 1}. [${f.findingCode}] ${f.title} (${f.severity} - ${f.category})\n`;
-                      prompt += `- **คำอธิบายปัญหา**: ${f.description}\n`;
-                      if (f.element) prompt += `- **Element ที่เกี่ยวข้อง**: \`<${f.element}>\`\n`;
-                      if (f.actual) prompt += `- **สิ่งที่พบปัจจุบัน (Actual)**: \`${f.actual}\`\n`;
-                      if (f.expected) prompt += `- **ผลลัพธ์ที่ถูกต้อง (Expected)**: \`${f.expected}\`\n`;
-                      prompt += `- **แนวทางแก้ไขที่แนะนำ**: ${f.recommendation}\n\n`;
-                    });
+                  prompt += `## 🎯 คำขอสำหรับการดำเนินการใน ChatGPT / AI Assistant:\n`;
+                  prompt += `กรุณาช่วยวิเคราะห์ปัญหาข้างต้นทีละข้อ และเขียนขั้นตอนการแก้ไขพร้อมโค้ดตัวอย่างที่ถูกต้องตามมาตรฐาน Next.js App Router, Tailwind CSS และ TypeScript โดยคำนึงถึง Security, Clean Code และ Accessibility ครับ\n`;
 
-                    prompt += `## 🎯 คำขอสำหรับการดำเนินการใน ChatGPT / AI Assistant:\n`;
-                    prompt += `กรุณาช่วยวิเคราะห์ปัญหาข้างต้นทีละข้อ และเขียนขั้นตอนการแก้ไขพร้อมโค้ดตัวอย่างที่ถูกต้องตามมาตรฐาน Next.js App Router, Tailwind CSS และ TypeScript โดยคำนึงถึง Security, Clean Code และ Accessibility ครับ\n`;
-
-                    navigator.clipboard.writeText(prompt);
-                    toast.success('คัดลอก Prompt สำหรับ ChatGPT เรียบร้อยแล้ว!');
-                  }}
-                  className="px-3.5 py-1.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all hover:scale-105 active:scale-95"
-                >
-                  <i className="fa-solid fa-copy"></i>
-                  <span>คัดลอก Prompt ChatGPT</span>
-                </button>
-
-                <button
-                  onClick={() => setSelectedInspection(null)}
-                  className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-
-            {/* Findings List */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {isDetailLoading ? (
-                <div className="py-12 text-center text-slate-400">
-                  <i className="fa-solid fa-spinner animate-spin text-xl mb-2"></i>
-                  <p>กำลังโหลดข้อบกพร่อง...</p>
-                </div>
-              ) : findingsList.length === 0 ? (
-                <div className="py-12 text-center text-emerald-500">
-                  <i className="fa-solid fa-shield-check text-4xl mb-2"></i>
-                  <p className="font-bold text-sm">ไม่พบข้อบกพร่องในการตรวจครั้งนี้</p>
-                </div>
-              ) : (
-                findingsList.map((f) => (
-                  <div key={f.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-black bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-                          {f.findingCode}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
-                          f.severity === 'CRITICAL' ? 'bg-rose-500 text-white' :
-                          f.severity === 'HIGH' ? 'bg-orange-500 text-white' :
-                          f.severity === 'MEDIUM' ? 'bg-amber-500 text-white' :
-                          f.severity === 'LOW' ? 'bg-blue-500 text-white' :
-                          'bg-slate-500 text-white'
-                        }`}>
-                          {f.severity}
-                        </span>
-                        <span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
-                          [{f.category}]
-                        </span>
-                      </div>
-
-                      {/* Status Selector */}
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <span className="text-[11px] text-slate-400 font-semibold">สถานะ:</span>
-                        <select
-                          value={f.status}
-                          onChange={(e) => updateFindingStatus(selectedInspection.id, f.id, e.target.value as any)}
-                          className="px-2 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 cursor-pointer"
-                        >
-                          <option value="OPEN">🔴 OPEN</option>
-                          <option value="REVIEWED">🟡 REVIEWED</option>
-                          <option value="FIXED">🟢 FIXED</option>
-                          <option value="IGNORED">⚪ IGNORED</option>
-                          <option value="FALSE_POSITIVE">🟣 FALSE_POSITIVE</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <h5 className="text-sm font-bold text-slate-900 dark:text-white">
-                      {f.title}
-                    </h5>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">
-                      {f.description}
-                    </p>
-
-                    {(f.expected || f.actual) && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
-                        {f.actual && (
-                          <div className="p-2 rounded-xl bg-rose-50/60 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 text-rose-700 dark:text-rose-300">
-                            <span className="font-bold block text-[10px] uppercase text-rose-500">Actual (พบ):</span>
-                            <span className="font-mono">{f.actual}</span>
-                          </div>
-                        )}
-                        {f.expected && (
-                          <div className="p-2 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-300">
-                            <span className="font-bold block text-[10px] uppercase text-emerald-500">Expected (ถูกต้อง):</span>
-                            <span className="font-mono">{f.expected}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-start gap-1.5">
-                      <i className="fa-solid fa-lightbulb text-amber-500 mt-0.5 shrink-0"></i>
-                      <div>
-                        <span className="font-bold">ข้อเสนอแนะ: </span>
-                        <span>{f.recommendation}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-end">
-              <button
+                  navigator.clipboard.writeText(prompt);
+                  toast.success('คัดลอก Prompt สำหรับ ChatGPT เรียบร้อยแล้ว!');
+                }}
+              >
+                คัดลอก Prompt ChatGPT
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setSelectedInspection(null)}
-                className="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl text-xs font-semibold"
               >
                 ปิด
-              </button>
+              </Button>
             </div>
+          }
+        >
+          <div className="space-y-4 text-xs">
+            {isDetailLoading ? (
+              <div className="py-12 text-center text-slate-400">
+                <i className="fa-solid fa-spinner animate-spin text-xl mb-2"></i>
+                <p>กำลังโหลดข้อบกพร่อง...</p>
+              </div>
+            ) : findingsList.length === 0 ? (
+              <div className="py-12 text-center text-emerald-500">
+                <i className="fa-solid fa-shield-check text-4xl mb-2"></i>
+                <p className="font-bold text-sm">ไม่พบข้อบกพร่องในการตรวจครั้งนี้</p>
+              </div>
+            ) : (
+              findingsList.map((f) => (
+                <div key={f.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-black bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+                        {f.findingCode}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                        f.severity === 'CRITICAL' ? 'bg-rose-500 text-white' :
+                        f.severity === 'HIGH' ? 'bg-orange-500 text-white' :
+                        f.severity === 'MEDIUM' ? 'bg-amber-500 text-white' :
+                        f.severity === 'LOW' ? 'bg-blue-500 text-white' :
+                        'bg-slate-500 text-white'
+                      }`}>
+                        {f.severity}
+                      </span>
+                      <span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
+                        [{f.category}]
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <span className="text-[11px] text-slate-400 font-semibold">สถานะ:</span>
+                      <select
+                        value={f.status}
+                        onChange={(e) => updateFindingStatus(selectedInspection.id, f.id, e.target.value as any)}
+                        className="px-2 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 cursor-pointer"
+                      >
+                        <option value="OPEN">🔴 OPEN</option>
+                        <option value="REVIEWED">🟡 REVIEWED</option>
+                        <option value="FIXED">🟢 FIXED</option>
+                        <option value="IGNORED">⚪ IGNORED</option>
+                        <option value="FALSE_POSITIVE">🟣 FALSE_POSITIVE</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <h5 className="text-sm font-bold text-slate-900 dark:text-white">
+                    {f.title}
+                  </h5>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
+                    {f.description}
+                  </p>
+
+                  {(f.expected || f.actual) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
+                      {f.actual && (
+                        <div className="p-2 rounded-xl bg-rose-50/60 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 text-rose-700 dark:text-rose-300">
+                          <span className="font-bold block text-[10px] uppercase text-rose-500">Actual (พบ):</span>
+                          <span className="font-mono">{f.actual}</span>
+                        </div>
+                      )}
+                      {f.expected && (
+                        <div className="p-2 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-300">
+                          <span className="font-bold block text-[10px] uppercase text-emerald-500">Expected (ถูกต้อง):</span>
+                          <span className="font-mono">{f.expected}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 flex items-start gap-1.5">
+                    <i className="fa-solid fa-lightbulb text-amber-500 mt-0.5 shrink-0"></i>
+                    <div>
+                      <span className="font-bold">ข้อเสนอแนะ: </span>
+                      <span>{f.recommendation}</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Live Inspector Modal */}

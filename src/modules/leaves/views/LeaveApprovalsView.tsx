@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import TablePagination from '@/components/common/TablePagination';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
+import { DatePicker, Modal, Button, Badge } from '@/components/ui';
 
 interface ApplicantInfo {
   id: string;
@@ -42,6 +43,7 @@ interface LeaveApprovalItem {
   contactTambon?: string;
   contactAmphoe?: string;
   contactProvince?: string;
+  contactPhone?: string;
   status: string;
   approvedById?: string;
   approvedAt?: string;
@@ -649,34 +651,28 @@ export default function LeaveApprovalsView() {
               <label htmlFor="start-date-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
                 ตั้งแต่วันที่
               </label>
-              <input
+              <DatePicker
                 id="start-date-filter"
-                name="startDateFilter"
-                aria-label="เลือกวันที่เริ่มต้น"
-                type="date"
                 value={startDateFilter}
-                onChange={e => {
-                  setStartDateFilter(e.target.value);
+                onChange={val => {
+                  setStartDateFilter(val);
                   setPage(1);
                 }}
-                className="w-full h-9 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="วว/ดด/ปปปป (พ.ศ.)"
               />
             </div>
             <div className="flex-1">
               <label htmlFor="end-date-filter" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
                 ถึงวันที่
               </label>
-              <input
+              <DatePicker
                 id="end-date-filter"
-                name="endDateFilter"
-                aria-label="เลือกวันที่สิ้นสุด"
-                type="date"
                 value={endDateFilter}
-                onChange={e => {
-                  setEndDateFilter(e.target.value);
+                onChange={val => {
+                  setEndDateFilter(val);
                   setPage(1);
                 }}
-                className="w-full h-9 px-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="วว/ดด/ปปปป (พ.ศ.)"
               />
             </div>
           </div>
@@ -877,326 +873,249 @@ export default function LeaveApprovalsView() {
 
       {/* ── Detail Modal ─────────────────────────────────────────────────── */}
       {isDetailModalOpen && selectedLeave && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-primary-500/10 text-primary-500 flex items-center justify-center text-sm">
-                  <i className="fa-solid fa-file-lines"></i>
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                    รายละเอียดคำขอลา ({selectedLeave.leaveType})
-                  </h3>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    รหัสคำขอ: <span className="font-mono">{selectedLeave.id}</span>
-                  </div>
-                </div>
-              </div>
-              <button
+        <Modal
+          isOpen={isDetailModalOpen && !!selectedLeave}
+          onClose={() => setIsDetailModalOpen(false)}
+          title={`รายละเอียดคำขอลา (${selectedLeave.leaveType})`}
+          subtitle={`รหัสคำขอ: ${selectedLeave.id}`}
+          icon="fa-solid fa-file-lines"
+          size="lg"
+          footer={
+            <div className="flex items-center justify-between w-full">
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setIsDetailModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-xs transition"
-              >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="p-6 space-y-4 overflow-y-auto flex-1 text-xs">
-              {/* Applicant Card */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-11 h-11 rounded-2xl flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm ${
-                      selectedLeave.personnel.avatarColor || 'bg-primary-600'
-                    }`}
-                  >
-                    {selectedLeave.personnel.firstName?.charAt(0) || 'U'}
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-slate-900 dark:text-white">
-                      {selectedLeave.personnel.prefix || ''}{selectedLeave.personnel.firstName} {selectedLeave.personnel.lastName}
-                    </div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                      {selectedLeave.personnel.position || 'เจ้าหน้าที่'} • {selectedLeave.personnel.department}
-                      {selectedLeave.personnel.subDepartment && selectedLeave.personnel.subDepartment !== '-' ? ` (${selectedLeave.personnel.subDepartment})` : ''}
-                    </div>
-                  </div>
-                </div>
-                <div>{getStatusBadge(selectedLeave.status)}</div>
-              </div>
-
-              {/* Details Grid */}
-              <div className="grid grid-cols-2 gap-3.5 p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800">
-                <div>
-                  <span className="text-[11px] text-slate-400 block mb-0.5">ประเภทการลา</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedLeave.leaveType}</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-400 block mb-0.5">จำนวนวันลา</span>
-                  <span className="font-bold font-mono text-primary-600 dark:text-primary-400">
-                    {calculateDays(selectedLeave.startDate, selectedLeave.endDate)} วัน
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-400 block mb-0.5">ตั้งแต่วันที่</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {new Date(selectedLeave.startDate).toLocaleDateString('th-TH', { dateStyle: 'long' })}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-400 block mb-0.5">ถึงวันที่</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {new Date(selectedLeave.endDate).toLocaleDateString('th-TH', { dateStyle: 'long' })}
-                  </span>
-                </div>
-              </div>
-
-              {/* Reason */}
-              <div>
-                <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                  เหตุผลความจำเป็นในการลา
-                </label>
-                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  {selectedLeave.reason || 'ไม่ได้ระบุเหตุผล'}
-                </div>
-              </div>
-
-              {/* Contact Information */}
-              <div>
-                <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                  สถานที่ติดต่อระหว่างลา
-                </label>
-                <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  {[
-                    selectedLeave.contactAddress,
-                    selectedLeave.contactTambon ? `ต.${selectedLeave.contactTambon}` : '',
-                    selectedLeave.contactAmphoe ? `อ.${selectedLeave.contactAmphoe}` : '',
-                    selectedLeave.contactProvince ? `จ.${selectedLeave.contactProvince}` : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ') || 'ไม่ได้ระบุที่อยู่ติดต่อ'}
-                  {selectedLeave.personnel.phone && (
-                    <div className="mt-1 text-slate-500 dark:text-slate-400">
-                      เบอร์โทรศัพท์: <span className="font-mono text-slate-800 dark:text-slate-200">{selectedLeave.personnel.phone}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Specific Details */}
-              {selectedLeave.substitutePerson && (
-                <div>
-                  <span className="text-[11px] text-slate-400 block mb-0.5">ผู้รับมอบหมายหน้าที่ระหว่างลา</span>
-                  <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-200 font-medium">
-                    {selectedLeave.substitutePerson}
-                  </div>
-                </div>
-              )}
-
-              {/* Ordination details */}
-              {selectedLeave.leaveType === 'ลาอุปสมบท' && (
-                <div className="p-3 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200/50 dark:border-emerald-800/50 space-y-1">
-                  <div className="font-bold text-emerald-800 dark:text-emerald-300">ข้อมูลการอุปสมบท:</div>
-                  <div className="text-slate-700 dark:text-slate-300">
-                    วัดที่อุปสมบท: {selectedLeave.ordainTempleName || '-'} ({selectedLeave.ordainTempleLocation || '-'})
-                  </div>
-                  {selectedLeave.ordainDate && (
-                    <div className="text-slate-700 dark:text-slate-300">
-                      วันที่อุปสมบท: {new Date(selectedLeave.ordainDate).toLocaleDateString('th-TH')}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Review / Approver Details if processed */}
-              {selectedLeave.status !== 'รออนุมัติ' && (
-                <div className="p-4 rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2">
-                  <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                    <span>ประวัติการพิจารณา</span>
-                    {selectedLeave.approvedAt && (
-                      <span className="text-[11px] font-normal text-slate-500">
-                        {new Date(selectedLeave.approvedAt).toLocaleString('th-TH')}
-                      </span>
-                    )}
-                  </div>
-                  {selectedLeave.approvedBy && (
-                    <div className="text-slate-700 dark:text-slate-300">
-                      ผู้พิจารณา:{' '}
-                      <span className="font-semibold">
-                        {selectedLeave.approvedBy.prefix || ''}{selectedLeave.approvedBy.firstName} {selectedLeave.approvedBy.lastName}
-                      </span>{' '}
-                      ({selectedLeave.approvedBy.role})
-                    </div>
-                  )}
-                  {selectedLeave.rejectionReason && (
-                    <div className="text-rose-600 dark:text-rose-400">
-                      เหตุผลที่ไม่อนุมัติ: <span className="font-semibold">{selectedLeave.rejectionReason}</span>
-                    </div>
-                  )}
-                  {selectedLeave.approvalNote && (
-                    <div className="text-slate-600 dark:text-slate-400">
-                      หมายเหตุ: {selectedLeave.approvalNote}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-              <button
-                type="button"
-                onClick={() => setIsDetailModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-300"
               >
                 ปิดหน้าต่าง
-              </button>
+              </Button>
 
               {selectedLeave.status === 'รออนุมัติ' && (
                 <div className="flex items-center gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="danger"
+                    size="sm"
                     onClick={() => {
                       setIsDetailModalOpen(false);
                       handleOpenActionModal(selectedLeave, 'reject');
                     }}
-                    className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition"
                   >
                     ไม่อนุมัติ
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
+                    variant="success"
+                    size="sm"
                     onClick={() => {
                       setIsDetailModalOpen(false);
                       handleOpenActionModal(selectedLeave, 'approve');
                     }}
-                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition shadow-md"
                   >
                     อนุมัติการลา
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
+          }
+        >
+          <div className="space-y-4 text-xs">
+            {/* Applicant Card */}
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-11 h-11 rounded-2xl flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm ${
+                    selectedLeave.personnel.avatarColor || 'bg-primary-600'
+                  }`}
+                >
+                  {selectedLeave.personnel.firstName?.charAt(0) || 'U'}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">
+                    {selectedLeave.personnel.prefix || ''}{selectedLeave.personnel.firstName} {selectedLeave.personnel.lastName}
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {selectedLeave.personnel.position || 'เจ้าหน้าที่'} • {selectedLeave.personnel.department}
+                    {selectedLeave.personnel.subDepartment && selectedLeave.personnel.subDepartment !== '-' ? ` (${selectedLeave.personnel.subDepartment})` : ''}
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-[10px] text-slate-400">สถานะ</div>
+                <div className="mt-0.5">
+                  {getStatusBadge(selectedLeave.status)}
+                </div>
+              </div>
+            </div>
+
+            {/* Leave Details Grid */}
+            <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+              <div>
+                <span className="text-slate-400 block text-[11px]">ประเภทการลา</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">{selectedLeave.leaveType}</span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">จำนวนวันลา</span>
+                <span className="font-bold text-primary-600 dark:text-primary-400">
+                  {calculateDays(selectedLeave.startDate, selectedLeave.endDate)} วัน
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">ตั้งแต่วันที่</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-300">
+                  {new Date(selectedLeave.startDate).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[11px]">ถึงวันที่</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-300">
+                  {new Date(selectedLeave.endDate).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
+              </div>
+              {selectedLeave.writtenAt && (
+                <div className="col-span-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+                  <span className="text-slate-400 block text-[11px]">เขียนที่</span>
+                  <span className="text-slate-700 dark:text-slate-300">{selectedLeave.writtenAt}</span>
+                </div>
+              )}
+              {selectedLeave.reason && (
+                <div className="col-span-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+                  <span className="text-slate-400 block text-[11px]">เหตุผลการลา</span>
+                  <span className="text-slate-700 dark:text-slate-300 whitespace-pre-line">{selectedLeave.reason}</span>
+                </div>
+              )}
+              {selectedLeave.contactAddress && (
+                <div className="col-span-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+                  <span className="text-slate-400 block text-[11px]">สถานที่ติดต่อระหว่างลา</span>
+                  <span className="text-slate-700 dark:text-slate-300">{selectedLeave.contactAddress}</span>
+                </div>
+              )}
+              {selectedLeave.contactPhone && (
+                <div>
+                  <span className="text-slate-400 block text-[11px]">เบอร์ติดต่อระหว่างลา</span>
+                  <span className="font-mono text-slate-700 dark:text-slate-300">{selectedLeave.contactPhone}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Approval History */}
+            {selectedLeave.approvedBy && (
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1.5">
+                <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <i className="fa-solid fa-signature text-primary-500"></i> ข้อมูลการพิจารณา
+                </div>
+                <div className="text-slate-600 dark:text-slate-400">
+                  ผู้พิจารณา: <span className="font-semibold">{selectedLeave.approvedBy.prefix || ''}{selectedLeave.approvedBy.firstName} {selectedLeave.approvedBy.lastName}</span> ({selectedLeave.approvedBy.role})
+                </div>
+                {selectedLeave.approvedAt && (
+                  <div className="text-slate-500 text-[11px]">
+                    วันและเวลาที่พิจารณา: {new Date(selectedLeave.approvedAt).toLocaleString('th-TH')}
+                  </div>
+                )}
+                {selectedLeave.rejectionReason && (
+                  <div className="text-rose-600 dark:text-rose-400">
+                    เหตุผลที่ไม่อนุมัติ: <span className="font-semibold">{selectedLeave.rejectionReason}</span>
+                  </div>
+                )}
+                {selectedLeave.approvalNote && (
+                  <div className="text-slate-600 dark:text-slate-400">
+                    หมายเหตุ: {selectedLeave.approvalNote}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* ── Action Confirmation Dialog (Approve / Reject) ────────────────── */}
       {actionType && selectedLeave && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className={`p-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 ${
-              actionType === 'approve' ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : 'bg-rose-50/50 dark:bg-rose-950/20'
-            }`}>
-              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg shrink-0 ${
-                actionType === 'approve' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-rose-500/10 text-rose-600'
-              }`}>
-                <i className={`fa-solid ${actionType === 'approve' ? 'fa-circle-check' : 'fa-triangle-exclamation'}`}></i>
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  {actionType === 'approve' ? 'ยืนยันการอนุมัติใบลา' : 'ยืนยันการไม่อนุมัติใบลา'}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  คำขอของ: <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedLeave.personnel.prefix || ''}{selectedLeave.personnel.firstName} {selectedLeave.personnel.lastName}</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Body */}
-            <div className="p-6 space-y-4 text-xs">
-              {actionError && (
-                <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-600 dark:text-rose-400 font-medium">
-                  <i className="fa-solid fa-circle-exclamation mr-1.5"></i>
-                  {actionError}
-                </div>
-              )}
-
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl space-y-1 text-slate-600 dark:text-slate-400">
-                <div>ประเภทการลา: <span className="font-bold text-slate-800 dark:text-slate-200">{selectedLeave.leaveType}</span></div>
-                <div>
-                  ช่วงวันที่:{' '}
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {new Date(selectedLeave.startDate).toLocaleDateString('th-TH')} - {new Date(selectedLeave.endDate).toLocaleDateString('th-TH')}
-                  </span>{' '}
-                  ({calculateDays(selectedLeave.startDate, selectedLeave.endDate)} วัน)
-                </div>
-              </div>
-
-              {actionType === 'reject' && (
-                <div>
-                  <label htmlFor="rejection-reason-input" className="block text-xs font-bold text-rose-600 dark:text-rose-400 mb-1">
-                    เหตุผลการไม่อนุมัติ <span className="text-rose-500">*</span>
-                  </label>
-                  <textarea
-                    id="rejection-reason-input"
-                    name="rejectionReasonInput"
-                    aria-label="เหตุผลการไม่อนุมัติ"
-                    value={rejectionReason}
-                    onChange={e => setRejectionReason(e.target.value)}
-                    placeholder="กรุณาระบุเหตุผล เช่น ติดภารกิจราชการเร่งด่วน, ข้อมูลไม่ครบถ้วน..."
-                    rows={3}
-                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-rose-200 dark:border-rose-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
-                  />
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="action-note-input" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  หมายเหตุเพิ่มเติม (ถ้ามี)
-                </label>
-                <input
-                  id="action-note-input"
-                  name="actionNoteInput"
-                  aria-label="หมายเหตุเพิ่มเติม"
-                  type="text"
-                  value={actionNote}
-                  onChange={e => setActionNote(e.target.value)}
-                  placeholder="ข้อความหมายเหตุถึงผู้ยื่นคำขอ..."
-                  className="w-full h-9 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-              </div>
-            </div>
-
-            {/* Footer Buttons */}
-            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-              <button
+        <Modal
+          isOpen={!!actionType && !!selectedLeave}
+          onClose={() => setActionType(null)}
+          title={actionType === 'approve' ? 'ยืนยันการอนุมัติใบลา' : 'ยืนยันการไม่อนุมัติใบลา'}
+          subtitle={`คำขอของ: ${selectedLeave.personnel.prefix || ''}${selectedLeave.personnel.firstName} ${selectedLeave.personnel.lastName}`}
+          icon={actionType === 'approve' ? 'fa-solid fa-circle-check' : 'fa-solid fa-triangle-exclamation'}
+          size="md"
+          footer={
+            <div className="flex items-center justify-end gap-2 w-full">
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setActionType(null)}
                 disabled={isSubmittingAction}
-                className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-300"
               >
                 ยกเลิก
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant={actionType === 'approve' ? 'success' : 'danger'}
+                size="sm"
                 onClick={handleExecuteAction}
                 disabled={isSubmittingAction}
-                className={`px-5 py-2 rounded-xl text-white text-xs font-bold transition flex items-center gap-2 shadow-md ${
-                  actionType === 'approve'
-                    ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20'
-                    : 'bg-rose-600 hover:bg-rose-500 shadow-rose-600/20'
-                }`}
+                icon={isSubmittingAction ? 'fa-solid fa-spinner fa-spin' : actionType === 'approve' ? 'fa-solid fa-check' : 'fa-solid fa-xmark'}
               >
-                {isSubmittingAction ? (
-                  <>
-                    <i className="fa-solid fa-spinner fa-spin"></i>
-                    <span>กำลังบันทึก...</span>
-                  </>
-                ) : (
-                  <>
-                    <i className={`fa-solid ${actionType === 'approve' ? 'fa-check' : 'fa-xmark'}`}></i>
-                    <span>{actionType === 'approve' ? 'ยืนยันอนุมัติ' : 'ยืนยันไม่อนุมัติ'}</span>
-                  </>
-                )}
-              </button>
+                {isSubmittingAction ? 'กำลังบันทึก...' : actionType === 'approve' ? 'ยืนยันอนุมัติ' : 'ยืนยันไม่อนุมัติ'}
+              </Button>
+            </div>
+          }
+        >
+          <div className="space-y-4 text-xs">
+            {actionError && (
+              <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-600 dark:text-rose-400 font-medium">
+                <i className="fa-solid fa-circle-exclamation mr-1.5"></i>
+                {actionError}
+              </div>
+            )}
+
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl space-y-1 text-slate-600 dark:text-slate-400">
+              <div>ประเภทการลา: <span className="font-bold text-slate-800 dark:text-slate-200">{selectedLeave.leaveType}</span></div>
+              <div>
+                ช่วงวันที่:{' '}
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  {new Date(selectedLeave.startDate).toLocaleDateString('th-TH')} - {new Date(selectedLeave.endDate).toLocaleDateString('th-TH')}
+                </span>{' '}
+                ({calculateDays(selectedLeave.startDate, selectedLeave.endDate)} วัน)
+              </div>
+            </div>
+
+            {actionType === 'reject' && (
+              <div>
+                <label htmlFor="rejection-reason-input" className="block text-xs font-bold text-rose-600 dark:text-rose-400 mb-1">
+                  เหตุผลการไม่อนุมัติ <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  id="rejection-reason-input"
+                  name="rejectionReasonInput"
+                  aria-label="เหตุผลการไม่อนุมัติ"
+                  value={rejectionReason}
+                  onChange={e => setRejectionReason(e.target.value)}
+                  placeholder="กรุณาระบุเหตุผล เช่น ติดภารกิจราชการเร่งด่วน, ข้อมูลไม่ครบถ้วน..."
+                  rows={3}
+                  className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-rose-200 dark:border-rose-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                />
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="action-note-input" className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                หมายเหตุเพิ่มเติม (ถ้ามี)
+              </label>
+              <input
+                id="action-note-input"
+                name="actionNoteInput"
+                aria-label="หมายเหตุเพิ่มเติม"
+                type="text"
+                value={actionNote}
+                onChange={e => setActionNote(e.target.value)}
+                placeholder="ข้อความหมายเหตุถึงผู้ยื่นคำขอ..."
+                className="w-full h-9 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

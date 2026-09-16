@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Rpb1FormData, CohabitantItem, CloseFriendItem, SupporterItem } from '../types';
+import { Rpb1FormData, CohabitantItem, CloseFriendItem, SupporterItem } from '../../types';
 
 interface PageProps {
   formData: Rpb1FormData;
@@ -101,7 +101,7 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
             8
           </span>
           <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-            หน้า ๘ — ผู้ร่วมอาศัย, บุคคลอ้างอิง, ผู้อุปการะ และคำรับรองลงนาม (หมวด ๒๗ - ๓๐)
+            หน้า 8 — ผู้ร่วมอาศัย, บุคคลอ้างอิง, ผู้อุปการะ และคำรับรองลงนาม (หมวด 27 - 30)
           </h4>
         </div>
         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
@@ -113,8 +113,8 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
       <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-3">
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
-            <i className="fa-solid fa-person-shelter"></i>
-            <span>๒๗. ผู้ร่วมอาศัยในที่อยู่ปัจจุบัน</span>
+            <i className="fa-solid fa-people-roof"></i>
+            <span>27. ผู้ร่วมอาศัยในที่อยู่ปัจจุบัน</span>
           </h5>
           <button
             type="button"
@@ -139,21 +139,27 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
               >
                 <span className="text-xs font-bold text-slate-400 w-6 shrink-0">{idx + 1}.</span>
                 <div className="flex-1">
+                  <label htmlFor={`rpb1_p8_cohab_titleName_${idx}`} className="sr-only">ยศ ชื่อตัว ชื่อสกุล ผู้ร่วมอาศัย ({idx + 1})</label>
                   <input
+                    id={`rpb1_p8_cohab_titleName_${idx}`}
                     type="text"
                     placeholder="ยศ ชื่อตัว ชื่อสกุล"
                     value={item.titleName}
                     onChange={(e) => updateCohabitant(idx, 'titleName', e.target.value)}
-                    className="form-control text-xs p-1.5"
+                    aria-label={`ยศ ชื่อตัว ชื่อสกุล ผู้ร่วมอาศัย (${idx + 1})`}
+                    className="form-input text-xs p-1.5"
                   />
                 </div>
                 <div className="flex-1">
+                  <label htmlFor={`rpb1_p8_cohab_relation_${idx}`} className="sr-only">ความสัมพันธ์ ผู้ร่วมอาศัย ({idx + 1})</label>
                   <input
+                    id={`rpb1_p8_cohab_relation_${idx}`}
                     type="text"
                     placeholder="เกี่ยวข้องเป็น เช่น เพื่อนร่วมห้อง / ญาติ"
                     value={item.relation}
                     onChange={(e) => updateCohabitant(idx, 'relation', e.target.value)}
-                    className="form-control text-xs p-1.5"
+                    aria-label={`ความสัมพันธ์ ผู้ร่วมอาศัย (${idx + 1})`}
+                    className="form-input text-xs p-1.5"
                   />
                 </div>
                 <button
@@ -175,10 +181,10 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
         <div className="flex items-center justify-between">
           <div>
             <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
-              <i className="fa-solid fa-user-check"></i>
-              <span>๒๘. ผู้ใกล้ชิดสนิทสนมและบุคคลที่ติดต่อด้วยเสมอ (บุคคลอ้างอิง)</span>
+              <i className="fa-solid fa-user-group"></i>
+              <span>28. ผู้ใกล้ชิดสนิทสนมและบุคคลที่ติดต่อด้วยเสมอ (บุคคลอ้างอิง)</span>
             </h5>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">(เว้นเครือญาติ นายจ้างเดิม หรือบุคคลนอกประเทศ)</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">ต้องไม่ใช่ญาติหรือผู้บังคับบัญชาโดยตรง (อย่างน้อย 2 คน)</p>
           </div>
           <button
             type="button"
@@ -191,8 +197,8 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
         </div>
 
         {formData.closeFriendsRef.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-3 bg-white/50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
-            ยังไม่มีรายการบุคคลอ้างอิง (ควรกำหนดอย่างน้อย ๒ ท่าน)
+          <p className="text-xs text-slate-400 text-center py-4 bg-white/50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+            ยังไม่มีรายการบุคคลอ้างอิง (ควรกำหนดอย่างน้อย 2 ท่าน)
           </p>
         ) : (
           <div className="space-y-2.5">
@@ -212,53 +218,63 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
+                    <label htmlFor={`rpb1_p8_ref_titleName_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
                     <input
+                      id={`rpb1_p8_ref_titleName_${idx}`}
                       type="text"
                       placeholder="ยศ ชื่อ สกุล"
                       value={item.titleName}
                       onChange={(e) => updateFriend(idx, 'titleName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ยศ ชื่อตัว ชื่อสกุล บุคคลอ้างอิงลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">จำนวนปีที่รู้จัก</label>
+                    <label htmlFor={`rpb1_p8_ref_years_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">จำนวนปีที่รู้จัก</label>
                     <input
+                      id={`rpb1_p8_ref_years_${idx}`}
                       type="text"
                       placeholder="เช่น 10 ปี"
                       value={item.yearsKnown}
                       onChange={(e) => updateFriend(idx, 'yearsKnown', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`จำนวนปีที่รู้จัก บุคคลอ้างอิงลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เชื้อชาติ/สัญชาติ/ศาสนา</label>
+                    <label htmlFor={`rpb1_p8_ref_raceRel_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เชื้อชาติ/สัญชาติ/ศาสนา</label>
                     <input
+                      id={`rpb1_p8_ref_raceRel_${idx}`}
                       type="text"
                       placeholder="ไทย/ไทย/พุทธ"
                       value={item.raceNationalityReligion}
                       onChange={(e) => updateFriend(idx, 'raceNationalityReligion', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เชื้อชาติ สัญชาติ ศาสนา บุคคลอ้างอิงลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบันและโทรศัพท์</label>
+                    <label htmlFor={`rpb1_p8_ref_address_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบันและโทรศัพท์</label>
                     <input
+                      id={`rpb1_p8_ref_address_${idx}`}
                       type="text"
                       placeholder="ที่อยู่และโทร"
                       value={item.addressPhone}
                       onChange={(e) => updateFriend(idx, 'addressPhone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่อยู่ปัจจุบันและโทรศัพท์ บุคคลอ้างอิงลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงานและโทรศัพท์</label>
+                    <label htmlFor={`rpb1_p8_ref_workplace_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงานและโทรศัพท์</label>
                     <input
+                      id={`rpb1_p8_ref_workplace_${idx}`}
                       type="text"
                       placeholder="ที่ทำงานและโทร"
                       value={item.workplacePhone}
                       onChange={(e) => updateFriend(idx, 'workplacePhone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่ทำงานและโทรศัพท์ บุคคลอ้างอิงลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -272,8 +288,8 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
       <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-3">
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
-            <i className="fa-solid fa-hand-holding-heart"></i>
-            <span>๒๙. ผู้อุปการะช่วยเหลือ สนับสนุนทั้งในอดีตและปัจจุบัน (เว้นบิดามารดา)</span>
+            <i className="fa-solid fa-handshake-angle"></i>
+            <span>29. ผู้อุปการะช่วยเหลือ สนับสนุนทั้งในอดีตและปัจจุบัน (เว้นบิดามารดา)</span>
           </h5>
           <button
             type="button"
@@ -307,43 +323,51 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
+                    <label htmlFor={`rpb1_p8_sup_titleName_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
                     <input
+                      id={`rpb1_p8_sup_titleName_${idx}`}
                       type="text"
                       placeholder="ยศ ชื่อ สกุล"
                       value={item.titleName}
                       onChange={(e) => updateSupporter(idx, 'titleName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ยศ ชื่อตัว ชื่อสกุล ผู้อุปการะลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เชื้อชาติ/สัญชาติ/ศาสนา</label>
+                    <label htmlFor={`rpb1_p8_sup_raceRel_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เชื้อชาติ/สัญชาติ/ศาสนา</label>
                     <input
+                      id={`rpb1_p8_sup_raceRel_${idx}`}
                       type="text"
                       placeholder="ไทย/ไทย/พุทธ"
                       value={item.raceNationalityReligion}
                       onChange={(e) => updateSupporter(idx, 'raceNationalityReligion', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เชื้อชาติ สัญชาติ ศาสนา ผู้อุปการะลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบันและโทรศัพท์</label>
+                    <label htmlFor={`rpb1_p8_sup_address_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบันและโทรศัพท์</label>
                     <input
+                      id={`rpb1_p8_sup_address_${idx}`}
                       type="text"
                       placeholder="ที่อยู่และโทร"
                       value={item.addressPhone}
                       onChange={(e) => updateSupporter(idx, 'addressPhone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่อยู่ปัจจุบันและโทรศัพท์ ผู้อุปการะลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงานและโทรศัพท์</label>
+                    <label htmlFor={`rpb1_p8_sup_workplace_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงานและโทรศัพท์</label>
                     <input
+                      id={`rpb1_p8_sup_workplace_${idx}`}
                       type="text"
                       placeholder="สถานที่ทำงาน"
                       value={item.workplacePhone}
                       onChange={(e) => updateSupporter(idx, 'workplacePhone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่ทำงานและโทรศัพท์ ผู้อุปการะลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -357,27 +381,29 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
       <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-4">
         <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
           <i className="fa-solid fa-file-signature"></i>
-          <span>๓๐. คำชี้แจงอื่น ๆ และคำรับรองการบันทึกประวัติ</span>
+          <span>30. คำชี้แจงอื่น ๆ และคำรับรองการบันทึกประวัติ</span>
         </h5>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+          <label htmlFor="rpb1_p8_additionalExplanations" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 cursor-pointer">
             ประวัติคำชี้แจงอื่น ๆ ในทางส่วนตัวที่ไม่ได้แจ้งไว้ข้างต้น
           </label>
           <textarea
+            id="rpb1_p8_additionalExplanations"
             name="additionalExplanations"
             rows={2}
             value={formData.additionalExplanations || ''}
             onChange={handleChange}
             placeholder="คำชี้แจงเพิ่มเติม (ถ้ามี)"
-            className="form-control text-xs"
+            aria-label="ประวัติคำชี้แจงอื่น ๆ ในทางส่วนตัวที่ไม่ได้แจ้งไว้ข้างต้น"
+            className="form-textarea text-xs"
           />
         </div>
 
         {/* Legal Certification Statement */}
         <div className="p-3.5 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/60 text-xs text-amber-900 dark:text-amber-200 space-y-1.5">
           <p className="font-semibold leading-relaxed">
-            &quot;ข้าพเจ้าขอรับรองว่า ข้อความดังกล่าวข้างต้นเป็นความจริงทุกประการ และรับทราบว่าหน่วยงานสามารถจัดเก็บ ใช้ ข้อมูลจากแบบประวัติบุคคลนี้ เพื่อพิจารณาดำเนินการตามระเบียบสำนักนายกรัฐมนตรี ว่าด้วยการรักษาความปลอดภัยแห่งชาติ พ.ศ.๒๕๕๒ และที่แก้ไขเพิ่มเติม&quot;
+            &quot;ข้าพเจ้าขอรับรองว่า ข้อความดังกล่าวข้างต้นเป็นความจริงทุกประการ และรับทราบว่าหน่วยงานสามารถจัดเก็บ ใช้ ข้อมูลจากแบบประวัติบุคคลนี้ เพื่อพิจารณาดำเนินการตามระเบียบสำนักนายกรัฐมนตรี ว่าด้วยการรักษาความปลอดภัยแห่งชาติ พ.ศ. 2552 และที่แก้ไขเพิ่มเติม&quot;
           </p>
         </div>
 
@@ -386,14 +412,16 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
           <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
             <h6 className="text-xs font-bold text-slate-800 dark:text-slate-200">เจ้าของประวัติ</h6>
             <div>
-              <label className="block text-[10px] text-slate-500 mb-0.5">วันที่ลงนาม</label>
+              <label htmlFor="rpb1_p8_ownerSignatureDate" className="block text-[10px] text-slate-500 mb-0.5">วันที่ลงนาม</label>
               <input
+                id="rpb1_p8_ownerSignatureDate"
                 type="text"
                 name="ownerSignatureDate"
                 value={formData.ownerSignatureDate || ''}
                 onChange={handleChange}
                 placeholder="เช่น 15 มีนาคม 2567"
-                className="form-control text-xs p-1.5"
+                aria-label="วันที่ลงนาม เจ้าของประวัติ"
+                className="form-input text-xs p-1.5"
               />
             </div>
           </div>
@@ -402,36 +430,42 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
             <h6 className="text-xs font-bold text-slate-800 dark:text-slate-200">เจ้าหน้าที่ควบคุมการบันทึกประวัติ</h6>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อ (ตัวบรรจง)</label>
+                <label htmlFor="rpb1_p8_inspectorRankName" className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อ (ตัวบรรจง)</label>
                 <input
+                  id="rpb1_p8_inspectorRankName"
                   type="text"
                   name="inspectorRankName"
                   value={formData.inspectorRankName || ''}
                   onChange={handleChange}
                   placeholder="ยศ ชื่อ สกุล"
-                  className="form-control text-xs p-1.5"
+                  aria-label="ยศ ชื่อ เจ้าหน้าที่ควบคุม"
+                  className="form-input text-xs p-1.5"
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-500 mb-0.5">ตำแหน่ง</label>
+                <label htmlFor="rpb1_p8_inspectorPosition" className="block text-[10px] text-slate-500 mb-0.5">ตำแหน่ง</label>
                 <input
+                  id="rpb1_p8_inspectorPosition"
                   type="text"
                   name="inspectorPosition"
                   value={formData.inspectorPosition || ''}
                   onChange={handleChange}
                   placeholder="ตำแหน่งเจ้าหน้าที่"
-                  className="form-control text-xs p-1.5"
+                  aria-label="ตำแหน่ง เจ้าหน้าที่ควบคุม"
+                  className="form-input text-xs p-1.5"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-[10px] text-slate-500 mb-0.5">วันที่ควบคุมการบันทึก</label>
+                <label htmlFor="rpb1_p8_inspectorSignatureDate" className="block text-[10px] text-slate-500 mb-0.5">วันที่ควบคุมการบันทึก</label>
                 <input
+                  id="rpb1_p8_inspectorSignatureDate"
                   type="text"
                   name="inspectorSignatureDate"
                   value={formData.inspectorSignatureDate || ''}
                   onChange={handleChange}
                   placeholder="เช่น 15 มีนาคม 2567"
-                  className="form-control text-xs p-1.5"
+                  aria-label="วันที่ควบคุมการบันทึก"
+                  className="form-input text-xs p-1.5"
                 />
               </div>
             </div>
@@ -441,3 +475,4 @@ export default function Page8CohabitantsSignatures({ formData, setFormData }: Pa
     </div>
   );
 }
+

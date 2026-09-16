@@ -5,6 +5,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import TablePagination from '@/components/common/TablePagination';
 import InspectorLayout from './InspectorLayout';
+import { Modal, Button, Badge } from '@/components/ui';
 
 interface AuditLogItem {
   id: string;
@@ -539,70 +540,50 @@ export default function ManageAuditLogsPage() {
 
       {/* ChatGPT AI Prompt Preview Modal */}
       {isPromptModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl">
-                  <i className="fa-solid fa-robot"></i>
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-base">
-                    ChatGPT Prompt สำหรับวิเคราะห์ Audit Logs & ข้อผิดพลาด
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    นำข้อความด้านล่างไปวางใน ChatGPT เพื่อวิเคราะห์ความผิดปกติ ความปลอดภัย หรือสาเหตุของ Error
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsPromptModalOpen(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
-              >
-                <i className="fa-solid fa-xmark text-lg"></i>
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-5 overflow-y-auto flex-1 font-mono text-xs">
-              <textarea
-                readOnly
-                rows={14}
-                value={generateChatGPTPrompt()}
-                className="w-full p-4 bg-slate-900 text-slate-100 rounded-2xl border border-slate-800 text-xs font-mono leading-relaxed focus:outline-none resize-none selection:bg-emerald-500 selection:text-white"
-              />
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+        <Modal
+          isOpen={isPromptModalOpen}
+          onClose={() => setIsPromptModalOpen(false)}
+          title="ChatGPT Prompt สำหรับวิเคราะห์ Audit Logs & ข้อผิดพลาด"
+          subtitle="นำข้อความด้านล่างไปวางใน ChatGPT เพื่อวิเคราะห์ความผิดปกติ ความปลอดภัย หรือสาเหตุของ Error"
+          icon="fa-solid fa-robot"
+          size="lg"
+          footer={
+            <div className="flex items-center justify-between w-full">
               <span className="text-xs text-slate-500">
                 ความยาว: {generateChatGPTPrompt().length.toLocaleString()} ตัวอักษร
               </span>
               <div className="flex items-center gap-2">
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setIsPromptModalOpen(false)}
-                  className="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-xs transition-all"
                 >
                   ปิด
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="primary"
+                  size="sm"
                   onClick={() => {
                     handleCopyPrompt();
                     setIsPromptModalOpen(false);
                   }}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-2 shadow-md shadow-emerald-500/20"
+                  icon="fa-solid fa-copy"
                 >
-                  <i className="fa-solid fa-copy"></i>
-                  <span>คัดลอก Prompt</span>
-                </button>
+                  คัดลอก Prompt
+                </Button>
               </div>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <textarea
+            readOnly
+            rows={14}
+            value={generateChatGPTPrompt()}
+            className="w-full p-4 bg-slate-900 text-slate-100 rounded-2xl border border-slate-800 text-xs font-mono leading-relaxed focus:outline-none resize-none selection:bg-emerald-500 selection:text-white"
+          />
+        </Modal>
       )}
       </div>
     </InspectorLayout>

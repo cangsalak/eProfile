@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { Card, Button, Badge } from '@/components/ui';
+import { Card, Button, Badge, Modal } from '@/components/ui';
 
 export interface SubDepartment {
   name: string;
@@ -513,85 +513,67 @@ export default function DepartmentsManager() {
 
       {/* Add Sub-department Modal */}
       {activeDeptForSub && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <Card variant="convex" className="w-full max-w-md p-6 rounded-[24px] shadow-2xl relative">
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i className="fa-solid fa-plus-circle text-primary-500"></i>
-                เพิ่มแผนก/หมวดย่อย
-              </h3>
-              <button 
+        <Modal
+          isOpen={!!activeDeptForSub}
+          onClose={() => setActiveDeptForSub(null)}
+          title="เพิ่มแผนก/หมวดย่อย"
+          subtitle={`สังกัดกอง/ฝ่าย: ${activeDeptForSub.name} ${activeDeptForSub.shortName ? `(${activeDeptForSub.shortName})` : ''}`}
+          icon="fa-solid fa-plus-circle"
+          size="sm"
+        >
+          <form onSubmit={handleAddSubDepartment} className="space-y-4">
+            <div>
+              <label htmlFor="newSubNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                ชื่อเต็มแผนก / หมวด / ตอน <span className="text-rose-500">*</span>
+              </label>
+              <input
+                id="newSubNameInput"
+                aria-label="ชื่อเต็มแผนกหรือหมวด"
+                type="text"
+                placeholder="เช่น แผนกวิชาทหาร, หมวดฝึกที่ 1, ตอนส่งกำลัง"
+                value={newSubName}
+                onChange={(e) => setNewSubName(e.target.value)}
+                className="w-full h-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+                required
+                autoFocus
+              />
+            </div>
+
+            <div>
+              <label htmlFor="newSubShortNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                คำย่อแผนก / หมวด (ถ้ามี)
+              </label>
+              <input
+                id="newSubShortNameInput"
+                aria-label="คำย่อแผนกหรือหมวด"
+                type="text"
+                placeholder="เช่น ผบท., มว.1, ตอน กบ."
+                value={newSubShortName}
+                onChange={(e) => setNewSubShortName(e.target.value)}
+                className="w-full h-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setActiveDeptForSub(null)}
-                className="w-7 h-7 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs"
               >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
+                ปิด
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                icon="fa-solid fa-plus"
+              >
+                เพิ่มแผนกย่อย
+              </Button>
             </div>
-
-            <div className="mb-4 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800">
-              <p className="text-xs text-slate-500 dark:text-slate-400">สังกัดกอง/ฝ่าย:</p>
-              <p className="text-sm font-bold text-primary-600 dark:text-primary-400 mt-0.5">
-                {activeDeptForSub.name} {activeDeptForSub.shortName ? `(${activeDeptForSub.shortName})` : ''}
-              </p>
-            </div>
-
-            <form onSubmit={handleAddSubDepartment} className="space-y-3.5">
-              <div>
-                <label htmlFor="newSubNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  ชื่อเต็มแผนก / หมวด / ตอน <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="newSubNameInput"
-                  aria-label="ชื่อเต็มแผนกหรือหมวด"
-                  type="text"
-                  placeholder="เช่น แผนกวิชาทหาร, หมวดฝึกที่ 1, ตอนส่งกำลัง"
-                  value={newSubName}
-                  onChange={(e) => setNewSubName(e.target.value)}
-                  className="w-full h-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
-                  required
-                  autoFocus
-                />
-              </div>
-
-              <div>
-                <label htmlFor="newSubShortNameInput" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  คำย่อแผนก / หมวด (ถ้ามี)
-                </label>
-                <input
-                  id="newSubShortNameInput"
-                  aria-label="คำย่อแผนกหรือหมวด"
-                  type="text"
-                  placeholder="เช่น ผบท., มว.1, ตอน กบ."
-                  value={newSubShortName}
-                  onChange={(e) => setNewSubShortName(e.target.value)}
-                  className="w-full h-10 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-primary-500"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setActiveDeptForSub(null)}
-                  className="text-xs font-medium rounded-xl"
-                >
-                  ปิด
-                </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="sm"
-                  icon="fa-solid fa-plus"
-                  className="text-xs font-semibold rounded-xl"
-                >
-                  เพิ่มแผนกย่อย
-                </Button>
-              </div>
-            </form>
-          </Card>
-        </div>
+          </form>
+        </Modal>
       )}
 
       {/* Styled Confirmation Modal */}

@@ -13,21 +13,13 @@ import { Input } from '@/components/ui';
 interface MilitaryInfoFormProps {
   formData: Partial<Personnel>;
   setFormData: (data: Partial<Personnel>) => void;
-  departments?: DepartmentItem[];
-  personnelTypes?: string[];
-  statusList?: string[];
   isProfile?: boolean;
-  roles?: RoleItem[];
 }
 
 export default function MilitaryInfoForm({ 
   formData, 
   setFormData, 
-  departments, 
-  personnelTypes, 
-  statusList, 
   isProfile, 
-  roles = [] 
 }: MilitaryInfoFormProps) {
   return (
     <div>
@@ -50,7 +42,6 @@ export default function MilitaryInfoForm({
           <PersonnelTypeSelect
             value={formData.personnelType || ''}
             onChange={(e) => setFormData({ ...formData, personnelType: e.target.value })}
-            personnelTypes={personnelTypes}
             required
           />
         )}
@@ -63,7 +54,6 @@ export default function MilitaryInfoForm({
           onDepartmentChange={(dept) => setFormData({ ...formData, department: dept })}
           subDepartment={formData.subDepartment || ''}
           onSubDepartmentChange={(subDept) => setFormData({ ...formData, subDepartment: subDept })}
-          departments={departments}
           required
         />
       </div>
@@ -118,14 +108,12 @@ export default function MilitaryInfoForm({
           <PersonnelStatusSelect
             value={formData.status || ''}
             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-            statusList={statusList}
             required
           />
 
           <RoleSelect
             value={formData.role || 'USER'}
             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-            roles={roles.length > 0 ? roles : undefined}
             required
           />
         </div>

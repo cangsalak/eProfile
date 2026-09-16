@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Modal, Button, Input } from '@/components/ui';
 
 interface RichTextEditorProps {
   value: string;
@@ -359,95 +360,101 @@ export default function RichTextEditor({
       </div>
 
       {/* Link Modal Dialog */}
-      {showLinkModal && (
-        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xl w-full max-w-sm space-y-3">
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <i className="fa-solid fa-link text-primary-500"></i> แทรกลิงก์เว็บไซต์
-            </h4>
-            <input
-              type="url"
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-              placeholder="https://example.com"
-              className="w-full px-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-xs"
-            />
-            <div className="flex justify-end gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => setShowLinkModal(false)}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition-colors"
-              >
-                ยกเลิก
-              </button>
-              <button
-                type="button"
-                onClick={handleInsertLink}
-                className="px-4 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-bold shadow-xs transition-colors"
-              >
-                แทรกลิงก์
-              </button>
-            </div>
+      <Modal
+        isOpen={showLinkModal}
+        onClose={() => setShowLinkModal(false)}
+        title="แทรกลิงก์เว็บไซต์"
+        icon="fa-solid fa-link"
+        size="sm"
+        footer={
+          <div className="flex justify-end gap-2 w-full">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowLinkModal(false)}
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={handleInsertLink}
+            >
+              แทรกลิงก์
+            </Button>
           </div>
+        }
+      >
+        <div className="space-y-3">
+          <Input
+            type="url"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            placeholder="https://example.com"
+          />
         </div>
-      )}
+      </Modal>
 
       {/* Image Modal Dialog */}
-      {showImageModal && (
-        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xl w-full max-w-md space-y-4">
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <i className="fa-regular fa-image text-primary-500"></i> แทรกรูปภาพในบทความ
-            </h4>
+      <Modal
+        isOpen={showImageModal}
+        onClose={() => setShowImageModal(false)}
+        title="แทรกรูปภาพในบทความ"
+        icon="fa-regular fa-image"
+        size="md"
+        footer={
+          <div className="flex justify-end gap-2 w-full">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowImageModal(false)}
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={handleInsertImage}
+            >
+              แทรกรูปภาพ
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          {/* URL Input */}
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              ระบุ URL ของรูปภาพ
+            </label>
+            <Input
+              type="url"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://... หรือ /uploads/..."
+            />
+          </div>
 
-            {/* URL Input */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                ระบุ URL ของรูปภาพ
-              </label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://... หรือ /uploads/..."
-                className="w-full px-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-xs"
-              />
-            </div>
+          <div className="text-center text-xs text-slate-400 font-bold">หรือ</div>
 
-            <div className="text-center text-xs text-slate-400 font-bold">หรือ</div>
-
-            {/* File Upload */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                อัปโหลดรูปภาพจากอุปกรณ์
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageFileUpload}
-                className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-50 file:text-primary-600 dark:file:bg-primary-950 dark:file:text-primary-400 hover:file:bg-primary-100 cursor-pointer"
-              />
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-              <button
-                type="button"
-                onClick={() => setShowImageModal(false)}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition-colors"
-              >
-                ยกเลิก
-              </button>
-              <button
-                type="button"
-                onClick={handleInsertImage}
-                className="px-4 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-bold shadow-xs transition-colors"
-              >
-                แทรกรูปภาพ
-              </button>
-            </div>
+          {/* File Upload */}
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              อัปโหลดรูปภาพจากอุปกรณ์
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageFileUpload}
+              className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-50 file:text-primary-600 dark:file:bg-primary-950 dark:file:text-primary-400 hover:file:bg-primary-100 cursor-pointer"
+            />
           </div>
         </div>
-      )}
+      </Modal>
 
     </div>
   );

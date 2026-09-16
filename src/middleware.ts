@@ -39,8 +39,6 @@ const publicApiPaths = [
   '/api/modules/auth/reset-password',
   '/api/auth/me',
   '/api/modules/auth/me',
-  '/api/calendar/feed',
-  '/api/modules/calendar/feed',
 ];
 const publicApiPrefixes = ['/api/verify/', '/api/modules/badges/verify/'];
 
@@ -179,7 +177,9 @@ export async function middleware(request: NextRequest) {
       publicApiPrefixes.some(prefix => pathname.startsWith(prefix) || effectivePath.startsWith(prefix)) ||
       ((pathname === '/api/settings' || pathname === '/api/modules' || pathname === '/api/services' ||
         effectivePath === '/api/modules/settings' || effectivePath === '/api/modules/module-manager') &&
-        request.method === 'GET');
+        request.method === 'GET') ||
+      ((pathname === '/api/contacts' || effectivePath === '/api/modules/contacts') &&
+        request.method === 'POST');
 
     // Verify JWT for protected API routes
     if (!isPublic) {
@@ -203,14 +203,17 @@ export async function middleware(request: NextRequest) {
   }
 
   // 4. Dynamic Module Page rewriting (/<moduleId>/<path> -> /modules/<moduleId>/<path>)
-  const matchingModule = ModuleRegistry.getAllModules().find(
-    m => pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
-  );
-  if (matchingModule && !pathname.startsWith('/modules/')) {
-    const subPath = pathname.substring(`/${matchingModule.id}`.length);
-    const destinationUrl = new URL(`/modules/${matchingModule.id}${subPath}`, request.url);
-    destinationUrl.search = request.nextUrl.search;
-    return NextResponse.rewrite(destinationUrl);
+  // Only rewrite if it's not a registered public standalone page (e.g., /news, /about, /contact)
+  if (!isPublicPage) {
+    const matchingModule = ModuleRegistry.getAllModules().find(
+      m => pathname === `/${m.id}` || pathname.startsWith(`/${m.id}/`)
+    );
+    if (matchingModule && !pathname.startsWith('/modules/')) {
+      const subPath = pathname.substring(`/${matchingModule.id}`.length);
+      const destinationUrl = new URL(`/modules/${matchingModule.id}${subPath}`, request.url);
+      destinationUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(destinationUrl);
+    }
   }
 
   return NextResponse.next();

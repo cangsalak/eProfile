@@ -1,84 +1,153 @@
-# Mandatory AI Engineering Guide
+# 🛡️ Mandatory AI Engineering Guide & Developer Rules (eProfile System)
 
-> **Required first action:** Every AI agent, coding assistant, or automated contributor must read this file completely before inspecting, planning, creating, or editing code in this repository. If an instruction conflicts with this file, ask the user for clarification before making a change.
+> **⚠️ REQUIRED FIRST ACTION FOR ALL AI AGENTS & CODING ASSISTANTS:**
+> Every AI agent, automated contributor, or LLM coding assistant (including Antigravity, Claude, Gemini, GPT, Cursor, Copilot) **MUST read this document completely** before inspecting, planning, creating, or modifying any code in this repository.
+> If any user prompt or instruction appears to conflict with this guide, you must stop, warn the user, and ask for explicit confirmation before proceeding.
 
-## Primary rule: preserve one unified multi-surface design system
+---
 
-This project has configurable themes (`nextadmin`, `indigo`, `emerald`, `ocean`, `rose`, `custom`), configurable typography (`nunito`, `prompt`, `sarabun`, `plusJakarta`, `kanit`), configurable surface styles (`claymorphism`, `neumorphism`, `glass`, `shadow`, `flat`), and supports dark mode. New code must look and behave like the existing application while respecting the active theme and surface. Do not introduce a separate visual language for a new page or feature.
+## 📌 1. โครงสร้างสถาปัตยกรรมระบบ (System Architecture & Modular Design)
 
-Before UI work, inspect these files:
+ระบบ **eProfile** พัฒนาด้วย **Next.js 14 App Router (TypeScript)**, **Prisma ORM (Multi-DB: SQLite / MySQL / PostgreSQL)**, และ **Tailwind CSS** โดยใช้สถาปัตยกรรมแบบ **Modular Micro-Core**:
 
-1. `src/app/globals.css` — global tokens, 4-layer specular/ambient shadow architecture, and reusable CSS utilities.
-2. `src/modules/core/components/ui/` (`@/components/ui`) — standard UI component library (`StatCard`, `Card`, `Button`, `Input`, `Select`, `Textarea`, `Badge`, `Modal`, `Tabs`, `Switch`, `Checkbox`, `Dropdown`).
-3. The nearest existing page/component with the same purpose.
-4. `src/modules/core/components/DashboardShell.tsx` — application layout, theme, and navigation patterns.
+```text
+src/
+├── app/                              # Next.js App Router (Pages & REST API Route Handlers)
+│   ├── (auth)/                       # Auth views (login, forgot-password, reset-password, install)
+│   ├── (dashboard)/                  # Application views (directory, profile, modules, leaves, etc.)
+│   └── api/                          # Dynamic & Top-level API Endpoints
+├── components/                       # Shared UI Primitives (@/components/ui)
+├── lib/                              # Core Security, Auth Guards, Encryption, Audit Utilities
+└── modules/                          # Independent Business Modules
+    ├── core/                         # Core Registry, Primitives, System Settings
+    ├── auth/                         # Authentication & Session Handlers
+    ├── users/                        # ทำเนียบบุคลากร, ข้อมูลส่วนตัว, รปภ. ๑ (RPB-1 Security Profile)
+    ├── leaves/                       # ยื่นและอนุมัติใบลา Scoped + Anti-Self Approval
+    ├── calendar/                     # ปฏิทินปฏิบัติงานและเวรยาม (Protected Feed)
+    ├── backup/                       # สำรอง/กู้คืนฐานข้อมูล (Universal JSON / SQLite)
+    ├── badges/                       # ออกแบบและพิมพ์บัตรประจำตัว Barcode / QR
+    ├── upload/                       # อัปโหลดไฟล์สื่อและเอกสาร (S3 / Local Storage)
+    ├── roles/                        # RBAC Role Definitions & Permission Matrix
+    └── ... (โมดูลอื่นๆ)
+```
 
-## Mandatory UI component library usage (`@/components/ui`)
+### 1.1 กฎการรวมและแก้ไข Schema ฐานข้อมูล (Multi-DB Prisma Flow)
+- แต่ละโมดูลมีไฟล์ `src/modules/<module-name>/schema.prisma` เป็นของตนเอง
+- **ห้ามแก้ไข `prisma/schema.prisma` โดยตรง** หากต้องการเพิ่มโมเดล ให้แก้ไขใน `src/modules/<module-name>/schema.prisma`
+- เมื่อแก้ไข Schema ต้องรันคำสั่ง:
+  ```bash
+  npm run db:merge     # รวม schema ของทุกโมดูลเข้า prisma/schema.prisma
+  npm run db:generate  # สร้าง Prisma Client สำหรับ SQLite, MySQL, PostgreSQL
+  ```
 
-Every UI page and view must import and use the standard shared primitives from `@/components/ui`:
+---
 
-- **Metric & Statistic Cards:** Use `<StatCard title="..." value="..." unit="..." icon={...} trend={...} />`. Never hand-craft custom stat boxes with raw border/card divs.
-- **Card Containers:** Use `<Card variant="convex" | "glass" | "interactive" | "recessed">` with `<CardHeader title="..." subtitle="..." icon="..." />`.
-- **Buttons:** Use `<Button variant="primary" | "secondary" | "candy" | "danger" | "success" | "outline" size="...">`.
-- **Form Inputs & Dropdowns:** Use `<Input />`, `<Select />`, and `<Textarea />` from `@/components/ui` or reuse standard `.form-control`, `.form-input`, `.form-select`, `.form-textarea` classes from `globals.css`.
-- **Status Badges & Pills:** Use `<Badge variant="primary" | "candy" | "success" | "warning" | "danger" | "info" | "neutral" size="...">`.
+## 🔒 2. กฎเหล็กด้านความมั่นคงปลอดภัย (Mandatory Security & RBAC Rules)
 
-## CSS and UI requirements
+### 2.1 สิทธิ์และการควบคุมการเข้าถึง (Role & Permission Matrix)
+ระบบมี 8 บทบาทตาม `ROLE_DEFINITIONS` ใน [src/modules/roles/](file:///Users/cangsalak/project/eprofile/src/modules/roles/):
+1. `SUPER_ADMIN`: สิทธิ์สูงสุดในระบบ (กู้คืนฐานข้อมูล, จัดการผู้ใช้ทุกคน, ปรับแต่งระบบ)
+2. `ADMIN`: จัดการข้อมูลทั่วไป, ตั้งค่าระบบ, ข่าวสาร, อนุมัติใบลา (ห้ามก้าวก่าย `SUPER_ADMIN`, ห้ามแก้ไข RPB-1 คนอื่น, **ห้าม Restore DB**)
+3. `HR_MANAGER`: จัดการบุคลากร, ดูสถิติ, อนุมัติใบลาทั่วองค์กร
+4. `DEPARTMENT_COMMANDER`: ผบ.ระดับกอง/สำนัก (เข้าถึงและอนุมัติใบลาเฉพาะในสังกัด `department` ของตน)
+5. `COMMANDER`: ผบ.หน่วยย่อย/แผนก (เข้าถึงและอนุมัติใบลาเฉพาะในสังกัด `department` + `subDepartment` ของตน)
+6. `EDITOR`: จัดการเนื้อหา ข่าวสาร และไฟล์มีเดีย (`MANAGE_POSTS`)
+7. `OFFICER`: เจ้าหน้าที่ (จัดการข้อมูลและใบลาของตนเอง)
+8. `USER`: ผู้ใช้งานทั่วไป
 
-- Use `primary-*` for brand/accent colours. Never use fixed `indigo-*`, `purple-*`, `violet-*`, or hex branding colours for ordinary application UI.
-- Use semantic colours only for their meaning: success (`emerald`), warning (`amber`), error/destructive (`rose` or `red`), and informational states (`sky`/`blue`). Do not use them as a page's primary brand.
-- Do not use fixed dark backgrounds such as `dark:bg-[#0f172a]`. Use the established themed surfaces/tokens so every selected theme remains visible in dark mode.
-- Reuse `.form-control`, `.form-input`, `.form-select`, and `.form-textarea` from `src/app/globals.css`. Do not copy their long Tailwind class strings into a component.
-- Reuse existing shared components before creating a new button, modal, pagination control, card, toast, or table pattern.
-- Keep light and dark styles together for every surface, border, text, hover, focus, disabled, empty, loading, and error state.
-- Cards generally use `rounded-[24px]` / `rounded-[28px]`, `backdrop-blur-xl`, and project tokens. Follow the closest comparable component rather than inventing a variation.
-- Avoid inline styles except where the value is genuinely user-generated or geometry-dependent (for example badge canvas coordinates or a user-selected avatar colour).
-- Put reusable animations in `src/app/globals.css` outside `@media print`. Print-only styles must remain inside `@media print`.
-- Do not add a `<style>` block to a page for normal application UI. Add reusable rules to `globals.css` or use Tailwind utilities. A deliberately isolated page (such as a print artifact) is the only exception.
-- Maintain responsive layouts for mobile, tablet, and desktop. Do not assume desktop width.
-- Preserve accessible labels, visible keyboard focus, sufficient colour contrast, and semantic HTML (WCAG AA compliant).
+### 2.2 กฎความปลอดภัยที่ห้ามละเมิดเด็ดขาด (Strict Security Prohibitions)
+1. **ห้ามอนุมัติใบลาของตนเอง (Strict Anti-Self Approval):**
+   - ผู้ใช้ทุกระดับ รวมถึง `SUPER_ADMIN`, `ADMIN`, และผู้บังคับบัญชา **ห้ามอนุมัติหรือปฏิเสธใบลาของตนเองโดยเด็ดขาด** ทั้งใน UI และ API Layer
+2. **การป้องกันช่องโหว่ `/api/install`:**
+   - ต้องตรวจสอบ One-time installation lock (`isInstalled === 'true'` และมีบัญชี Admin อยู่แล้ว) เสมอ
+   - หากมีการตั้งค่า `ADMIN_SETUP_SECRET` ใน `.env` ต้องตรวจสอบความถูกต้องก่อนอนุญาตให้ติดตั้ง
+   - **ห้ามใช้ Flag `--accept-data-loss`** ในการติดตั้งหรือรันคำสั่งอัตโนมัติ
+3. **การปกป้องความลับ (Zero Secret Leakage):**
+   - ห้ามใส่ค่า S3 Secret (`s3AccessKeyId`, `s3SecretAccessKey`, `s3Configs`), Database Connection String, หรือ Private Key ลงใน `PUBLIC_SETTINGS_ALLOWLIST` หรือส่งออกผ่าน Public API
+   - ในรายงานหรือการตอบกลับ **ห้ามพิมพ์ค่า Secret จริงเด็ดขาด** (ให้ระบุเฉพาะชื่อตัวแปรหรือตำแหน่งบรรทัด)
+4. **การอัปโหลดไฟล์ (Upload Authorization):**
+   - ต้องตรวจสอบสิทธิ์ `MANAGE_MEDIA` อย่างเคร่งครัด ห้ามมี Fallback ให้ผู้ใช้ทั่วไปที่ล็อกอินแล้วอัปโหลดไฟล์ได้
+5. **การกู้คืนฐานข้อมูล (Database Restore):**
+   - ฟังก์ชัน Restore Database ใน `src/modules/backup/` สงวนสิทธิ์ไว้สำหรับ `SUPER_ADMIN` เท่านั้น
+6. **ข้อมูลปฏิทินและประวัติการลา (Protected Data):**
+   - Endpoint `/api/calendar/feed` และข้อมูลกำลังพล ต้องผ่านการยืนยันตัวตน (`verifyAuth` / Token) เสมอ ห้ามเปิดเป็น Public โดยไม่มีการตรวจสอบสิทธิ์
+7. **Content Security Policy (CSP):**
+   - ห้ามเปิดใช้ `'unsafe-eval'` ใน `next.config.js`
 
-## API, security, and data requirements
+---
 
-- Enforce authentication and authorization in server-side API routes; hiding a UI element is never authorization.
-- Reuse `requireAuth`, `requirePermission`, and `requireRole` from `src/lib/auth-guards.ts` where appropriate.
-- Validate request bodies and query parameters with Zod. Use allowlists for sort fields, status values, and other controlled inputs.
-- Apply department/sub-department scope at the database query layer for scoped roles.
-- Do not create a second endpoint that bypasses an established secured workflow. Extend or reuse the shared workflow instead.
-- Record material mutations in `AuditLog` and use transactions when an operation must update business data, notifications, and audit records together.
-- Never expose passwords, database connection strings, tokens, citizen IDs, addresses, or other unnecessary personal data in public APIs or lists.
+## 📋 3. แบบฟอร์ม รปภ. ๑ (RPB-1 Security Profile Form)
 
-## Database and migrations
+- แบบฟอร์มประวัติความปลอดภัย รปภ. ๑ (ทบ. 100-009) มีทั้งหมด 10 หน้า ตั้งอยู่ใน `src/modules/users/` (Views: `Rpb1FormView.tsx`, `Rpb1ListView.tsx`, Components: `Page1Personal.tsx` ถึง `Page10AdditionalRecord.tsx`)
+- **API Routes:** ให้บริการผ่าน `/api/rpb1/` และ `src/modules/users/api/rpb1.ts`
+- **การบันทึกข้อมูล:** มีทั้งระบบ Silent Auto-Save เมื่อเปลี่ยนหน้า และปุ่ม Quick Save บันทึกฉบับร่าง
+- **การจำกัดสิทธิ์:**
+  - กำลังพลทั่วไป (`USER`, `OFFICER`, `EDITOR`) เข้าถึงและแก้ไขได้เฉพาะข้อมูล รปภ. ๑ ของตนเอง
+  - `ADMIN` ดูได้แบบ Read-only ทั่วระบบ
+  - `SUPER_ADMIN` เท่านั้นที่มีสิทธิ์แก้ไข รปภ. ๑ ของผู้อื่น
 
-- **Required database preflight:** Before any task that reads, tests, changes, seeds, migrates, or diagnoses application data, check whether a database is already configured. Inspect the Prisma datasource and the presence (not the value) of `DATABASE_URL` or the project's documented database configuration. Do not print connection strings, passwords, tokens, or other secrets.
-- If a configured database exists, treat it as the primary source of truth. Use the configured database and its existing schema/data for read-only investigation and focused tests instead of silently creating, substituting, or assuming a separate local database.
-- If no database is configured, state that clearly and use only safe, non-mutating alternatives (schema inspection, mocks, or isolated test configuration). Ask the user before creating or configuring a database.
-- Never overwrite, reset, seed, restore, migrate, or otherwise mutate an existing configured database without explicit user approval. Confirm the exact target database and use a non-production/isolated test database for automated tests whenever possible.
-- Inspect `prisma/schema.prisma` before changing data behavior.
-- For schema changes, create a safe additive Prisma migration and document the deployment command. Do not run `prisma db push`, migrations, resets, restores, or other database-mutating commands without explicit user approval.
-- Preserve existing user data and avoid destructive schema changes unless explicitly authorized.
+---
 
-## Required quality checks
+## 🎨 4. มาตรฐานดีไซน์และ UI Components (`@/components/ui`)
 
-Before reporting a code change as complete:
+ระบบมีระบบธีมแบบรวมศูนย์ (`nextadmin`, `indigo`, `emerald`, `ocean`, `rose`, `custom`) และสไตล์พื้นผิว (`claymorphism`, `neumorphism`, `glass`, `shadow`, `flat`) พร้อมรองรับ Dark Mode
 
-1. Run `npx tsc --noEmit`.
-2. Run `npm run lint`.
-3. Run the focused automated tests, or explain precisely why they cannot run.
-4. Add or update tests for authorization, validation, and changed business logic.
-5. Review the changed UI in both light and dark mode, and verify the selected theme still affects it.
-6. Check `git diff` to ensure no unrelated files or generated artifacts were changed.
+### 4.1 กฎการใช้ Component มาตรฐาน
+ห้ามสร้าง Card, Button, Input, Dropdown แบบ Custom Raw Div ขึ้นมาใหม่ ให้เรียกใช้ Shared Primitives จาก `@/components/ui` เสมอ:
+- **กล่องสถิติ/ตัวเลข:** ใช้ `<StatCard title="..." value="..." unit="..." icon={...} trend={...} />`
+- **การ์ดคอนเทนเนอร์:** ใช้ `<Card variant="convex" | "glass" | "interactive" | "recessed">` คู่กับ `<CardHeader />`
+- **ปุ่ม:** ใช้ `<Button variant="primary" | "secondary" | "candy" | "danger" | "success" | "outline" size="...">`
+- **ฟอร์มและ Dropdown:** ใช้ `<Input />`, `<Select />`, `<Textarea />` หรือ Self-Fetching Dropdowns ใน `src/modules/users/components/dropdowns/`:
+  - `<DepartmentSelect />` (ดึงข้อมูลสังกัดอัตโนมัติ)
+  - `<PersonnelStatusSelect />` (ดึงสถานะกำลังพลอัตโนมัติ)
+  - `<PersonnelTypeSelect />` (ดึงประเภทกำลังพลอัตโนมัติ)
+  - `<PrefixSelect />` (ดึงคำนำหน้าชื่ออัตโนมัติ)
+  - `<BloodTypeSelect />` (ดึงหมู่โลหิตอัตโนมัติ)
+  - `<RoleSelect />` (ดึงบทบาทผู้ใช้ระบบอัตโนมัติ)
+- **ป้ายสถานะ:** ใช้ `<Badge variant="primary" | "candy" | "success" | "warning" | "danger" | "info" | "neutral">`
 
-## Required completion summary
+### 4.2 กฎการใช้สีและ CSS
+- ใช้คลาสสี `primary-*` สำหรับสีหลักของระบบ ห้ามใช้ `indigo-*` หรือรหัส Hex ตายตัว
+- ใช้สี Semantic ตามความหมายเท่านั้น: `emerald` (สำเร็จ), `amber` (เตือน), `rose/red` (ข้อผิดพลาด/อันตราย), `sky/blue` (ข้อมูลทั่วไป)
+- ใช้คลาสมาตรฐาน `.form-control`, `.form-input`, `.form-select`, `.form-textarea` จาก `src/app/globals.css`
+- การ์ดต้องใช้ `rounded-[24px]` หรือ `rounded-[28px]` และ `backdrop-blur-xl` ตาม Design Token ของระบบ
 
-Every implementation response must state:
+---
 
-- Files changed and why.
-- Security/permission behavior changed.
-- Tests and quality checks run, with results.
-- Migration or deployment steps, if applicable.
-- Any known limitation or follow-up work.
+## 🗄️ 5. กฎการจัดการฐานข้อมูล (Database & Migration Safety)
 
-## Stop conditions
+1. **Database Preflight Check:** ตรวจสอบค่าคอนฟิกใน `prisma/schema.prisma` และ `DATABASE_URL` ก่อนเริ่มงานทุกครั้ง
+2. **ห้ามทำลายข้อมูล Production:**
+   - **ห้ามรัน** `prisma migrate reset`, `prisma db push --force-reset`, หรือ `prisma db push --accept-data-loss` บนฐานข้อมูลจริงโดยเด็ดขาด
+   - ห้าม Seed ทับข้อมูลเดิมโดยไม่ได้รับอนุญาตจากผู้ใช้
+3. **การเปลี่ยนแปลง Schema:** ต้องเป็นการเปลี่ยนแปลงแบบ Additive (ไม่ลบคอลัมน์สำคัญ) และต้องผสานผ่าน `npm run db:merge` เสมอ
 
-Stop and ask the user before proceeding if the task requires a destructive data action, an irreversible external action, access to a secret, a decision that changes authorization scope, or a design direction that conflicts with these rules.
+---
+
+## 🚦 6. ขั้นตอนการตรวจสอบคุณภาพก่อนส่งมอบงาน (Mandatory Quality Gate)
+
+ก่อนรายงานผลว่างานเสร็จสิ้น AI ทุกตัว **ต้องปฏิบัติตามลำดับขั้นตอนดังนี้**:
+
+1. **ตรวจสอบความถูกต้องของ TypeScript:**
+   ```bash
+   npx tsc --noEmit
+   ```
+2. **ตรวจสอบ Code Linting:**
+   ```bash
+   npm run lint
+   ```
+3. **ตรวจสอบความเรียบร้อยของ Git Diff:**
+   ```bash
+   git status -s
+   ```
+   ต้องมั่นใจว่าไม่มีการแก้ไขไฟล์ที่ไม่เกี่ยวข้อง หรือหลงเหลือไฟล์ขยะ/ไฟล์ชั่วคราว
+4. **สรุปผลการทำงานอย่างครบถ้วน (Completion Summary):**
+   - ระบุไฟล์ที่เปลี่ยนแปลงและเหตุผล
+   - ระบุการเปลี่ยนแปลงด้านความปลอดภัยหรือสิทธิ์ (Security Impact)
+   - แสดงผลการรัน `npx tsc --noEmit` และ `npm run lint`
+   - ระบุขั้นตอนการ Deploy หรือข้อควรระวัง (ถ้ามี)
+
+---
+
+> **🔴 STOP CONDITION:**
+> หยุดการทำงานและถามผู้ใช้ทันทีก่อนดำเนินการ หากงานนั้นต้องมีการลบข้อมูลถาวร, การกระทำที่ย้อนกลับไม่ได้, การเปลี่ยนแปลงขอบเขตสิทธิ์ระดับโครงสร้าง หรือการกระทำที่ขัดแย้งกับข้อบังคับในคู่มือนี้

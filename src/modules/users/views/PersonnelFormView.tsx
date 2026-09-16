@@ -10,6 +10,7 @@ import PersonalInfoForm from '../components/forms/PersonalInfoForm';
 import MilitaryInfoForm from '../components/forms/MilitaryInfoForm';
 import ContactInfoForm from '../components/forms/ContactInfoForm';
 import ExtendedHistoryForm from '../components/forms/ExtendedHistoryForm';
+import Rpb1ProgressSection from '../components/rpb1/Rpb1ProgressSection';
 import toast from 'react-hot-toast';
 
 export default function PersonnelFormView() {
@@ -49,58 +50,12 @@ export default function PersonnelFormView() {
     notes: '',
   });
 
-  const [departments, setDepartments] = useState<any[]>([]);
-  const [personnelTypes, setPersonnelTypes] = useState<string[]>([
-    'นายทหารสัญญาบัตร', 'นายทหารประทวน', 'พนักงานราชการ', 'ลูกจ้าง', 'ทหารกองประจำการ'
-  ]);
-  const [statusList, setStatusList] = useState<string[]>([
-    'ปฏิบัติงานปกติ', 'ไปช่วยราชการ', 'ไปช่วยราชการภายนอกหน่วย', 'มาช่วยราชการ', 'ลาพักผ่อน', 'ลาป่วย/ลากิจ', 'ศึกษา/ดูงาน', 'ย้ายหน่วย/พ้นสภาพ'
-  ]);
-  const [prefixes, setPrefixes] = useState<string[]>([]);
-  const [bloodGroups, setBloodGroups] = useState<string[]>([]);
-  const [roles, setRoles] = useState<{ name: string; displayName: string }[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    // 1. Fetch departments
-    fetch('/api/departments')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (Array.isArray(data)) setDepartments(data);
-      })
-      .catch(console.error);
-
-    // 2. Fetch dynamic settings
-    fetch('/api/settings')
-      .then((res) => (res.ok ? res.json() : {}))
-      .then((settings: any) => {
-        if (settings?.personnelTypes) {
-          try { setPersonnelTypes(JSON.parse(settings.personnelTypes)); } catch {}
-        }
-        if (settings?.statusList) {
-          try { setStatusList(JSON.parse(settings.statusList)); } catch {}
-        }
-        if (settings?.prefixes) {
-          try { setPrefixes(JSON.parse(settings.prefixes)); } catch {}
-        }
-        if (settings?.bloodGroups) {
-          try { setBloodGroups(JSON.parse(settings.bloodGroups)); } catch {}
-        }
-      })
-      .catch(console.error);
-
-    // 3. Fetch roles
-    fetch('/api/roles')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (Array.isArray(data)) setRoles(data);
-      })
-      .catch(console.error);
-
-    // 4. If in Edit mode (id passed)
+    // If in Edit mode (id passed)
     if (editId) {
       setIsLoading(true);
       setIsEditMode(true);
@@ -314,8 +269,6 @@ export default function PersonnelFormView() {
           <PersonalInfoForm
             formData={formData}
             setFormData={setFormData}
-            prefixes={prefixes}
-            bloodGroups={bloodGroups}
           />
         </Card>
 
@@ -324,10 +277,6 @@ export default function PersonnelFormView() {
           <MilitaryInfoForm
             formData={formData}
             setFormData={setFormData}
-            departments={departments}
-            personnelTypes={personnelTypes}
-            statusList={statusList}
-            roles={roles}
           />
         </Card>
 
@@ -340,6 +289,11 @@ export default function PersonnelFormView() {
         <Card variant="convex" className="p-6 sm:p-8 rounded-[24px] space-y-6">
           <ExtendedHistoryForm formData={formData} setFormData={setFormData} />
         </Card>
+
+        {/* Section 5: RPB-1 Progress & Management (Only in Edit Mode) */}
+        {isEditMode && editId && (
+          <Rpb1ProgressSection personnelId={editId} />
+        )}
 
         {/* 4. Sticky Bottom Action Bar */}
         <div className="sticky bottom-6 z-30 p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl flex justify-between items-center">

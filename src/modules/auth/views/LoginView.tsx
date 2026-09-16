@@ -12,6 +12,7 @@ export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [systemName, setSystemName] = useState('eProfile');
+  const [hasDemoData, setHasDemoData] = useState(false);
 
   useEffect(() => {
     // If already authenticated via HttpOnly cookie, redirect to dashboard
@@ -32,6 +33,7 @@ export default function LoginView() {
       .then((res) => res.json())
       .then((data) => {
         if (data.systemName) setSystemName(data.systemName);
+        if (data.hasDemoData === 'true' || data.hasDemoData === true) setHasDemoData(true);
         if (data.isInstalled === 'false') {
           router.push('/install');
         }
@@ -165,38 +167,40 @@ export default function LoginView() {
           </button>
         </form>
 
-        {/* Quick Login for Dev/Demo */}
-        <div className="mt-8 border-t border-slate-200 pt-6 dark:border-slate-800">
-          <p className="mb-3 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">
-            ทางลัดเข้าสู่ระบบสำหรับทดสอบ (Demo Accounts)
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('superadmin', 'password')}
-              className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-center text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-            >
-              <i className="fa-solid fa-crown block mb-1 text-amber-500" />
-              Super Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('1000000001', 'password')}
-              className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-center text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-            >
-              <i className="fa-solid fa-user-shield block mb-1 text-primary-500" />
-              Admin IT
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('1000000002', 'password')}
-              className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-center text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-            >
-              <i className="fa-solid fa-user block mb-1 text-emerald-500" />
-              Staff
-            </button>
+        {/* Quick Login for Dev/Demo (Only shown when system is installed with demo data) */}
+        {hasDemoData && (
+          <div className="mt-8 border-t border-slate-200 pt-6 dark:border-slate-800 animate-fade-in">
+            <p className="mb-3 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">
+              ทางลัดเข้าสู่ระบบสำหรับทดสอบ (Demo Accounts)
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('superadmin', 'password')}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-center text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                <i className="fa-solid fa-crown block mb-1 text-amber-500" />
+                Super Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('1000000001', 'password')}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-center text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                <i className="fa-solid fa-user-shield block mb-1 text-primary-500" />
+                Admin IT
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('1000000002', 'password')}
+                className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-center text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                <i className="fa-solid fa-user block mb-1 text-emerald-500" />
+                Staff
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Footer Registration Link */}

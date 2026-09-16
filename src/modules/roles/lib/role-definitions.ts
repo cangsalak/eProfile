@@ -13,6 +13,7 @@ export const ROLE_DEFINITIONS = [
       'MANAGE_PERSONNEL',
       'MANAGE_SYSTEM',
       'MANAGE_POSTS',
+      'MANAGE_MEDIA',
       'APPROVE_LEAVE',
       'VIEW_AUDIT_LOGS',
       'VIEW_COMMAND_DASHBOARD',
@@ -27,6 +28,7 @@ export const ROLE_DEFINITIONS = [
       'MANAGE_PERSONNEL',
       'MANAGE_SYSTEM',
       'MANAGE_POSTS',
+      'MANAGE_MEDIA',
       'APPROVE_LEAVE',
       'VIEW_AUDIT_LOGS',
       'VIEW_COMMAND_DASHBOARD',
@@ -39,6 +41,7 @@ export const ROLE_DEFINITIONS = [
     description: 'จัดการข้อมูลบุคลากรและอนุมัติใบลา',
     permissions: [
       'MANAGE_PERSONNEL',
+      'MANAGE_MEDIA',
       'APPROVE_LEAVE',
       'VIEW_AUDIT_LOGS',
       'VIEW_COMMAND_DASHBOARD',
@@ -71,6 +74,7 @@ export const ROLE_DEFINITIONS = [
     description: 'สร้าง/แก้ไข/ลบบทความและไฟล์มีเดีย',
     permissions: [
       'MANAGE_POSTS',
+      'MANAGE_MEDIA',
     ] as string[],
     isSystem: true,
   },

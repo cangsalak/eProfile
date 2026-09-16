@@ -8,10 +8,7 @@ export async function handleUploadMedia(req: Request) {
   try {
     const { user, error: authError } = await requirePermission(req, 'MANAGE_MEDIA');
     if (authError || !user) {
-      // Fallback: check if user is logged in
-      if (!user) {
-        return authError || NextResponse.json({ error: 'Unauthorized: กรุณาเข้าสู่ระบบ' }, { status: 401 });
-      }
+      return authError || NextResponse.json({ error: 'Unauthorized: ไม่มีสิทธิ์จัดการไฟล์สื่อ (MANAGE_MEDIA required)' }, { status: 403 });
     }
 
     const contentType = req.headers.get('content-type') || '';

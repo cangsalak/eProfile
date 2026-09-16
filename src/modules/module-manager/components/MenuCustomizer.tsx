@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ALL_SYSTEM_MODULES, MenuOverride } from '@/modules/core/registry';
-import { Card, Button, Badge, Input } from '@/components/ui';
+import { Card, Button, Badge, Input, Modal } from '@/components/ui';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import {
   Menu,
@@ -572,268 +572,236 @@ export default function MenuCustomizer({ settings, setSettings }: MenuCustomizer
       </div>
 
       {/* Edit Menu Modal */}
-      {editingItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400">
-                  <Edit2 className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                    ปรับแต่งเมนู: {editingItem.title}
-                  </h3>
-                  <p className="text-xs text-slate-500">ID: {editingItem.id}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setEditingItem(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                ✕
-              </button>
+      <Modal
+        isOpen={!!editingItem}
+        onClose={() => setEditingItem(null)}
+        title={editingItem ? `ปรับแต่งเมนู: ${editingItem.title}` : 'ปรับแต่งเมนู'}
+        subtitle={editingItem ? `ID: ${editingItem.id}` : undefined}
+        icon="fa-solid fa-pen-to-square"
+        size="md"
+        footer={
+          <div className="flex items-center justify-end gap-2.5 w-full">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setEditingItem(null)}
+            >
+              ยกเลิก
+            </Button>
+            <Button type="submit" form="edit-menu-form" variant="primary" className="gap-1.5">
+              <Save className="h-4 w-4" />
+              <span>บันทึกการแก้ไข</span>
+            </Button>
+          </div>
+        }
+      >
+        {editingItem && (
+          <form id="edit-menu-form" onSubmit={handleSaveEdit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                ชื่อเมนูที่แสดง (Title)
+              </label>
+              <Input
+                type="text"
+                required
+                value={editingItem.title}
+                onChange={(e) =>
+                  setEditingItem({ ...editingItem, title: e.target.value })
+                }
+              />
             </div>
 
-            <form onSubmit={handleSaveEdit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                ลิงก์ปลายทาง (Path / URL)
+              </label>
+              <Input
+                type="text"
+                required
+                value={editingItem.path}
+                onChange={(e) =>
+                  setEditingItem({ ...editingItem, path: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                  ชื่อเมนูที่แสดง (Title)
+                  ลำดับการแสดง (Order)
                 </label>
                 <Input
-                  type="text"
-                  required
-                  value={editingItem.title}
+                  type="number"
+                  value={editingItem.order}
                   onChange={(e) =>
-                    setEditingItem({ ...editingItem, title: e.target.value })
+                    setEditingItem({
+                      ...editingItem,
+                      order: parseInt(e.target.value, 10) || 0,
+                    })
                   }
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                  ลิงก์ปลายทาง (Path / URL)
+                  FontAwesome Icon Class
                 </label>
-                <Input
-                  type="text"
-                  required
-                  value={editingItem.path}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, path: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ลำดับการแสดง (Order)
-                  </label>
+                <div className="flex items-center gap-2">
                   <Input
-                    type="number"
-                    value={editingItem.order}
+                    type="text"
+                    value={editingItem.icon}
                     onChange={(e) =>
-                      setEditingItem({
-                        ...editingItem,
-                        order: parseInt(e.target.value, 10) || 0,
-                      })
+                      setEditingItem({ ...editingItem, icon: e.target.value })
                     }
                   />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    FontAwesome Icon Class
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      value={editingItem.icon}
-                      onChange={(e) =>
-                        setEditingItem({ ...editingItem, icon: e.target.value })
-                      }
-                    />
-                    <div className="h-9 w-9 shrink-0 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary-600">
-                      <i className={editingItem.icon}></i>
-                    </div>
+                  <div className="h-9 w-9 shrink-0 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary-600">
+                    <i className={editingItem.icon}></i>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Quick Icon Selector */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 mb-1.5">
-                  เลือกไอคอนด่วน
-                </label>
-                <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 max-h-24 overflow-y-auto">
-                  {COMMON_ICONS.map((ic) => (
-                    <button
-                      key={ic}
-                      type="button"
-                      onClick={() => setEditingItem({ ...editingItem, icon: ic })}
-                      className={`h-7 w-7 rounded flex items-center justify-center text-sm transition ${
-                        editingItem.icon === ic
-                          ? 'bg-primary-600 text-white shadow-sm'
-                          : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                      }`}
-                    >
-                      <i className={ic}></i>
-                    </button>
-                  ))}
-                </div>
+            {/* Quick Icon Selector */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-500 mb-1.5">
+                เลือกไอคอนด่วน
+              </label>
+              <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 max-h-24 overflow-y-auto">
+                {COMMON_ICONS.map((ic) => (
+                  <button
+                    key={ic}
+                    type="button"
+                    onClick={() => setEditingItem({ ...editingItem, icon: ic })}
+                    className={`h-7 w-7 rounded flex items-center justify-center text-sm transition ${
+                      editingItem.icon === ic
+                        ? 'bg-primary-600 text-white shadow-sm'
+                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    <i className={ic}></i>
+                  </button>
+                ))}
               </div>
-
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditingItem(null)}
-                >
-                  ยกเลิก
-                </Button>
-                <Button type="submit" variant="primary" className="gap-1.5">
-                  <Save className="h-4 w-4" />
-                  <span>บันทึกการแก้ไข</span>
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            </div>
+          </form>
+        )}
+      </Modal>
 
       {/* Add Custom Menu Modal */}
-      {isNewMenuModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-5">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400">
-                  <Plus className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                    เพิ่มเมนูกำหนดเองใหม่
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    สร้างลิงก์ภายในหรือภายนอกเพิ่มลงในแถบนำทาง
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsNewMenuModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                ✕
-              </button>
+      <Modal
+        isOpen={isNewMenuModalOpen}
+        onClose={() => setIsNewMenuModalOpen(false)}
+        title="เพิ่มเมนูกำหนดเองใหม่"
+        subtitle="สร้างลิงก์ภายในหรือภายนอกเพิ่มลงในแถบนำทาง"
+        icon="fa-solid fa-plus"
+        size="md"
+        footer={
+          <div className="flex items-center justify-end gap-2.5 w-full">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsNewMenuModalOpen(false)}
+            >
+              ยกเลิก
+            </Button>
+            <Button type="submit" form="create-custom-menu-form" variant="primary" className="gap-1.5">
+              <Plus className="h-4 w-4" />
+              <span>เพิ่มเมนู</span>
+            </Button>
+          </div>
+        }
+      >
+        <form id="create-custom-menu-form" onSubmit={handleCreateCustomMenu} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              ชื่อเมนู (Title) *
+            </label>
+            <Input
+              type="text"
+              required
+              placeholder="เช่น คู่มือการใช้งานระบบ, ลิงก์ภายนอก"
+              value={newMenuForm.title}
+              onChange={(e) =>
+                setNewMenuForm({ ...newMenuForm, title: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              ลิงก์ปลายทาง (Path / URL) *
+            </label>
+            <Input
+              type="text"
+              required
+              placeholder="เช่น /custom-page หรือ https://example.com"
+              value={newMenuForm.path}
+              onChange={(e) =>
+                setNewMenuForm({ ...newMenuForm, path: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                ลำดับการแสดง (Order)
+              </label>
+              <Input
+                type="number"
+                value={newMenuForm.order}
+                onChange={(e) =>
+                  setNewMenuForm({
+                    ...newMenuForm,
+                    order: parseInt(e.target.value, 10) || 0,
+                  })
+                }
+              />
             </div>
 
-            <form onSubmit={handleCreateCustomMenu} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                  ชื่อเมนู (Title) *
-                </label>
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                ไอคอน
+              </label>
+              <div className="flex items-center gap-2">
                 <Input
                   type="text"
-                  required
-                  placeholder="เช่น คู่มือการใช้งานระบบ, ลิงก์ภายนอก"
-                  value={newMenuForm.title}
+                  value={newMenuForm.icon}
                   onChange={(e) =>
-                    setNewMenuForm({ ...newMenuForm, title: e.target.value })
+                    setNewMenuForm({ ...newMenuForm, icon: e.target.value })
                   }
                 />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                  ลิงก์ปลายทาง (Path / URL) *
-                </label>
-                <Input
-                  type="text"
-                  required
-                  placeholder="เช่น /custom-page หรือ https://example.com"
-                  value={newMenuForm.path}
-                  onChange={(e) =>
-                    setNewMenuForm({ ...newMenuForm, path: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ลำดับการแสดง (Order)
-                  </label>
-                  <Input
-                    type="number"
-                    value={newMenuForm.order}
-                    onChange={(e) =>
-                      setNewMenuForm({
-                        ...newMenuForm,
-                        order: parseInt(e.target.value, 10) || 0,
-                      })
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ไอคอน
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      value={newMenuForm.icon}
-                      onChange={(e) =>
-                        setNewMenuForm({ ...newMenuForm, icon: e.target.value })
-                      }
-                    />
-                    <div className="h-9 w-9 shrink-0 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary-600">
-                      <i className={newMenuForm.icon}></i>
-                    </div>
-                  </div>
+                <div className="h-9 w-9 shrink-0 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary-600">
+                  <i className={newMenuForm.icon}></i>
                 </div>
               </div>
-
-              {/* Quick Icon Selector */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-500 mb-1.5">
-                  เลือกไอคอนด่วน
-                </label>
-                <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 max-h-24 overflow-y-auto">
-                  {COMMON_ICONS.map((ic) => (
-                    <button
-                      key={ic}
-                      type="button"
-                      onClick={() => setNewMenuForm({ ...newMenuForm, icon: ic })}
-                      className={`h-7 w-7 rounded flex items-center justify-center text-sm transition ${
-                        newMenuForm.icon === ic
-                          ? 'bg-primary-600 text-white shadow-sm'
-                          : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                      }`}
-                    >
-                      <i className={ic}></i>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsNewMenuModalOpen(false)}
-                >
-                  ยกเลิก
-                </Button>
-                <Button type="submit" variant="primary" className="gap-1.5">
-                  <Plus className="h-4 w-4" />
-                  <span>เพิ่มเมนู</span>
-                </Button>
-              </div>
-            </form>
+            </div>
           </div>
-        </div>
-      )}
+
+          {/* Quick Icon Selector */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 mb-1.5">
+              เลือกไอคอนด่วน
+            </label>
+            <div className="flex flex-wrap gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 max-h-24 overflow-y-auto">
+              {COMMON_ICONS.map((ic) => (
+                <button
+                  key={ic}
+                  type="button"
+                  onClick={() => setNewMenuForm({ ...newMenuForm, icon: ic })}
+                  className={`h-7 w-7 rounded flex items-center justify-center text-sm transition ${
+                    newMenuForm.icon === ic
+                      ? 'bg-primary-600 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  <i className={ic}></i>
+                </button>
+              ))}
+            </div>
+          </div>
+        </form>
+      </Modal>
 
       {/* Confirm Reset All Modal */}
       <ConfirmModal

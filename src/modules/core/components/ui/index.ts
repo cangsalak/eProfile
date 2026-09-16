@@ -10,3 +10,12 @@ export * from './Textarea';
 export * from './Switch';
 export * from './Checkbox';
 export * from './Dropdown';
+export * from './DatePicker';
+export { default as ImageUpload } from '@/modules/upload/components/ImageUpload';
+export { default as FileUpload } from '@/modules/upload/components/FileUpload';
+export { default as MediaPickerModal } from '@/modules/upload/components/MediaPickerModal';
+export { WebcamCaptureModal } from '@/modules/upload/components/WebcamCaptureModal';
+export type { ImageUploadProps, ImageUploadVariant } from '@/modules/upload/components/ImageUpload';
+export type { FileUploadProps } from '@/modules/upload/components/FileUpload';
+export type { WebcamCaptureModalProps, CompositionGuideType } from '@/modules/upload/components/WebcamCaptureModal';
+

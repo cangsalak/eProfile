@@ -29,7 +29,7 @@ import { backupManifest } from '@/modules/backup/manifest';
 import { ModuleManagerManifest } from '@/modules/module-manager/manifest';
 import { SiteManifest, SiteContentManifest } from '@/modules/site/manifest';
 import { TestSlipManifest } from '@/modules/test-slip/manifest';
-import { Rpb1Manifest } from '@/modules/rpb1/manifest';
+
 import { ApiDocsManifest } from '@/modules/api-docs/manifest';
 import { UploadManifest } from '@/modules/upload/manifest';
 
@@ -60,7 +60,7 @@ export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
   ModuleManagerManifest,
   SiteManifest,
   TestSlipManifest,
-  Rpb1Manifest,
+
 ];
 
 export { UsersManifest, PersonnelManifest, RolesManifest, SiteManifest, SiteContentManifest, InspectorManifest, SystemInspectorManifest, AuthManifest, InstallManifest, SettingsManifest, PrintManifest };

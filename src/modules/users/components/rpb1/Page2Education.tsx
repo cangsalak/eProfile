@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Rpb1FormData, Address15YearItem, EducationItem, SpecialActivityItem } from '../types';
+import { Rpb1FormData, Address15YearItem, EducationItem, SpecialActivityItem } from '../../types';
 
 interface PageProps {
   formData: Rpb1FormData;
@@ -109,7 +109,7 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
             2
           </span>
           <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-            หน้า ๒ — รูปพรรณ, ที่อยู่ในรอบ ๑๕ ปี, ประวัติการศึกษา และกิจกรรม (หมวด ๘ - ๑๑)
+            หน้า 2 — รูปพรรณ, ที่อยู่ในรอบ 15 ปี, ประวัติการศึกษา และกิจกรรม (หมวด 8 - 11)
           </h4>
         </div>
         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
@@ -121,39 +121,45 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
       <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-4">
         <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
           <i className="fa-solid fa-child"></i>
-          <span>๘. ข้อมูลรูปพรรณสัณฐาน</span>
+          <span>8. ข้อมูลรูปพรรณสัณฐาน</span>
         </h5>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ส่วนสูง (ซม.)</label>
+            <label htmlFor="rpb1_height" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ส่วนสูง (ซม.)</label>
             <input
+              id="rpb1_height"
               type="number"
               name="height"
               value={formData.height}
               onChange={handleChange}
               placeholder="เช่น 175"
-              className="form-control text-xs"
+              aria-label="ส่วนสูงเป็นเซนติเมตร"
+              className="form-input text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">น้ำหนัก (กก.)</label>
+            <label htmlFor="rpb1_weight" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">น้ำหนัก (กก.)</label>
             <input
+              id="rpb1_weight"
               type="number"
               name="weight"
               value={formData.weight}
               onChange={handleChange}
               placeholder="เช่น 68"
-              className="form-control text-xs"
+              aria-label="น้ำหนักเป็นกิโลกรัม"
+              className="form-input text-xs"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">กลุ่มเลือด</label>
+            <label htmlFor="rpb1_bloodGroup" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">กลุ่มเลือด</label>
             <select
+              id="rpb1_bloodGroup"
               name="bloodGroup"
               value={formData.bloodGroup || ''}
               onChange={handleChange}
-              className="form-control text-xs"
+              aria-label="เลือกกลุ่มเลือด"
+              className="form-select text-xs"
             >
               <option value="">-- เลือกกลุ่มเลือด --</option>
               <option value="A">A</option>
@@ -163,14 +169,16 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ตำหนิ / แผลเป็น</label>
+            <label htmlFor="rpb1_scarsDistinguishingMarks" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">ตำหนิ / แผลเป็น</label>
             <input
+              id="rpb1_scarsDistinguishingMarks"
               type="text"
               name="scarsDistinguishingMarks"
               value={formData.scarsDistinguishingMarks || ''}
               onChange={handleChange}
               placeholder="เช่น ไฝที่แก้มขวา หรือ ไม่มี"
-              className="form-control text-xs"
+              aria-label="ตำหนิ หรือ แผลเป็น"
+              className="form-input text-xs"
             />
           </div>
         </div>
@@ -181,7 +189,7 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <i className="fa-solid fa-clock-rotate-left"></i>
-            <span>๙. ที่อยู่ในระยะ ๑๕ ปี ที่ผ่านมา (กรอกตามลำดับก่อน-หลัง)</span>
+            <span>9. ที่อยู่ในระยะ 15 ปี ที่ผ่านมา (กรอกตามลำดับก่อน-หลัง)</span>
           </h5>
           <button
             type="button"
@@ -215,86 +223,104 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-9 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
+                    <label htmlFor={`rpb1_addr15_fromYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
                     <input
+                      id={`rpb1_addr15_fromYear_${idx}`}
                       type="text"
                       placeholder="2554"
                       value={item.fromYear}
                       onChange={(e) => updateAddress15(idx, 'fromYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปีพ.ศ. เริ่มต้น แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
+                    <label htmlFor={`rpb1_addr15_toYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
                     <input
+                      id={`rpb1_addr15_toYear_${idx}`}
                       type="text"
                       placeholder="2560"
                       value={item.toYear}
                       onChange={(e) => updateAddress15(idx, 'toYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปีพ.ศ. สิ้นสุด แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">บ้านเลขที่</label>
+                    <label htmlFor={`rpb1_addr15_houseNo_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">บ้านเลขที่</label>
                     <input
+                      id={`rpb1_addr15_houseNo_${idx}`}
                       type="text"
                       value={item.houseNo}
                       onChange={(e) => updateAddress15(idx, 'houseNo', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`บ้านเลขที่ แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ตรอก/ซอย</label>
+                    <label htmlFor={`rpb1_addr15_soi_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ตรอก/ซอย</label>
                     <input
+                      id={`rpb1_addr15_soi_${idx}`}
                       type="text"
                       value={item.soi}
                       onChange={(e) => updateAddress15(idx, 'soi', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ตรอก หรือ ซอย แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ถนน</label>
+                    <label htmlFor={`rpb1_addr15_road_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ถนน</label>
                     <input
+                      id={`rpb1_addr15_road_${idx}`}
                       type="text"
                       value={item.road}
                       onChange={(e) => updateAddress15(idx, 'road', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ถนน แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ตำบล/แขวง</label>
+                    <label htmlFor={`rpb1_addr15_subdistrict_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ตำบล/แขวง</label>
                     <input
+                      id={`rpb1_addr15_subdistrict_${idx}`}
                       type="text"
                       value={item.subdistrict}
                       onChange={(e) => updateAddress15(idx, 'subdistrict', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ตำบล หรือ แขวง แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">อำเภอ/เขต</label>
+                    <label htmlFor={`rpb1_addr15_district_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">อำเภอ/เขต</label>
                     <input
+                      id={`rpb1_addr15_district_${idx}`}
                       type="text"
                       value={item.district}
                       onChange={(e) => updateAddress15(idx, 'district', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`อำเภอ หรือ เขต แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">จังหวัด</label>
+                    <label htmlFor={`rpb1_addr15_province_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">จังหวัด</label>
                     <input
+                      id={`rpb1_addr15_province_${idx}`}
                       type="text"
                       value={item.province}
                       onChange={(e) => updateAddress15(idx, 'province', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`จังหวัด แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ประเทศ</label>
+                    <label htmlFor={`rpb1_addr15_country_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ประเทศ</label>
                     <input
+                      id={`rpb1_addr15_country_${idx}`}
                       type="text"
                       value={item.country}
                       onChange={(e) => updateAddress15(idx, 'country', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ประเทศ แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -309,7 +335,7 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <i className="fa-solid fa-graduation-cap"></i>
-            <span>๑๐. ประวัติการศึกษา (กรอกตามลำดับก่อน-หลัง)</span>
+            <span>10. ประวัติการศึกษา (กรอกตามลำดับก่อน-หลัง)</span>
           </h5>
           <button
             type="button"
@@ -343,53 +369,63 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
 
                 <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
+                    <label htmlFor={`rpb1_edu_fromYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
                     <input
+                      id={`rpb1_edu_fromYear_${idx}`}
                       type="text"
                       placeholder="2550"
                       value={item.fromYear}
                       onChange={(e) => updateEducation(idx, 'fromYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปีพ.ศ. เริ่มศึกษา แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
+                    <label htmlFor={`rpb1_edu_toYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
                     <input
+                      id={`rpb1_edu_toYear_${idx}`}
                       type="text"
                       placeholder="2554"
                       value={item.toYear}
                       onChange={(e) => updateEducation(idx, 'toYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปีพ.ศ. สำเร็จการศึกษา แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ชื่อสถานศึกษา</label>
+                    <label htmlFor={`rpb1_edu_school_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ชื่อสถานศึกษา</label>
                     <input
+                      id={`rpb1_edu_school_${idx}`}
                       type="text"
                       placeholder="เช่น โรงเรียนนายเรืออากาศฯ / ม.เกษตรศาสตร์"
                       value={item.schoolName}
                       onChange={(e) => updateEducation(idx, 'schoolName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ชื่อสถานศึกษา แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">วุฒิ / สาขาวิชาเอก</label>
+                    <label htmlFor={`rpb1_edu_degree_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">วุฒิ / สาขาวิชาเอก</label>
                     <input
+                      id={`rpb1_edu_degree_${idx}`}
                       type="text"
                       placeholder="วศ.บ. (วิศวกรรมอากาศยาน)"
                       value={item.degree}
                       onChange={(e) => updateEducation(idx, 'degree', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`วุฒิการศึกษา แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เกรดเฉลี่ย (GPA)</label>
+                    <label htmlFor={`rpb1_edu_gpa_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เกรดเฉลี่ย (GPA)</label>
                     <input
+                      id={`rpb1_edu_gpa_${idx}`}
                       type="text"
                       placeholder="3.25"
                       value={item.gpa}
                       onChange={(e) => updateEducation(idx, 'gpa', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เกรดเฉลี่ย แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -404,7 +440,7 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <i className="fa-solid fa-medal"></i>
-            <span>๑๑. กิจกรรมพิเศษในสถานศึกษา (กรรมการนักเรียน/ประธานกีฬา/หน้าที่อื่น ๆ)</span>
+            <span>11. กิจกรรมพิเศษในสถานศึกษา (กรรมการนักเรียน/ประธานกีฬา/หน้าที่อื่น ๆ)</span>
           </h5>
           <button
             type="button"
@@ -438,43 +474,51 @@ export default function Page2Education({ formData, setFormData }: PageProps) {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
+                    <label htmlFor={`rpb1_act_fromYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
                     <input
+                      id={`rpb1_act_fromYear_${idx}`}
                       type="text"
                       placeholder="2552"
                       value={item.fromYear}
                       onChange={(e) => updateActivity(idx, 'fromYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปีพ.ศ. เริ่มกิจกรรม แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
+                    <label htmlFor={`rpb1_act_toYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
                     <input
+                      id={`rpb1_act_toYear_${idx}`}
                       type="text"
                       placeholder="2554"
                       value={item.toYear}
                       onChange={(e) => updateActivity(idx, 'toYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปีพ.ศ. สิ้นสุดกิจกรรม แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ชื่อสถานศึกษา</label>
+                    <label htmlFor={`rpb1_act_school_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ชื่อสถานศึกษา</label>
                     <input
+                      id={`rpb1_act_school_${idx}`}
                       type="text"
                       placeholder="ชื่อโรงเรียน/มหาวิทยาลัย"
                       value={item.schoolName}
                       onChange={(e) => updateActivity(idx, 'schoolName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ชื่อสถานศึกษา แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ตำแหน่งหน้าที่ / กิจกรรม</label>
+                    <label htmlFor={`rpb1_act_position_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ตำแหน่งหน้าที่ / กิจกรรม</label>
                     <input
+                      id={`rpb1_act_position_${idx}`}
                       type="text"
                       placeholder="เช่น ประธานนักเรียน, หัวหน้านักเรียนทหาร"
                       value={item.positionRole}
                       onChange={(e) => updateActivity(idx, 'positionRole', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ตำแหน่งหน้าที่ หรือ กิจกรรม แถวที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>

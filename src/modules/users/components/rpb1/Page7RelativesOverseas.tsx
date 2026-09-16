@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Rpb1FormData, SiblingItem, RelativeInGovItem, OverseasContactItem } from '../types';
+import { Rpb1FormData, SiblingItem, RelativeInGovItem, OverseasContactItem } from '../../types';
 
 interface PageProps {
   formData: Rpb1FormData;
@@ -115,7 +115,7 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
             7
           </span>
           <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-            หน้า ๗ — พี่น้องร่วมบิดามารดา, ญาติในหน่วยงานรัฐ และผู้คุ้นเคยในต่างประเทศ (หมวด ๒๔ - ๒๖)
+            หน้า 7 — พี่น้องร่วมบิดามารดา, ญาติในหน่วยงานรัฐ และผู้คุ้นเคยในต่างประเทศ (หมวด 24 - 26)
           </h4>
         </div>
         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
@@ -128,7 +128,7 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <i className="fa-solid fa-people-group"></i>
-            <span>๒๔. พี่น้องร่วมบิดาหรือร่วมมารดา รวมทั้งสามีหรือภรรยาของพี่น้อง</span>
+            <span>24. พี่น้องร่วมบิดาหรือร่วมมารดา รวมทั้งสามีหรือภรรยาของพี่น้อง</span>
           </h5>
           <button
             type="button"
@@ -168,73 +168,87 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
                 {/* Sibling info */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
+                    <label htmlFor={`rpb1_p7_sib_titleName_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
                     <input
+                      id={`rpb1_p7_sib_titleName_${idx}`}
                       type="text"
                       placeholder="นาย/นาง/น.ส. ..."
                       value={item.titleName}
                       onChange={(e) => updateSibling(idx, 'titleName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ยศ ชื่อตัว ชื่อสกุล พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">วัน เดือน ปี เกิด</label>
+                    <label htmlFor={`rpb1_p7_sib_dob_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">วัน เดือน ปี เกิด</label>
                     <input
+                      id={`rpb1_p7_sib_dob_${idx}`}
                       type="text"
                       placeholder="เช่น 1 ม.ค. 2533"
                       value={item.dob}
                       onChange={(e) => updateSibling(idx, 'dob', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`วัน เดือน ปี เกิด พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เลขประจำตัวประชาชน</label>
+                    <label htmlFor={`rpb1_p7_sib_citizenId_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เลขประจำตัวประชาชน</label>
                     <input
+                      id={`rpb1_p7_sib_citizenId_${idx}`}
                       type="text"
                       maxLength={13}
                       value={item.citizenId}
                       onChange={(e) => updateSibling(idx, 'citizenId', e.target.value)}
-                      className="form-control text-xs p-1.5 font-mono"
+                      aria-label={`เลขประจำตัวประชาชน พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5 font-mono"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์</label>
+                    <label htmlFor={`rpb1_p7_sib_phone_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์</label>
                     <input
+                      id={`rpb1_p7_sib_phone_${idx}`}
                       type="text"
                       placeholder="เบอร์โทร"
                       value={item.phone}
                       onChange={(e) => updateSibling(idx, 'phone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`โทรศัพท์ พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบัน</label>
+                    <label htmlFor={`rpb1_p7_sib_address_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบัน</label>
                     <input
+                      id={`rpb1_p7_sib_address_${idx}`}
                       type="text"
                       placeholder="ที่อยู่ปัจจุบัน"
                       value={item.currentAddress}
                       onChange={(e) => updateSibling(idx, 'currentAddress', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่อยู่ปัจจุบัน พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">อาชีพ / ตำแหน่ง</label>
+                    <label htmlFor={`rpb1_p7_sib_occ_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">อาชีพ / ตำแหน่ง</label>
                     <input
+                      id={`rpb1_p7_sib_occ_${idx}`}
                       type="text"
                       placeholder="เช่น พนักงานรัฐวิสาหกิจ"
                       value={item.occupation}
                       onChange={(e) => updateSibling(idx, 'occupation', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`อาชีพ ตำแหน่ง พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงาน / สถานศึกษา</label>
+                    <label htmlFor={`rpb1_p7_sib_school_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงาน / สถานศึกษา</label>
                     <input
+                      id={`rpb1_p7_sib_school_${idx}`}
                       type="text"
                       placeholder="สถานที่ทำงาน"
                       value={item.schoolWorkplace}
                       onChange={(e) => updateSibling(idx, 'schoolWorkplace', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่ทำงาน สถานศึกษา พี่น้องลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -248,38 +262,46 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                     <div>
                       <input
+                        id={`rpb1_p7_sibSpouse_name_${idx}`}
                         type="text"
                         placeholder="ชื่อสกุลเดิมคู่สมรส"
                         value={item.spouseNameOriginal}
                         onChange={(e) => updateSibling(idx, 'spouseNameOriginal', e.target.value)}
-                        className="form-control text-xs p-1.5"
+                        aria-label={`ชื่อสกุลเดิมคู่สมรสของพี่น้องลำดับที่ ${idx + 1}`}
+                        className="form-input text-xs p-1.5"
                       />
                     </div>
                     <div>
                       <input
+                        id={`rpb1_p7_sibSpouse_occ_${idx}`}
                         type="text"
                         placeholder="อาชีพและตำแหน่ง"
                         value={item.spouseOccupation}
                         onChange={(e) => updateSibling(idx, 'spouseOccupation', e.target.value)}
-                        className="form-control text-xs p-1.5"
+                        aria-label={`อาชีพและตำแหน่งคู่สมรสของพี่น้องลำดับที่ ${idx + 1}`}
+                        className="form-input text-xs p-1.5"
                       />
                     </div>
                     <div>
                       <input
+                        id={`rpb1_p7_sibSpouse_workplace_${idx}`}
                         type="text"
                         placeholder="สถานที่ทำงาน"
                         value={item.spouseSchoolWorkplace}
                         onChange={(e) => updateSibling(idx, 'spouseSchoolWorkplace', e.target.value)}
-                        className="form-control text-xs p-1.5"
+                        aria-label={`สถานที่ทำงานคู่สมรสของพี่น้องลำดับที่ ${idx + 1}`}
+                        className="form-input text-xs p-1.5"
                       />
                     </div>
                     <div>
                       <input
+                        id={`rpb1_p7_sibSpouse_phone_${idx}`}
                         type="text"
                         placeholder="เบอร์โทรคู่สมรส"
                         value={item.spousePhone}
                         onChange={(e) => updateSibling(idx, 'spousePhone', e.target.value)}
-                        className="form-control text-xs p-1.5"
+                        aria-label={`เบอร์โทรคู่สมรสของพี่น้องลำดับที่ ${idx + 1}`}
+                        className="form-input text-xs p-1.5"
                       />
                     </div>
                   </div>
@@ -294,8 +316,8 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
       <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-3">
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
-            <i className="fa-solid fa-landmark"></i>
-            <span>๒๕. ญาติที่รับราชการหรือทำงานในองค์การรัฐบาล</span>
+            <i className="fa-solid fa-building-columns"></i>
+            <span>25. ญาติที่รับราชการหรือทำงานในองค์การรัฐบาล</span>
           </h5>
           <button
             type="button"
@@ -329,53 +351,63 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
+                    <label htmlFor={`rpb1_p7_govRel_titleName_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
                     <input
+                      id={`rpb1_p7_govRel_titleName_${idx}`}
                       type="text"
                       placeholder="ยศ ชื่อ สกุล"
                       value={item.titleName}
                       onChange={(e) => updateGovRelative(idx, 'titleName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ยศ ชื่อตัว ชื่อสกุล ญาติในภาครัฐลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เกี่ยวข้องเป็น</label>
+                    <label htmlFor={`rpb1_p7_govRel_relation_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เกี่ยวข้องเป็น</label>
                     <input
+                      id={`rpb1_p7_govRel_relation_${idx}`}
                       type="text"
                       placeholder="เช่น ลุง, น้า, อา, ลูกพี่ลูกน้อง"
                       value={item.relation}
                       onChange={(e) => updateGovRelative(idx, 'relation', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เกี่ยวข้องเป็น ญาติในภาครัฐลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">อาชีพ / ตำแหน่ง</label>
+                    <label htmlFor={`rpb1_p7_govRel_occ_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">อาชีพ / ตำแหน่ง</label>
                     <input
+                      id={`rpb1_p7_govRel_occ_${idx}`}
                       type="text"
                       placeholder="เช่น ผอ.กอง..."
                       value={item.occupation}
                       onChange={(e) => updateGovRelative(idx, 'occupation', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`อาชีพ ตำแหน่ง ญาติในภาครัฐลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงานและโทรศัพท์</label>
+                    <label htmlFor={`rpb1_p7_govRel_workplace_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่ทำงานและโทรศัพท์</label>
                     <input
+                      id={`rpb1_p7_govRel_workplace_${idx}`}
                       type="text"
                       placeholder="สถานที่ทำงานและเบอร์โทร"
                       value={item.workplacePhone}
                       onChange={(e) => updateGovRelative(idx, 'workplacePhone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่ทำงานและโทรศัพท์ ญาติในภาครัฐลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบันและโทรศัพท์</label>
+                    <label htmlFor={`rpb1_p7_govRel_address_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบันและโทรศัพท์</label>
                     <input
+                      id={`rpb1_p7_govRel_address_${idx}`}
                       type="text"
                       placeholder="ที่อยู่และเบอร์โทร"
                       value={item.currentAddressPhone}
                       onChange={(e) => updateGovRelative(idx, 'currentAddressPhone', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่อยู่ปัจจุบันและโทรศัพท์ ญาติในภาครัฐลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -390,7 +422,7 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <i className="fa-solid fa-earth-americas"></i>
-            <span>๒๖. ญาติ เพื่อน หรือผู้ที่คุ้นเคยในต่างประเทศ</span>
+            <span>26. ญาติ เพื่อน หรือผู้ที่คุ้นเคยในต่างประเทศ</span>
           </h5>
           <button
             type="button"
@@ -424,63 +456,75 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
+                    <label htmlFor={`rpb1_p7_overseas_titleName_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
                     <input
+                      id={`rpb1_p7_overseas_titleName_${idx}`}
                       type="text"
                       placeholder="ชื่อ-สกุล"
                       value={item.titleName}
                       onChange={(e) => updateOverseas(idx, 'titleName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ยศ ชื่อตัว ชื่อสกุล ผู้คุ้นเคยต่างประเทศลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เกี่ยวข้องเป็น</label>
+                    <label htmlFor={`rpb1_p7_overseas_relation_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เกี่ยวข้องเป็น</label>
                     <input
+                      id={`rpb1_p7_overseas_relation_${idx}`}
                       type="text"
                       placeholder="เช่น เพื่อนสนิท, ญาติ"
                       value={item.relation}
                       onChange={(e) => updateOverseas(idx, 'relation', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เกี่ยวข้องเป็น ผู้คุ้นเคยต่างประเทศลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">อาชีพและตำแหน่ง</label>
+                    <label htmlFor={`rpb1_p7_overseas_occ_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">อาชีพและตำแหน่ง</label>
                     <input
+                      id={`rpb1_p7_overseas_occ_${idx}`}
                       type="text"
                       placeholder="อาชีพ"
                       value={item.occupation}
                       onChange={(e) => updateOverseas(idx, 'occupation', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`อาชีพและตำแหน่ง ผู้คุ้นเคยต่างประเทศลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">สถานศึกษา / ที่ทำงาน</label>
+                    <label htmlFor={`rpb1_p7_overseas_school_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">สถานศึกษา / ที่ทำงาน</label>
                     <input
+                      id={`rpb1_p7_overseas_school_${idx}`}
                       type="text"
                       placeholder="ชื่อมหาวิทยาลัย/บริษัท"
                       value={item.schoolWorkplace}
                       onChange={(e) => updateOverseas(idx, 'schoolWorkplace', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`สถานศึกษา ที่ทำงาน ผู้คุ้นเคยต่างประเทศลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบัน (ต่างประเทศ)</label>
+                    <label htmlFor={`rpb1_p7_overseas_address_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่อยู่ปัจจุบัน (ต่างประเทศ)</label>
                     <input
+                      id={`rpb1_p7_overseas_address_${idx}`}
                       type="text"
                       placeholder="เมือง, รัฐ, ประเทศ"
                       value={item.currentAddress}
                       onChange={(e) => updateOverseas(idx, 'currentAddress', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่อยู่ปัจจุบันต่างประเทศ ผู้คุ้นเคยต่างประเทศลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เหตุผลการไปอยู่ต่างประเทศ</label>
+                    <label htmlFor={`rpb1_p7_overseas_reason_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เหตุผลการไปอยู่ต่างประเทศ</label>
                     <input
+                      id={`rpb1_p7_overseas_reason_${idx}`}
                       type="text"
                       placeholder="เช่น ศึกษาต่อปริญญาเอก / ทำงานประจำ"
                       value={item.reasonLivingAbroad}
                       onChange={(e) => updateOverseas(idx, 'reasonLivingAbroad', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เหตุผลการไปอยู่ต่างประเทศ ผู้คุ้นเคยต่างประเทศลำดับที่ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -492,3 +536,4 @@ export default function Page7RelativesOverseas({ formData, setFormData }: PagePr
     </div>
   );
 }
+

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import TablePagination from '@/components/common/TablePagination';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
-import { Card, Button, Badge, Input, Select } from '@/components/ui';
+import { Card, Button, Badge, Input, Select, DatePicker } from '@/components/ui';
 import {
   ShieldAlert,
   Users,
@@ -307,11 +307,11 @@ export default function CommandDashboardView() {
             <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">
               วันที่ตรวจสอบความพร้อม
             </label>
-            <Input
-              type="date"
+            <DatePicker
+              id="dashboard-target-date"
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="text-xs w-full"
+              onChange={(val) => setSelectedDate(val)}
+              placeholder="วว/ดด/ปปปป (พ.ศ.)"
             />
           </div>
 

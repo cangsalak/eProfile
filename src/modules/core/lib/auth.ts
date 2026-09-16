@@ -1,7 +1,12 @@
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
+const isProduction = process.env.NODE_ENV === 'production';
+const rawJwtSecret = process.env.JWT_SECRET;
+if (isProduction && (!rawJwtSecret || rawJwtSecret.includes('change-in-production') || rawJwtSecret.length < 32)) {
+  console.warn('⚠️ [SECURITY WARNING] JWT_SECRET is not securely set for production! Please configure a strong random secret at least 32 characters.');
+}
+const JWT_SECRET = rawJwtSecret || 'eprofile-jwt-default-secret-change-in-production-at-least-32-bytes';
 const encodedSecret = new TextEncoder().encode(JWT_SECRET);
 
 export async function verifyAuth(req?: Request) {

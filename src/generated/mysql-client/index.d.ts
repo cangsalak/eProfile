@@ -75,11 +75,6 @@ export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
  */
 export type NotificationRead = $Result.DefaultSelection<Prisma.$NotificationReadPayload>
 /**
- * Model Rpb1Record
- * 
- */
-export type Rpb1Record = $Result.DefaultSelection<Prisma.$Rpb1RecordPayload>
-/**
  * Model Service
  * 
  */
@@ -104,6 +99,11 @@ export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
  * 
  */
 export type PersonnelDocument = $Result.DefaultSelection<Prisma.$PersonnelDocumentPayload>
+/**
+ * Model Rpb1Record
+ * 
+ */
+export type Rpb1Record = $Result.DefaultSelection<Prisma.$Rpb1RecordPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -349,16 +349,6 @@ export class PrismaClient<
   get notificationRead(): Prisma.NotificationReadDelegate<ExtArgs>;
 
   /**
-   * `prisma.rpb1Record`: Exposes CRUD operations for the **Rpb1Record** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Rpb1Records
-    * const rpb1Records = await prisma.rpb1Record.findMany()
-    * ```
-    */
-  get rpb1Record(): Prisma.Rpb1RecordDelegate<ExtArgs>;
-
-  /**
    * `prisma.service`: Exposes CRUD operations for the **Service** model.
     * Example usage:
     * ```ts
@@ -407,6 +397,16 @@ export class PrismaClient<
     * ```
     */
   get personnelDocument(): Prisma.PersonnelDocumentDelegate<ExtArgs>;
+
+  /**
+   * `prisma.rpb1Record`: Exposes CRUD operations for the **Rpb1Record** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Rpb1Records
+    * const rpb1Records = await prisma.rpb1Record.findMany()
+    * ```
+    */
+  get rpb1Record(): Prisma.Rpb1RecordDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -860,12 +860,12 @@ export namespace Prisma {
     Post: 'Post',
     Notification: 'Notification',
     NotificationRead: 'NotificationRead',
-    Rpb1Record: 'Rpb1Record',
     Service: 'Service',
     MediaFile: 'MediaFile',
     Personnel: 'Personnel',
     Department: 'Department',
-    PersonnelDocument: 'PersonnelDocument'
+    PersonnelDocument: 'PersonnelDocument',
+    Rpb1Record: 'Rpb1Record'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -881,7 +881,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "systemSetting" | "systemRole" | "auditLog" | "passwordResetToken" | "calendarEvent" | "contactMessage" | "inspection" | "inspectionFinding" | "leaveRecord" | "post" | "notification" | "notificationRead" | "rpb1Record" | "service" | "mediaFile" | "personnel" | "department" | "personnelDocument"
+      modelProps: "systemSetting" | "systemRole" | "auditLog" | "passwordResetToken" | "calendarEvent" | "contactMessage" | "inspection" | "inspectionFinding" | "leaveRecord" | "post" | "notification" | "notificationRead" | "service" | "mediaFile" | "personnel" | "department" | "personnelDocument" | "rpb1Record"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1677,72 +1677,6 @@ export namespace Prisma {
           }
         }
       }
-      Rpb1Record: {
-        payload: Prisma.$Rpb1RecordPayload<ExtArgs>
-        fields: Prisma.Rpb1RecordFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.Rpb1RecordFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          findFirst: {
-            args: Prisma.Rpb1RecordFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.Rpb1RecordFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          findMany: {
-            args: Prisma.Rpb1RecordFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>[]
-          }
-          create: {
-            args: Prisma.Rpb1RecordCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          createMany: {
-            args: Prisma.Rpb1RecordCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.Rpb1RecordDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          update: {
-            args: Prisma.Rpb1RecordUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          deleteMany: {
-            args: Prisma.Rpb1RecordDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.Rpb1RecordUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.Rpb1RecordUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
-          }
-          aggregate: {
-            args: Prisma.Rpb1RecordAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRpb1Record>
-          }
-          groupBy: {
-            args: Prisma.Rpb1RecordGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Rpb1RecordGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.Rpb1RecordCountArgs<ExtArgs>
-            result: $Utils.Optional<Rpb1RecordCountAggregateOutputType> | number
-          }
-        }
-      }
       Service: {
         payload: Prisma.$ServicePayload<ExtArgs>
         fields: Prisma.ServiceFieldRefs
@@ -2070,6 +2004,72 @@ export namespace Prisma {
           count: {
             args: Prisma.PersonnelDocumentCountArgs<ExtArgs>
             result: $Utils.Optional<PersonnelDocumentCountAggregateOutputType> | number
+          }
+        }
+      }
+      Rpb1Record: {
+        payload: Prisma.$Rpb1RecordPayload<ExtArgs>
+        fields: Prisma.Rpb1RecordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.Rpb1RecordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          findFirst: {
+            args: Prisma.Rpb1RecordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Rpb1RecordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          findMany: {
+            args: Prisma.Rpb1RecordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>[]
+          }
+          create: {
+            args: Prisma.Rpb1RecordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          createMany: {
+            args: Prisma.Rpb1RecordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.Rpb1RecordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          update: {
+            args: Prisma.Rpb1RecordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          deleteMany: {
+            args: Prisma.Rpb1RecordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Rpb1RecordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.Rpb1RecordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Rpb1RecordPayload>
+          }
+          aggregate: {
+            args: Prisma.Rpb1RecordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRpb1Record>
+          }
+          groupBy: {
+            args: Prisma.Rpb1RecordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Rpb1RecordGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Rpb1RecordCountArgs<ExtArgs>
+            result: $Utils.Optional<Rpb1RecordCountAggregateOutputType> | number
           }
         }
       }
@@ -13705,2438 +13705,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Rpb1Record
-   */
-
-  export type AggregateRpb1Record = {
-    _count: Rpb1RecordCountAggregateOutputType | null
-    _avg: Rpb1RecordAvgAggregateOutputType | null
-    _sum: Rpb1RecordSumAggregateOutputType | null
-    _min: Rpb1RecordMinAggregateOutputType | null
-    _max: Rpb1RecordMaxAggregateOutputType | null
-  }
-
-  export type Rpb1RecordAvgAggregateOutputType = {
-    version: number | null
-    age: number | null
-    height: number | null
-    weight: number | null
-  }
-
-  export type Rpb1RecordSumAggregateOutputType = {
-    version: number | null
-    age: number | null
-    height: number | null
-    weight: number | null
-  }
-
-  export type Rpb1RecordMinAggregateOutputType = {
-    id: string | null
-    personnelId: string | null
-    status: string | null
-    version: number | null
-    classification: string | null
-    photoUrl: string | null
-    titleRank: string | null
-    firstName: string | null
-    middleName: string | null
-    lastName: string | null
-    gender: string | null
-    age: number | null
-    formerFirstName: string | null
-    nameChangeDoc: string | null
-    formerLastName: string | null
-    lastNameChangeDoc: string | null
-    nickname: string | null
-    citizenId: string | null
-    dateOfBirth: string | null
-    birthPlaceHospital: string | null
-    race: string | null
-    nationality: string | null
-    formerNationality: string | null
-    naturalizationDoc: string | null
-    religion: string | null
-    formerReligion: string | null
-    registeredHouseNo: string | null
-    registeredVillage: string | null
-    registeredMoo: string | null
-    registeredSoi: string | null
-    registeredRoad: string | null
-    registeredSubdistrict: string | null
-    registeredDistrict: string | null
-    registeredProvince: string | null
-    registeredPhone: string | null
-    currentHouseNo: string | null
-    currentVillage: string | null
-    currentMoo: string | null
-    currentSoi: string | null
-    currentRoad: string | null
-    currentSubdistrict: string | null
-    currentDistrict: string | null
-    currentProvince: string | null
-    currentPhone: string | null
-    phoneLandline: string | null
-    phoneMobile: string | null
-    email: string | null
-    lineId: string | null
-    facebook: string | null
-    instagram: string | null
-    otherContact: string | null
-    alienCardNo: string | null
-    alienCardDate: string | null
-    alienCardIssuedAt: string | null
-    alienResidenceDocNo: string | null
-    alienResidenceDocDate: string | null
-    alienResidenceIssuedAt: string | null
-    alienIdInThailand: string | null
-    birthCountry: string | null
-    entryDateToThailand: string | null
-    workPermitNo: string | null
-    workPermitIssuedBy: string | null
-    workPermitIssueDate: string | null
-    workPermitExpiryDate: string | null
-    height: number | null
-    weight: number | null
-    scarsDistinguishingMarks: string | null
-    bloodGroup: string | null
-    addressesPast15Years: string | null
-    educations: string | null
-    specialActivities: string | null
-    languages: string | null
-    workHistory: string | null
-    specialOccupationsHobbies: string | null
-    militaryStatus: string | null
-    militaryRank: string | null
-    militaryRegNumber: string | null
-    militaryBranchUnit: string | null
-    militaryUnitLocation: string | null
-    militaryServiceFrom: string | null
-    militaryServiceTo: string | null
-    militaryYearsServed: string | null
-    militaryDischargeReason: string | null
-    militaryLastCommander: string | null
-    militarySpecialOperations: string | null
-    militarySpecialOpDate: string | null
-    militarySpecialOpDuration: string | null
-    militaryExemptionReason: string | null
-    writerDetails: string | null
-    politicalSocialMemberships: string | null
-    foreignTravels: string | null
-    identificationDocuments: string | null
-    legalCases: string | null
-    disciplinaryPunishments: string | null
-    fatherDetails: string | null
-    motherDetails: string | null
-    maritalStatus: string | null
-    spouseFormerDetails: string | null
-    spouseCurrentDetails: string | null
-    children: string | null
-    siblings: string | null
-    relativesInGovernment: string | null
-    overseasContacts: string | null
-    cohabitants: string | null
-    closeFriendsRef: string | null
-    supporters: string | null
-    additionalExplanations: string | null
-    ownerSignatureDate: string | null
-    inspectorRankName: string | null
-    inspectorPosition: string | null
-    inspectorSignatureDate: string | null
-    sketchMapImage: string | null
-    mapHouseNo: string | null
-    mapVillage: string | null
-    mapMoo: string | null
-    mapSoi: string | null
-    mapRoad: string | null
-    mapSubdistrict: string | null
-    mapDistrict: string | null
-    mapProvince: string | null
-    mapPhone: string | null
-    mapHouseOwnerName: string | null
-    mapHouseOwnerPhone: string | null
-    emergencyContactRankName: string | null
-    emergencyContactRelation: string | null
-    emergencyContactAddress: string | null
-    extraTitleName: string | null
-    extraGender: string | null
-    extraBloodGroup: string | null
-    extraRegisteredAddress: string | null
-    extraCurrentAddress: string | null
-    extraIsSameAddress: boolean | null
-    extraMobilePhone: string | null
-    extraHomePhone: string | null
-    extraOfficePhone: string | null
-    extraEmail: string | null
-    extraOwnerSignatureDate: string | null
-    extraOfficerName: string | null
-    extraOfficerPosition: string | null
-    extraOfficerSignatureDate: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type Rpb1RecordMaxAggregateOutputType = {
-    id: string | null
-    personnelId: string | null
-    status: string | null
-    version: number | null
-    classification: string | null
-    photoUrl: string | null
-    titleRank: string | null
-    firstName: string | null
-    middleName: string | null
-    lastName: string | null
-    gender: string | null
-    age: number | null
-    formerFirstName: string | null
-    nameChangeDoc: string | null
-    formerLastName: string | null
-    lastNameChangeDoc: string | null
-    nickname: string | null
-    citizenId: string | null
-    dateOfBirth: string | null
-    birthPlaceHospital: string | null
-    race: string | null
-    nationality: string | null
-    formerNationality: string | null
-    naturalizationDoc: string | null
-    religion: string | null
-    formerReligion: string | null
-    registeredHouseNo: string | null
-    registeredVillage: string | null
-    registeredMoo: string | null
-    registeredSoi: string | null
-    registeredRoad: string | null
-    registeredSubdistrict: string | null
-    registeredDistrict: string | null
-    registeredProvince: string | null
-    registeredPhone: string | null
-    currentHouseNo: string | null
-    currentVillage: string | null
-    currentMoo: string | null
-    currentSoi: string | null
-    currentRoad: string | null
-    currentSubdistrict: string | null
-    currentDistrict: string | null
-    currentProvince: string | null
-    currentPhone: string | null
-    phoneLandline: string | null
-    phoneMobile: string | null
-    email: string | null
-    lineId: string | null
-    facebook: string | null
-    instagram: string | null
-    otherContact: string | null
-    alienCardNo: string | null
-    alienCardDate: string | null
-    alienCardIssuedAt: string | null
-    alienResidenceDocNo: string | null
-    alienResidenceDocDate: string | null
-    alienResidenceIssuedAt: string | null
-    alienIdInThailand: string | null
-    birthCountry: string | null
-    entryDateToThailand: string | null
-    workPermitNo: string | null
-    workPermitIssuedBy: string | null
-    workPermitIssueDate: string | null
-    workPermitExpiryDate: string | null
-    height: number | null
-    weight: number | null
-    scarsDistinguishingMarks: string | null
-    bloodGroup: string | null
-    addressesPast15Years: string | null
-    educations: string | null
-    specialActivities: string | null
-    languages: string | null
-    workHistory: string | null
-    specialOccupationsHobbies: string | null
-    militaryStatus: string | null
-    militaryRank: string | null
-    militaryRegNumber: string | null
-    militaryBranchUnit: string | null
-    militaryUnitLocation: string | null
-    militaryServiceFrom: string | null
-    militaryServiceTo: string | null
-    militaryYearsServed: string | null
-    militaryDischargeReason: string | null
-    militaryLastCommander: string | null
-    militarySpecialOperations: string | null
-    militarySpecialOpDate: string | null
-    militarySpecialOpDuration: string | null
-    militaryExemptionReason: string | null
-    writerDetails: string | null
-    politicalSocialMemberships: string | null
-    foreignTravels: string | null
-    identificationDocuments: string | null
-    legalCases: string | null
-    disciplinaryPunishments: string | null
-    fatherDetails: string | null
-    motherDetails: string | null
-    maritalStatus: string | null
-    spouseFormerDetails: string | null
-    spouseCurrentDetails: string | null
-    children: string | null
-    siblings: string | null
-    relativesInGovernment: string | null
-    overseasContacts: string | null
-    cohabitants: string | null
-    closeFriendsRef: string | null
-    supporters: string | null
-    additionalExplanations: string | null
-    ownerSignatureDate: string | null
-    inspectorRankName: string | null
-    inspectorPosition: string | null
-    inspectorSignatureDate: string | null
-    sketchMapImage: string | null
-    mapHouseNo: string | null
-    mapVillage: string | null
-    mapMoo: string | null
-    mapSoi: string | null
-    mapRoad: string | null
-    mapSubdistrict: string | null
-    mapDistrict: string | null
-    mapProvince: string | null
-    mapPhone: string | null
-    mapHouseOwnerName: string | null
-    mapHouseOwnerPhone: string | null
-    emergencyContactRankName: string | null
-    emergencyContactRelation: string | null
-    emergencyContactAddress: string | null
-    extraTitleName: string | null
-    extraGender: string | null
-    extraBloodGroup: string | null
-    extraRegisteredAddress: string | null
-    extraCurrentAddress: string | null
-    extraIsSameAddress: boolean | null
-    extraMobilePhone: string | null
-    extraHomePhone: string | null
-    extraOfficePhone: string | null
-    extraEmail: string | null
-    extraOwnerSignatureDate: string | null
-    extraOfficerName: string | null
-    extraOfficerPosition: string | null
-    extraOfficerSignatureDate: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type Rpb1RecordCountAggregateOutputType = {
-    id: number
-    personnelId: number
-    status: number
-    version: number
-    classification: number
-    photoUrl: number
-    titleRank: number
-    firstName: number
-    middleName: number
-    lastName: number
-    gender: number
-    age: number
-    formerFirstName: number
-    nameChangeDoc: number
-    formerLastName: number
-    lastNameChangeDoc: number
-    nickname: number
-    citizenId: number
-    dateOfBirth: number
-    birthPlaceHospital: number
-    race: number
-    nationality: number
-    formerNationality: number
-    naturalizationDoc: number
-    religion: number
-    formerReligion: number
-    registeredHouseNo: number
-    registeredVillage: number
-    registeredMoo: number
-    registeredSoi: number
-    registeredRoad: number
-    registeredSubdistrict: number
-    registeredDistrict: number
-    registeredProvince: number
-    registeredPhone: number
-    currentHouseNo: number
-    currentVillage: number
-    currentMoo: number
-    currentSoi: number
-    currentRoad: number
-    currentSubdistrict: number
-    currentDistrict: number
-    currentProvince: number
-    currentPhone: number
-    phoneLandline: number
-    phoneMobile: number
-    email: number
-    lineId: number
-    facebook: number
-    instagram: number
-    otherContact: number
-    alienCardNo: number
-    alienCardDate: number
-    alienCardIssuedAt: number
-    alienResidenceDocNo: number
-    alienResidenceDocDate: number
-    alienResidenceIssuedAt: number
-    alienIdInThailand: number
-    birthCountry: number
-    entryDateToThailand: number
-    workPermitNo: number
-    workPermitIssuedBy: number
-    workPermitIssueDate: number
-    workPermitExpiryDate: number
-    height: number
-    weight: number
-    scarsDistinguishingMarks: number
-    bloodGroup: number
-    addressesPast15Years: number
-    educations: number
-    specialActivities: number
-    languages: number
-    workHistory: number
-    specialOccupationsHobbies: number
-    militaryStatus: number
-    militaryRank: number
-    militaryRegNumber: number
-    militaryBranchUnit: number
-    militaryUnitLocation: number
-    militaryServiceFrom: number
-    militaryServiceTo: number
-    militaryYearsServed: number
-    militaryDischargeReason: number
-    militaryLastCommander: number
-    militarySpecialOperations: number
-    militarySpecialOpDate: number
-    militarySpecialOpDuration: number
-    militaryExemptionReason: number
-    writerDetails: number
-    politicalSocialMemberships: number
-    foreignTravels: number
-    identificationDocuments: number
-    legalCases: number
-    disciplinaryPunishments: number
-    fatherDetails: number
-    motherDetails: number
-    maritalStatus: number
-    spouseFormerDetails: number
-    spouseCurrentDetails: number
-    children: number
-    siblings: number
-    relativesInGovernment: number
-    overseasContacts: number
-    cohabitants: number
-    closeFriendsRef: number
-    supporters: number
-    additionalExplanations: number
-    ownerSignatureDate: number
-    inspectorRankName: number
-    inspectorPosition: number
-    inspectorSignatureDate: number
-    sketchMapImage: number
-    mapHouseNo: number
-    mapVillage: number
-    mapMoo: number
-    mapSoi: number
-    mapRoad: number
-    mapSubdistrict: number
-    mapDistrict: number
-    mapProvince: number
-    mapPhone: number
-    mapHouseOwnerName: number
-    mapHouseOwnerPhone: number
-    emergencyContactRankName: number
-    emergencyContactRelation: number
-    emergencyContactAddress: number
-    extraTitleName: number
-    extraGender: number
-    extraBloodGroup: number
-    extraRegisteredAddress: number
-    extraCurrentAddress: number
-    extraIsSameAddress: number
-    extraMobilePhone: number
-    extraHomePhone: number
-    extraOfficePhone: number
-    extraEmail: number
-    extraOwnerSignatureDate: number
-    extraOfficerName: number
-    extraOfficerPosition: number
-    extraOfficerSignatureDate: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type Rpb1RecordAvgAggregateInputType = {
-    version?: true
-    age?: true
-    height?: true
-    weight?: true
-  }
-
-  export type Rpb1RecordSumAggregateInputType = {
-    version?: true
-    age?: true
-    height?: true
-    weight?: true
-  }
-
-  export type Rpb1RecordMinAggregateInputType = {
-    id?: true
-    personnelId?: true
-    status?: true
-    version?: true
-    classification?: true
-    photoUrl?: true
-    titleRank?: true
-    firstName?: true
-    middleName?: true
-    lastName?: true
-    gender?: true
-    age?: true
-    formerFirstName?: true
-    nameChangeDoc?: true
-    formerLastName?: true
-    lastNameChangeDoc?: true
-    nickname?: true
-    citizenId?: true
-    dateOfBirth?: true
-    birthPlaceHospital?: true
-    race?: true
-    nationality?: true
-    formerNationality?: true
-    naturalizationDoc?: true
-    religion?: true
-    formerReligion?: true
-    registeredHouseNo?: true
-    registeredVillage?: true
-    registeredMoo?: true
-    registeredSoi?: true
-    registeredRoad?: true
-    registeredSubdistrict?: true
-    registeredDistrict?: true
-    registeredProvince?: true
-    registeredPhone?: true
-    currentHouseNo?: true
-    currentVillage?: true
-    currentMoo?: true
-    currentSoi?: true
-    currentRoad?: true
-    currentSubdistrict?: true
-    currentDistrict?: true
-    currentProvince?: true
-    currentPhone?: true
-    phoneLandline?: true
-    phoneMobile?: true
-    email?: true
-    lineId?: true
-    facebook?: true
-    instagram?: true
-    otherContact?: true
-    alienCardNo?: true
-    alienCardDate?: true
-    alienCardIssuedAt?: true
-    alienResidenceDocNo?: true
-    alienResidenceDocDate?: true
-    alienResidenceIssuedAt?: true
-    alienIdInThailand?: true
-    birthCountry?: true
-    entryDateToThailand?: true
-    workPermitNo?: true
-    workPermitIssuedBy?: true
-    workPermitIssueDate?: true
-    workPermitExpiryDate?: true
-    height?: true
-    weight?: true
-    scarsDistinguishingMarks?: true
-    bloodGroup?: true
-    addressesPast15Years?: true
-    educations?: true
-    specialActivities?: true
-    languages?: true
-    workHistory?: true
-    specialOccupationsHobbies?: true
-    militaryStatus?: true
-    militaryRank?: true
-    militaryRegNumber?: true
-    militaryBranchUnit?: true
-    militaryUnitLocation?: true
-    militaryServiceFrom?: true
-    militaryServiceTo?: true
-    militaryYearsServed?: true
-    militaryDischargeReason?: true
-    militaryLastCommander?: true
-    militarySpecialOperations?: true
-    militarySpecialOpDate?: true
-    militarySpecialOpDuration?: true
-    militaryExemptionReason?: true
-    writerDetails?: true
-    politicalSocialMemberships?: true
-    foreignTravels?: true
-    identificationDocuments?: true
-    legalCases?: true
-    disciplinaryPunishments?: true
-    fatherDetails?: true
-    motherDetails?: true
-    maritalStatus?: true
-    spouseFormerDetails?: true
-    spouseCurrentDetails?: true
-    children?: true
-    siblings?: true
-    relativesInGovernment?: true
-    overseasContacts?: true
-    cohabitants?: true
-    closeFriendsRef?: true
-    supporters?: true
-    additionalExplanations?: true
-    ownerSignatureDate?: true
-    inspectorRankName?: true
-    inspectorPosition?: true
-    inspectorSignatureDate?: true
-    sketchMapImage?: true
-    mapHouseNo?: true
-    mapVillage?: true
-    mapMoo?: true
-    mapSoi?: true
-    mapRoad?: true
-    mapSubdistrict?: true
-    mapDistrict?: true
-    mapProvince?: true
-    mapPhone?: true
-    mapHouseOwnerName?: true
-    mapHouseOwnerPhone?: true
-    emergencyContactRankName?: true
-    emergencyContactRelation?: true
-    emergencyContactAddress?: true
-    extraTitleName?: true
-    extraGender?: true
-    extraBloodGroup?: true
-    extraRegisteredAddress?: true
-    extraCurrentAddress?: true
-    extraIsSameAddress?: true
-    extraMobilePhone?: true
-    extraHomePhone?: true
-    extraOfficePhone?: true
-    extraEmail?: true
-    extraOwnerSignatureDate?: true
-    extraOfficerName?: true
-    extraOfficerPosition?: true
-    extraOfficerSignatureDate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type Rpb1RecordMaxAggregateInputType = {
-    id?: true
-    personnelId?: true
-    status?: true
-    version?: true
-    classification?: true
-    photoUrl?: true
-    titleRank?: true
-    firstName?: true
-    middleName?: true
-    lastName?: true
-    gender?: true
-    age?: true
-    formerFirstName?: true
-    nameChangeDoc?: true
-    formerLastName?: true
-    lastNameChangeDoc?: true
-    nickname?: true
-    citizenId?: true
-    dateOfBirth?: true
-    birthPlaceHospital?: true
-    race?: true
-    nationality?: true
-    formerNationality?: true
-    naturalizationDoc?: true
-    religion?: true
-    formerReligion?: true
-    registeredHouseNo?: true
-    registeredVillage?: true
-    registeredMoo?: true
-    registeredSoi?: true
-    registeredRoad?: true
-    registeredSubdistrict?: true
-    registeredDistrict?: true
-    registeredProvince?: true
-    registeredPhone?: true
-    currentHouseNo?: true
-    currentVillage?: true
-    currentMoo?: true
-    currentSoi?: true
-    currentRoad?: true
-    currentSubdistrict?: true
-    currentDistrict?: true
-    currentProvince?: true
-    currentPhone?: true
-    phoneLandline?: true
-    phoneMobile?: true
-    email?: true
-    lineId?: true
-    facebook?: true
-    instagram?: true
-    otherContact?: true
-    alienCardNo?: true
-    alienCardDate?: true
-    alienCardIssuedAt?: true
-    alienResidenceDocNo?: true
-    alienResidenceDocDate?: true
-    alienResidenceIssuedAt?: true
-    alienIdInThailand?: true
-    birthCountry?: true
-    entryDateToThailand?: true
-    workPermitNo?: true
-    workPermitIssuedBy?: true
-    workPermitIssueDate?: true
-    workPermitExpiryDate?: true
-    height?: true
-    weight?: true
-    scarsDistinguishingMarks?: true
-    bloodGroup?: true
-    addressesPast15Years?: true
-    educations?: true
-    specialActivities?: true
-    languages?: true
-    workHistory?: true
-    specialOccupationsHobbies?: true
-    militaryStatus?: true
-    militaryRank?: true
-    militaryRegNumber?: true
-    militaryBranchUnit?: true
-    militaryUnitLocation?: true
-    militaryServiceFrom?: true
-    militaryServiceTo?: true
-    militaryYearsServed?: true
-    militaryDischargeReason?: true
-    militaryLastCommander?: true
-    militarySpecialOperations?: true
-    militarySpecialOpDate?: true
-    militarySpecialOpDuration?: true
-    militaryExemptionReason?: true
-    writerDetails?: true
-    politicalSocialMemberships?: true
-    foreignTravels?: true
-    identificationDocuments?: true
-    legalCases?: true
-    disciplinaryPunishments?: true
-    fatherDetails?: true
-    motherDetails?: true
-    maritalStatus?: true
-    spouseFormerDetails?: true
-    spouseCurrentDetails?: true
-    children?: true
-    siblings?: true
-    relativesInGovernment?: true
-    overseasContacts?: true
-    cohabitants?: true
-    closeFriendsRef?: true
-    supporters?: true
-    additionalExplanations?: true
-    ownerSignatureDate?: true
-    inspectorRankName?: true
-    inspectorPosition?: true
-    inspectorSignatureDate?: true
-    sketchMapImage?: true
-    mapHouseNo?: true
-    mapVillage?: true
-    mapMoo?: true
-    mapSoi?: true
-    mapRoad?: true
-    mapSubdistrict?: true
-    mapDistrict?: true
-    mapProvince?: true
-    mapPhone?: true
-    mapHouseOwnerName?: true
-    mapHouseOwnerPhone?: true
-    emergencyContactRankName?: true
-    emergencyContactRelation?: true
-    emergencyContactAddress?: true
-    extraTitleName?: true
-    extraGender?: true
-    extraBloodGroup?: true
-    extraRegisteredAddress?: true
-    extraCurrentAddress?: true
-    extraIsSameAddress?: true
-    extraMobilePhone?: true
-    extraHomePhone?: true
-    extraOfficePhone?: true
-    extraEmail?: true
-    extraOwnerSignatureDate?: true
-    extraOfficerName?: true
-    extraOfficerPosition?: true
-    extraOfficerSignatureDate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type Rpb1RecordCountAggregateInputType = {
-    id?: true
-    personnelId?: true
-    status?: true
-    version?: true
-    classification?: true
-    photoUrl?: true
-    titleRank?: true
-    firstName?: true
-    middleName?: true
-    lastName?: true
-    gender?: true
-    age?: true
-    formerFirstName?: true
-    nameChangeDoc?: true
-    formerLastName?: true
-    lastNameChangeDoc?: true
-    nickname?: true
-    citizenId?: true
-    dateOfBirth?: true
-    birthPlaceHospital?: true
-    race?: true
-    nationality?: true
-    formerNationality?: true
-    naturalizationDoc?: true
-    religion?: true
-    formerReligion?: true
-    registeredHouseNo?: true
-    registeredVillage?: true
-    registeredMoo?: true
-    registeredSoi?: true
-    registeredRoad?: true
-    registeredSubdistrict?: true
-    registeredDistrict?: true
-    registeredProvince?: true
-    registeredPhone?: true
-    currentHouseNo?: true
-    currentVillage?: true
-    currentMoo?: true
-    currentSoi?: true
-    currentRoad?: true
-    currentSubdistrict?: true
-    currentDistrict?: true
-    currentProvince?: true
-    currentPhone?: true
-    phoneLandline?: true
-    phoneMobile?: true
-    email?: true
-    lineId?: true
-    facebook?: true
-    instagram?: true
-    otherContact?: true
-    alienCardNo?: true
-    alienCardDate?: true
-    alienCardIssuedAt?: true
-    alienResidenceDocNo?: true
-    alienResidenceDocDate?: true
-    alienResidenceIssuedAt?: true
-    alienIdInThailand?: true
-    birthCountry?: true
-    entryDateToThailand?: true
-    workPermitNo?: true
-    workPermitIssuedBy?: true
-    workPermitIssueDate?: true
-    workPermitExpiryDate?: true
-    height?: true
-    weight?: true
-    scarsDistinguishingMarks?: true
-    bloodGroup?: true
-    addressesPast15Years?: true
-    educations?: true
-    specialActivities?: true
-    languages?: true
-    workHistory?: true
-    specialOccupationsHobbies?: true
-    militaryStatus?: true
-    militaryRank?: true
-    militaryRegNumber?: true
-    militaryBranchUnit?: true
-    militaryUnitLocation?: true
-    militaryServiceFrom?: true
-    militaryServiceTo?: true
-    militaryYearsServed?: true
-    militaryDischargeReason?: true
-    militaryLastCommander?: true
-    militarySpecialOperations?: true
-    militarySpecialOpDate?: true
-    militarySpecialOpDuration?: true
-    militaryExemptionReason?: true
-    writerDetails?: true
-    politicalSocialMemberships?: true
-    foreignTravels?: true
-    identificationDocuments?: true
-    legalCases?: true
-    disciplinaryPunishments?: true
-    fatherDetails?: true
-    motherDetails?: true
-    maritalStatus?: true
-    spouseFormerDetails?: true
-    spouseCurrentDetails?: true
-    children?: true
-    siblings?: true
-    relativesInGovernment?: true
-    overseasContacts?: true
-    cohabitants?: true
-    closeFriendsRef?: true
-    supporters?: true
-    additionalExplanations?: true
-    ownerSignatureDate?: true
-    inspectorRankName?: true
-    inspectorPosition?: true
-    inspectorSignatureDate?: true
-    sketchMapImage?: true
-    mapHouseNo?: true
-    mapVillage?: true
-    mapMoo?: true
-    mapSoi?: true
-    mapRoad?: true
-    mapSubdistrict?: true
-    mapDistrict?: true
-    mapProvince?: true
-    mapPhone?: true
-    mapHouseOwnerName?: true
-    mapHouseOwnerPhone?: true
-    emergencyContactRankName?: true
-    emergencyContactRelation?: true
-    emergencyContactAddress?: true
-    extraTitleName?: true
-    extraGender?: true
-    extraBloodGroup?: true
-    extraRegisteredAddress?: true
-    extraCurrentAddress?: true
-    extraIsSameAddress?: true
-    extraMobilePhone?: true
-    extraHomePhone?: true
-    extraOfficePhone?: true
-    extraEmail?: true
-    extraOwnerSignatureDate?: true
-    extraOfficerName?: true
-    extraOfficerPosition?: true
-    extraOfficerSignatureDate?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type Rpb1RecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Rpb1Record to aggregate.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Rpb1Records
-    **/
-    _count?: true | Rpb1RecordCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: Rpb1RecordAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: Rpb1RecordSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Rpb1RecordMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Rpb1RecordMaxAggregateInputType
-  }
-
-  export type GetRpb1RecordAggregateType<T extends Rpb1RecordAggregateArgs> = {
-        [P in keyof T & keyof AggregateRpb1Record]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRpb1Record[P]>
-      : GetScalarType<T[P], AggregateRpb1Record[P]>
-  }
-
-
-
-
-  export type Rpb1RecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: Rpb1RecordWhereInput
-    orderBy?: Rpb1RecordOrderByWithAggregationInput | Rpb1RecordOrderByWithAggregationInput[]
-    by: Rpb1RecordScalarFieldEnum[] | Rpb1RecordScalarFieldEnum
-    having?: Rpb1RecordScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Rpb1RecordCountAggregateInputType | true
-    _avg?: Rpb1RecordAvgAggregateInputType
-    _sum?: Rpb1RecordSumAggregateInputType
-    _min?: Rpb1RecordMinAggregateInputType
-    _max?: Rpb1RecordMaxAggregateInputType
-  }
-
-  export type Rpb1RecordGroupByOutputType = {
-    id: string
-    personnelId: string
-    status: string
-    version: number
-    classification: string
-    photoUrl: string | null
-    titleRank: string | null
-    firstName: string | null
-    middleName: string | null
-    lastName: string | null
-    gender: string | null
-    age: number | null
-    formerFirstName: string | null
-    nameChangeDoc: string | null
-    formerLastName: string | null
-    lastNameChangeDoc: string | null
-    nickname: string | null
-    citizenId: string | null
-    dateOfBirth: string | null
-    birthPlaceHospital: string | null
-    race: string | null
-    nationality: string | null
-    formerNationality: string | null
-    naturalizationDoc: string | null
-    religion: string | null
-    formerReligion: string | null
-    registeredHouseNo: string | null
-    registeredVillage: string | null
-    registeredMoo: string | null
-    registeredSoi: string | null
-    registeredRoad: string | null
-    registeredSubdistrict: string | null
-    registeredDistrict: string | null
-    registeredProvince: string | null
-    registeredPhone: string | null
-    currentHouseNo: string | null
-    currentVillage: string | null
-    currentMoo: string | null
-    currentSoi: string | null
-    currentRoad: string | null
-    currentSubdistrict: string | null
-    currentDistrict: string | null
-    currentProvince: string | null
-    currentPhone: string | null
-    phoneLandline: string | null
-    phoneMobile: string | null
-    email: string | null
-    lineId: string | null
-    facebook: string | null
-    instagram: string | null
-    otherContact: string | null
-    alienCardNo: string | null
-    alienCardDate: string | null
-    alienCardIssuedAt: string | null
-    alienResidenceDocNo: string | null
-    alienResidenceDocDate: string | null
-    alienResidenceIssuedAt: string | null
-    alienIdInThailand: string | null
-    birthCountry: string | null
-    entryDateToThailand: string | null
-    workPermitNo: string | null
-    workPermitIssuedBy: string | null
-    workPermitIssueDate: string | null
-    workPermitExpiryDate: string | null
-    height: number | null
-    weight: number | null
-    scarsDistinguishingMarks: string | null
-    bloodGroup: string | null
-    addressesPast15Years: string
-    educations: string
-    specialActivities: string
-    languages: string
-    workHistory: string
-    specialOccupationsHobbies: string | null
-    militaryStatus: string | null
-    militaryRank: string | null
-    militaryRegNumber: string | null
-    militaryBranchUnit: string | null
-    militaryUnitLocation: string | null
-    militaryServiceFrom: string | null
-    militaryServiceTo: string | null
-    militaryYearsServed: string | null
-    militaryDischargeReason: string | null
-    militaryLastCommander: string | null
-    militarySpecialOperations: string | null
-    militarySpecialOpDate: string | null
-    militarySpecialOpDuration: string | null
-    militaryExemptionReason: string | null
-    writerDetails: string | null
-    politicalSocialMemberships: string
-    foreignTravels: string
-    identificationDocuments: string
-    legalCases: string
-    disciplinaryPunishments: string | null
-    fatherDetails: string | null
-    motherDetails: string | null
-    maritalStatus: string | null
-    spouseFormerDetails: string | null
-    spouseCurrentDetails: string | null
-    children: string
-    siblings: string
-    relativesInGovernment: string
-    overseasContacts: string
-    cohabitants: string
-    closeFriendsRef: string
-    supporters: string
-    additionalExplanations: string | null
-    ownerSignatureDate: string | null
-    inspectorRankName: string | null
-    inspectorPosition: string | null
-    inspectorSignatureDate: string | null
-    sketchMapImage: string | null
-    mapHouseNo: string | null
-    mapVillage: string | null
-    mapMoo: string | null
-    mapSoi: string | null
-    mapRoad: string | null
-    mapSubdistrict: string | null
-    mapDistrict: string | null
-    mapProvince: string | null
-    mapPhone: string | null
-    mapHouseOwnerName: string | null
-    mapHouseOwnerPhone: string | null
-    emergencyContactRankName: string | null
-    emergencyContactRelation: string | null
-    emergencyContactAddress: string | null
-    extraTitleName: string | null
-    extraGender: string | null
-    extraBloodGroup: string | null
-    extraRegisteredAddress: string | null
-    extraCurrentAddress: string | null
-    extraIsSameAddress: boolean
-    extraMobilePhone: string | null
-    extraHomePhone: string | null
-    extraOfficePhone: string | null
-    extraEmail: string | null
-    extraOwnerSignatureDate: string | null
-    extraOfficerName: string | null
-    extraOfficerPosition: string | null
-    extraOfficerSignatureDate: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: Rpb1RecordCountAggregateOutputType | null
-    _avg: Rpb1RecordAvgAggregateOutputType | null
-    _sum: Rpb1RecordSumAggregateOutputType | null
-    _min: Rpb1RecordMinAggregateOutputType | null
-    _max: Rpb1RecordMaxAggregateOutputType | null
-  }
-
-  type GetRpb1RecordGroupByPayload<T extends Rpb1RecordGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<Rpb1RecordGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Rpb1RecordGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
-            : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type Rpb1RecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    personnelId?: boolean
-    status?: boolean
-    version?: boolean
-    classification?: boolean
-    photoUrl?: boolean
-    titleRank?: boolean
-    firstName?: boolean
-    middleName?: boolean
-    lastName?: boolean
-    gender?: boolean
-    age?: boolean
-    formerFirstName?: boolean
-    nameChangeDoc?: boolean
-    formerLastName?: boolean
-    lastNameChangeDoc?: boolean
-    nickname?: boolean
-    citizenId?: boolean
-    dateOfBirth?: boolean
-    birthPlaceHospital?: boolean
-    race?: boolean
-    nationality?: boolean
-    formerNationality?: boolean
-    naturalizationDoc?: boolean
-    religion?: boolean
-    formerReligion?: boolean
-    registeredHouseNo?: boolean
-    registeredVillage?: boolean
-    registeredMoo?: boolean
-    registeredSoi?: boolean
-    registeredRoad?: boolean
-    registeredSubdistrict?: boolean
-    registeredDistrict?: boolean
-    registeredProvince?: boolean
-    registeredPhone?: boolean
-    currentHouseNo?: boolean
-    currentVillage?: boolean
-    currentMoo?: boolean
-    currentSoi?: boolean
-    currentRoad?: boolean
-    currentSubdistrict?: boolean
-    currentDistrict?: boolean
-    currentProvince?: boolean
-    currentPhone?: boolean
-    phoneLandline?: boolean
-    phoneMobile?: boolean
-    email?: boolean
-    lineId?: boolean
-    facebook?: boolean
-    instagram?: boolean
-    otherContact?: boolean
-    alienCardNo?: boolean
-    alienCardDate?: boolean
-    alienCardIssuedAt?: boolean
-    alienResidenceDocNo?: boolean
-    alienResidenceDocDate?: boolean
-    alienResidenceIssuedAt?: boolean
-    alienIdInThailand?: boolean
-    birthCountry?: boolean
-    entryDateToThailand?: boolean
-    workPermitNo?: boolean
-    workPermitIssuedBy?: boolean
-    workPermitIssueDate?: boolean
-    workPermitExpiryDate?: boolean
-    height?: boolean
-    weight?: boolean
-    scarsDistinguishingMarks?: boolean
-    bloodGroup?: boolean
-    addressesPast15Years?: boolean
-    educations?: boolean
-    specialActivities?: boolean
-    languages?: boolean
-    workHistory?: boolean
-    specialOccupationsHobbies?: boolean
-    militaryStatus?: boolean
-    militaryRank?: boolean
-    militaryRegNumber?: boolean
-    militaryBranchUnit?: boolean
-    militaryUnitLocation?: boolean
-    militaryServiceFrom?: boolean
-    militaryServiceTo?: boolean
-    militaryYearsServed?: boolean
-    militaryDischargeReason?: boolean
-    militaryLastCommander?: boolean
-    militarySpecialOperations?: boolean
-    militarySpecialOpDate?: boolean
-    militarySpecialOpDuration?: boolean
-    militaryExemptionReason?: boolean
-    writerDetails?: boolean
-    politicalSocialMemberships?: boolean
-    foreignTravels?: boolean
-    identificationDocuments?: boolean
-    legalCases?: boolean
-    disciplinaryPunishments?: boolean
-    fatherDetails?: boolean
-    motherDetails?: boolean
-    maritalStatus?: boolean
-    spouseFormerDetails?: boolean
-    spouseCurrentDetails?: boolean
-    children?: boolean
-    siblings?: boolean
-    relativesInGovernment?: boolean
-    overseasContacts?: boolean
-    cohabitants?: boolean
-    closeFriendsRef?: boolean
-    supporters?: boolean
-    additionalExplanations?: boolean
-    ownerSignatureDate?: boolean
-    inspectorRankName?: boolean
-    inspectorPosition?: boolean
-    inspectorSignatureDate?: boolean
-    sketchMapImage?: boolean
-    mapHouseNo?: boolean
-    mapVillage?: boolean
-    mapMoo?: boolean
-    mapSoi?: boolean
-    mapRoad?: boolean
-    mapSubdistrict?: boolean
-    mapDistrict?: boolean
-    mapProvince?: boolean
-    mapPhone?: boolean
-    mapHouseOwnerName?: boolean
-    mapHouseOwnerPhone?: boolean
-    emergencyContactRankName?: boolean
-    emergencyContactRelation?: boolean
-    emergencyContactAddress?: boolean
-    extraTitleName?: boolean
-    extraGender?: boolean
-    extraBloodGroup?: boolean
-    extraRegisteredAddress?: boolean
-    extraCurrentAddress?: boolean
-    extraIsSameAddress?: boolean
-    extraMobilePhone?: boolean
-    extraHomePhone?: boolean
-    extraOfficePhone?: boolean
-    extraEmail?: boolean
-    extraOwnerSignatureDate?: boolean
-    extraOfficerName?: boolean
-    extraOfficerPosition?: boolean
-    extraOfficerSignatureDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["rpb1Record"]>
-
-
-  export type Rpb1RecordSelectScalar = {
-    id?: boolean
-    personnelId?: boolean
-    status?: boolean
-    version?: boolean
-    classification?: boolean
-    photoUrl?: boolean
-    titleRank?: boolean
-    firstName?: boolean
-    middleName?: boolean
-    lastName?: boolean
-    gender?: boolean
-    age?: boolean
-    formerFirstName?: boolean
-    nameChangeDoc?: boolean
-    formerLastName?: boolean
-    lastNameChangeDoc?: boolean
-    nickname?: boolean
-    citizenId?: boolean
-    dateOfBirth?: boolean
-    birthPlaceHospital?: boolean
-    race?: boolean
-    nationality?: boolean
-    formerNationality?: boolean
-    naturalizationDoc?: boolean
-    religion?: boolean
-    formerReligion?: boolean
-    registeredHouseNo?: boolean
-    registeredVillage?: boolean
-    registeredMoo?: boolean
-    registeredSoi?: boolean
-    registeredRoad?: boolean
-    registeredSubdistrict?: boolean
-    registeredDistrict?: boolean
-    registeredProvince?: boolean
-    registeredPhone?: boolean
-    currentHouseNo?: boolean
-    currentVillage?: boolean
-    currentMoo?: boolean
-    currentSoi?: boolean
-    currentRoad?: boolean
-    currentSubdistrict?: boolean
-    currentDistrict?: boolean
-    currentProvince?: boolean
-    currentPhone?: boolean
-    phoneLandline?: boolean
-    phoneMobile?: boolean
-    email?: boolean
-    lineId?: boolean
-    facebook?: boolean
-    instagram?: boolean
-    otherContact?: boolean
-    alienCardNo?: boolean
-    alienCardDate?: boolean
-    alienCardIssuedAt?: boolean
-    alienResidenceDocNo?: boolean
-    alienResidenceDocDate?: boolean
-    alienResidenceIssuedAt?: boolean
-    alienIdInThailand?: boolean
-    birthCountry?: boolean
-    entryDateToThailand?: boolean
-    workPermitNo?: boolean
-    workPermitIssuedBy?: boolean
-    workPermitIssueDate?: boolean
-    workPermitExpiryDate?: boolean
-    height?: boolean
-    weight?: boolean
-    scarsDistinguishingMarks?: boolean
-    bloodGroup?: boolean
-    addressesPast15Years?: boolean
-    educations?: boolean
-    specialActivities?: boolean
-    languages?: boolean
-    workHistory?: boolean
-    specialOccupationsHobbies?: boolean
-    militaryStatus?: boolean
-    militaryRank?: boolean
-    militaryRegNumber?: boolean
-    militaryBranchUnit?: boolean
-    militaryUnitLocation?: boolean
-    militaryServiceFrom?: boolean
-    militaryServiceTo?: boolean
-    militaryYearsServed?: boolean
-    militaryDischargeReason?: boolean
-    militaryLastCommander?: boolean
-    militarySpecialOperations?: boolean
-    militarySpecialOpDate?: boolean
-    militarySpecialOpDuration?: boolean
-    militaryExemptionReason?: boolean
-    writerDetails?: boolean
-    politicalSocialMemberships?: boolean
-    foreignTravels?: boolean
-    identificationDocuments?: boolean
-    legalCases?: boolean
-    disciplinaryPunishments?: boolean
-    fatherDetails?: boolean
-    motherDetails?: boolean
-    maritalStatus?: boolean
-    spouseFormerDetails?: boolean
-    spouseCurrentDetails?: boolean
-    children?: boolean
-    siblings?: boolean
-    relativesInGovernment?: boolean
-    overseasContacts?: boolean
-    cohabitants?: boolean
-    closeFriendsRef?: boolean
-    supporters?: boolean
-    additionalExplanations?: boolean
-    ownerSignatureDate?: boolean
-    inspectorRankName?: boolean
-    inspectorPosition?: boolean
-    inspectorSignatureDate?: boolean
-    sketchMapImage?: boolean
-    mapHouseNo?: boolean
-    mapVillage?: boolean
-    mapMoo?: boolean
-    mapSoi?: boolean
-    mapRoad?: boolean
-    mapSubdistrict?: boolean
-    mapDistrict?: boolean
-    mapProvince?: boolean
-    mapPhone?: boolean
-    mapHouseOwnerName?: boolean
-    mapHouseOwnerPhone?: boolean
-    emergencyContactRankName?: boolean
-    emergencyContactRelation?: boolean
-    emergencyContactAddress?: boolean
-    extraTitleName?: boolean
-    extraGender?: boolean
-    extraBloodGroup?: boolean
-    extraRegisteredAddress?: boolean
-    extraCurrentAddress?: boolean
-    extraIsSameAddress?: boolean
-    extraMobilePhone?: boolean
-    extraHomePhone?: boolean
-    extraOfficePhone?: boolean
-    extraEmail?: boolean
-    extraOwnerSignatureDate?: boolean
-    extraOfficerName?: boolean
-    extraOfficerPosition?: boolean
-    extraOfficerSignatureDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type Rpb1RecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
-  }
-
-  export type $Rpb1RecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Rpb1Record"
-    objects: {
-      personnel: Prisma.$PersonnelPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      personnelId: string
-      status: string
-      version: number
-      classification: string
-      photoUrl: string | null
-      titleRank: string | null
-      firstName: string | null
-      middleName: string | null
-      lastName: string | null
-      gender: string | null
-      age: number | null
-      formerFirstName: string | null
-      nameChangeDoc: string | null
-      formerLastName: string | null
-      lastNameChangeDoc: string | null
-      nickname: string | null
-      citizenId: string | null
-      dateOfBirth: string | null
-      birthPlaceHospital: string | null
-      race: string | null
-      nationality: string | null
-      formerNationality: string | null
-      naturalizationDoc: string | null
-      religion: string | null
-      formerReligion: string | null
-      registeredHouseNo: string | null
-      registeredVillage: string | null
-      registeredMoo: string | null
-      registeredSoi: string | null
-      registeredRoad: string | null
-      registeredSubdistrict: string | null
-      registeredDistrict: string | null
-      registeredProvince: string | null
-      registeredPhone: string | null
-      currentHouseNo: string | null
-      currentVillage: string | null
-      currentMoo: string | null
-      currentSoi: string | null
-      currentRoad: string | null
-      currentSubdistrict: string | null
-      currentDistrict: string | null
-      currentProvince: string | null
-      currentPhone: string | null
-      phoneLandline: string | null
-      phoneMobile: string | null
-      email: string | null
-      lineId: string | null
-      facebook: string | null
-      instagram: string | null
-      otherContact: string | null
-      alienCardNo: string | null
-      alienCardDate: string | null
-      alienCardIssuedAt: string | null
-      alienResidenceDocNo: string | null
-      alienResidenceDocDate: string | null
-      alienResidenceIssuedAt: string | null
-      alienIdInThailand: string | null
-      birthCountry: string | null
-      entryDateToThailand: string | null
-      workPermitNo: string | null
-      workPermitIssuedBy: string | null
-      workPermitIssueDate: string | null
-      workPermitExpiryDate: string | null
-      height: number | null
-      weight: number | null
-      scarsDistinguishingMarks: string | null
-      bloodGroup: string | null
-      addressesPast15Years: string
-      educations: string
-      specialActivities: string
-      languages: string
-      workHistory: string
-      specialOccupationsHobbies: string | null
-      militaryStatus: string | null
-      militaryRank: string | null
-      militaryRegNumber: string | null
-      militaryBranchUnit: string | null
-      militaryUnitLocation: string | null
-      militaryServiceFrom: string | null
-      militaryServiceTo: string | null
-      militaryYearsServed: string | null
-      militaryDischargeReason: string | null
-      militaryLastCommander: string | null
-      militarySpecialOperations: string | null
-      militarySpecialOpDate: string | null
-      militarySpecialOpDuration: string | null
-      militaryExemptionReason: string | null
-      writerDetails: string | null
-      politicalSocialMemberships: string
-      foreignTravels: string
-      identificationDocuments: string
-      legalCases: string
-      disciplinaryPunishments: string | null
-      fatherDetails: string | null
-      motherDetails: string | null
-      maritalStatus: string | null
-      spouseFormerDetails: string | null
-      spouseCurrentDetails: string | null
-      children: string
-      siblings: string
-      relativesInGovernment: string
-      overseasContacts: string
-      cohabitants: string
-      closeFriendsRef: string
-      supporters: string
-      additionalExplanations: string | null
-      ownerSignatureDate: string | null
-      inspectorRankName: string | null
-      inspectorPosition: string | null
-      inspectorSignatureDate: string | null
-      sketchMapImage: string | null
-      mapHouseNo: string | null
-      mapVillage: string | null
-      mapMoo: string | null
-      mapSoi: string | null
-      mapRoad: string | null
-      mapSubdistrict: string | null
-      mapDistrict: string | null
-      mapProvince: string | null
-      mapPhone: string | null
-      mapHouseOwnerName: string | null
-      mapHouseOwnerPhone: string | null
-      emergencyContactRankName: string | null
-      emergencyContactRelation: string | null
-      emergencyContactAddress: string | null
-      extraTitleName: string | null
-      extraGender: string | null
-      extraBloodGroup: string | null
-      extraRegisteredAddress: string | null
-      extraCurrentAddress: string | null
-      extraIsSameAddress: boolean
-      extraMobilePhone: string | null
-      extraHomePhone: string | null
-      extraOfficePhone: string | null
-      extraEmail: string | null
-      extraOwnerSignatureDate: string | null
-      extraOfficerName: string | null
-      extraOfficerPosition: string | null
-      extraOfficerSignatureDate: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["rpb1Record"]>
-    composites: {}
-  }
-
-  type Rpb1RecordGetPayload<S extends boolean | null | undefined | Rpb1RecordDefaultArgs> = $Result.GetResult<Prisma.$Rpb1RecordPayload, S>
-
-  type Rpb1RecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<Rpb1RecordFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: Rpb1RecordCountAggregateInputType | true
-    }
-
-  export interface Rpb1RecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Rpb1Record'], meta: { name: 'Rpb1Record' } }
-    /**
-     * Find zero or one Rpb1Record that matches the filter.
-     * @param {Rpb1RecordFindUniqueArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends Rpb1RecordFindUniqueArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one Rpb1Record that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {Rpb1RecordFindUniqueOrThrowArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends Rpb1RecordFindUniqueOrThrowArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first Rpb1Record that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordFindFirstArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends Rpb1RecordFindFirstArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first Rpb1Record that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordFindFirstOrThrowArgs} args - Arguments to find a Rpb1Record
-     * @example
-     * // Get one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends Rpb1RecordFindFirstOrThrowArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more Rpb1Records that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Rpb1Records
-     * const rpb1Records = await prisma.rpb1Record.findMany()
-     * 
-     * // Get first 10 Rpb1Records
-     * const rpb1Records = await prisma.rpb1Record.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const rpb1RecordWithIdOnly = await prisma.rpb1Record.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends Rpb1RecordFindManyArgs>(args?: SelectSubset<T, Rpb1RecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a Rpb1Record.
-     * @param {Rpb1RecordCreateArgs} args - Arguments to create a Rpb1Record.
-     * @example
-     * // Create one Rpb1Record
-     * const Rpb1Record = await prisma.rpb1Record.create({
-     *   data: {
-     *     // ... data to create a Rpb1Record
-     *   }
-     * })
-     * 
-     */
-    create<T extends Rpb1RecordCreateArgs>(args: SelectSubset<T, Rpb1RecordCreateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many Rpb1Records.
-     * @param {Rpb1RecordCreateManyArgs} args - Arguments to create many Rpb1Records.
-     * @example
-     * // Create many Rpb1Records
-     * const rpb1Record = await prisma.rpb1Record.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends Rpb1RecordCreateManyArgs>(args?: SelectSubset<T, Rpb1RecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Rpb1Record.
-     * @param {Rpb1RecordDeleteArgs} args - Arguments to delete one Rpb1Record.
-     * @example
-     * // Delete one Rpb1Record
-     * const Rpb1Record = await prisma.rpb1Record.delete({
-     *   where: {
-     *     // ... filter to delete one Rpb1Record
-     *   }
-     * })
-     * 
-     */
-    delete<T extends Rpb1RecordDeleteArgs>(args: SelectSubset<T, Rpb1RecordDeleteArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one Rpb1Record.
-     * @param {Rpb1RecordUpdateArgs} args - Arguments to update one Rpb1Record.
-     * @example
-     * // Update one Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends Rpb1RecordUpdateArgs>(args: SelectSubset<T, Rpb1RecordUpdateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more Rpb1Records.
-     * @param {Rpb1RecordDeleteManyArgs} args - Arguments to filter Rpb1Records to delete.
-     * @example
-     * // Delete a few Rpb1Records
-     * const { count } = await prisma.rpb1Record.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends Rpb1RecordDeleteManyArgs>(args?: SelectSubset<T, Rpb1RecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Rpb1Records.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Rpb1Records
-     * const rpb1Record = await prisma.rpb1Record.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends Rpb1RecordUpdateManyArgs>(args: SelectSubset<T, Rpb1RecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Rpb1Record.
-     * @param {Rpb1RecordUpsertArgs} args - Arguments to update or create a Rpb1Record.
-     * @example
-     * // Update or create a Rpb1Record
-     * const rpb1Record = await prisma.rpb1Record.upsert({
-     *   create: {
-     *     // ... data to create a Rpb1Record
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Rpb1Record we want to update
-     *   }
-     * })
-     */
-    upsert<T extends Rpb1RecordUpsertArgs>(args: SelectSubset<T, Rpb1RecordUpsertArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of Rpb1Records.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordCountArgs} args - Arguments to filter Rpb1Records to count.
-     * @example
-     * // Count the number of Rpb1Records
-     * const count = await prisma.rpb1Record.count({
-     *   where: {
-     *     // ... the filter for the Rpb1Records we want to count
-     *   }
-     * })
-    **/
-    count<T extends Rpb1RecordCountArgs>(
-      args?: Subset<T, Rpb1RecordCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Rpb1RecordCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Rpb1Record.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Rpb1RecordAggregateArgs>(args: Subset<T, Rpb1RecordAggregateArgs>): Prisma.PrismaPromise<GetRpb1RecordAggregateType<T>>
-
-    /**
-     * Group by Rpb1Record.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Rpb1RecordGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends Rpb1RecordGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: Rpb1RecordGroupByArgs['orderBy'] }
-        : { orderBy?: Rpb1RecordGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, Rpb1RecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRpb1RecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Rpb1Record model
-   */
-  readonly fields: Rpb1RecordFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Rpb1Record.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__Rpb1RecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    personnel<T extends PersonnelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonnelDefaultArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Rpb1Record model
-   */ 
-  interface Rpb1RecordFieldRefs {
-    readonly id: FieldRef<"Rpb1Record", 'String'>
-    readonly personnelId: FieldRef<"Rpb1Record", 'String'>
-    readonly status: FieldRef<"Rpb1Record", 'String'>
-    readonly version: FieldRef<"Rpb1Record", 'Int'>
-    readonly classification: FieldRef<"Rpb1Record", 'String'>
-    readonly photoUrl: FieldRef<"Rpb1Record", 'String'>
-    readonly titleRank: FieldRef<"Rpb1Record", 'String'>
-    readonly firstName: FieldRef<"Rpb1Record", 'String'>
-    readonly middleName: FieldRef<"Rpb1Record", 'String'>
-    readonly lastName: FieldRef<"Rpb1Record", 'String'>
-    readonly gender: FieldRef<"Rpb1Record", 'String'>
-    readonly age: FieldRef<"Rpb1Record", 'Int'>
-    readonly formerFirstName: FieldRef<"Rpb1Record", 'String'>
-    readonly nameChangeDoc: FieldRef<"Rpb1Record", 'String'>
-    readonly formerLastName: FieldRef<"Rpb1Record", 'String'>
-    readonly lastNameChangeDoc: FieldRef<"Rpb1Record", 'String'>
-    readonly nickname: FieldRef<"Rpb1Record", 'String'>
-    readonly citizenId: FieldRef<"Rpb1Record", 'String'>
-    readonly dateOfBirth: FieldRef<"Rpb1Record", 'String'>
-    readonly birthPlaceHospital: FieldRef<"Rpb1Record", 'String'>
-    readonly race: FieldRef<"Rpb1Record", 'String'>
-    readonly nationality: FieldRef<"Rpb1Record", 'String'>
-    readonly formerNationality: FieldRef<"Rpb1Record", 'String'>
-    readonly naturalizationDoc: FieldRef<"Rpb1Record", 'String'>
-    readonly religion: FieldRef<"Rpb1Record", 'String'>
-    readonly formerReligion: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredHouseNo: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredVillage: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredMoo: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredSoi: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredRoad: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredSubdistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredDistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredProvince: FieldRef<"Rpb1Record", 'String'>
-    readonly registeredPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly currentHouseNo: FieldRef<"Rpb1Record", 'String'>
-    readonly currentVillage: FieldRef<"Rpb1Record", 'String'>
-    readonly currentMoo: FieldRef<"Rpb1Record", 'String'>
-    readonly currentSoi: FieldRef<"Rpb1Record", 'String'>
-    readonly currentRoad: FieldRef<"Rpb1Record", 'String'>
-    readonly currentSubdistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly currentDistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly currentProvince: FieldRef<"Rpb1Record", 'String'>
-    readonly currentPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly phoneLandline: FieldRef<"Rpb1Record", 'String'>
-    readonly phoneMobile: FieldRef<"Rpb1Record", 'String'>
-    readonly email: FieldRef<"Rpb1Record", 'String'>
-    readonly lineId: FieldRef<"Rpb1Record", 'String'>
-    readonly facebook: FieldRef<"Rpb1Record", 'String'>
-    readonly instagram: FieldRef<"Rpb1Record", 'String'>
-    readonly otherContact: FieldRef<"Rpb1Record", 'String'>
-    readonly alienCardNo: FieldRef<"Rpb1Record", 'String'>
-    readonly alienCardDate: FieldRef<"Rpb1Record", 'String'>
-    readonly alienCardIssuedAt: FieldRef<"Rpb1Record", 'String'>
-    readonly alienResidenceDocNo: FieldRef<"Rpb1Record", 'String'>
-    readonly alienResidenceDocDate: FieldRef<"Rpb1Record", 'String'>
-    readonly alienResidenceIssuedAt: FieldRef<"Rpb1Record", 'String'>
-    readonly alienIdInThailand: FieldRef<"Rpb1Record", 'String'>
-    readonly birthCountry: FieldRef<"Rpb1Record", 'String'>
-    readonly entryDateToThailand: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitNo: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitIssuedBy: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitIssueDate: FieldRef<"Rpb1Record", 'String'>
-    readonly workPermitExpiryDate: FieldRef<"Rpb1Record", 'String'>
-    readonly height: FieldRef<"Rpb1Record", 'Float'>
-    readonly weight: FieldRef<"Rpb1Record", 'Float'>
-    readonly scarsDistinguishingMarks: FieldRef<"Rpb1Record", 'String'>
-    readonly bloodGroup: FieldRef<"Rpb1Record", 'String'>
-    readonly addressesPast15Years: FieldRef<"Rpb1Record", 'String'>
-    readonly educations: FieldRef<"Rpb1Record", 'String'>
-    readonly specialActivities: FieldRef<"Rpb1Record", 'String'>
-    readonly languages: FieldRef<"Rpb1Record", 'String'>
-    readonly workHistory: FieldRef<"Rpb1Record", 'String'>
-    readonly specialOccupationsHobbies: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryStatus: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryRank: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryRegNumber: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryBranchUnit: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryUnitLocation: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryServiceFrom: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryServiceTo: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryYearsServed: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryDischargeReason: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryLastCommander: FieldRef<"Rpb1Record", 'String'>
-    readonly militarySpecialOperations: FieldRef<"Rpb1Record", 'String'>
-    readonly militarySpecialOpDate: FieldRef<"Rpb1Record", 'String'>
-    readonly militarySpecialOpDuration: FieldRef<"Rpb1Record", 'String'>
-    readonly militaryExemptionReason: FieldRef<"Rpb1Record", 'String'>
-    readonly writerDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly politicalSocialMemberships: FieldRef<"Rpb1Record", 'String'>
-    readonly foreignTravels: FieldRef<"Rpb1Record", 'String'>
-    readonly identificationDocuments: FieldRef<"Rpb1Record", 'String'>
-    readonly legalCases: FieldRef<"Rpb1Record", 'String'>
-    readonly disciplinaryPunishments: FieldRef<"Rpb1Record", 'String'>
-    readonly fatherDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly motherDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly maritalStatus: FieldRef<"Rpb1Record", 'String'>
-    readonly spouseFormerDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly spouseCurrentDetails: FieldRef<"Rpb1Record", 'String'>
-    readonly children: FieldRef<"Rpb1Record", 'String'>
-    readonly siblings: FieldRef<"Rpb1Record", 'String'>
-    readonly relativesInGovernment: FieldRef<"Rpb1Record", 'String'>
-    readonly overseasContacts: FieldRef<"Rpb1Record", 'String'>
-    readonly cohabitants: FieldRef<"Rpb1Record", 'String'>
-    readonly closeFriendsRef: FieldRef<"Rpb1Record", 'String'>
-    readonly supporters: FieldRef<"Rpb1Record", 'String'>
-    readonly additionalExplanations: FieldRef<"Rpb1Record", 'String'>
-    readonly ownerSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly inspectorRankName: FieldRef<"Rpb1Record", 'String'>
-    readonly inspectorPosition: FieldRef<"Rpb1Record", 'String'>
-    readonly inspectorSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly sketchMapImage: FieldRef<"Rpb1Record", 'String'>
-    readonly mapHouseNo: FieldRef<"Rpb1Record", 'String'>
-    readonly mapVillage: FieldRef<"Rpb1Record", 'String'>
-    readonly mapMoo: FieldRef<"Rpb1Record", 'String'>
-    readonly mapSoi: FieldRef<"Rpb1Record", 'String'>
-    readonly mapRoad: FieldRef<"Rpb1Record", 'String'>
-    readonly mapSubdistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly mapDistrict: FieldRef<"Rpb1Record", 'String'>
-    readonly mapProvince: FieldRef<"Rpb1Record", 'String'>
-    readonly mapPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly mapHouseOwnerName: FieldRef<"Rpb1Record", 'String'>
-    readonly mapHouseOwnerPhone: FieldRef<"Rpb1Record", 'String'>
-    readonly emergencyContactRankName: FieldRef<"Rpb1Record", 'String'>
-    readonly emergencyContactRelation: FieldRef<"Rpb1Record", 'String'>
-    readonly emergencyContactAddress: FieldRef<"Rpb1Record", 'String'>
-    readonly extraTitleName: FieldRef<"Rpb1Record", 'String'>
-    readonly extraGender: FieldRef<"Rpb1Record", 'String'>
-    readonly extraBloodGroup: FieldRef<"Rpb1Record", 'String'>
-    readonly extraRegisteredAddress: FieldRef<"Rpb1Record", 'String'>
-    readonly extraCurrentAddress: FieldRef<"Rpb1Record", 'String'>
-    readonly extraIsSameAddress: FieldRef<"Rpb1Record", 'Boolean'>
-    readonly extraMobilePhone: FieldRef<"Rpb1Record", 'String'>
-    readonly extraHomePhone: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficePhone: FieldRef<"Rpb1Record", 'String'>
-    readonly extraEmail: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOwnerSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficerName: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficerPosition: FieldRef<"Rpb1Record", 'String'>
-    readonly extraOfficerSignatureDate: FieldRef<"Rpb1Record", 'String'>
-    readonly createdAt: FieldRef<"Rpb1Record", 'DateTime'>
-    readonly updatedAt: FieldRef<"Rpb1Record", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Rpb1Record findUnique
-   */
-  export type Rpb1RecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record findUniqueOrThrow
-   */
-  export type Rpb1RecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record findFirst
-   */
-  export type Rpb1RecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Rpb1Records.
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Rpb1Records.
-     */
-    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
-  }
-
-  /**
-   * Rpb1Record findFirstOrThrow
-   */
-  export type Rpb1RecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Record to fetch.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Rpb1Records.
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Rpb1Records.
-     */
-    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
-  }
-
-  /**
-   * Rpb1Record findMany
-   */
-  export type Rpb1RecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter, which Rpb1Records to fetch.
-     */
-    where?: Rpb1RecordWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rpb1Records to fetch.
-     */
-    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Rpb1Records.
-     */
-    cursor?: Rpb1RecordWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rpb1Records from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rpb1Records.
-     */
-    skip?: number
-    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
-  }
-
-  /**
-   * Rpb1Record create
-   */
-  export type Rpb1RecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Rpb1Record.
-     */
-    data: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
-  }
-
-  /**
-   * Rpb1Record createMany
-   */
-  export type Rpb1RecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Rpb1Records.
-     */
-    data: Rpb1RecordCreateManyInput | Rpb1RecordCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Rpb1Record update
-   */
-  export type Rpb1RecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Rpb1Record.
-     */
-    data: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
-    /**
-     * Choose, which Rpb1Record to update.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record updateMany
-   */
-  export type Rpb1RecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Rpb1Records.
-     */
-    data: XOR<Rpb1RecordUpdateManyMutationInput, Rpb1RecordUncheckedUpdateManyInput>
-    /**
-     * Filter which Rpb1Records to update
-     */
-    where?: Rpb1RecordWhereInput
-  }
-
-  /**
-   * Rpb1Record upsert
-   */
-  export type Rpb1RecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Rpb1Record to update in case it exists.
-     */
-    where: Rpb1RecordWhereUniqueInput
-    /**
-     * In case the Rpb1Record found by the `where` argument doesn't exist, create a new Rpb1Record with this data.
-     */
-    create: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
-    /**
-     * In case the Rpb1Record was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
-  }
-
-  /**
-   * Rpb1Record delete
-   */
-  export type Rpb1RecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-    /**
-     * Filter which Rpb1Record to delete.
-     */
-    where: Rpb1RecordWhereUniqueInput
-  }
-
-  /**
-   * Rpb1Record deleteMany
-   */
-  export type Rpb1RecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Rpb1Records to delete
-     */
-    where?: Rpb1RecordWhereInput
-  }
-
-  /**
-   * Rpb1Record without action
-   */
-  export type Rpb1RecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rpb1Record
-     */
-    select?: Rpb1RecordSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Rpb1RecordInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Service
    */
 
@@ -21501,6 +19069,2438 @@ export namespace Prisma {
 
 
   /**
+   * Model Rpb1Record
+   */
+
+  export type AggregateRpb1Record = {
+    _count: Rpb1RecordCountAggregateOutputType | null
+    _avg: Rpb1RecordAvgAggregateOutputType | null
+    _sum: Rpb1RecordSumAggregateOutputType | null
+    _min: Rpb1RecordMinAggregateOutputType | null
+    _max: Rpb1RecordMaxAggregateOutputType | null
+  }
+
+  export type Rpb1RecordAvgAggregateOutputType = {
+    version: number | null
+    age: number | null
+    height: number | null
+    weight: number | null
+  }
+
+  export type Rpb1RecordSumAggregateOutputType = {
+    version: number | null
+    age: number | null
+    height: number | null
+    weight: number | null
+  }
+
+  export type Rpb1RecordMinAggregateOutputType = {
+    id: string | null
+    personnelId: string | null
+    status: string | null
+    version: number | null
+    classification: string | null
+    photoUrl: string | null
+    titleRank: string | null
+    firstName: string | null
+    middleName: string | null
+    lastName: string | null
+    gender: string | null
+    age: number | null
+    formerFirstName: string | null
+    nameChangeDoc: string | null
+    formerLastName: string | null
+    lastNameChangeDoc: string | null
+    nickname: string | null
+    citizenId: string | null
+    dateOfBirth: string | null
+    birthPlaceHospital: string | null
+    race: string | null
+    nationality: string | null
+    formerNationality: string | null
+    naturalizationDoc: string | null
+    religion: string | null
+    formerReligion: string | null
+    registeredHouseNo: string | null
+    registeredVillage: string | null
+    registeredMoo: string | null
+    registeredSoi: string | null
+    registeredRoad: string | null
+    registeredSubdistrict: string | null
+    registeredDistrict: string | null
+    registeredProvince: string | null
+    registeredPhone: string | null
+    currentHouseNo: string | null
+    currentVillage: string | null
+    currentMoo: string | null
+    currentSoi: string | null
+    currentRoad: string | null
+    currentSubdistrict: string | null
+    currentDistrict: string | null
+    currentProvince: string | null
+    currentPhone: string | null
+    phoneLandline: string | null
+    phoneMobile: string | null
+    email: string | null
+    lineId: string | null
+    facebook: string | null
+    instagram: string | null
+    otherContact: string | null
+    alienCardNo: string | null
+    alienCardDate: string | null
+    alienCardIssuedAt: string | null
+    alienResidenceDocNo: string | null
+    alienResidenceDocDate: string | null
+    alienResidenceIssuedAt: string | null
+    alienIdInThailand: string | null
+    birthCountry: string | null
+    entryDateToThailand: string | null
+    workPermitNo: string | null
+    workPermitIssuedBy: string | null
+    workPermitIssueDate: string | null
+    workPermitExpiryDate: string | null
+    height: number | null
+    weight: number | null
+    scarsDistinguishingMarks: string | null
+    bloodGroup: string | null
+    addressesPast15Years: string | null
+    educations: string | null
+    specialActivities: string | null
+    languages: string | null
+    workHistory: string | null
+    specialOccupationsHobbies: string | null
+    militaryStatus: string | null
+    militaryRank: string | null
+    militaryRegNumber: string | null
+    militaryBranchUnit: string | null
+    militaryUnitLocation: string | null
+    militaryServiceFrom: string | null
+    militaryServiceTo: string | null
+    militaryYearsServed: string | null
+    militaryDischargeReason: string | null
+    militaryLastCommander: string | null
+    militarySpecialOperations: string | null
+    militarySpecialOpDate: string | null
+    militarySpecialOpDuration: string | null
+    militaryExemptionReason: string | null
+    writerDetails: string | null
+    politicalSocialMemberships: string | null
+    foreignTravels: string | null
+    identificationDocuments: string | null
+    legalCases: string | null
+    disciplinaryPunishments: string | null
+    fatherDetails: string | null
+    motherDetails: string | null
+    maritalStatus: string | null
+    spouseFormerDetails: string | null
+    spouseCurrentDetails: string | null
+    children: string | null
+    siblings: string | null
+    relativesInGovernment: string | null
+    overseasContacts: string | null
+    cohabitants: string | null
+    closeFriendsRef: string | null
+    supporters: string | null
+    additionalExplanations: string | null
+    ownerSignatureDate: string | null
+    inspectorRankName: string | null
+    inspectorPosition: string | null
+    inspectorSignatureDate: string | null
+    sketchMapImage: string | null
+    mapHouseNo: string | null
+    mapVillage: string | null
+    mapMoo: string | null
+    mapSoi: string | null
+    mapRoad: string | null
+    mapSubdistrict: string | null
+    mapDistrict: string | null
+    mapProvince: string | null
+    mapPhone: string | null
+    mapHouseOwnerName: string | null
+    mapHouseOwnerPhone: string | null
+    emergencyContactRankName: string | null
+    emergencyContactRelation: string | null
+    emergencyContactAddress: string | null
+    extraTitleName: string | null
+    extraGender: string | null
+    extraBloodGroup: string | null
+    extraRegisteredAddress: string | null
+    extraCurrentAddress: string | null
+    extraIsSameAddress: boolean | null
+    extraMobilePhone: string | null
+    extraHomePhone: string | null
+    extraOfficePhone: string | null
+    extraEmail: string | null
+    extraOwnerSignatureDate: string | null
+    extraOfficerName: string | null
+    extraOfficerPosition: string | null
+    extraOfficerSignatureDate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Rpb1RecordMaxAggregateOutputType = {
+    id: string | null
+    personnelId: string | null
+    status: string | null
+    version: number | null
+    classification: string | null
+    photoUrl: string | null
+    titleRank: string | null
+    firstName: string | null
+    middleName: string | null
+    lastName: string | null
+    gender: string | null
+    age: number | null
+    formerFirstName: string | null
+    nameChangeDoc: string | null
+    formerLastName: string | null
+    lastNameChangeDoc: string | null
+    nickname: string | null
+    citizenId: string | null
+    dateOfBirth: string | null
+    birthPlaceHospital: string | null
+    race: string | null
+    nationality: string | null
+    formerNationality: string | null
+    naturalizationDoc: string | null
+    religion: string | null
+    formerReligion: string | null
+    registeredHouseNo: string | null
+    registeredVillage: string | null
+    registeredMoo: string | null
+    registeredSoi: string | null
+    registeredRoad: string | null
+    registeredSubdistrict: string | null
+    registeredDistrict: string | null
+    registeredProvince: string | null
+    registeredPhone: string | null
+    currentHouseNo: string | null
+    currentVillage: string | null
+    currentMoo: string | null
+    currentSoi: string | null
+    currentRoad: string | null
+    currentSubdistrict: string | null
+    currentDistrict: string | null
+    currentProvince: string | null
+    currentPhone: string | null
+    phoneLandline: string | null
+    phoneMobile: string | null
+    email: string | null
+    lineId: string | null
+    facebook: string | null
+    instagram: string | null
+    otherContact: string | null
+    alienCardNo: string | null
+    alienCardDate: string | null
+    alienCardIssuedAt: string | null
+    alienResidenceDocNo: string | null
+    alienResidenceDocDate: string | null
+    alienResidenceIssuedAt: string | null
+    alienIdInThailand: string | null
+    birthCountry: string | null
+    entryDateToThailand: string | null
+    workPermitNo: string | null
+    workPermitIssuedBy: string | null
+    workPermitIssueDate: string | null
+    workPermitExpiryDate: string | null
+    height: number | null
+    weight: number | null
+    scarsDistinguishingMarks: string | null
+    bloodGroup: string | null
+    addressesPast15Years: string | null
+    educations: string | null
+    specialActivities: string | null
+    languages: string | null
+    workHistory: string | null
+    specialOccupationsHobbies: string | null
+    militaryStatus: string | null
+    militaryRank: string | null
+    militaryRegNumber: string | null
+    militaryBranchUnit: string | null
+    militaryUnitLocation: string | null
+    militaryServiceFrom: string | null
+    militaryServiceTo: string | null
+    militaryYearsServed: string | null
+    militaryDischargeReason: string | null
+    militaryLastCommander: string | null
+    militarySpecialOperations: string | null
+    militarySpecialOpDate: string | null
+    militarySpecialOpDuration: string | null
+    militaryExemptionReason: string | null
+    writerDetails: string | null
+    politicalSocialMemberships: string | null
+    foreignTravels: string | null
+    identificationDocuments: string | null
+    legalCases: string | null
+    disciplinaryPunishments: string | null
+    fatherDetails: string | null
+    motherDetails: string | null
+    maritalStatus: string | null
+    spouseFormerDetails: string | null
+    spouseCurrentDetails: string | null
+    children: string | null
+    siblings: string | null
+    relativesInGovernment: string | null
+    overseasContacts: string | null
+    cohabitants: string | null
+    closeFriendsRef: string | null
+    supporters: string | null
+    additionalExplanations: string | null
+    ownerSignatureDate: string | null
+    inspectorRankName: string | null
+    inspectorPosition: string | null
+    inspectorSignatureDate: string | null
+    sketchMapImage: string | null
+    mapHouseNo: string | null
+    mapVillage: string | null
+    mapMoo: string | null
+    mapSoi: string | null
+    mapRoad: string | null
+    mapSubdistrict: string | null
+    mapDistrict: string | null
+    mapProvince: string | null
+    mapPhone: string | null
+    mapHouseOwnerName: string | null
+    mapHouseOwnerPhone: string | null
+    emergencyContactRankName: string | null
+    emergencyContactRelation: string | null
+    emergencyContactAddress: string | null
+    extraTitleName: string | null
+    extraGender: string | null
+    extraBloodGroup: string | null
+    extraRegisteredAddress: string | null
+    extraCurrentAddress: string | null
+    extraIsSameAddress: boolean | null
+    extraMobilePhone: string | null
+    extraHomePhone: string | null
+    extraOfficePhone: string | null
+    extraEmail: string | null
+    extraOwnerSignatureDate: string | null
+    extraOfficerName: string | null
+    extraOfficerPosition: string | null
+    extraOfficerSignatureDate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Rpb1RecordCountAggregateOutputType = {
+    id: number
+    personnelId: number
+    status: number
+    version: number
+    classification: number
+    photoUrl: number
+    titleRank: number
+    firstName: number
+    middleName: number
+    lastName: number
+    gender: number
+    age: number
+    formerFirstName: number
+    nameChangeDoc: number
+    formerLastName: number
+    lastNameChangeDoc: number
+    nickname: number
+    citizenId: number
+    dateOfBirth: number
+    birthPlaceHospital: number
+    race: number
+    nationality: number
+    formerNationality: number
+    naturalizationDoc: number
+    religion: number
+    formerReligion: number
+    registeredHouseNo: number
+    registeredVillage: number
+    registeredMoo: number
+    registeredSoi: number
+    registeredRoad: number
+    registeredSubdistrict: number
+    registeredDistrict: number
+    registeredProvince: number
+    registeredPhone: number
+    currentHouseNo: number
+    currentVillage: number
+    currentMoo: number
+    currentSoi: number
+    currentRoad: number
+    currentSubdistrict: number
+    currentDistrict: number
+    currentProvince: number
+    currentPhone: number
+    phoneLandline: number
+    phoneMobile: number
+    email: number
+    lineId: number
+    facebook: number
+    instagram: number
+    otherContact: number
+    alienCardNo: number
+    alienCardDate: number
+    alienCardIssuedAt: number
+    alienResidenceDocNo: number
+    alienResidenceDocDate: number
+    alienResidenceIssuedAt: number
+    alienIdInThailand: number
+    birthCountry: number
+    entryDateToThailand: number
+    workPermitNo: number
+    workPermitIssuedBy: number
+    workPermitIssueDate: number
+    workPermitExpiryDate: number
+    height: number
+    weight: number
+    scarsDistinguishingMarks: number
+    bloodGroup: number
+    addressesPast15Years: number
+    educations: number
+    specialActivities: number
+    languages: number
+    workHistory: number
+    specialOccupationsHobbies: number
+    militaryStatus: number
+    militaryRank: number
+    militaryRegNumber: number
+    militaryBranchUnit: number
+    militaryUnitLocation: number
+    militaryServiceFrom: number
+    militaryServiceTo: number
+    militaryYearsServed: number
+    militaryDischargeReason: number
+    militaryLastCommander: number
+    militarySpecialOperations: number
+    militarySpecialOpDate: number
+    militarySpecialOpDuration: number
+    militaryExemptionReason: number
+    writerDetails: number
+    politicalSocialMemberships: number
+    foreignTravels: number
+    identificationDocuments: number
+    legalCases: number
+    disciplinaryPunishments: number
+    fatherDetails: number
+    motherDetails: number
+    maritalStatus: number
+    spouseFormerDetails: number
+    spouseCurrentDetails: number
+    children: number
+    siblings: number
+    relativesInGovernment: number
+    overseasContacts: number
+    cohabitants: number
+    closeFriendsRef: number
+    supporters: number
+    additionalExplanations: number
+    ownerSignatureDate: number
+    inspectorRankName: number
+    inspectorPosition: number
+    inspectorSignatureDate: number
+    sketchMapImage: number
+    mapHouseNo: number
+    mapVillage: number
+    mapMoo: number
+    mapSoi: number
+    mapRoad: number
+    mapSubdistrict: number
+    mapDistrict: number
+    mapProvince: number
+    mapPhone: number
+    mapHouseOwnerName: number
+    mapHouseOwnerPhone: number
+    emergencyContactRankName: number
+    emergencyContactRelation: number
+    emergencyContactAddress: number
+    extraTitleName: number
+    extraGender: number
+    extraBloodGroup: number
+    extraRegisteredAddress: number
+    extraCurrentAddress: number
+    extraIsSameAddress: number
+    extraMobilePhone: number
+    extraHomePhone: number
+    extraOfficePhone: number
+    extraEmail: number
+    extraOwnerSignatureDate: number
+    extraOfficerName: number
+    extraOfficerPosition: number
+    extraOfficerSignatureDate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type Rpb1RecordAvgAggregateInputType = {
+    version?: true
+    age?: true
+    height?: true
+    weight?: true
+  }
+
+  export type Rpb1RecordSumAggregateInputType = {
+    version?: true
+    age?: true
+    height?: true
+    weight?: true
+  }
+
+  export type Rpb1RecordMinAggregateInputType = {
+    id?: true
+    personnelId?: true
+    status?: true
+    version?: true
+    classification?: true
+    photoUrl?: true
+    titleRank?: true
+    firstName?: true
+    middleName?: true
+    lastName?: true
+    gender?: true
+    age?: true
+    formerFirstName?: true
+    nameChangeDoc?: true
+    formerLastName?: true
+    lastNameChangeDoc?: true
+    nickname?: true
+    citizenId?: true
+    dateOfBirth?: true
+    birthPlaceHospital?: true
+    race?: true
+    nationality?: true
+    formerNationality?: true
+    naturalizationDoc?: true
+    religion?: true
+    formerReligion?: true
+    registeredHouseNo?: true
+    registeredVillage?: true
+    registeredMoo?: true
+    registeredSoi?: true
+    registeredRoad?: true
+    registeredSubdistrict?: true
+    registeredDistrict?: true
+    registeredProvince?: true
+    registeredPhone?: true
+    currentHouseNo?: true
+    currentVillage?: true
+    currentMoo?: true
+    currentSoi?: true
+    currentRoad?: true
+    currentSubdistrict?: true
+    currentDistrict?: true
+    currentProvince?: true
+    currentPhone?: true
+    phoneLandline?: true
+    phoneMobile?: true
+    email?: true
+    lineId?: true
+    facebook?: true
+    instagram?: true
+    otherContact?: true
+    alienCardNo?: true
+    alienCardDate?: true
+    alienCardIssuedAt?: true
+    alienResidenceDocNo?: true
+    alienResidenceDocDate?: true
+    alienResidenceIssuedAt?: true
+    alienIdInThailand?: true
+    birthCountry?: true
+    entryDateToThailand?: true
+    workPermitNo?: true
+    workPermitIssuedBy?: true
+    workPermitIssueDate?: true
+    workPermitExpiryDate?: true
+    height?: true
+    weight?: true
+    scarsDistinguishingMarks?: true
+    bloodGroup?: true
+    addressesPast15Years?: true
+    educations?: true
+    specialActivities?: true
+    languages?: true
+    workHistory?: true
+    specialOccupationsHobbies?: true
+    militaryStatus?: true
+    militaryRank?: true
+    militaryRegNumber?: true
+    militaryBranchUnit?: true
+    militaryUnitLocation?: true
+    militaryServiceFrom?: true
+    militaryServiceTo?: true
+    militaryYearsServed?: true
+    militaryDischargeReason?: true
+    militaryLastCommander?: true
+    militarySpecialOperations?: true
+    militarySpecialOpDate?: true
+    militarySpecialOpDuration?: true
+    militaryExemptionReason?: true
+    writerDetails?: true
+    politicalSocialMemberships?: true
+    foreignTravels?: true
+    identificationDocuments?: true
+    legalCases?: true
+    disciplinaryPunishments?: true
+    fatherDetails?: true
+    motherDetails?: true
+    maritalStatus?: true
+    spouseFormerDetails?: true
+    spouseCurrentDetails?: true
+    children?: true
+    siblings?: true
+    relativesInGovernment?: true
+    overseasContacts?: true
+    cohabitants?: true
+    closeFriendsRef?: true
+    supporters?: true
+    additionalExplanations?: true
+    ownerSignatureDate?: true
+    inspectorRankName?: true
+    inspectorPosition?: true
+    inspectorSignatureDate?: true
+    sketchMapImage?: true
+    mapHouseNo?: true
+    mapVillage?: true
+    mapMoo?: true
+    mapSoi?: true
+    mapRoad?: true
+    mapSubdistrict?: true
+    mapDistrict?: true
+    mapProvince?: true
+    mapPhone?: true
+    mapHouseOwnerName?: true
+    mapHouseOwnerPhone?: true
+    emergencyContactRankName?: true
+    emergencyContactRelation?: true
+    emergencyContactAddress?: true
+    extraTitleName?: true
+    extraGender?: true
+    extraBloodGroup?: true
+    extraRegisteredAddress?: true
+    extraCurrentAddress?: true
+    extraIsSameAddress?: true
+    extraMobilePhone?: true
+    extraHomePhone?: true
+    extraOfficePhone?: true
+    extraEmail?: true
+    extraOwnerSignatureDate?: true
+    extraOfficerName?: true
+    extraOfficerPosition?: true
+    extraOfficerSignatureDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Rpb1RecordMaxAggregateInputType = {
+    id?: true
+    personnelId?: true
+    status?: true
+    version?: true
+    classification?: true
+    photoUrl?: true
+    titleRank?: true
+    firstName?: true
+    middleName?: true
+    lastName?: true
+    gender?: true
+    age?: true
+    formerFirstName?: true
+    nameChangeDoc?: true
+    formerLastName?: true
+    lastNameChangeDoc?: true
+    nickname?: true
+    citizenId?: true
+    dateOfBirth?: true
+    birthPlaceHospital?: true
+    race?: true
+    nationality?: true
+    formerNationality?: true
+    naturalizationDoc?: true
+    religion?: true
+    formerReligion?: true
+    registeredHouseNo?: true
+    registeredVillage?: true
+    registeredMoo?: true
+    registeredSoi?: true
+    registeredRoad?: true
+    registeredSubdistrict?: true
+    registeredDistrict?: true
+    registeredProvince?: true
+    registeredPhone?: true
+    currentHouseNo?: true
+    currentVillage?: true
+    currentMoo?: true
+    currentSoi?: true
+    currentRoad?: true
+    currentSubdistrict?: true
+    currentDistrict?: true
+    currentProvince?: true
+    currentPhone?: true
+    phoneLandline?: true
+    phoneMobile?: true
+    email?: true
+    lineId?: true
+    facebook?: true
+    instagram?: true
+    otherContact?: true
+    alienCardNo?: true
+    alienCardDate?: true
+    alienCardIssuedAt?: true
+    alienResidenceDocNo?: true
+    alienResidenceDocDate?: true
+    alienResidenceIssuedAt?: true
+    alienIdInThailand?: true
+    birthCountry?: true
+    entryDateToThailand?: true
+    workPermitNo?: true
+    workPermitIssuedBy?: true
+    workPermitIssueDate?: true
+    workPermitExpiryDate?: true
+    height?: true
+    weight?: true
+    scarsDistinguishingMarks?: true
+    bloodGroup?: true
+    addressesPast15Years?: true
+    educations?: true
+    specialActivities?: true
+    languages?: true
+    workHistory?: true
+    specialOccupationsHobbies?: true
+    militaryStatus?: true
+    militaryRank?: true
+    militaryRegNumber?: true
+    militaryBranchUnit?: true
+    militaryUnitLocation?: true
+    militaryServiceFrom?: true
+    militaryServiceTo?: true
+    militaryYearsServed?: true
+    militaryDischargeReason?: true
+    militaryLastCommander?: true
+    militarySpecialOperations?: true
+    militarySpecialOpDate?: true
+    militarySpecialOpDuration?: true
+    militaryExemptionReason?: true
+    writerDetails?: true
+    politicalSocialMemberships?: true
+    foreignTravels?: true
+    identificationDocuments?: true
+    legalCases?: true
+    disciplinaryPunishments?: true
+    fatherDetails?: true
+    motherDetails?: true
+    maritalStatus?: true
+    spouseFormerDetails?: true
+    spouseCurrentDetails?: true
+    children?: true
+    siblings?: true
+    relativesInGovernment?: true
+    overseasContacts?: true
+    cohabitants?: true
+    closeFriendsRef?: true
+    supporters?: true
+    additionalExplanations?: true
+    ownerSignatureDate?: true
+    inspectorRankName?: true
+    inspectorPosition?: true
+    inspectorSignatureDate?: true
+    sketchMapImage?: true
+    mapHouseNo?: true
+    mapVillage?: true
+    mapMoo?: true
+    mapSoi?: true
+    mapRoad?: true
+    mapSubdistrict?: true
+    mapDistrict?: true
+    mapProvince?: true
+    mapPhone?: true
+    mapHouseOwnerName?: true
+    mapHouseOwnerPhone?: true
+    emergencyContactRankName?: true
+    emergencyContactRelation?: true
+    emergencyContactAddress?: true
+    extraTitleName?: true
+    extraGender?: true
+    extraBloodGroup?: true
+    extraRegisteredAddress?: true
+    extraCurrentAddress?: true
+    extraIsSameAddress?: true
+    extraMobilePhone?: true
+    extraHomePhone?: true
+    extraOfficePhone?: true
+    extraEmail?: true
+    extraOwnerSignatureDate?: true
+    extraOfficerName?: true
+    extraOfficerPosition?: true
+    extraOfficerSignatureDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Rpb1RecordCountAggregateInputType = {
+    id?: true
+    personnelId?: true
+    status?: true
+    version?: true
+    classification?: true
+    photoUrl?: true
+    titleRank?: true
+    firstName?: true
+    middleName?: true
+    lastName?: true
+    gender?: true
+    age?: true
+    formerFirstName?: true
+    nameChangeDoc?: true
+    formerLastName?: true
+    lastNameChangeDoc?: true
+    nickname?: true
+    citizenId?: true
+    dateOfBirth?: true
+    birthPlaceHospital?: true
+    race?: true
+    nationality?: true
+    formerNationality?: true
+    naturalizationDoc?: true
+    religion?: true
+    formerReligion?: true
+    registeredHouseNo?: true
+    registeredVillage?: true
+    registeredMoo?: true
+    registeredSoi?: true
+    registeredRoad?: true
+    registeredSubdistrict?: true
+    registeredDistrict?: true
+    registeredProvince?: true
+    registeredPhone?: true
+    currentHouseNo?: true
+    currentVillage?: true
+    currentMoo?: true
+    currentSoi?: true
+    currentRoad?: true
+    currentSubdistrict?: true
+    currentDistrict?: true
+    currentProvince?: true
+    currentPhone?: true
+    phoneLandline?: true
+    phoneMobile?: true
+    email?: true
+    lineId?: true
+    facebook?: true
+    instagram?: true
+    otherContact?: true
+    alienCardNo?: true
+    alienCardDate?: true
+    alienCardIssuedAt?: true
+    alienResidenceDocNo?: true
+    alienResidenceDocDate?: true
+    alienResidenceIssuedAt?: true
+    alienIdInThailand?: true
+    birthCountry?: true
+    entryDateToThailand?: true
+    workPermitNo?: true
+    workPermitIssuedBy?: true
+    workPermitIssueDate?: true
+    workPermitExpiryDate?: true
+    height?: true
+    weight?: true
+    scarsDistinguishingMarks?: true
+    bloodGroup?: true
+    addressesPast15Years?: true
+    educations?: true
+    specialActivities?: true
+    languages?: true
+    workHistory?: true
+    specialOccupationsHobbies?: true
+    militaryStatus?: true
+    militaryRank?: true
+    militaryRegNumber?: true
+    militaryBranchUnit?: true
+    militaryUnitLocation?: true
+    militaryServiceFrom?: true
+    militaryServiceTo?: true
+    militaryYearsServed?: true
+    militaryDischargeReason?: true
+    militaryLastCommander?: true
+    militarySpecialOperations?: true
+    militarySpecialOpDate?: true
+    militarySpecialOpDuration?: true
+    militaryExemptionReason?: true
+    writerDetails?: true
+    politicalSocialMemberships?: true
+    foreignTravels?: true
+    identificationDocuments?: true
+    legalCases?: true
+    disciplinaryPunishments?: true
+    fatherDetails?: true
+    motherDetails?: true
+    maritalStatus?: true
+    spouseFormerDetails?: true
+    spouseCurrentDetails?: true
+    children?: true
+    siblings?: true
+    relativesInGovernment?: true
+    overseasContacts?: true
+    cohabitants?: true
+    closeFriendsRef?: true
+    supporters?: true
+    additionalExplanations?: true
+    ownerSignatureDate?: true
+    inspectorRankName?: true
+    inspectorPosition?: true
+    inspectorSignatureDate?: true
+    sketchMapImage?: true
+    mapHouseNo?: true
+    mapVillage?: true
+    mapMoo?: true
+    mapSoi?: true
+    mapRoad?: true
+    mapSubdistrict?: true
+    mapDistrict?: true
+    mapProvince?: true
+    mapPhone?: true
+    mapHouseOwnerName?: true
+    mapHouseOwnerPhone?: true
+    emergencyContactRankName?: true
+    emergencyContactRelation?: true
+    emergencyContactAddress?: true
+    extraTitleName?: true
+    extraGender?: true
+    extraBloodGroup?: true
+    extraRegisteredAddress?: true
+    extraCurrentAddress?: true
+    extraIsSameAddress?: true
+    extraMobilePhone?: true
+    extraHomePhone?: true
+    extraOfficePhone?: true
+    extraEmail?: true
+    extraOwnerSignatureDate?: true
+    extraOfficerName?: true
+    extraOfficerPosition?: true
+    extraOfficerSignatureDate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type Rpb1RecordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Rpb1Record to aggregate.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Rpb1Records
+    **/
+    _count?: true | Rpb1RecordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Rpb1RecordAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Rpb1RecordSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Rpb1RecordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Rpb1RecordMaxAggregateInputType
+  }
+
+  export type GetRpb1RecordAggregateType<T extends Rpb1RecordAggregateArgs> = {
+        [P in keyof T & keyof AggregateRpb1Record]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRpb1Record[P]>
+      : GetScalarType<T[P], AggregateRpb1Record[P]>
+  }
+
+
+
+
+  export type Rpb1RecordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Rpb1RecordWhereInput
+    orderBy?: Rpb1RecordOrderByWithAggregationInput | Rpb1RecordOrderByWithAggregationInput[]
+    by: Rpb1RecordScalarFieldEnum[] | Rpb1RecordScalarFieldEnum
+    having?: Rpb1RecordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Rpb1RecordCountAggregateInputType | true
+    _avg?: Rpb1RecordAvgAggregateInputType
+    _sum?: Rpb1RecordSumAggregateInputType
+    _min?: Rpb1RecordMinAggregateInputType
+    _max?: Rpb1RecordMaxAggregateInputType
+  }
+
+  export type Rpb1RecordGroupByOutputType = {
+    id: string
+    personnelId: string
+    status: string
+    version: number
+    classification: string
+    photoUrl: string | null
+    titleRank: string | null
+    firstName: string | null
+    middleName: string | null
+    lastName: string | null
+    gender: string | null
+    age: number | null
+    formerFirstName: string | null
+    nameChangeDoc: string | null
+    formerLastName: string | null
+    lastNameChangeDoc: string | null
+    nickname: string | null
+    citizenId: string | null
+    dateOfBirth: string | null
+    birthPlaceHospital: string | null
+    race: string | null
+    nationality: string | null
+    formerNationality: string | null
+    naturalizationDoc: string | null
+    religion: string | null
+    formerReligion: string | null
+    registeredHouseNo: string | null
+    registeredVillage: string | null
+    registeredMoo: string | null
+    registeredSoi: string | null
+    registeredRoad: string | null
+    registeredSubdistrict: string | null
+    registeredDistrict: string | null
+    registeredProvince: string | null
+    registeredPhone: string | null
+    currentHouseNo: string | null
+    currentVillage: string | null
+    currentMoo: string | null
+    currentSoi: string | null
+    currentRoad: string | null
+    currentSubdistrict: string | null
+    currentDistrict: string | null
+    currentProvince: string | null
+    currentPhone: string | null
+    phoneLandline: string | null
+    phoneMobile: string | null
+    email: string | null
+    lineId: string | null
+    facebook: string | null
+    instagram: string | null
+    otherContact: string | null
+    alienCardNo: string | null
+    alienCardDate: string | null
+    alienCardIssuedAt: string | null
+    alienResidenceDocNo: string | null
+    alienResidenceDocDate: string | null
+    alienResidenceIssuedAt: string | null
+    alienIdInThailand: string | null
+    birthCountry: string | null
+    entryDateToThailand: string | null
+    workPermitNo: string | null
+    workPermitIssuedBy: string | null
+    workPermitIssueDate: string | null
+    workPermitExpiryDate: string | null
+    height: number | null
+    weight: number | null
+    scarsDistinguishingMarks: string | null
+    bloodGroup: string | null
+    addressesPast15Years: string
+    educations: string
+    specialActivities: string
+    languages: string
+    workHistory: string
+    specialOccupationsHobbies: string | null
+    militaryStatus: string | null
+    militaryRank: string | null
+    militaryRegNumber: string | null
+    militaryBranchUnit: string | null
+    militaryUnitLocation: string | null
+    militaryServiceFrom: string | null
+    militaryServiceTo: string | null
+    militaryYearsServed: string | null
+    militaryDischargeReason: string | null
+    militaryLastCommander: string | null
+    militarySpecialOperations: string | null
+    militarySpecialOpDate: string | null
+    militarySpecialOpDuration: string | null
+    militaryExemptionReason: string | null
+    writerDetails: string | null
+    politicalSocialMemberships: string
+    foreignTravels: string
+    identificationDocuments: string
+    legalCases: string
+    disciplinaryPunishments: string | null
+    fatherDetails: string | null
+    motherDetails: string | null
+    maritalStatus: string | null
+    spouseFormerDetails: string | null
+    spouseCurrentDetails: string | null
+    children: string
+    siblings: string
+    relativesInGovernment: string
+    overseasContacts: string
+    cohabitants: string
+    closeFriendsRef: string
+    supporters: string
+    additionalExplanations: string | null
+    ownerSignatureDate: string | null
+    inspectorRankName: string | null
+    inspectorPosition: string | null
+    inspectorSignatureDate: string | null
+    sketchMapImage: string | null
+    mapHouseNo: string | null
+    mapVillage: string | null
+    mapMoo: string | null
+    mapSoi: string | null
+    mapRoad: string | null
+    mapSubdistrict: string | null
+    mapDistrict: string | null
+    mapProvince: string | null
+    mapPhone: string | null
+    mapHouseOwnerName: string | null
+    mapHouseOwnerPhone: string | null
+    emergencyContactRankName: string | null
+    emergencyContactRelation: string | null
+    emergencyContactAddress: string | null
+    extraTitleName: string | null
+    extraGender: string | null
+    extraBloodGroup: string | null
+    extraRegisteredAddress: string | null
+    extraCurrentAddress: string | null
+    extraIsSameAddress: boolean
+    extraMobilePhone: string | null
+    extraHomePhone: string | null
+    extraOfficePhone: string | null
+    extraEmail: string | null
+    extraOwnerSignatureDate: string | null
+    extraOfficerName: string | null
+    extraOfficerPosition: string | null
+    extraOfficerSignatureDate: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: Rpb1RecordCountAggregateOutputType | null
+    _avg: Rpb1RecordAvgAggregateOutputType | null
+    _sum: Rpb1RecordSumAggregateOutputType | null
+    _min: Rpb1RecordMinAggregateOutputType | null
+    _max: Rpb1RecordMaxAggregateOutputType | null
+  }
+
+  type GetRpb1RecordGroupByPayload<T extends Rpb1RecordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Rpb1RecordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Rpb1RecordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
+            : GetScalarType<T[P], Rpb1RecordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Rpb1RecordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    personnelId?: boolean
+    status?: boolean
+    version?: boolean
+    classification?: boolean
+    photoUrl?: boolean
+    titleRank?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    lastName?: boolean
+    gender?: boolean
+    age?: boolean
+    formerFirstName?: boolean
+    nameChangeDoc?: boolean
+    formerLastName?: boolean
+    lastNameChangeDoc?: boolean
+    nickname?: boolean
+    citizenId?: boolean
+    dateOfBirth?: boolean
+    birthPlaceHospital?: boolean
+    race?: boolean
+    nationality?: boolean
+    formerNationality?: boolean
+    naturalizationDoc?: boolean
+    religion?: boolean
+    formerReligion?: boolean
+    registeredHouseNo?: boolean
+    registeredVillage?: boolean
+    registeredMoo?: boolean
+    registeredSoi?: boolean
+    registeredRoad?: boolean
+    registeredSubdistrict?: boolean
+    registeredDistrict?: boolean
+    registeredProvince?: boolean
+    registeredPhone?: boolean
+    currentHouseNo?: boolean
+    currentVillage?: boolean
+    currentMoo?: boolean
+    currentSoi?: boolean
+    currentRoad?: boolean
+    currentSubdistrict?: boolean
+    currentDistrict?: boolean
+    currentProvince?: boolean
+    currentPhone?: boolean
+    phoneLandline?: boolean
+    phoneMobile?: boolean
+    email?: boolean
+    lineId?: boolean
+    facebook?: boolean
+    instagram?: boolean
+    otherContact?: boolean
+    alienCardNo?: boolean
+    alienCardDate?: boolean
+    alienCardIssuedAt?: boolean
+    alienResidenceDocNo?: boolean
+    alienResidenceDocDate?: boolean
+    alienResidenceIssuedAt?: boolean
+    alienIdInThailand?: boolean
+    birthCountry?: boolean
+    entryDateToThailand?: boolean
+    workPermitNo?: boolean
+    workPermitIssuedBy?: boolean
+    workPermitIssueDate?: boolean
+    workPermitExpiryDate?: boolean
+    height?: boolean
+    weight?: boolean
+    scarsDistinguishingMarks?: boolean
+    bloodGroup?: boolean
+    addressesPast15Years?: boolean
+    educations?: boolean
+    specialActivities?: boolean
+    languages?: boolean
+    workHistory?: boolean
+    specialOccupationsHobbies?: boolean
+    militaryStatus?: boolean
+    militaryRank?: boolean
+    militaryRegNumber?: boolean
+    militaryBranchUnit?: boolean
+    militaryUnitLocation?: boolean
+    militaryServiceFrom?: boolean
+    militaryServiceTo?: boolean
+    militaryYearsServed?: boolean
+    militaryDischargeReason?: boolean
+    militaryLastCommander?: boolean
+    militarySpecialOperations?: boolean
+    militarySpecialOpDate?: boolean
+    militarySpecialOpDuration?: boolean
+    militaryExemptionReason?: boolean
+    writerDetails?: boolean
+    politicalSocialMemberships?: boolean
+    foreignTravels?: boolean
+    identificationDocuments?: boolean
+    legalCases?: boolean
+    disciplinaryPunishments?: boolean
+    fatherDetails?: boolean
+    motherDetails?: boolean
+    maritalStatus?: boolean
+    spouseFormerDetails?: boolean
+    spouseCurrentDetails?: boolean
+    children?: boolean
+    siblings?: boolean
+    relativesInGovernment?: boolean
+    overseasContacts?: boolean
+    cohabitants?: boolean
+    closeFriendsRef?: boolean
+    supporters?: boolean
+    additionalExplanations?: boolean
+    ownerSignatureDate?: boolean
+    inspectorRankName?: boolean
+    inspectorPosition?: boolean
+    inspectorSignatureDate?: boolean
+    sketchMapImage?: boolean
+    mapHouseNo?: boolean
+    mapVillage?: boolean
+    mapMoo?: boolean
+    mapSoi?: boolean
+    mapRoad?: boolean
+    mapSubdistrict?: boolean
+    mapDistrict?: boolean
+    mapProvince?: boolean
+    mapPhone?: boolean
+    mapHouseOwnerName?: boolean
+    mapHouseOwnerPhone?: boolean
+    emergencyContactRankName?: boolean
+    emergencyContactRelation?: boolean
+    emergencyContactAddress?: boolean
+    extraTitleName?: boolean
+    extraGender?: boolean
+    extraBloodGroup?: boolean
+    extraRegisteredAddress?: boolean
+    extraCurrentAddress?: boolean
+    extraIsSameAddress?: boolean
+    extraMobilePhone?: boolean
+    extraHomePhone?: boolean
+    extraOfficePhone?: boolean
+    extraEmail?: boolean
+    extraOwnerSignatureDate?: boolean
+    extraOfficerName?: boolean
+    extraOfficerPosition?: boolean
+    extraOfficerSignatureDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rpb1Record"]>
+
+
+  export type Rpb1RecordSelectScalar = {
+    id?: boolean
+    personnelId?: boolean
+    status?: boolean
+    version?: boolean
+    classification?: boolean
+    photoUrl?: boolean
+    titleRank?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    lastName?: boolean
+    gender?: boolean
+    age?: boolean
+    formerFirstName?: boolean
+    nameChangeDoc?: boolean
+    formerLastName?: boolean
+    lastNameChangeDoc?: boolean
+    nickname?: boolean
+    citizenId?: boolean
+    dateOfBirth?: boolean
+    birthPlaceHospital?: boolean
+    race?: boolean
+    nationality?: boolean
+    formerNationality?: boolean
+    naturalizationDoc?: boolean
+    religion?: boolean
+    formerReligion?: boolean
+    registeredHouseNo?: boolean
+    registeredVillage?: boolean
+    registeredMoo?: boolean
+    registeredSoi?: boolean
+    registeredRoad?: boolean
+    registeredSubdistrict?: boolean
+    registeredDistrict?: boolean
+    registeredProvince?: boolean
+    registeredPhone?: boolean
+    currentHouseNo?: boolean
+    currentVillage?: boolean
+    currentMoo?: boolean
+    currentSoi?: boolean
+    currentRoad?: boolean
+    currentSubdistrict?: boolean
+    currentDistrict?: boolean
+    currentProvince?: boolean
+    currentPhone?: boolean
+    phoneLandline?: boolean
+    phoneMobile?: boolean
+    email?: boolean
+    lineId?: boolean
+    facebook?: boolean
+    instagram?: boolean
+    otherContact?: boolean
+    alienCardNo?: boolean
+    alienCardDate?: boolean
+    alienCardIssuedAt?: boolean
+    alienResidenceDocNo?: boolean
+    alienResidenceDocDate?: boolean
+    alienResidenceIssuedAt?: boolean
+    alienIdInThailand?: boolean
+    birthCountry?: boolean
+    entryDateToThailand?: boolean
+    workPermitNo?: boolean
+    workPermitIssuedBy?: boolean
+    workPermitIssueDate?: boolean
+    workPermitExpiryDate?: boolean
+    height?: boolean
+    weight?: boolean
+    scarsDistinguishingMarks?: boolean
+    bloodGroup?: boolean
+    addressesPast15Years?: boolean
+    educations?: boolean
+    specialActivities?: boolean
+    languages?: boolean
+    workHistory?: boolean
+    specialOccupationsHobbies?: boolean
+    militaryStatus?: boolean
+    militaryRank?: boolean
+    militaryRegNumber?: boolean
+    militaryBranchUnit?: boolean
+    militaryUnitLocation?: boolean
+    militaryServiceFrom?: boolean
+    militaryServiceTo?: boolean
+    militaryYearsServed?: boolean
+    militaryDischargeReason?: boolean
+    militaryLastCommander?: boolean
+    militarySpecialOperations?: boolean
+    militarySpecialOpDate?: boolean
+    militarySpecialOpDuration?: boolean
+    militaryExemptionReason?: boolean
+    writerDetails?: boolean
+    politicalSocialMemberships?: boolean
+    foreignTravels?: boolean
+    identificationDocuments?: boolean
+    legalCases?: boolean
+    disciplinaryPunishments?: boolean
+    fatherDetails?: boolean
+    motherDetails?: boolean
+    maritalStatus?: boolean
+    spouseFormerDetails?: boolean
+    spouseCurrentDetails?: boolean
+    children?: boolean
+    siblings?: boolean
+    relativesInGovernment?: boolean
+    overseasContacts?: boolean
+    cohabitants?: boolean
+    closeFriendsRef?: boolean
+    supporters?: boolean
+    additionalExplanations?: boolean
+    ownerSignatureDate?: boolean
+    inspectorRankName?: boolean
+    inspectorPosition?: boolean
+    inspectorSignatureDate?: boolean
+    sketchMapImage?: boolean
+    mapHouseNo?: boolean
+    mapVillage?: boolean
+    mapMoo?: boolean
+    mapSoi?: boolean
+    mapRoad?: boolean
+    mapSubdistrict?: boolean
+    mapDistrict?: boolean
+    mapProvince?: boolean
+    mapPhone?: boolean
+    mapHouseOwnerName?: boolean
+    mapHouseOwnerPhone?: boolean
+    emergencyContactRankName?: boolean
+    emergencyContactRelation?: boolean
+    emergencyContactAddress?: boolean
+    extraTitleName?: boolean
+    extraGender?: boolean
+    extraBloodGroup?: boolean
+    extraRegisteredAddress?: boolean
+    extraCurrentAddress?: boolean
+    extraIsSameAddress?: boolean
+    extraMobilePhone?: boolean
+    extraHomePhone?: boolean
+    extraOfficePhone?: boolean
+    extraEmail?: boolean
+    extraOwnerSignatureDate?: boolean
+    extraOfficerName?: boolean
+    extraOfficerPosition?: boolean
+    extraOfficerSignatureDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type Rpb1RecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    personnel?: boolean | PersonnelDefaultArgs<ExtArgs>
+  }
+
+  export type $Rpb1RecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Rpb1Record"
+    objects: {
+      personnel: Prisma.$PersonnelPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      personnelId: string
+      status: string
+      version: number
+      classification: string
+      photoUrl: string | null
+      titleRank: string | null
+      firstName: string | null
+      middleName: string | null
+      lastName: string | null
+      gender: string | null
+      age: number | null
+      formerFirstName: string | null
+      nameChangeDoc: string | null
+      formerLastName: string | null
+      lastNameChangeDoc: string | null
+      nickname: string | null
+      citizenId: string | null
+      dateOfBirth: string | null
+      birthPlaceHospital: string | null
+      race: string | null
+      nationality: string | null
+      formerNationality: string | null
+      naturalizationDoc: string | null
+      religion: string | null
+      formerReligion: string | null
+      registeredHouseNo: string | null
+      registeredVillage: string | null
+      registeredMoo: string | null
+      registeredSoi: string | null
+      registeredRoad: string | null
+      registeredSubdistrict: string | null
+      registeredDistrict: string | null
+      registeredProvince: string | null
+      registeredPhone: string | null
+      currentHouseNo: string | null
+      currentVillage: string | null
+      currentMoo: string | null
+      currentSoi: string | null
+      currentRoad: string | null
+      currentSubdistrict: string | null
+      currentDistrict: string | null
+      currentProvince: string | null
+      currentPhone: string | null
+      phoneLandline: string | null
+      phoneMobile: string | null
+      email: string | null
+      lineId: string | null
+      facebook: string | null
+      instagram: string | null
+      otherContact: string | null
+      alienCardNo: string | null
+      alienCardDate: string | null
+      alienCardIssuedAt: string | null
+      alienResidenceDocNo: string | null
+      alienResidenceDocDate: string | null
+      alienResidenceIssuedAt: string | null
+      alienIdInThailand: string | null
+      birthCountry: string | null
+      entryDateToThailand: string | null
+      workPermitNo: string | null
+      workPermitIssuedBy: string | null
+      workPermitIssueDate: string | null
+      workPermitExpiryDate: string | null
+      height: number | null
+      weight: number | null
+      scarsDistinguishingMarks: string | null
+      bloodGroup: string | null
+      addressesPast15Years: string
+      educations: string
+      specialActivities: string
+      languages: string
+      workHistory: string
+      specialOccupationsHobbies: string | null
+      militaryStatus: string | null
+      militaryRank: string | null
+      militaryRegNumber: string | null
+      militaryBranchUnit: string | null
+      militaryUnitLocation: string | null
+      militaryServiceFrom: string | null
+      militaryServiceTo: string | null
+      militaryYearsServed: string | null
+      militaryDischargeReason: string | null
+      militaryLastCommander: string | null
+      militarySpecialOperations: string | null
+      militarySpecialOpDate: string | null
+      militarySpecialOpDuration: string | null
+      militaryExemptionReason: string | null
+      writerDetails: string | null
+      politicalSocialMemberships: string
+      foreignTravels: string
+      identificationDocuments: string
+      legalCases: string
+      disciplinaryPunishments: string | null
+      fatherDetails: string | null
+      motherDetails: string | null
+      maritalStatus: string | null
+      spouseFormerDetails: string | null
+      spouseCurrentDetails: string | null
+      children: string
+      siblings: string
+      relativesInGovernment: string
+      overseasContacts: string
+      cohabitants: string
+      closeFriendsRef: string
+      supporters: string
+      additionalExplanations: string | null
+      ownerSignatureDate: string | null
+      inspectorRankName: string | null
+      inspectorPosition: string | null
+      inspectorSignatureDate: string | null
+      sketchMapImage: string | null
+      mapHouseNo: string | null
+      mapVillage: string | null
+      mapMoo: string | null
+      mapSoi: string | null
+      mapRoad: string | null
+      mapSubdistrict: string | null
+      mapDistrict: string | null
+      mapProvince: string | null
+      mapPhone: string | null
+      mapHouseOwnerName: string | null
+      mapHouseOwnerPhone: string | null
+      emergencyContactRankName: string | null
+      emergencyContactRelation: string | null
+      emergencyContactAddress: string | null
+      extraTitleName: string | null
+      extraGender: string | null
+      extraBloodGroup: string | null
+      extraRegisteredAddress: string | null
+      extraCurrentAddress: string | null
+      extraIsSameAddress: boolean
+      extraMobilePhone: string | null
+      extraHomePhone: string | null
+      extraOfficePhone: string | null
+      extraEmail: string | null
+      extraOwnerSignatureDate: string | null
+      extraOfficerName: string | null
+      extraOfficerPosition: string | null
+      extraOfficerSignatureDate: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["rpb1Record"]>
+    composites: {}
+  }
+
+  type Rpb1RecordGetPayload<S extends boolean | null | undefined | Rpb1RecordDefaultArgs> = $Result.GetResult<Prisma.$Rpb1RecordPayload, S>
+
+  type Rpb1RecordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<Rpb1RecordFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: Rpb1RecordCountAggregateInputType | true
+    }
+
+  export interface Rpb1RecordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Rpb1Record'], meta: { name: 'Rpb1Record' } }
+    /**
+     * Find zero or one Rpb1Record that matches the filter.
+     * @param {Rpb1RecordFindUniqueArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends Rpb1RecordFindUniqueArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Rpb1Record that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {Rpb1RecordFindUniqueOrThrowArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends Rpb1RecordFindUniqueOrThrowArgs>(args: SelectSubset<T, Rpb1RecordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Rpb1Record that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordFindFirstArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends Rpb1RecordFindFirstArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Rpb1Record that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordFindFirstOrThrowArgs} args - Arguments to find a Rpb1Record
+     * @example
+     * // Get one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends Rpb1RecordFindFirstOrThrowArgs>(args?: SelectSubset<T, Rpb1RecordFindFirstOrThrowArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Rpb1Records that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Rpb1Records
+     * const rpb1Records = await prisma.rpb1Record.findMany()
+     * 
+     * // Get first 10 Rpb1Records
+     * const rpb1Records = await prisma.rpb1Record.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rpb1RecordWithIdOnly = await prisma.rpb1Record.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends Rpb1RecordFindManyArgs>(args?: SelectSubset<T, Rpb1RecordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Rpb1Record.
+     * @param {Rpb1RecordCreateArgs} args - Arguments to create a Rpb1Record.
+     * @example
+     * // Create one Rpb1Record
+     * const Rpb1Record = await prisma.rpb1Record.create({
+     *   data: {
+     *     // ... data to create a Rpb1Record
+     *   }
+     * })
+     * 
+     */
+    create<T extends Rpb1RecordCreateArgs>(args: SelectSubset<T, Rpb1RecordCreateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Rpb1Records.
+     * @param {Rpb1RecordCreateManyArgs} args - Arguments to create many Rpb1Records.
+     * @example
+     * // Create many Rpb1Records
+     * const rpb1Record = await prisma.rpb1Record.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends Rpb1RecordCreateManyArgs>(args?: SelectSubset<T, Rpb1RecordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Rpb1Record.
+     * @param {Rpb1RecordDeleteArgs} args - Arguments to delete one Rpb1Record.
+     * @example
+     * // Delete one Rpb1Record
+     * const Rpb1Record = await prisma.rpb1Record.delete({
+     *   where: {
+     *     // ... filter to delete one Rpb1Record
+     *   }
+     * })
+     * 
+     */
+    delete<T extends Rpb1RecordDeleteArgs>(args: SelectSubset<T, Rpb1RecordDeleteArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Rpb1Record.
+     * @param {Rpb1RecordUpdateArgs} args - Arguments to update one Rpb1Record.
+     * @example
+     * // Update one Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends Rpb1RecordUpdateArgs>(args: SelectSubset<T, Rpb1RecordUpdateArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Rpb1Records.
+     * @param {Rpb1RecordDeleteManyArgs} args - Arguments to filter Rpb1Records to delete.
+     * @example
+     * // Delete a few Rpb1Records
+     * const { count } = await prisma.rpb1Record.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends Rpb1RecordDeleteManyArgs>(args?: SelectSubset<T, Rpb1RecordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Rpb1Records.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Rpb1Records
+     * const rpb1Record = await prisma.rpb1Record.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends Rpb1RecordUpdateManyArgs>(args: SelectSubset<T, Rpb1RecordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Rpb1Record.
+     * @param {Rpb1RecordUpsertArgs} args - Arguments to update or create a Rpb1Record.
+     * @example
+     * // Update or create a Rpb1Record
+     * const rpb1Record = await prisma.rpb1Record.upsert({
+     *   create: {
+     *     // ... data to create a Rpb1Record
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Rpb1Record we want to update
+     *   }
+     * })
+     */
+    upsert<T extends Rpb1RecordUpsertArgs>(args: SelectSubset<T, Rpb1RecordUpsertArgs<ExtArgs>>): Prisma__Rpb1RecordClient<$Result.GetResult<Prisma.$Rpb1RecordPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Rpb1Records.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordCountArgs} args - Arguments to filter Rpb1Records to count.
+     * @example
+     * // Count the number of Rpb1Records
+     * const count = await prisma.rpb1Record.count({
+     *   where: {
+     *     // ... the filter for the Rpb1Records we want to count
+     *   }
+     * })
+    **/
+    count<T extends Rpb1RecordCountArgs>(
+      args?: Subset<T, Rpb1RecordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Rpb1RecordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Rpb1Record.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Rpb1RecordAggregateArgs>(args: Subset<T, Rpb1RecordAggregateArgs>): Prisma.PrismaPromise<GetRpb1RecordAggregateType<T>>
+
+    /**
+     * Group by Rpb1Record.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Rpb1RecordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Rpb1RecordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Rpb1RecordGroupByArgs['orderBy'] }
+        : { orderBy?: Rpb1RecordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Rpb1RecordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRpb1RecordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Rpb1Record model
+   */
+  readonly fields: Rpb1RecordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Rpb1Record.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__Rpb1RecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    personnel<T extends PersonnelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PersonnelDefaultArgs<ExtArgs>>): Prisma__PersonnelClient<$Result.GetResult<Prisma.$PersonnelPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Rpb1Record model
+   */ 
+  interface Rpb1RecordFieldRefs {
+    readonly id: FieldRef<"Rpb1Record", 'String'>
+    readonly personnelId: FieldRef<"Rpb1Record", 'String'>
+    readonly status: FieldRef<"Rpb1Record", 'String'>
+    readonly version: FieldRef<"Rpb1Record", 'Int'>
+    readonly classification: FieldRef<"Rpb1Record", 'String'>
+    readonly photoUrl: FieldRef<"Rpb1Record", 'String'>
+    readonly titleRank: FieldRef<"Rpb1Record", 'String'>
+    readonly firstName: FieldRef<"Rpb1Record", 'String'>
+    readonly middleName: FieldRef<"Rpb1Record", 'String'>
+    readonly lastName: FieldRef<"Rpb1Record", 'String'>
+    readonly gender: FieldRef<"Rpb1Record", 'String'>
+    readonly age: FieldRef<"Rpb1Record", 'Int'>
+    readonly formerFirstName: FieldRef<"Rpb1Record", 'String'>
+    readonly nameChangeDoc: FieldRef<"Rpb1Record", 'String'>
+    readonly formerLastName: FieldRef<"Rpb1Record", 'String'>
+    readonly lastNameChangeDoc: FieldRef<"Rpb1Record", 'String'>
+    readonly nickname: FieldRef<"Rpb1Record", 'String'>
+    readonly citizenId: FieldRef<"Rpb1Record", 'String'>
+    readonly dateOfBirth: FieldRef<"Rpb1Record", 'String'>
+    readonly birthPlaceHospital: FieldRef<"Rpb1Record", 'String'>
+    readonly race: FieldRef<"Rpb1Record", 'String'>
+    readonly nationality: FieldRef<"Rpb1Record", 'String'>
+    readonly formerNationality: FieldRef<"Rpb1Record", 'String'>
+    readonly naturalizationDoc: FieldRef<"Rpb1Record", 'String'>
+    readonly religion: FieldRef<"Rpb1Record", 'String'>
+    readonly formerReligion: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredHouseNo: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredVillage: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredMoo: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredSoi: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredRoad: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredSubdistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredDistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredProvince: FieldRef<"Rpb1Record", 'String'>
+    readonly registeredPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly currentHouseNo: FieldRef<"Rpb1Record", 'String'>
+    readonly currentVillage: FieldRef<"Rpb1Record", 'String'>
+    readonly currentMoo: FieldRef<"Rpb1Record", 'String'>
+    readonly currentSoi: FieldRef<"Rpb1Record", 'String'>
+    readonly currentRoad: FieldRef<"Rpb1Record", 'String'>
+    readonly currentSubdistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly currentDistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly currentProvince: FieldRef<"Rpb1Record", 'String'>
+    readonly currentPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly phoneLandline: FieldRef<"Rpb1Record", 'String'>
+    readonly phoneMobile: FieldRef<"Rpb1Record", 'String'>
+    readonly email: FieldRef<"Rpb1Record", 'String'>
+    readonly lineId: FieldRef<"Rpb1Record", 'String'>
+    readonly facebook: FieldRef<"Rpb1Record", 'String'>
+    readonly instagram: FieldRef<"Rpb1Record", 'String'>
+    readonly otherContact: FieldRef<"Rpb1Record", 'String'>
+    readonly alienCardNo: FieldRef<"Rpb1Record", 'String'>
+    readonly alienCardDate: FieldRef<"Rpb1Record", 'String'>
+    readonly alienCardIssuedAt: FieldRef<"Rpb1Record", 'String'>
+    readonly alienResidenceDocNo: FieldRef<"Rpb1Record", 'String'>
+    readonly alienResidenceDocDate: FieldRef<"Rpb1Record", 'String'>
+    readonly alienResidenceIssuedAt: FieldRef<"Rpb1Record", 'String'>
+    readonly alienIdInThailand: FieldRef<"Rpb1Record", 'String'>
+    readonly birthCountry: FieldRef<"Rpb1Record", 'String'>
+    readonly entryDateToThailand: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitNo: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitIssuedBy: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitIssueDate: FieldRef<"Rpb1Record", 'String'>
+    readonly workPermitExpiryDate: FieldRef<"Rpb1Record", 'String'>
+    readonly height: FieldRef<"Rpb1Record", 'Float'>
+    readonly weight: FieldRef<"Rpb1Record", 'Float'>
+    readonly scarsDistinguishingMarks: FieldRef<"Rpb1Record", 'String'>
+    readonly bloodGroup: FieldRef<"Rpb1Record", 'String'>
+    readonly addressesPast15Years: FieldRef<"Rpb1Record", 'String'>
+    readonly educations: FieldRef<"Rpb1Record", 'String'>
+    readonly specialActivities: FieldRef<"Rpb1Record", 'String'>
+    readonly languages: FieldRef<"Rpb1Record", 'String'>
+    readonly workHistory: FieldRef<"Rpb1Record", 'String'>
+    readonly specialOccupationsHobbies: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryStatus: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryRank: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryRegNumber: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryBranchUnit: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryUnitLocation: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryServiceFrom: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryServiceTo: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryYearsServed: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryDischargeReason: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryLastCommander: FieldRef<"Rpb1Record", 'String'>
+    readonly militarySpecialOperations: FieldRef<"Rpb1Record", 'String'>
+    readonly militarySpecialOpDate: FieldRef<"Rpb1Record", 'String'>
+    readonly militarySpecialOpDuration: FieldRef<"Rpb1Record", 'String'>
+    readonly militaryExemptionReason: FieldRef<"Rpb1Record", 'String'>
+    readonly writerDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly politicalSocialMemberships: FieldRef<"Rpb1Record", 'String'>
+    readonly foreignTravels: FieldRef<"Rpb1Record", 'String'>
+    readonly identificationDocuments: FieldRef<"Rpb1Record", 'String'>
+    readonly legalCases: FieldRef<"Rpb1Record", 'String'>
+    readonly disciplinaryPunishments: FieldRef<"Rpb1Record", 'String'>
+    readonly fatherDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly motherDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly maritalStatus: FieldRef<"Rpb1Record", 'String'>
+    readonly spouseFormerDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly spouseCurrentDetails: FieldRef<"Rpb1Record", 'String'>
+    readonly children: FieldRef<"Rpb1Record", 'String'>
+    readonly siblings: FieldRef<"Rpb1Record", 'String'>
+    readonly relativesInGovernment: FieldRef<"Rpb1Record", 'String'>
+    readonly overseasContacts: FieldRef<"Rpb1Record", 'String'>
+    readonly cohabitants: FieldRef<"Rpb1Record", 'String'>
+    readonly closeFriendsRef: FieldRef<"Rpb1Record", 'String'>
+    readonly supporters: FieldRef<"Rpb1Record", 'String'>
+    readonly additionalExplanations: FieldRef<"Rpb1Record", 'String'>
+    readonly ownerSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly inspectorRankName: FieldRef<"Rpb1Record", 'String'>
+    readonly inspectorPosition: FieldRef<"Rpb1Record", 'String'>
+    readonly inspectorSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly sketchMapImage: FieldRef<"Rpb1Record", 'String'>
+    readonly mapHouseNo: FieldRef<"Rpb1Record", 'String'>
+    readonly mapVillage: FieldRef<"Rpb1Record", 'String'>
+    readonly mapMoo: FieldRef<"Rpb1Record", 'String'>
+    readonly mapSoi: FieldRef<"Rpb1Record", 'String'>
+    readonly mapRoad: FieldRef<"Rpb1Record", 'String'>
+    readonly mapSubdistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly mapDistrict: FieldRef<"Rpb1Record", 'String'>
+    readonly mapProvince: FieldRef<"Rpb1Record", 'String'>
+    readonly mapPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly mapHouseOwnerName: FieldRef<"Rpb1Record", 'String'>
+    readonly mapHouseOwnerPhone: FieldRef<"Rpb1Record", 'String'>
+    readonly emergencyContactRankName: FieldRef<"Rpb1Record", 'String'>
+    readonly emergencyContactRelation: FieldRef<"Rpb1Record", 'String'>
+    readonly emergencyContactAddress: FieldRef<"Rpb1Record", 'String'>
+    readonly extraTitleName: FieldRef<"Rpb1Record", 'String'>
+    readonly extraGender: FieldRef<"Rpb1Record", 'String'>
+    readonly extraBloodGroup: FieldRef<"Rpb1Record", 'String'>
+    readonly extraRegisteredAddress: FieldRef<"Rpb1Record", 'String'>
+    readonly extraCurrentAddress: FieldRef<"Rpb1Record", 'String'>
+    readonly extraIsSameAddress: FieldRef<"Rpb1Record", 'Boolean'>
+    readonly extraMobilePhone: FieldRef<"Rpb1Record", 'String'>
+    readonly extraHomePhone: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficePhone: FieldRef<"Rpb1Record", 'String'>
+    readonly extraEmail: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOwnerSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficerName: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficerPosition: FieldRef<"Rpb1Record", 'String'>
+    readonly extraOfficerSignatureDate: FieldRef<"Rpb1Record", 'String'>
+    readonly createdAt: FieldRef<"Rpb1Record", 'DateTime'>
+    readonly updatedAt: FieldRef<"Rpb1Record", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Rpb1Record findUnique
+   */
+  export type Rpb1RecordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record findUniqueOrThrow
+   */
+  export type Rpb1RecordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record findFirst
+   */
+  export type Rpb1RecordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Rpb1Records.
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Rpb1Records.
+     */
+    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
+  }
+
+  /**
+   * Rpb1Record findFirstOrThrow
+   */
+  export type Rpb1RecordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Record to fetch.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Rpb1Records.
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Rpb1Records.
+     */
+    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
+  }
+
+  /**
+   * Rpb1Record findMany
+   */
+  export type Rpb1RecordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter, which Rpb1Records to fetch.
+     */
+    where?: Rpb1RecordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rpb1Records to fetch.
+     */
+    orderBy?: Rpb1RecordOrderByWithRelationInput | Rpb1RecordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Rpb1Records.
+     */
+    cursor?: Rpb1RecordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rpb1Records from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rpb1Records.
+     */
+    skip?: number
+    distinct?: Rpb1RecordScalarFieldEnum | Rpb1RecordScalarFieldEnum[]
+  }
+
+  /**
+   * Rpb1Record create
+   */
+  export type Rpb1RecordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Rpb1Record.
+     */
+    data: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
+  }
+
+  /**
+   * Rpb1Record createMany
+   */
+  export type Rpb1RecordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Rpb1Records.
+     */
+    data: Rpb1RecordCreateManyInput | Rpb1RecordCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Rpb1Record update
+   */
+  export type Rpb1RecordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Rpb1Record.
+     */
+    data: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
+    /**
+     * Choose, which Rpb1Record to update.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record updateMany
+   */
+  export type Rpb1RecordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Rpb1Records.
+     */
+    data: XOR<Rpb1RecordUpdateManyMutationInput, Rpb1RecordUncheckedUpdateManyInput>
+    /**
+     * Filter which Rpb1Records to update
+     */
+    where?: Rpb1RecordWhereInput
+  }
+
+  /**
+   * Rpb1Record upsert
+   */
+  export type Rpb1RecordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Rpb1Record to update in case it exists.
+     */
+    where: Rpb1RecordWhereUniqueInput
+    /**
+     * In case the Rpb1Record found by the `where` argument doesn't exist, create a new Rpb1Record with this data.
+     */
+    create: XOR<Rpb1RecordCreateInput, Rpb1RecordUncheckedCreateInput>
+    /**
+     * In case the Rpb1Record was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Rpb1RecordUpdateInput, Rpb1RecordUncheckedUpdateInput>
+  }
+
+  /**
+   * Rpb1Record delete
+   */
+  export type Rpb1RecordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+    /**
+     * Filter which Rpb1Record to delete.
+     */
+    where: Rpb1RecordWhereUniqueInput
+  }
+
+  /**
+   * Rpb1Record deleteMany
+   */
+  export type Rpb1RecordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Rpb1Records to delete
+     */
+    where?: Rpb1RecordWhereInput
+  }
+
+  /**
+   * Rpb1Record without action
+   */
+  export type Rpb1RecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rpb1Record
+     */
+    select?: Rpb1RecordSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Rpb1RecordInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -21711,6 +21711,117 @@ export namespace Prisma {
   export type NotificationReadScalarFieldEnum = (typeof NotificationReadScalarFieldEnum)[keyof typeof NotificationReadScalarFieldEnum]
 
 
+  export const ServiceScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    price: 'price',
+    image: 'image',
+    icon: 'icon',
+    published: 'published',
+    order: 'order',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+  export const MediaFileScalarFieldEnum: {
+    id: 'id',
+    filename: 'filename',
+    url: 'url',
+    size: 'size',
+    mimetype: 'mimetype',
+    uploadedById: 'uploadedById',
+    createdAt: 'createdAt'
+  };
+
+  export type MediaFileScalarFieldEnum = (typeof MediaFileScalarFieldEnum)[keyof typeof MediaFileScalarFieldEnum]
+
+
+  export const PersonnelScalarFieldEnum: {
+    id: 'id',
+    badgeNo: 'badgeNo',
+    username: 'username',
+    password: 'password',
+    role: 'role',
+    prefix: 'prefix',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    position: 'position',
+    department: 'department',
+    subDepartment: 'subDepartment',
+    personnelType: 'personnelType',
+    phone: 'phone',
+    mobile: 'mobile',
+    email: 'email',
+    status: 'status',
+    avatarColor: 'avatarColor',
+    skills: 'skills',
+    education: 'education',
+    experience: 'experience',
+    notes: 'notes',
+    citizenId: 'citizenId',
+    dateOfBirth: 'dateOfBirth',
+    bloodType: 'bloodType',
+    religion: 'religion',
+    officialId: 'officialId',
+    militaryBranch: 'militaryBranch',
+    commissionDate: 'commissionDate',
+    currentAddress: 'currentAddress',
+    currentTambon: 'currentTambon',
+    currentAmphoe: 'currentAmphoe',
+    currentProvince: 'currentProvince',
+    currentZipcode: 'currentZipcode',
+    emergencyContactName: 'emergencyContactName',
+    emergencyContactPhone: 'emergencyContactPhone',
+    emergencyContactRelation: 'emergencyContactRelation',
+    royalDecorations: 'royalDecorations',
+    trainingHistory: 'trainingHistory',
+    coverPhoto: 'coverPhoto',
+    profileTheme: 'profileTheme',
+    mustChangePassword: 'mustChangePassword',
+    failedLoginAttempts: 'failedLoginAttempts',
+    lockedUntil: 'lockedUntil',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PersonnelScalarFieldEnum = (typeof PersonnelScalarFieldEnum)[keyof typeof PersonnelScalarFieldEnum]
+
+
+  export const DepartmentScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    shortName: 'shortName',
+    subDepartments: 'subDepartments',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
+
+
+  export const PersonnelDocumentScalarFieldEnum: {
+    id: 'id',
+    personnelId: 'personnelId',
+    category: 'category',
+    filename: 'filename',
+    mimeType: 'mimeType',
+    size: 'size',
+    storagePath: 'storagePath',
+    uploadedBy: 'uploadedBy',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type PersonnelDocumentScalarFieldEnum = (typeof PersonnelDocumentScalarFieldEnum)[keyof typeof PersonnelDocumentScalarFieldEnum]
+
+
   export const Rpb1RecordScalarFieldEnum: {
     id: 'id',
     personnelId: 'personnelId',
@@ -21857,117 +21968,6 @@ export namespace Prisma {
   };
 
   export type Rpb1RecordScalarFieldEnum = (typeof Rpb1RecordScalarFieldEnum)[keyof typeof Rpb1RecordScalarFieldEnum]
-
-
-  export const ServiceScalarFieldEnum: {
-    id: 'id',
-    title: 'title',
-    description: 'description',
-    price: 'price',
-    image: 'image',
-    icon: 'icon',
-    published: 'published',
-    order: 'order',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
-
-
-  export const MediaFileScalarFieldEnum: {
-    id: 'id',
-    filename: 'filename',
-    url: 'url',
-    size: 'size',
-    mimetype: 'mimetype',
-    uploadedById: 'uploadedById',
-    createdAt: 'createdAt'
-  };
-
-  export type MediaFileScalarFieldEnum = (typeof MediaFileScalarFieldEnum)[keyof typeof MediaFileScalarFieldEnum]
-
-
-  export const PersonnelScalarFieldEnum: {
-    id: 'id',
-    badgeNo: 'badgeNo',
-    username: 'username',
-    password: 'password',
-    role: 'role',
-    prefix: 'prefix',
-    firstName: 'firstName',
-    lastName: 'lastName',
-    position: 'position',
-    department: 'department',
-    subDepartment: 'subDepartment',
-    personnelType: 'personnelType',
-    phone: 'phone',
-    mobile: 'mobile',
-    email: 'email',
-    status: 'status',
-    avatarColor: 'avatarColor',
-    skills: 'skills',
-    education: 'education',
-    experience: 'experience',
-    notes: 'notes',
-    citizenId: 'citizenId',
-    dateOfBirth: 'dateOfBirth',
-    bloodType: 'bloodType',
-    religion: 'religion',
-    officialId: 'officialId',
-    militaryBranch: 'militaryBranch',
-    commissionDate: 'commissionDate',
-    currentAddress: 'currentAddress',
-    currentTambon: 'currentTambon',
-    currentAmphoe: 'currentAmphoe',
-    currentProvince: 'currentProvince',
-    currentZipcode: 'currentZipcode',
-    emergencyContactName: 'emergencyContactName',
-    emergencyContactPhone: 'emergencyContactPhone',
-    emergencyContactRelation: 'emergencyContactRelation',
-    royalDecorations: 'royalDecorations',
-    trainingHistory: 'trainingHistory',
-    coverPhoto: 'coverPhoto',
-    profileTheme: 'profileTheme',
-    mustChangePassword: 'mustChangePassword',
-    failedLoginAttempts: 'failedLoginAttempts',
-    lockedUntil: 'lockedUntil',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type PersonnelScalarFieldEnum = (typeof PersonnelScalarFieldEnum)[keyof typeof PersonnelScalarFieldEnum]
-
-
-  export const DepartmentScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    shortName: 'shortName',
-    subDepartments: 'subDepartments',
-    sortOrder: 'sortOrder',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
-
-
-  export const PersonnelDocumentScalarFieldEnum: {
-    id: 'id',
-    personnelId: 'personnelId',
-    category: 'category',
-    filename: 'filename',
-    mimeType: 'mimeType',
-    size: 'size',
-    storagePath: 'storagePath',
-    uploadedBy: 'uploadedBy',
-    notes: 'notes',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    expiresAt: 'expiresAt'
-  };
-
-  export type PersonnelDocumentScalarFieldEnum = (typeof PersonnelDocumentScalarFieldEnum)[keyof typeof PersonnelDocumentScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -23019,6 +23019,595 @@ export namespace Prisma {
     readAt?: DateTimeWithAggregatesFilter<"NotificationRead"> | Date | string
   }
 
+  export type ServiceWhereInput = {
+    AND?: ServiceWhereInput | ServiceWhereInput[]
+    OR?: ServiceWhereInput[]
+    NOT?: ServiceWhereInput | ServiceWhereInput[]
+    id?: StringFilter<"Service"> | string
+    title?: StringFilter<"Service"> | string
+    description?: StringFilter<"Service"> | string
+    price?: StringNullableFilter<"Service"> | string | null
+    image?: StringNullableFilter<"Service"> | string | null
+    icon?: StringNullableFilter<"Service"> | string | null
+    published?: BoolFilter<"Service"> | boolean
+    order?: IntFilter<"Service"> | number
+    createdAt?: DateTimeFilter<"Service"> | Date | string
+    updatedAt?: DateTimeFilter<"Service"> | Date | string
+  }
+
+  export type ServiceOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    price?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
+    published?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ServiceWhereInput | ServiceWhereInput[]
+    OR?: ServiceWhereInput[]
+    NOT?: ServiceWhereInput | ServiceWhereInput[]
+    title?: StringFilter<"Service"> | string
+    description?: StringFilter<"Service"> | string
+    price?: StringNullableFilter<"Service"> | string | null
+    image?: StringNullableFilter<"Service"> | string | null
+    icon?: StringNullableFilter<"Service"> | string | null
+    published?: BoolFilter<"Service"> | boolean
+    order?: IntFilter<"Service"> | number
+    createdAt?: DateTimeFilter<"Service"> | Date | string
+    updatedAt?: DateTimeFilter<"Service"> | Date | string
+  }, "id">
+
+  export type ServiceOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    price?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
+    published?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ServiceCountOrderByAggregateInput
+    _avg?: ServiceAvgOrderByAggregateInput
+    _max?: ServiceMaxOrderByAggregateInput
+    _min?: ServiceMinOrderByAggregateInput
+    _sum?: ServiceSumOrderByAggregateInput
+  }
+
+  export type ServiceScalarWhereWithAggregatesInput = {
+    AND?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
+    OR?: ServiceScalarWhereWithAggregatesInput[]
+    NOT?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Service"> | string
+    title?: StringWithAggregatesFilter<"Service"> | string
+    description?: StringWithAggregatesFilter<"Service"> | string
+    price?: StringNullableWithAggregatesFilter<"Service"> | string | null
+    image?: StringNullableWithAggregatesFilter<"Service"> | string | null
+    icon?: StringNullableWithAggregatesFilter<"Service"> | string | null
+    published?: BoolWithAggregatesFilter<"Service"> | boolean
+    order?: IntWithAggregatesFilter<"Service"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
+  }
+
+  export type MediaFileWhereInput = {
+    AND?: MediaFileWhereInput | MediaFileWhereInput[]
+    OR?: MediaFileWhereInput[]
+    NOT?: MediaFileWhereInput | MediaFileWhereInput[]
+    id?: StringFilter<"MediaFile"> | string
+    filename?: StringFilter<"MediaFile"> | string
+    url?: StringFilter<"MediaFile"> | string
+    size?: IntFilter<"MediaFile"> | number
+    mimetype?: StringFilter<"MediaFile"> | string
+    uploadedById?: StringNullableFilter<"MediaFile"> | string | null
+    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
+    uploadedBy?: XOR<PersonnelNullableRelationFilter, PersonnelWhereInput> | null
+  }
+
+  export type MediaFileOrderByWithRelationInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    mimetype?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    uploadedBy?: PersonnelOrderByWithRelationInput
+  }
+
+  export type MediaFileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MediaFileWhereInput | MediaFileWhereInput[]
+    OR?: MediaFileWhereInput[]
+    NOT?: MediaFileWhereInput | MediaFileWhereInput[]
+    filename?: StringFilter<"MediaFile"> | string
+    url?: StringFilter<"MediaFile"> | string
+    size?: IntFilter<"MediaFile"> | number
+    mimetype?: StringFilter<"MediaFile"> | string
+    uploadedById?: StringNullableFilter<"MediaFile"> | string | null
+    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
+    uploadedBy?: XOR<PersonnelNullableRelationFilter, PersonnelWhereInput> | null
+  }, "id">
+
+  export type MediaFileOrderByWithAggregationInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    mimetype?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: MediaFileCountOrderByAggregateInput
+    _avg?: MediaFileAvgOrderByAggregateInput
+    _max?: MediaFileMaxOrderByAggregateInput
+    _min?: MediaFileMinOrderByAggregateInput
+    _sum?: MediaFileSumOrderByAggregateInput
+  }
+
+  export type MediaFileScalarWhereWithAggregatesInput = {
+    AND?: MediaFileScalarWhereWithAggregatesInput | MediaFileScalarWhereWithAggregatesInput[]
+    OR?: MediaFileScalarWhereWithAggregatesInput[]
+    NOT?: MediaFileScalarWhereWithAggregatesInput | MediaFileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MediaFile"> | string
+    filename?: StringWithAggregatesFilter<"MediaFile"> | string
+    url?: StringWithAggregatesFilter<"MediaFile"> | string
+    size?: IntWithAggregatesFilter<"MediaFile"> | number
+    mimetype?: StringWithAggregatesFilter<"MediaFile"> | string
+    uploadedById?: StringNullableWithAggregatesFilter<"MediaFile"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MediaFile"> | Date | string
+  }
+
+  export type PersonnelWhereInput = {
+    AND?: PersonnelWhereInput | PersonnelWhereInput[]
+    OR?: PersonnelWhereInput[]
+    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
+    id?: StringFilter<"Personnel"> | string
+    badgeNo?: StringFilter<"Personnel"> | string
+    username?: StringFilter<"Personnel"> | string
+    password?: StringFilter<"Personnel"> | string
+    role?: StringFilter<"Personnel"> | string
+    prefix?: StringFilter<"Personnel"> | string
+    firstName?: StringFilter<"Personnel"> | string
+    lastName?: StringFilter<"Personnel"> | string
+    position?: StringFilter<"Personnel"> | string
+    department?: StringFilter<"Personnel"> | string
+    subDepartment?: StringFilter<"Personnel"> | string
+    personnelType?: StringFilter<"Personnel"> | string
+    phone?: StringFilter<"Personnel"> | string
+    mobile?: StringFilter<"Personnel"> | string
+    email?: StringFilter<"Personnel"> | string
+    status?: StringFilter<"Personnel"> | string
+    avatarColor?: StringFilter<"Personnel"> | string
+    skills?: StringFilter<"Personnel"> | string
+    education?: StringFilter<"Personnel"> | string
+    experience?: StringFilter<"Personnel"> | string
+    notes?: StringNullableFilter<"Personnel"> | string | null
+    citizenId?: StringFilter<"Personnel"> | string
+    dateOfBirth?: StringFilter<"Personnel"> | string
+    bloodType?: StringFilter<"Personnel"> | string
+    religion?: StringFilter<"Personnel"> | string
+    officialId?: StringFilter<"Personnel"> | string
+    militaryBranch?: StringFilter<"Personnel"> | string
+    commissionDate?: StringFilter<"Personnel"> | string
+    currentAddress?: StringFilter<"Personnel"> | string
+    currentTambon?: StringFilter<"Personnel"> | string
+    currentAmphoe?: StringFilter<"Personnel"> | string
+    currentProvince?: StringFilter<"Personnel"> | string
+    currentZipcode?: StringFilter<"Personnel"> | string
+    emergencyContactName?: StringFilter<"Personnel"> | string
+    emergencyContactPhone?: StringFilter<"Personnel"> | string
+    emergencyContactRelation?: StringFilter<"Personnel"> | string
+    royalDecorations?: StringFilter<"Personnel"> | string
+    trainingHistory?: StringFilter<"Personnel"> | string
+    coverPhoto?: StringFilter<"Personnel"> | string
+    profileTheme?: StringFilter<"Personnel"> | string
+    mustChangePassword?: BoolFilter<"Personnel"> | boolean
+    failedLoginAttempts?: IntFilter<"Personnel"> | number
+    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
+    createdAt?: DateTimeFilter<"Personnel"> | Date | string
+    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
+    leaves?: LeaveRecordListRelationFilter
+    approvedLeaves?: LeaveRecordListRelationFilter
+    notifications?: NotificationListRelationFilter
+    notificationReads?: NotificationReadListRelationFilter
+    posts?: PostListRelationFilter
+    auditLogs?: AuditLogListRelationFilter
+    mediaFiles?: MediaFileListRelationFilter
+    passwordResetTokens?: PasswordResetTokenListRelationFilter
+    documents?: PersonnelDocumentListRelationFilter
+    inspections?: InspectionListRelationFilter
+    rpb1Records?: Rpb1RecordListRelationFilter
+  }
+
+  export type PersonnelOrderByWithRelationInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    leaves?: LeaveRecordOrderByRelationAggregateInput
+    approvedLeaves?: LeaveRecordOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
+    notificationReads?: NotificationReadOrderByRelationAggregateInput
+    posts?: PostOrderByRelationAggregateInput
+    auditLogs?: AuditLogOrderByRelationAggregateInput
+    mediaFiles?: MediaFileOrderByRelationAggregateInput
+    passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
+    documents?: PersonnelDocumentOrderByRelationAggregateInput
+    inspections?: InspectionOrderByRelationAggregateInput
+    rpb1Records?: Rpb1RecordOrderByRelationAggregateInput
+  }
+
+  export type PersonnelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    badgeNo?: string
+    username?: string
+    AND?: PersonnelWhereInput | PersonnelWhereInput[]
+    OR?: PersonnelWhereInput[]
+    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
+    password?: StringFilter<"Personnel"> | string
+    role?: StringFilter<"Personnel"> | string
+    prefix?: StringFilter<"Personnel"> | string
+    firstName?: StringFilter<"Personnel"> | string
+    lastName?: StringFilter<"Personnel"> | string
+    position?: StringFilter<"Personnel"> | string
+    department?: StringFilter<"Personnel"> | string
+    subDepartment?: StringFilter<"Personnel"> | string
+    personnelType?: StringFilter<"Personnel"> | string
+    phone?: StringFilter<"Personnel"> | string
+    mobile?: StringFilter<"Personnel"> | string
+    email?: StringFilter<"Personnel"> | string
+    status?: StringFilter<"Personnel"> | string
+    avatarColor?: StringFilter<"Personnel"> | string
+    skills?: StringFilter<"Personnel"> | string
+    education?: StringFilter<"Personnel"> | string
+    experience?: StringFilter<"Personnel"> | string
+    notes?: StringNullableFilter<"Personnel"> | string | null
+    citizenId?: StringFilter<"Personnel"> | string
+    dateOfBirth?: StringFilter<"Personnel"> | string
+    bloodType?: StringFilter<"Personnel"> | string
+    religion?: StringFilter<"Personnel"> | string
+    officialId?: StringFilter<"Personnel"> | string
+    militaryBranch?: StringFilter<"Personnel"> | string
+    commissionDate?: StringFilter<"Personnel"> | string
+    currentAddress?: StringFilter<"Personnel"> | string
+    currentTambon?: StringFilter<"Personnel"> | string
+    currentAmphoe?: StringFilter<"Personnel"> | string
+    currentProvince?: StringFilter<"Personnel"> | string
+    currentZipcode?: StringFilter<"Personnel"> | string
+    emergencyContactName?: StringFilter<"Personnel"> | string
+    emergencyContactPhone?: StringFilter<"Personnel"> | string
+    emergencyContactRelation?: StringFilter<"Personnel"> | string
+    royalDecorations?: StringFilter<"Personnel"> | string
+    trainingHistory?: StringFilter<"Personnel"> | string
+    coverPhoto?: StringFilter<"Personnel"> | string
+    profileTheme?: StringFilter<"Personnel"> | string
+    mustChangePassword?: BoolFilter<"Personnel"> | boolean
+    failedLoginAttempts?: IntFilter<"Personnel"> | number
+    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
+    createdAt?: DateTimeFilter<"Personnel"> | Date | string
+    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
+    leaves?: LeaveRecordListRelationFilter
+    approvedLeaves?: LeaveRecordListRelationFilter
+    notifications?: NotificationListRelationFilter
+    notificationReads?: NotificationReadListRelationFilter
+    posts?: PostListRelationFilter
+    auditLogs?: AuditLogListRelationFilter
+    mediaFiles?: MediaFileListRelationFilter
+    passwordResetTokens?: PasswordResetTokenListRelationFilter
+    documents?: PersonnelDocumentListRelationFilter
+    inspections?: InspectionListRelationFilter
+    rpb1Records?: Rpb1RecordListRelationFilter
+  }, "id" | "badgeNo" | "username">
+
+  export type PersonnelOrderByWithAggregationInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PersonnelCountOrderByAggregateInput
+    _avg?: PersonnelAvgOrderByAggregateInput
+    _max?: PersonnelMaxOrderByAggregateInput
+    _min?: PersonnelMinOrderByAggregateInput
+    _sum?: PersonnelSumOrderByAggregateInput
+  }
+
+  export type PersonnelScalarWhereWithAggregatesInput = {
+    AND?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
+    OR?: PersonnelScalarWhereWithAggregatesInput[]
+    NOT?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Personnel"> | string
+    badgeNo?: StringWithAggregatesFilter<"Personnel"> | string
+    username?: StringWithAggregatesFilter<"Personnel"> | string
+    password?: StringWithAggregatesFilter<"Personnel"> | string
+    role?: StringWithAggregatesFilter<"Personnel"> | string
+    prefix?: StringWithAggregatesFilter<"Personnel"> | string
+    firstName?: StringWithAggregatesFilter<"Personnel"> | string
+    lastName?: StringWithAggregatesFilter<"Personnel"> | string
+    position?: StringWithAggregatesFilter<"Personnel"> | string
+    department?: StringWithAggregatesFilter<"Personnel"> | string
+    subDepartment?: StringWithAggregatesFilter<"Personnel"> | string
+    personnelType?: StringWithAggregatesFilter<"Personnel"> | string
+    phone?: StringWithAggregatesFilter<"Personnel"> | string
+    mobile?: StringWithAggregatesFilter<"Personnel"> | string
+    email?: StringWithAggregatesFilter<"Personnel"> | string
+    status?: StringWithAggregatesFilter<"Personnel"> | string
+    avatarColor?: StringWithAggregatesFilter<"Personnel"> | string
+    skills?: StringWithAggregatesFilter<"Personnel"> | string
+    education?: StringWithAggregatesFilter<"Personnel"> | string
+    experience?: StringWithAggregatesFilter<"Personnel"> | string
+    notes?: StringNullableWithAggregatesFilter<"Personnel"> | string | null
+    citizenId?: StringWithAggregatesFilter<"Personnel"> | string
+    dateOfBirth?: StringWithAggregatesFilter<"Personnel"> | string
+    bloodType?: StringWithAggregatesFilter<"Personnel"> | string
+    religion?: StringWithAggregatesFilter<"Personnel"> | string
+    officialId?: StringWithAggregatesFilter<"Personnel"> | string
+    militaryBranch?: StringWithAggregatesFilter<"Personnel"> | string
+    commissionDate?: StringWithAggregatesFilter<"Personnel"> | string
+    currentAddress?: StringWithAggregatesFilter<"Personnel"> | string
+    currentTambon?: StringWithAggregatesFilter<"Personnel"> | string
+    currentAmphoe?: StringWithAggregatesFilter<"Personnel"> | string
+    currentProvince?: StringWithAggregatesFilter<"Personnel"> | string
+    currentZipcode?: StringWithAggregatesFilter<"Personnel"> | string
+    emergencyContactName?: StringWithAggregatesFilter<"Personnel"> | string
+    emergencyContactPhone?: StringWithAggregatesFilter<"Personnel"> | string
+    emergencyContactRelation?: StringWithAggregatesFilter<"Personnel"> | string
+    royalDecorations?: StringWithAggregatesFilter<"Personnel"> | string
+    trainingHistory?: StringWithAggregatesFilter<"Personnel"> | string
+    coverPhoto?: StringWithAggregatesFilter<"Personnel"> | string
+    profileTheme?: StringWithAggregatesFilter<"Personnel"> | string
+    mustChangePassword?: BoolWithAggregatesFilter<"Personnel"> | boolean
+    failedLoginAttempts?: IntWithAggregatesFilter<"Personnel"> | number
+    lockedUntil?: DateTimeNullableWithAggregatesFilter<"Personnel"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
+  }
+
+  export type DepartmentWhereInput = {
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    id?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    shortName?: StringNullableFilter<"Department"> | string | null
+    subDepartments?: StringFilter<"Department"> | string
+    sortOrder?: IntFilter<"Department"> | number
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+  }
+
+  export type DepartmentOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrderInput | SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    shortName?: StringNullableFilter<"Department"> | string | null
+    subDepartments?: StringFilter<"Department"> | string
+    sortOrder?: IntFilter<"Department"> | number
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+  }, "id" | "name">
+
+  export type DepartmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrderInput | SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentCountOrderByAggregateInput
+    _avg?: DepartmentAvgOrderByAggregateInput
+    _max?: DepartmentMaxOrderByAggregateInput
+    _min?: DepartmentMinOrderByAggregateInput
+    _sum?: DepartmentSumOrderByAggregateInput
+  }
+
+  export type DepartmentScalarWhereWithAggregatesInput = {
+    AND?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    OR?: DepartmentScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Department"> | string
+    name?: StringWithAggregatesFilter<"Department"> | string
+    shortName?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    subDepartments?: StringWithAggregatesFilter<"Department"> | string
+    sortOrder?: IntWithAggregatesFilter<"Department"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+  }
+
+  export type PersonnelDocumentWhereInput = {
+    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    OR?: PersonnelDocumentWhereInput[]
+    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    id?: StringFilter<"PersonnelDocument"> | string
+    personnelId?: StringFilter<"PersonnelDocument"> | string
+    category?: StringFilter<"PersonnelDocument"> | string
+    filename?: StringFilter<"PersonnelDocument"> | string
+    mimeType?: StringFilter<"PersonnelDocument"> | string
+    size?: IntFilter<"PersonnelDocument"> | number
+    storagePath?: StringFilter<"PersonnelDocument"> | string
+    uploadedBy?: StringFilter<"PersonnelDocument"> | string
+    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
+    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
+    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
+  }
+
+  export type PersonnelDocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    personnel?: PersonnelOrderByWithRelationInput
+  }
+
+  export type PersonnelDocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    OR?: PersonnelDocumentWhereInput[]
+    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
+    personnelId?: StringFilter<"PersonnelDocument"> | string
+    category?: StringFilter<"PersonnelDocument"> | string
+    filename?: StringFilter<"PersonnelDocument"> | string
+    mimeType?: StringFilter<"PersonnelDocument"> | string
+    size?: IntFilter<"PersonnelDocument"> | number
+    storagePath?: StringFilter<"PersonnelDocument"> | string
+    uploadedBy?: StringFilter<"PersonnelDocument"> | string
+    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
+    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
+    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
+  }, "id">
+
+  export type PersonnelDocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: PersonnelDocumentCountOrderByAggregateInput
+    _avg?: PersonnelDocumentAvgOrderByAggregateInput
+    _max?: PersonnelDocumentMaxOrderByAggregateInput
+    _min?: PersonnelDocumentMinOrderByAggregateInput
+    _sum?: PersonnelDocumentSumOrderByAggregateInput
+  }
+
+  export type PersonnelDocumentScalarWhereWithAggregatesInput = {
+    AND?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
+    OR?: PersonnelDocumentScalarWhereWithAggregatesInput[]
+    NOT?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    personnelId?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    category?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    filename?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    mimeType?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    size?: IntWithAggregatesFilter<"PersonnelDocument"> | number
+    storagePath?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    uploadedBy?: StringWithAggregatesFilter<"PersonnelDocument"> | string
+    notes?: StringNullableWithAggregatesFilter<"PersonnelDocument"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"PersonnelDocument"> | Date | string | null
+  }
+
   export type Rpb1RecordWhereInput = {
     AND?: Rpb1RecordWhereInput | Rpb1RecordWhereInput[]
     OR?: Rpb1RecordWhereInput[]
@@ -23759,595 +24348,6 @@ export namespace Prisma {
     extraOfficerSignatureDate?: StringNullableWithAggregatesFilter<"Rpb1Record"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Rpb1Record"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Rpb1Record"> | Date | string
-  }
-
-  export type ServiceWhereInput = {
-    AND?: ServiceWhereInput | ServiceWhereInput[]
-    OR?: ServiceWhereInput[]
-    NOT?: ServiceWhereInput | ServiceWhereInput[]
-    id?: StringFilter<"Service"> | string
-    title?: StringFilter<"Service"> | string
-    description?: StringFilter<"Service"> | string
-    price?: StringNullableFilter<"Service"> | string | null
-    image?: StringNullableFilter<"Service"> | string | null
-    icon?: StringNullableFilter<"Service"> | string | null
-    published?: BoolFilter<"Service"> | boolean
-    order?: IntFilter<"Service"> | number
-    createdAt?: DateTimeFilter<"Service"> | Date | string
-    updatedAt?: DateTimeFilter<"Service"> | Date | string
-  }
-
-  export type ServiceOrderByWithRelationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    price?: SortOrderInput | SortOrder
-    image?: SortOrderInput | SortOrder
-    icon?: SortOrderInput | SortOrder
-    published?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ServiceWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: ServiceWhereInput | ServiceWhereInput[]
-    OR?: ServiceWhereInput[]
-    NOT?: ServiceWhereInput | ServiceWhereInput[]
-    title?: StringFilter<"Service"> | string
-    description?: StringFilter<"Service"> | string
-    price?: StringNullableFilter<"Service"> | string | null
-    image?: StringNullableFilter<"Service"> | string | null
-    icon?: StringNullableFilter<"Service"> | string | null
-    published?: BoolFilter<"Service"> | boolean
-    order?: IntFilter<"Service"> | number
-    createdAt?: DateTimeFilter<"Service"> | Date | string
-    updatedAt?: DateTimeFilter<"Service"> | Date | string
-  }, "id">
-
-  export type ServiceOrderByWithAggregationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    price?: SortOrderInput | SortOrder
-    image?: SortOrderInput | SortOrder
-    icon?: SortOrderInput | SortOrder
-    published?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: ServiceCountOrderByAggregateInput
-    _avg?: ServiceAvgOrderByAggregateInput
-    _max?: ServiceMaxOrderByAggregateInput
-    _min?: ServiceMinOrderByAggregateInput
-    _sum?: ServiceSumOrderByAggregateInput
-  }
-
-  export type ServiceScalarWhereWithAggregatesInput = {
-    AND?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
-    OR?: ServiceScalarWhereWithAggregatesInput[]
-    NOT?: ServiceScalarWhereWithAggregatesInput | ServiceScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Service"> | string
-    title?: StringWithAggregatesFilter<"Service"> | string
-    description?: StringWithAggregatesFilter<"Service"> | string
-    price?: StringNullableWithAggregatesFilter<"Service"> | string | null
-    image?: StringNullableWithAggregatesFilter<"Service"> | string | null
-    icon?: StringNullableWithAggregatesFilter<"Service"> | string | null
-    published?: BoolWithAggregatesFilter<"Service"> | boolean
-    order?: IntWithAggregatesFilter<"Service"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Service"> | Date | string
-  }
-
-  export type MediaFileWhereInput = {
-    AND?: MediaFileWhereInput | MediaFileWhereInput[]
-    OR?: MediaFileWhereInput[]
-    NOT?: MediaFileWhereInput | MediaFileWhereInput[]
-    id?: StringFilter<"MediaFile"> | string
-    filename?: StringFilter<"MediaFile"> | string
-    url?: StringFilter<"MediaFile"> | string
-    size?: IntFilter<"MediaFile"> | number
-    mimetype?: StringFilter<"MediaFile"> | string
-    uploadedById?: StringNullableFilter<"MediaFile"> | string | null
-    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
-    uploadedBy?: XOR<PersonnelNullableRelationFilter, PersonnelWhereInput> | null
-  }
-
-  export type MediaFileOrderByWithRelationInput = {
-    id?: SortOrder
-    filename?: SortOrder
-    url?: SortOrder
-    size?: SortOrder
-    mimetype?: SortOrder
-    uploadedById?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    uploadedBy?: PersonnelOrderByWithRelationInput
-  }
-
-  export type MediaFileWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: MediaFileWhereInput | MediaFileWhereInput[]
-    OR?: MediaFileWhereInput[]
-    NOT?: MediaFileWhereInput | MediaFileWhereInput[]
-    filename?: StringFilter<"MediaFile"> | string
-    url?: StringFilter<"MediaFile"> | string
-    size?: IntFilter<"MediaFile"> | number
-    mimetype?: StringFilter<"MediaFile"> | string
-    uploadedById?: StringNullableFilter<"MediaFile"> | string | null
-    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
-    uploadedBy?: XOR<PersonnelNullableRelationFilter, PersonnelWhereInput> | null
-  }, "id">
-
-  export type MediaFileOrderByWithAggregationInput = {
-    id?: SortOrder
-    filename?: SortOrder
-    url?: SortOrder
-    size?: SortOrder
-    mimetype?: SortOrder
-    uploadedById?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    _count?: MediaFileCountOrderByAggregateInput
-    _avg?: MediaFileAvgOrderByAggregateInput
-    _max?: MediaFileMaxOrderByAggregateInput
-    _min?: MediaFileMinOrderByAggregateInput
-    _sum?: MediaFileSumOrderByAggregateInput
-  }
-
-  export type MediaFileScalarWhereWithAggregatesInput = {
-    AND?: MediaFileScalarWhereWithAggregatesInput | MediaFileScalarWhereWithAggregatesInput[]
-    OR?: MediaFileScalarWhereWithAggregatesInput[]
-    NOT?: MediaFileScalarWhereWithAggregatesInput | MediaFileScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"MediaFile"> | string
-    filename?: StringWithAggregatesFilter<"MediaFile"> | string
-    url?: StringWithAggregatesFilter<"MediaFile"> | string
-    size?: IntWithAggregatesFilter<"MediaFile"> | number
-    mimetype?: StringWithAggregatesFilter<"MediaFile"> | string
-    uploadedById?: StringNullableWithAggregatesFilter<"MediaFile"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"MediaFile"> | Date | string
-  }
-
-  export type PersonnelWhereInput = {
-    AND?: PersonnelWhereInput | PersonnelWhereInput[]
-    OR?: PersonnelWhereInput[]
-    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
-    id?: StringFilter<"Personnel"> | string
-    badgeNo?: StringFilter<"Personnel"> | string
-    username?: StringFilter<"Personnel"> | string
-    password?: StringFilter<"Personnel"> | string
-    role?: StringFilter<"Personnel"> | string
-    prefix?: StringFilter<"Personnel"> | string
-    firstName?: StringFilter<"Personnel"> | string
-    lastName?: StringFilter<"Personnel"> | string
-    position?: StringFilter<"Personnel"> | string
-    department?: StringFilter<"Personnel"> | string
-    subDepartment?: StringFilter<"Personnel"> | string
-    personnelType?: StringFilter<"Personnel"> | string
-    phone?: StringFilter<"Personnel"> | string
-    mobile?: StringFilter<"Personnel"> | string
-    email?: StringFilter<"Personnel"> | string
-    status?: StringFilter<"Personnel"> | string
-    avatarColor?: StringFilter<"Personnel"> | string
-    skills?: StringFilter<"Personnel"> | string
-    education?: StringFilter<"Personnel"> | string
-    experience?: StringFilter<"Personnel"> | string
-    notes?: StringNullableFilter<"Personnel"> | string | null
-    citizenId?: StringFilter<"Personnel"> | string
-    dateOfBirth?: StringFilter<"Personnel"> | string
-    bloodType?: StringFilter<"Personnel"> | string
-    religion?: StringFilter<"Personnel"> | string
-    officialId?: StringFilter<"Personnel"> | string
-    militaryBranch?: StringFilter<"Personnel"> | string
-    commissionDate?: StringFilter<"Personnel"> | string
-    currentAddress?: StringFilter<"Personnel"> | string
-    currentTambon?: StringFilter<"Personnel"> | string
-    currentAmphoe?: StringFilter<"Personnel"> | string
-    currentProvince?: StringFilter<"Personnel"> | string
-    currentZipcode?: StringFilter<"Personnel"> | string
-    emergencyContactName?: StringFilter<"Personnel"> | string
-    emergencyContactPhone?: StringFilter<"Personnel"> | string
-    emergencyContactRelation?: StringFilter<"Personnel"> | string
-    royalDecorations?: StringFilter<"Personnel"> | string
-    trainingHistory?: StringFilter<"Personnel"> | string
-    coverPhoto?: StringFilter<"Personnel"> | string
-    profileTheme?: StringFilter<"Personnel"> | string
-    mustChangePassword?: BoolFilter<"Personnel"> | boolean
-    failedLoginAttempts?: IntFilter<"Personnel"> | number
-    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
-    createdAt?: DateTimeFilter<"Personnel"> | Date | string
-    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
-    leaves?: LeaveRecordListRelationFilter
-    approvedLeaves?: LeaveRecordListRelationFilter
-    notifications?: NotificationListRelationFilter
-    notificationReads?: NotificationReadListRelationFilter
-    posts?: PostListRelationFilter
-    auditLogs?: AuditLogListRelationFilter
-    mediaFiles?: MediaFileListRelationFilter
-    passwordResetTokens?: PasswordResetTokenListRelationFilter
-    documents?: PersonnelDocumentListRelationFilter
-    inspections?: InspectionListRelationFilter
-    rpb1Records?: Rpb1RecordListRelationFilter
-  }
-
-  export type PersonnelOrderByWithRelationInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    leaves?: LeaveRecordOrderByRelationAggregateInput
-    approvedLeaves?: LeaveRecordOrderByRelationAggregateInput
-    notifications?: NotificationOrderByRelationAggregateInput
-    notificationReads?: NotificationReadOrderByRelationAggregateInput
-    posts?: PostOrderByRelationAggregateInput
-    auditLogs?: AuditLogOrderByRelationAggregateInput
-    mediaFiles?: MediaFileOrderByRelationAggregateInput
-    passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
-    documents?: PersonnelDocumentOrderByRelationAggregateInput
-    inspections?: InspectionOrderByRelationAggregateInput
-    rpb1Records?: Rpb1RecordOrderByRelationAggregateInput
-  }
-
-  export type PersonnelWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    badgeNo?: string
-    username?: string
-    AND?: PersonnelWhereInput | PersonnelWhereInput[]
-    OR?: PersonnelWhereInput[]
-    NOT?: PersonnelWhereInput | PersonnelWhereInput[]
-    password?: StringFilter<"Personnel"> | string
-    role?: StringFilter<"Personnel"> | string
-    prefix?: StringFilter<"Personnel"> | string
-    firstName?: StringFilter<"Personnel"> | string
-    lastName?: StringFilter<"Personnel"> | string
-    position?: StringFilter<"Personnel"> | string
-    department?: StringFilter<"Personnel"> | string
-    subDepartment?: StringFilter<"Personnel"> | string
-    personnelType?: StringFilter<"Personnel"> | string
-    phone?: StringFilter<"Personnel"> | string
-    mobile?: StringFilter<"Personnel"> | string
-    email?: StringFilter<"Personnel"> | string
-    status?: StringFilter<"Personnel"> | string
-    avatarColor?: StringFilter<"Personnel"> | string
-    skills?: StringFilter<"Personnel"> | string
-    education?: StringFilter<"Personnel"> | string
-    experience?: StringFilter<"Personnel"> | string
-    notes?: StringNullableFilter<"Personnel"> | string | null
-    citizenId?: StringFilter<"Personnel"> | string
-    dateOfBirth?: StringFilter<"Personnel"> | string
-    bloodType?: StringFilter<"Personnel"> | string
-    religion?: StringFilter<"Personnel"> | string
-    officialId?: StringFilter<"Personnel"> | string
-    militaryBranch?: StringFilter<"Personnel"> | string
-    commissionDate?: StringFilter<"Personnel"> | string
-    currentAddress?: StringFilter<"Personnel"> | string
-    currentTambon?: StringFilter<"Personnel"> | string
-    currentAmphoe?: StringFilter<"Personnel"> | string
-    currentProvince?: StringFilter<"Personnel"> | string
-    currentZipcode?: StringFilter<"Personnel"> | string
-    emergencyContactName?: StringFilter<"Personnel"> | string
-    emergencyContactPhone?: StringFilter<"Personnel"> | string
-    emergencyContactRelation?: StringFilter<"Personnel"> | string
-    royalDecorations?: StringFilter<"Personnel"> | string
-    trainingHistory?: StringFilter<"Personnel"> | string
-    coverPhoto?: StringFilter<"Personnel"> | string
-    profileTheme?: StringFilter<"Personnel"> | string
-    mustChangePassword?: BoolFilter<"Personnel"> | boolean
-    failedLoginAttempts?: IntFilter<"Personnel"> | number
-    lockedUntil?: DateTimeNullableFilter<"Personnel"> | Date | string | null
-    createdAt?: DateTimeFilter<"Personnel"> | Date | string
-    updatedAt?: DateTimeFilter<"Personnel"> | Date | string
-    leaves?: LeaveRecordListRelationFilter
-    approvedLeaves?: LeaveRecordListRelationFilter
-    notifications?: NotificationListRelationFilter
-    notificationReads?: NotificationReadListRelationFilter
-    posts?: PostListRelationFilter
-    auditLogs?: AuditLogListRelationFilter
-    mediaFiles?: MediaFileListRelationFilter
-    passwordResetTokens?: PasswordResetTokenListRelationFilter
-    documents?: PersonnelDocumentListRelationFilter
-    inspections?: InspectionListRelationFilter
-    rpb1Records?: Rpb1RecordListRelationFilter
-  }, "id" | "badgeNo" | "username">
-
-  export type PersonnelOrderByWithAggregationInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: PersonnelCountOrderByAggregateInput
-    _avg?: PersonnelAvgOrderByAggregateInput
-    _max?: PersonnelMaxOrderByAggregateInput
-    _min?: PersonnelMinOrderByAggregateInput
-    _sum?: PersonnelSumOrderByAggregateInput
-  }
-
-  export type PersonnelScalarWhereWithAggregatesInput = {
-    AND?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
-    OR?: PersonnelScalarWhereWithAggregatesInput[]
-    NOT?: PersonnelScalarWhereWithAggregatesInput | PersonnelScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Personnel"> | string
-    badgeNo?: StringWithAggregatesFilter<"Personnel"> | string
-    username?: StringWithAggregatesFilter<"Personnel"> | string
-    password?: StringWithAggregatesFilter<"Personnel"> | string
-    role?: StringWithAggregatesFilter<"Personnel"> | string
-    prefix?: StringWithAggregatesFilter<"Personnel"> | string
-    firstName?: StringWithAggregatesFilter<"Personnel"> | string
-    lastName?: StringWithAggregatesFilter<"Personnel"> | string
-    position?: StringWithAggregatesFilter<"Personnel"> | string
-    department?: StringWithAggregatesFilter<"Personnel"> | string
-    subDepartment?: StringWithAggregatesFilter<"Personnel"> | string
-    personnelType?: StringWithAggregatesFilter<"Personnel"> | string
-    phone?: StringWithAggregatesFilter<"Personnel"> | string
-    mobile?: StringWithAggregatesFilter<"Personnel"> | string
-    email?: StringWithAggregatesFilter<"Personnel"> | string
-    status?: StringWithAggregatesFilter<"Personnel"> | string
-    avatarColor?: StringWithAggregatesFilter<"Personnel"> | string
-    skills?: StringWithAggregatesFilter<"Personnel"> | string
-    education?: StringWithAggregatesFilter<"Personnel"> | string
-    experience?: StringWithAggregatesFilter<"Personnel"> | string
-    notes?: StringNullableWithAggregatesFilter<"Personnel"> | string | null
-    citizenId?: StringWithAggregatesFilter<"Personnel"> | string
-    dateOfBirth?: StringWithAggregatesFilter<"Personnel"> | string
-    bloodType?: StringWithAggregatesFilter<"Personnel"> | string
-    religion?: StringWithAggregatesFilter<"Personnel"> | string
-    officialId?: StringWithAggregatesFilter<"Personnel"> | string
-    militaryBranch?: StringWithAggregatesFilter<"Personnel"> | string
-    commissionDate?: StringWithAggregatesFilter<"Personnel"> | string
-    currentAddress?: StringWithAggregatesFilter<"Personnel"> | string
-    currentTambon?: StringWithAggregatesFilter<"Personnel"> | string
-    currentAmphoe?: StringWithAggregatesFilter<"Personnel"> | string
-    currentProvince?: StringWithAggregatesFilter<"Personnel"> | string
-    currentZipcode?: StringWithAggregatesFilter<"Personnel"> | string
-    emergencyContactName?: StringWithAggregatesFilter<"Personnel"> | string
-    emergencyContactPhone?: StringWithAggregatesFilter<"Personnel"> | string
-    emergencyContactRelation?: StringWithAggregatesFilter<"Personnel"> | string
-    royalDecorations?: StringWithAggregatesFilter<"Personnel"> | string
-    trainingHistory?: StringWithAggregatesFilter<"Personnel"> | string
-    coverPhoto?: StringWithAggregatesFilter<"Personnel"> | string
-    profileTheme?: StringWithAggregatesFilter<"Personnel"> | string
-    mustChangePassword?: BoolWithAggregatesFilter<"Personnel"> | boolean
-    failedLoginAttempts?: IntWithAggregatesFilter<"Personnel"> | number
-    lockedUntil?: DateTimeNullableWithAggregatesFilter<"Personnel"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Personnel"> | Date | string
-  }
-
-  export type DepartmentWhereInput = {
-    AND?: DepartmentWhereInput | DepartmentWhereInput[]
-    OR?: DepartmentWhereInput[]
-    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
-    id?: StringFilter<"Department"> | string
-    name?: StringFilter<"Department"> | string
-    shortName?: StringNullableFilter<"Department"> | string | null
-    subDepartments?: StringFilter<"Department"> | string
-    sortOrder?: IntFilter<"Department"> | number
-    createdAt?: DateTimeFilter<"Department"> | Date | string
-    updatedAt?: DateTimeFilter<"Department"> | Date | string
-  }
-
-  export type DepartmentOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrderInput | SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    name?: string
-    AND?: DepartmentWhereInput | DepartmentWhereInput[]
-    OR?: DepartmentWhereInput[]
-    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
-    shortName?: StringNullableFilter<"Department"> | string | null
-    subDepartments?: StringFilter<"Department"> | string
-    sortOrder?: IntFilter<"Department"> | number
-    createdAt?: DateTimeFilter<"Department"> | Date | string
-    updatedAt?: DateTimeFilter<"Department"> | Date | string
-  }, "id" | "name">
-
-  export type DepartmentOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrderInput | SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: DepartmentCountOrderByAggregateInput
-    _avg?: DepartmentAvgOrderByAggregateInput
-    _max?: DepartmentMaxOrderByAggregateInput
-    _min?: DepartmentMinOrderByAggregateInput
-    _sum?: DepartmentSumOrderByAggregateInput
-  }
-
-  export type DepartmentScalarWhereWithAggregatesInput = {
-    AND?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
-    OR?: DepartmentScalarWhereWithAggregatesInput[]
-    NOT?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Department"> | string
-    name?: StringWithAggregatesFilter<"Department"> | string
-    shortName?: StringNullableWithAggregatesFilter<"Department"> | string | null
-    subDepartments?: StringWithAggregatesFilter<"Department"> | string
-    sortOrder?: IntWithAggregatesFilter<"Department"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
-  }
-
-  export type PersonnelDocumentWhereInput = {
-    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    OR?: PersonnelDocumentWhereInput[]
-    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    id?: StringFilter<"PersonnelDocument"> | string
-    personnelId?: StringFilter<"PersonnelDocument"> | string
-    category?: StringFilter<"PersonnelDocument"> | string
-    filename?: StringFilter<"PersonnelDocument"> | string
-    mimeType?: StringFilter<"PersonnelDocument"> | string
-    size?: IntFilter<"PersonnelDocument"> | number
-    storagePath?: StringFilter<"PersonnelDocument"> | string
-    uploadedBy?: StringFilter<"PersonnelDocument"> | string
-    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
-    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
-    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
-  }
-
-  export type PersonnelDocumentOrderByWithRelationInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrderInput | SortOrder
-    personnel?: PersonnelOrderByWithRelationInput
-  }
-
-  export type PersonnelDocumentWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    OR?: PersonnelDocumentWhereInput[]
-    NOT?: PersonnelDocumentWhereInput | PersonnelDocumentWhereInput[]
-    personnelId?: StringFilter<"PersonnelDocument"> | string
-    category?: StringFilter<"PersonnelDocument"> | string
-    filename?: StringFilter<"PersonnelDocument"> | string
-    mimeType?: StringFilter<"PersonnelDocument"> | string
-    size?: IntFilter<"PersonnelDocument"> | number
-    storagePath?: StringFilter<"PersonnelDocument"> | string
-    uploadedBy?: StringFilter<"PersonnelDocument"> | string
-    notes?: StringNullableFilter<"PersonnelDocument"> | string | null
-    createdAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    updatedAt?: DateTimeFilter<"PersonnelDocument"> | Date | string
-    expiresAt?: DateTimeNullableFilter<"PersonnelDocument"> | Date | string | null
-    personnel?: XOR<PersonnelRelationFilter, PersonnelWhereInput>
-  }, "id">
-
-  export type PersonnelDocumentOrderByWithAggregationInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrderInput | SortOrder
-    _count?: PersonnelDocumentCountOrderByAggregateInput
-    _avg?: PersonnelDocumentAvgOrderByAggregateInput
-    _max?: PersonnelDocumentMaxOrderByAggregateInput
-    _min?: PersonnelDocumentMinOrderByAggregateInput
-    _sum?: PersonnelDocumentSumOrderByAggregateInput
-  }
-
-  export type PersonnelDocumentScalarWhereWithAggregatesInput = {
-    AND?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
-    OR?: PersonnelDocumentScalarWhereWithAggregatesInput[]
-    NOT?: PersonnelDocumentScalarWhereWithAggregatesInput | PersonnelDocumentScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    personnelId?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    category?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    filename?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    mimeType?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    size?: IntWithAggregatesFilter<"PersonnelDocument"> | number
-    storagePath?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    uploadedBy?: StringWithAggregatesFilter<"PersonnelDocument"> | string
-    notes?: StringNullableWithAggregatesFilter<"PersonnelDocument"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"PersonnelDocument"> | Date | string
-    expiresAt?: DateTimeNullableWithAggregatesFilter<"PersonnelDocument"> | Date | string | null
   }
 
   export type SystemSettingCreateInput = {
@@ -25475,6 +25475,720 @@ export namespace Prisma {
     readAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ServiceCreateInput = {
+    id?: string
+    title: string
+    description: string
+    price?: string | null
+    image?: string | null
+    icon?: string | null
+    published?: boolean
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceUncheckedCreateInput = {
+    id?: string
+    title: string
+    description: string
+    price?: string | null
+    image?: string | null
+    icon?: string | null
+    published?: boolean
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCreateManyInput = {
+    id?: string
+    title: string
+    description: string
+    price?: string | null
+    image?: string | null
+    icon?: string | null
+    published?: boolean
+    order?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    published?: BoolFieldUpdateOperationsInput | boolean
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaFileCreateInput = {
+    id?: string
+    filename: string
+    url: string
+    size: number
+    mimetype: string
+    createdAt?: Date | string
+    uploadedBy?: PersonnelCreateNestedOneWithoutMediaFilesInput
+  }
+
+  export type MediaFileUncheckedCreateInput = {
+    id?: string
+    filename: string
+    url: string
+    size: number
+    mimetype: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MediaFileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    uploadedBy?: PersonnelUpdateOneWithoutMediaFilesNestedInput
+  }
+
+  export type MediaFileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaFileCreateManyInput = {
+    id?: string
+    filename: string
+    url: string
+    size: number
+    mimetype: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MediaFileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaFileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonnelCreateInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionCreateNestedManyWithoutUserInput
+    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelUncheckedCreateInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
+    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
+  }
+
+  export type PersonnelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUpdateManyWithoutUserNestedInput
+    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
+    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type PersonnelCreateManyInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PersonnelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonnelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentCreateInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    subDepartments?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUncheckedCreateInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    subDepartments?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentCreateManyInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    subDepartments?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    subDepartments?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PersonnelDocumentCreateInput = {
+    id?: string
+    category: string
+    filename: string
+    mimeType: string
+    size: number
+    storagePath: string
+    uploadedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    personnel: PersonnelCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type PersonnelDocumentUncheckedCreateInput = {
+    id?: string
+    personnelId: string
+    category: string
+    filename: string
+    mimeType: string
+    size: number
+    storagePath: string
+    uploadedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type PersonnelDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    personnel?: PersonnelUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type PersonnelDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personnelId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PersonnelDocumentCreateManyInput = {
+    id?: string
+    personnelId: string
+    category: string
+    filename: string
+    mimeType: string
+    size: number
+    storagePath: string
+    uploadedBy?: string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type PersonnelDocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PersonnelDocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    personnelId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    storagePath?: StringFieldUpdateOperationsInput | string
+    uploadedBy?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type Rpb1RecordCreateInput = {
     id?: string
     status?: string
@@ -26489,720 +27203,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ServiceCreateInput = {
-    id?: string
-    title: string
-    description: string
-    price?: string | null
-    image?: string | null
-    icon?: string | null
-    published?: boolean
-    order?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ServiceUncheckedCreateInput = {
-    id?: string
-    title: string
-    description: string
-    price?: string | null
-    image?: string | null
-    icon?: string | null
-    published?: boolean
-    order?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ServiceUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    price?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ServiceUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    price?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ServiceCreateManyInput = {
-    id?: string
-    title: string
-    description: string
-    price?: string | null
-    image?: string | null
-    icon?: string | null
-    published?: boolean
-    order?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ServiceUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    price?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ServiceUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    price?: NullableStringFieldUpdateOperationsInput | string | null
-    image?: NullableStringFieldUpdateOperationsInput | string | null
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    published?: BoolFieldUpdateOperationsInput | boolean
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MediaFileCreateInput = {
-    id?: string
-    filename: string
-    url: string
-    size: number
-    mimetype: string
-    createdAt?: Date | string
-    uploadedBy?: PersonnelCreateNestedOneWithoutMediaFilesInput
-  }
-
-  export type MediaFileUncheckedCreateInput = {
-    id?: string
-    filename: string
-    url: string
-    size: number
-    mimetype: string
-    uploadedById?: string | null
-    createdAt?: Date | string
-  }
-
-  export type MediaFileUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    mimetype?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    uploadedBy?: PersonnelUpdateOneWithoutMediaFilesNestedInput
-  }
-
-  export type MediaFileUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    mimetype?: StringFieldUpdateOperationsInput | string
-    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MediaFileCreateManyInput = {
-    id?: string
-    filename: string
-    url: string
-    size: number
-    mimetype: string
-    uploadedById?: string | null
-    createdAt?: Date | string
-  }
-
-  export type MediaFileUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    mimetype?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MediaFileUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    mimetype?: StringFieldUpdateOperationsInput | string
-    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelCreateInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionCreateNestedManyWithoutUserInput
-    rpb1Records?: Rpb1RecordCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelUncheckedCreateInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
-    rpb1Records?: Rpb1RecordUncheckedCreateNestedManyWithoutPersonnelInput
-  }
-
-  export type PersonnelUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUpdateManyWithoutUserNestedInput
-    rpb1Records?: Rpb1RecordUpdateManyWithoutPersonnelNestedInput
-  }
-
-  export type PersonnelUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
-    rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
-  }
-
-  export type PersonnelCreateManyInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PersonnelUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentCreateInput = {
-    id?: string
-    name: string
-    shortName?: string | null
-    subDepartments?: string
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DepartmentUncheckedCreateInput = {
-    id?: string
-    name: string
-    shortName?: string | null
-    subDepartments?: string
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DepartmentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentCreateManyInput = {
-    id?: string
-    name: string
-    shortName?: string | null
-    subDepartments?: string
-    sortOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type DepartmentUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    shortName?: NullableStringFieldUpdateOperationsInput | string | null
-    subDepartments?: StringFieldUpdateOperationsInput | string
-    sortOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PersonnelDocumentCreateInput = {
-    id?: string
-    category: string
-    filename: string
-    mimeType: string
-    size: number
-    storagePath: string
-    uploadedBy?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    expiresAt?: Date | string | null
-    personnel: PersonnelCreateNestedOneWithoutDocumentsInput
-  }
-
-  export type PersonnelDocumentUncheckedCreateInput = {
-    id?: string
-    personnelId: string
-    category: string
-    filename: string
-    mimeType: string
-    size: number
-    storagePath: string
-    uploadedBy?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    expiresAt?: Date | string | null
-  }
-
-  export type PersonnelDocumentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    personnel?: PersonnelUpdateOneRequiredWithoutDocumentsNestedInput
-  }
-
-  export type PersonnelDocumentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    personnelId?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type PersonnelDocumentCreateManyInput = {
-    id?: string
-    personnelId: string
-    category: string
-    filename: string
-    mimeType: string
-    size: number
-    storagePath: string
-    uploadedBy?: string
-    notes?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    expiresAt?: Date | string | null
-  }
-
-  export type PersonnelDocumentUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type PersonnelDocumentUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    personnelId?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    filename?: StringFieldUpdateOperationsInput | string
-    mimeType?: StringFieldUpdateOperationsInput | string
-    size?: IntFieldUpdateOperationsInput | number
-    storagePath?: StringFieldUpdateOperationsInput | string
-    uploadedBy?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -27991,6 +27991,424 @@ export namespace Prisma {
     readAt?: SortOrder
   }
 
+  export type ServiceCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    image?: SortOrder
+    icon?: SortOrder
+    published?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type ServiceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    image?: SortOrder
+    icon?: SortOrder
+    published?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    image?: SortOrder
+    icon?: SortOrder
+    published?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ServiceSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type MediaFileCountOrderByAggregateInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    mimetype?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MediaFileAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type MediaFileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    mimetype?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MediaFileMinOrderByAggregateInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    mimetype?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MediaFileSumOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type LeaveRecordListRelationFilter = {
+    every?: LeaveRecordWhereInput
+    some?: LeaveRecordWhereInput
+    none?: LeaveRecordWhereInput
+  }
+
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
+  export type PostListRelationFilter = {
+    every?: PostWhereInput
+    some?: PostWhereInput
+    none?: PostWhereInput
+  }
+
+  export type AuditLogListRelationFilter = {
+    every?: AuditLogWhereInput
+    some?: AuditLogWhereInput
+    none?: AuditLogWhereInput
+  }
+
+  export type MediaFileListRelationFilter = {
+    every?: MediaFileWhereInput
+    some?: MediaFileWhereInput
+    none?: MediaFileWhereInput
+  }
+
+  export type PasswordResetTokenListRelationFilter = {
+    every?: PasswordResetTokenWhereInput
+    some?: PasswordResetTokenWhereInput
+    none?: PasswordResetTokenWhereInput
+  }
+
+  export type PersonnelDocumentListRelationFilter = {
+    every?: PersonnelDocumentWhereInput
+    some?: PersonnelDocumentWhereInput
+    none?: PersonnelDocumentWhereInput
+  }
+
+  export type InspectionListRelationFilter = {
+    every?: InspectionWhereInput
+    some?: InspectionWhereInput
+    none?: InspectionWhereInput
+  }
+
+  export type Rpb1RecordListRelationFilter = {
+    every?: Rpb1RecordWhereInput
+    some?: Rpb1RecordWhereInput
+    none?: Rpb1RecordWhereInput
+  }
+
+  export type LeaveRecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MediaFileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PasswordResetTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PersonnelDocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InspectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type Rpb1RecordOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PersonnelCountOrderByAggregateInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonnelAvgOrderByAggregateInput = {
+    failedLoginAttempts?: SortOrder
+  }
+
+  export type PersonnelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonnelMinOrderByAggregateInput = {
+    id?: SortOrder
+    badgeNo?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    role?: SortOrder
+    prefix?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    subDepartment?: SortOrder
+    personnelType?: SortOrder
+    phone?: SortOrder
+    mobile?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    avatarColor?: SortOrder
+    skills?: SortOrder
+    education?: SortOrder
+    experience?: SortOrder
+    notes?: SortOrder
+    citizenId?: SortOrder
+    dateOfBirth?: SortOrder
+    bloodType?: SortOrder
+    religion?: SortOrder
+    officialId?: SortOrder
+    militaryBranch?: SortOrder
+    commissionDate?: SortOrder
+    currentAddress?: SortOrder
+    currentTambon?: SortOrder
+    currentAmphoe?: SortOrder
+    currentProvince?: SortOrder
+    currentZipcode?: SortOrder
+    emergencyContactName?: SortOrder
+    emergencyContactPhone?: SortOrder
+    emergencyContactRelation?: SortOrder
+    royalDecorations?: SortOrder
+    trainingHistory?: SortOrder
+    coverPhoto?: SortOrder
+    profileTheme?: SortOrder
+    mustChangePassword?: SortOrder
+    failedLoginAttempts?: SortOrder
+    lockedUntil?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PersonnelSumOrderByAggregateInput = {
+    failedLoginAttempts?: SortOrder
+  }
+
+  export type DepartmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentAvgOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type DepartmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    subDepartments?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentSumOrderByAggregateInput = {
+    sortOrder?: SortOrder
+  }
+
+  export type PersonnelDocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type PersonnelDocumentAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type PersonnelDocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type PersonnelDocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    personnelId?: SortOrder
+    category?: SortOrder
+    filename?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    storagePath?: SortOrder
+    uploadedBy?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type PersonnelDocumentSumOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
   export type Rpb1RecordCountOrderByAggregateInput = {
     id?: SortOrder
     personnelId?: SortOrder
@@ -28440,424 +28858,6 @@ export namespace Prisma {
     weight?: SortOrder
   }
 
-  export type ServiceCountOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    price?: SortOrder
-    image?: SortOrder
-    icon?: SortOrder
-    published?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ServiceAvgOrderByAggregateInput = {
-    order?: SortOrder
-  }
-
-  export type ServiceMaxOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    price?: SortOrder
-    image?: SortOrder
-    icon?: SortOrder
-    published?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ServiceMinOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    price?: SortOrder
-    image?: SortOrder
-    icon?: SortOrder
-    published?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type ServiceSumOrderByAggregateInput = {
-    order?: SortOrder
-  }
-
-  export type MediaFileCountOrderByAggregateInput = {
-    id?: SortOrder
-    filename?: SortOrder
-    url?: SortOrder
-    size?: SortOrder
-    mimetype?: SortOrder
-    uploadedById?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type MediaFileAvgOrderByAggregateInput = {
-    size?: SortOrder
-  }
-
-  export type MediaFileMaxOrderByAggregateInput = {
-    id?: SortOrder
-    filename?: SortOrder
-    url?: SortOrder
-    size?: SortOrder
-    mimetype?: SortOrder
-    uploadedById?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type MediaFileMinOrderByAggregateInput = {
-    id?: SortOrder
-    filename?: SortOrder
-    url?: SortOrder
-    size?: SortOrder
-    mimetype?: SortOrder
-    uploadedById?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type MediaFileSumOrderByAggregateInput = {
-    size?: SortOrder
-  }
-
-  export type LeaveRecordListRelationFilter = {
-    every?: LeaveRecordWhereInput
-    some?: LeaveRecordWhereInput
-    none?: LeaveRecordWhereInput
-  }
-
-  export type NotificationListRelationFilter = {
-    every?: NotificationWhereInput
-    some?: NotificationWhereInput
-    none?: NotificationWhereInput
-  }
-
-  export type PostListRelationFilter = {
-    every?: PostWhereInput
-    some?: PostWhereInput
-    none?: PostWhereInput
-  }
-
-  export type AuditLogListRelationFilter = {
-    every?: AuditLogWhereInput
-    some?: AuditLogWhereInput
-    none?: AuditLogWhereInput
-  }
-
-  export type MediaFileListRelationFilter = {
-    every?: MediaFileWhereInput
-    some?: MediaFileWhereInput
-    none?: MediaFileWhereInput
-  }
-
-  export type PasswordResetTokenListRelationFilter = {
-    every?: PasswordResetTokenWhereInput
-    some?: PasswordResetTokenWhereInput
-    none?: PasswordResetTokenWhereInput
-  }
-
-  export type PersonnelDocumentListRelationFilter = {
-    every?: PersonnelDocumentWhereInput
-    some?: PersonnelDocumentWhereInput
-    none?: PersonnelDocumentWhereInput
-  }
-
-  export type InspectionListRelationFilter = {
-    every?: InspectionWhereInput
-    some?: InspectionWhereInput
-    none?: InspectionWhereInput
-  }
-
-  export type Rpb1RecordListRelationFilter = {
-    every?: Rpb1RecordWhereInput
-    some?: Rpb1RecordWhereInput
-    none?: Rpb1RecordWhereInput
-  }
-
-  export type LeaveRecordOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type NotificationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PostOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type AuditLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type MediaFileOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PasswordResetTokenOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PersonnelDocumentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InspectionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type Rpb1RecordOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PersonnelCountOrderByAggregateInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PersonnelAvgOrderByAggregateInput = {
-    failedLoginAttempts?: SortOrder
-  }
-
-  export type PersonnelMaxOrderByAggregateInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PersonnelMinOrderByAggregateInput = {
-    id?: SortOrder
-    badgeNo?: SortOrder
-    username?: SortOrder
-    password?: SortOrder
-    role?: SortOrder
-    prefix?: SortOrder
-    firstName?: SortOrder
-    lastName?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    subDepartment?: SortOrder
-    personnelType?: SortOrder
-    phone?: SortOrder
-    mobile?: SortOrder
-    email?: SortOrder
-    status?: SortOrder
-    avatarColor?: SortOrder
-    skills?: SortOrder
-    education?: SortOrder
-    experience?: SortOrder
-    notes?: SortOrder
-    citizenId?: SortOrder
-    dateOfBirth?: SortOrder
-    bloodType?: SortOrder
-    religion?: SortOrder
-    officialId?: SortOrder
-    militaryBranch?: SortOrder
-    commissionDate?: SortOrder
-    currentAddress?: SortOrder
-    currentTambon?: SortOrder
-    currentAmphoe?: SortOrder
-    currentProvince?: SortOrder
-    currentZipcode?: SortOrder
-    emergencyContactName?: SortOrder
-    emergencyContactPhone?: SortOrder
-    emergencyContactRelation?: SortOrder
-    royalDecorations?: SortOrder
-    trainingHistory?: SortOrder
-    coverPhoto?: SortOrder
-    profileTheme?: SortOrder
-    mustChangePassword?: SortOrder
-    failedLoginAttempts?: SortOrder
-    lockedUntil?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PersonnelSumOrderByAggregateInput = {
-    failedLoginAttempts?: SortOrder
-  }
-
-  export type DepartmentCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentAvgOrderByAggregateInput = {
-    sortOrder?: SortOrder
-  }
-
-  export type DepartmentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    shortName?: SortOrder
-    subDepartments?: SortOrder
-    sortOrder?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type DepartmentSumOrderByAggregateInput = {
-    sortOrder?: SortOrder
-  }
-
-  export type PersonnelDocumentCountOrderByAggregateInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrder
-  }
-
-  export type PersonnelDocumentAvgOrderByAggregateInput = {
-    size?: SortOrder
-  }
-
-  export type PersonnelDocumentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrder
-  }
-
-  export type PersonnelDocumentMinOrderByAggregateInput = {
-    id?: SortOrder
-    personnelId?: SortOrder
-    category?: SortOrder
-    filename?: SortOrder
-    mimeType?: SortOrder
-    size?: SortOrder
-    storagePath?: SortOrder
-    uploadedBy?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    expiresAt?: SortOrder
-  }
-
-  export type PersonnelDocumentSumOrderByAggregateInput = {
-    size?: SortOrder
-  }
-
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -29134,20 +29134,6 @@ export namespace Prisma {
     upsert?: PersonnelUpsertWithoutNotificationReadsInput
     connect?: PersonnelWhereUniqueInput
     update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutNotificationReadsInput, PersonnelUpdateWithoutNotificationReadsInput>, PersonnelUncheckedUpdateWithoutNotificationReadsInput>
-  }
-
-  export type PersonnelCreateNestedOneWithoutRpb1RecordsInput = {
-    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
-    connect?: PersonnelWhereUniqueInput
-  }
-
-  export type PersonnelUpdateOneRequiredWithoutRpb1RecordsNestedInput = {
-    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
-    upsert?: PersonnelUpsertWithoutRpb1RecordsInput
-    connect?: PersonnelWhereUniqueInput
-    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput, PersonnelUpdateWithoutRpb1RecordsInput>, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
   }
 
   export type PersonnelCreateNestedOneWithoutMediaFilesInput = {
@@ -29640,6 +29626,20 @@ export namespace Prisma {
     upsert?: PersonnelUpsertWithoutDocumentsInput
     connect?: PersonnelWhereUniqueInput
     update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutDocumentsInput, PersonnelUpdateWithoutDocumentsInput>, PersonnelUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type PersonnelCreateNestedOneWithoutRpb1RecordsInput = {
+    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
+    connect?: PersonnelWhereUniqueInput
+  }
+
+  export type PersonnelUpdateOneRequiredWithoutRpb1RecordsNestedInput = {
+    create?: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+    connectOrCreate?: PersonnelCreateOrConnectWithoutRpb1RecordsInput
+    upsert?: PersonnelUpsertWithoutRpb1RecordsInput
+    connect?: PersonnelWhereUniqueInput
+    update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput, PersonnelUpdateWithoutRpb1RecordsInput>, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -32144,254 +32144,6 @@ export namespace Prisma {
     rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
   }
 
-  export type PersonnelCreateWithoutRpb1RecordsInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionCreateNestedManyWithoutUserInput
-  }
-
-  export type PersonnelUncheckedCreateWithoutRpb1RecordsInput = {
-    id?: string
-    badgeNo: string
-    username: string
-    password: string
-    role?: string
-    prefix: string
-    firstName: string
-    lastName: string
-    position: string
-    department: string
-    subDepartment: string
-    personnelType?: string
-    phone: string
-    mobile: string
-    email: string
-    status?: string
-    avatarColor?: string
-    skills?: string
-    education?: string
-    experience?: string
-    notes?: string | null
-    citizenId?: string
-    dateOfBirth?: string
-    bloodType?: string
-    religion?: string
-    officialId?: string
-    militaryBranch?: string
-    commissionDate?: string
-    currentAddress?: string
-    currentTambon?: string
-    currentAmphoe?: string
-    currentProvince?: string
-    currentZipcode?: string
-    emergencyContactName?: string
-    emergencyContactPhone?: string
-    emergencyContactRelation?: string
-    royalDecorations?: string
-    trainingHistory?: string
-    coverPhoto?: string
-    profileTheme?: string
-    mustChangePassword?: boolean
-    failedLoginAttempts?: number
-    lockedUntil?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
-    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
-    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
-    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
-    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
-    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type PersonnelCreateOrConnectWithoutRpb1RecordsInput = {
-    where: PersonnelWhereUniqueInput
-    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-  }
-
-  export type PersonnelUpsertWithoutRpb1RecordsInput = {
-    update: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
-    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
-    where?: PersonnelWhereInput
-  }
-
-  export type PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput = {
-    where?: PersonnelWhereInput
-    data: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
-  }
-
-  export type PersonnelUpdateWithoutRpb1RecordsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUpdateManyWithoutUserNestedInput
-  }
-
-  export type PersonnelUncheckedUpdateWithoutRpb1RecordsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    badgeNo?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    role?: StringFieldUpdateOperationsInput | string
-    prefix?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    position?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    subDepartment?: StringFieldUpdateOperationsInput | string
-    personnelType?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    mobile?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
-    avatarColor?: StringFieldUpdateOperationsInput | string
-    skills?: StringFieldUpdateOperationsInput | string
-    education?: StringFieldUpdateOperationsInput | string
-    experience?: StringFieldUpdateOperationsInput | string
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
-    dateOfBirth?: StringFieldUpdateOperationsInput | string
-    bloodType?: StringFieldUpdateOperationsInput | string
-    religion?: StringFieldUpdateOperationsInput | string
-    officialId?: StringFieldUpdateOperationsInput | string
-    militaryBranch?: StringFieldUpdateOperationsInput | string
-    commissionDate?: StringFieldUpdateOperationsInput | string
-    currentAddress?: StringFieldUpdateOperationsInput | string
-    currentTambon?: StringFieldUpdateOperationsInput | string
-    currentAmphoe?: StringFieldUpdateOperationsInput | string
-    currentProvince?: StringFieldUpdateOperationsInput | string
-    currentZipcode?: StringFieldUpdateOperationsInput | string
-    emergencyContactName?: StringFieldUpdateOperationsInput | string
-    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
-    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
-    royalDecorations?: StringFieldUpdateOperationsInput | string
-    trainingHistory?: StringFieldUpdateOperationsInput | string
-    coverPhoto?: StringFieldUpdateOperationsInput | string
-    profileTheme?: StringFieldUpdateOperationsInput | string
-    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
-    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
-    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
-    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
-    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
-    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
-    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
-    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
-  }
-
   export type PersonnelCreateWithoutMediaFilesInput = {
     id?: string
     badgeNo: string
@@ -34063,6 +33815,254 @@ export namespace Prisma {
     rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
   }
 
+  export type PersonnelCreateWithoutRpb1RecordsInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadCreateNestedManyWithoutPersonnelInput
+    posts?: PostCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionCreateNestedManyWithoutUserInput
+  }
+
+  export type PersonnelUncheckedCreateWithoutRpb1RecordsInput = {
+    id?: string
+    badgeNo: string
+    username: string
+    password: string
+    role?: string
+    prefix: string
+    firstName: string
+    lastName: string
+    position: string
+    department: string
+    subDepartment: string
+    personnelType?: string
+    phone: string
+    mobile: string
+    email: string
+    status?: string
+    avatarColor?: string
+    skills?: string
+    education?: string
+    experience?: string
+    notes?: string | null
+    citizenId?: string
+    dateOfBirth?: string
+    bloodType?: string
+    religion?: string
+    officialId?: string
+    militaryBranch?: string
+    commissionDate?: string
+    currentAddress?: string
+    currentTambon?: string
+    currentAmphoe?: string
+    currentProvince?: string
+    currentZipcode?: string
+    emergencyContactName?: string
+    emergencyContactPhone?: string
+    emergencyContactRelation?: string
+    royalDecorations?: string
+    trainingHistory?: string
+    coverPhoto?: string
+    profileTheme?: string
+    mustChangePassword?: boolean
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leaves?: LeaveRecordUncheckedCreateNestedManyWithoutPersonnelInput
+    approvedLeaves?: LeaveRecordUncheckedCreateNestedManyWithoutApprovedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutPersonnelInput
+    notificationReads?: NotificationReadUncheckedCreateNestedManyWithoutPersonnelInput
+    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutPersonnelInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutPersonnelInput
+    documents?: PersonnelDocumentUncheckedCreateNestedManyWithoutPersonnelInput
+    inspections?: InspectionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type PersonnelCreateOrConnectWithoutRpb1RecordsInput = {
+    where: PersonnelWhereUniqueInput
+    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+  }
+
+  export type PersonnelUpsertWithoutRpb1RecordsInput = {
+    update: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
+    create: XOR<PersonnelCreateWithoutRpb1RecordsInput, PersonnelUncheckedCreateWithoutRpb1RecordsInput>
+    where?: PersonnelWhereInput
+  }
+
+  export type PersonnelUpdateToOneWithWhereWithoutRpb1RecordsInput = {
+    where?: PersonnelWhereInput
+    data: XOR<PersonnelUpdateWithoutRpb1RecordsInput, PersonnelUncheckedUpdateWithoutRpb1RecordsInput>
+  }
+
+  export type PersonnelUpdateWithoutRpb1RecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUpdateManyWithoutUserNestedInput
+  }
+
+  export type PersonnelUncheckedUpdateWithoutRpb1RecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    badgeNo?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    position?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    subDepartment?: StringFieldUpdateOperationsInput | string
+    personnelType?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    mobile?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    avatarColor?: StringFieldUpdateOperationsInput | string
+    skills?: StringFieldUpdateOperationsInput | string
+    education?: StringFieldUpdateOperationsInput | string
+    experience?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenId?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: StringFieldUpdateOperationsInput | string
+    bloodType?: StringFieldUpdateOperationsInput | string
+    religion?: StringFieldUpdateOperationsInput | string
+    officialId?: StringFieldUpdateOperationsInput | string
+    militaryBranch?: StringFieldUpdateOperationsInput | string
+    commissionDate?: StringFieldUpdateOperationsInput | string
+    currentAddress?: StringFieldUpdateOperationsInput | string
+    currentTambon?: StringFieldUpdateOperationsInput | string
+    currentAmphoe?: StringFieldUpdateOperationsInput | string
+    currentProvince?: StringFieldUpdateOperationsInput | string
+    currentZipcode?: StringFieldUpdateOperationsInput | string
+    emergencyContactName?: StringFieldUpdateOperationsInput | string
+    emergencyContactPhone?: StringFieldUpdateOperationsInput | string
+    emergencyContactRelation?: StringFieldUpdateOperationsInput | string
+    royalDecorations?: StringFieldUpdateOperationsInput | string
+    trainingHistory?: StringFieldUpdateOperationsInput | string
+    coverPhoto?: StringFieldUpdateOperationsInput | string
+    profileTheme?: StringFieldUpdateOperationsInput | string
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leaves?: LeaveRecordUncheckedUpdateManyWithoutPersonnelNestedInput
+    approvedLeaves?: LeaveRecordUncheckedUpdateManyWithoutApprovedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutPersonnelNestedInput
+    notificationReads?: NotificationReadUncheckedUpdateManyWithoutPersonnelNestedInput
+    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutPersonnelNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutPersonnelNestedInput
+    documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
+    inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type InspectionFindingCreateManyInspectionInput = {
     id?: string
     findingCode: string
@@ -35413,10 +35413,6 @@ export namespace Prisma {
      */
     export type NotificationReadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationReadDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use Rpb1RecordDefaultArgs instead
-     */
-    export type Rpb1RecordArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = Rpb1RecordDefaultArgs<ExtArgs>
-    /**
      * @deprecated Use ServiceDefaultArgs instead
      */
     export type ServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ServiceDefaultArgs<ExtArgs>
@@ -35436,6 +35432,10 @@ export namespace Prisma {
      * @deprecated Use PersonnelDocumentDefaultArgs instead
      */
     export type PersonnelDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PersonnelDocumentDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use Rpb1RecordDefaultArgs instead
+     */
+    export type Rpb1RecordArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = Rpb1RecordDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

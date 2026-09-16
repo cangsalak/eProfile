@@ -23,7 +23,7 @@ export const MaternityLeavePrintForm: React.FC<LeavePrintFormProps> = ({
       <div className="text-center mb-3 no-print pt-4">
         <PrintButton />
       </div>
-      <PrintFormLayout formNumber="แบบ ๔" toPerson={leave.toPerson}>
+      <PrintFormLayout formNumber="แบบ 4" toPerson={leave.toPerson}>
         {/* Garuda Emblem */}
         <div className="flex justify-center mt-4 mb-1">
           <img

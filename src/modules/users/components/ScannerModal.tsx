@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Personnel } from '@/modules/users';
+import { Modal, Button } from '@/components/ui';
 import PersonnelCard from './PersonnelCard';
 
 interface ScannerModalProps {
@@ -33,7 +34,7 @@ export default function ScannerModal({ isOpen, onClose, personnelList, settings,
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       // If modal is open and input isn't focused, try to focus it so the scanner types into it
       if (isOpen && document.activeElement !== inputRef.current) {
-        // Exclude focusing if user is typing in another input (which shouldn't exist in this modal anyway, but just in case)
+        // Exclude focusing if user is typing in another input
         if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
           inputRef.current?.focus();
         }
@@ -43,8 +44,6 @@ export default function ScannerModal({ isOpen, onClose, personnelList, settings,
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [isOpen]);
-
-  if (!isOpen) return null;
 
   const handleScanSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,103 +68,103 @@ export default function ScannerModal({ isOpen, onClose, personnelList, settings,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/50 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
-        {/* Header */}
-        <div className="flex justify-between items-center p-5 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/30">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-400">
-              <i className="fa-solid fa-barcode"></i>
-            </div>
-            ระบบสแกนตรวจเช็คบุคคล
-          </h2>
-          <button
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="ระบบสแกนตรวจเช็คบุคคล"
+      subtitle="สแกนบาร์โค้ดหรือกรอกเลขประจำตัวเพื่อค้นหาข้อมูล"
+      icon="fa-solid fa-barcode"
+      size="md"
+      footer={
+        <div className="flex justify-end w-full">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
           >
-            <i className="fa-solid fa-xmark"></i>
-          </button>
+            ปิดหน้าต่าง
+          </Button>
         </div>
-
-        {/* Body */}
-        <div className="p-6 overflow-y-auto">
-          {/* Hidden/Visually Hidden Input for Barcode Scanner */}
-          <form onSubmit={handleScanSubmit} className="mb-6">
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-2 text-center">
-              เสียบเครื่องอ่านบาร์โค้ด และสแกนบัตรรหัส 10 หลัก หรือกรอกรหัสด้วยตนเอง
-            </p>
-            <div className="relative max-w-sm mx-auto">
-              <label htmlFor="scannerModalInput" className="sr-only">รหัสประจำตัวหรือบาร์โค้ด</label>
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i className="fa-solid fa-magnifying-glass text-slate-500"></i>
-              </div>
-              <input
-                id="scannerModalInput"
-                aria-label="กรอกรหัสประจำตัว หรือสแกนบาร์โค้ด"
-                ref={inputRef}
-                type="text"
-                value={scanValue}
-                onChange={(e) => setScanValue(e.target.value)}
-                placeholder="กรอกรหัส หรือ สแกนที่นี่..."
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 shadow-inner"
-                autoComplete="off"
-              />
-              <button 
-                type="submit"
-                className="absolute inset-y-1 right-1 px-4 bg-primary-500 hover:bg-primary-600 rounded-lg text-sm font-medium text-white transition-colors"
-              >
-                ตรวจสอบ
-              </button>
+      }
+    >
+      <div className="space-y-6">
+        {/* Hidden/Visually Hidden Input for Barcode Scanner */}
+        <form onSubmit={handleScanSubmit}>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 text-center">
+            เสียบเครื่องอ่านบาร์โค้ด และสแกนบัตรรหัส 10 หลัก หรือกรอกรหัสด้วยตนเอง
+          </p>
+          <div className="relative max-w-sm mx-auto">
+            <label htmlFor="scannerModalInput" className="sr-only">รหัสประจำตัวหรือบาร์โค้ด</label>
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i className="fa-solid fa-magnifying-glass text-xs"></i>
             </div>
-          </form>
-
-          {/* Result Area */}
-          <div className="mt-8">
-            {scanStatus === 'idle' && (
-              <div className="text-center py-12 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/20">
-                <i className="fa-solid fa-qrcode text-5xl text-slate-600 mb-4 animate-pulse"></i>
-                <p className="text-slate-500 dark:text-slate-400 font-medium">รอรับข้อมูลการสแกน...</p>
-              </div>
-            )}
-
-            {scanStatus === 'success' && scannedPerson && (
-              <div className="animate-in fade-in zoom-in duration-300">
-                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 mb-6 flex items-center justify-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <i className="fa-solid fa-check text-emerald-400"></i>
-                  </div>
-                  <h3 className="text-emerald-400 font-bold text-lg">พบข้อมูลบุคลากรในหน่วยงาน</h3>
-                </div>
-                {/* Re-use PersonnelCard to show info */}
-                <div className="pointer-events-none flex justify-center">
-                  <PersonnelCard
-                    person={scannedPerson}
-                    settings={settings}
-                    isGuest={isGuest}
-                    onViewProfile={() => {}}
-                    onPrintCard={() => {}}
-                  />
-                </div>
-              </div>
-            )}
-
-            {scanStatus === 'not_found' && (
-              <div className="animate-in fade-in zoom-in duration-300 text-center py-10 border border-rose-500/30 rounded-2xl bg-rose-500/5">
-                <div className="w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center mx-auto mb-4">
-                  <i className="fa-solid fa-xmark text-3xl text-rose-400"></i>
-                </div>
-                <h3 className="text-xl font-bold text-rose-400 mb-2">ไม่พบข้อมูลในหน่วยงาน!</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm">
-                  รหัสที่คุณสแกนไม่ตรงกับฐานข้อมูลบุคลากรในระบบ<br />
-                  โปรดตรวจสอบบัตร หรือลองสแกนใหม่อีกครั้ง
-                </p>
-              </div>
-            )}
+            <input
+              id="scannerModalInput"
+              aria-label="กรอกรหัสประจำตัว หรือสแกนบาร์โค้ด"
+              ref={inputRef}
+              type="text"
+              value={scanValue}
+              onChange={(e) => setScanValue(e.target.value)}
+              placeholder="กรอกรหัส หรือ สแกนที่นี่..."
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-2.5 pl-9 pr-24 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 shadow-xs font-mono"
+              autoComplete="off"
+            />
+            <Button 
+              type="submit"
+              variant="primary"
+              size="sm"
+              className="absolute inset-y-1 right-1 h-auto py-1 px-3 text-xs"
+            >
+              ตรวจสอบ
+            </Button>
           </div>
+        </form>
 
+        {/* Result Area */}
+        <div>
+          {scanStatus === 'idle' && (
+            <div className="text-center py-10 border-2 border-dashed border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/50 dark:bg-slate-800/20">
+              <i className="fa-solid fa-qrcode text-4xl text-slate-400 dark:text-slate-500 mb-3 animate-pulse"></i>
+              <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">รอรับข้อมูลการสแกน...</p>
+            </div>
+          )}
+
+          {scanStatus === 'success' && scannedPerson && (
+            <div className="animate-fade-in space-y-4">
+              <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl p-3 flex items-center justify-center gap-2.5">
+                <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                  <i className="fa-solid fa-check text-xs text-emerald-600 dark:text-emerald-400"></i>
+                </div>
+                <h3 className="text-emerald-700 dark:text-emerald-300 font-bold text-xs">พบข้อมูลบุคลากรในหน่วยงาน</h3>
+              </div>
+              {/* Re-use PersonnelCard to show info */}
+              <div className="pointer-events-none flex justify-center">
+                <PersonnelCard
+                  person={scannedPerson}
+                  settings={settings}
+                  isGuest={isGuest}
+                  onViewProfile={() => {}}
+                  onPrintCard={() => {}}
+                />
+              </div>
+            </div>
+          )}
+
+          {scanStatus === 'not_found' && (
+            <div className="animate-fade-in text-center py-8 border border-rose-200 dark:border-rose-900/40 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 p-4">
+              <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center mx-auto mb-3">
+                <i className="fa-solid fa-xmark text-xl text-rose-600 dark:text-rose-400"></i>
+              </div>
+              <h3 className="text-sm font-bold text-rose-700 dark:text-rose-300 mb-1">ไม่พบข้อมูลในหน่วยงาน!</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                รหัสที่คุณสแกนไม่ตรงกับฐานข้อมูลบุคลากรในระบบ<br />
+                โปรดตรวจสอบบัตร หรือลองสแกนใหม่อีกครั้ง
+              </p>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

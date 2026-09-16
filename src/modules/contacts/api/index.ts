@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/modules/core';
+import { prisma, rateLimit } from '@/modules/core';
 import { requireRole } from '@/modules/core';
 import { contactSchema } from '@/modules/core';
+
+const contactRateLimiter = rateLimit({
+  interval: 60 * 1000, // 1 minute
+  uniqueTokenPerInterval: 200,
+});
 
 export async function handleGetContacts(req: Request) {
   try {
@@ -20,10 +25,31 @@ export async function handleGetContacts(req: Request) {
 
 export async function handleCreateContact(req: Request) {
   try {
-    const body = await req.json();
+    // 1. Rate limiting check (Max 5 inquiries per minute per IP)
+    const res = NextResponse.next();
+    try {
+      await contactRateLimiter.check(res, 5, 'CONTACT_SUBMIT');
+    } catch {
+      return NextResponse.json(
+        { error: 'คุณส่งข้อความติดต่อถี่เกินกำหนด กรุณารอ 1 นาทีแล้วลองใหม่อีกครั้ง (Rate limit exceeded)' },
+        { status: 429 }
+      );
+    }
+
+    const body = await req.json().catch(() => ({}));
+
+    // 2. Bot & Spam Honeypot check
+    if (body.website || body._gotcha || body.honeypot) {
+      return NextResponse.json(
+        { error: 'ระบบตรวจพบพฤติกรรมสแปมหรือบอทอัตโนมัติ ไม่อนุญาตให้ส่งข้อความ (Bot / Spam Detected)' },
+        { status: 400 }
+      );
+    }
+
     const validation = contactSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json({ error: validation.error.issues[0].message }, { status: 400 });
+      const firstIssue = validation.error.issues[0];
+      return NextResponse.json({ error: firstIssue?.message || 'ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบการกรอกข้อมูล' }, { status: 400 });
     }
 
     const { name, email, phone, message } = validation.data;

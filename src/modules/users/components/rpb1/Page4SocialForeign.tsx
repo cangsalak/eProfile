@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Rpb1FormData, OrganizationMembershipItem, ForeignTravelItem } from '../types';
+import { Rpb1FormData, OrganizationMembershipItem, ForeignTravelItem } from '../../types';
 
 interface PageProps {
   formData: Rpb1FormData;
@@ -82,7 +82,7 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
             4
           </span>
           <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-            หน้า ๔ — สื่อสิ่งพิมพ์/ออนไลน์, สมาชิกภาพองค์กร และการเดินทางต่างประเทศ (หมวด ๑๖ - ๑๘)
+            หน้า 4 — สื่อสิ่งพิมพ์/ออนไลน์, สมาชิกภาพองค์กร และการเดินทางต่างประเทศ (หมวด 16 - 18)
           </h4>
         </div>
         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
@@ -92,20 +92,22 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
 
       {/* Section 16: Writer & Online Media */}
       <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-2">
-        <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
+        <label htmlFor="rpb1_p4_writerDetails" className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2 cursor-pointer">
           <i className="fa-solid fa-pen-nib"></i>
-          <span>๑๖. การเป็นนักเขียน บทความ นามปากกา และการสื่อสารผ่านสื่อสังคมออนไลน์</span>
-        </h5>
+          <span>16. การเป็นนักเขียน บทความ นามปากกา และการสื่อสารผ่านสื่อสังคมออนไลน์</span>
+        </label>
         <p className="text-[11px] text-slate-500 dark:text-slate-400">
           ถ้าเคย ให้แจ้งชื่อเรื่อง/บทความ นามปากกา ชื่อหนังสือ บรรณาธิการ ผู้พิมพ์ ผู้โฆษณา และวันเดือนปีที่พิมพ์ หรือกลุ่มสังคมออนไลน์ที่ดูแล
         </p>
         <textarea
+          id="rpb1_p4_writerDetails"
           name="writerDetails"
           rows={3}
           value={formData.writerDetails || ''}
           onChange={handleChange}
           placeholder="เช่น เคยเขียนบทความวิชาการ นามปากกา '...' หรือ หากไม่มีให้ระบุ 'ไม่มี'"
-          className="form-control text-xs"
+          aria-label="16. การเป็นนักเขียน บทความ นามปากกา และการสื่อสารผ่านสื่อสังคมออนไลน์"
+          className="form-textarea text-xs"
         />
       </div>
 
@@ -115,7 +117,7 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
           <div>
             <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
               <i className="fa-solid fa-users-line"></i>
-              <span>๑๗. สมาชิกภาพในพรรคการเมือง สมาคม สโมสร องค์กร หรือกลุ่มสื่อออนไลน์</span>
+              <span>17. สมาชิกภาพในพรรคการเมือง สมาคม สโมสร องค์กร หรือกลุ่มสื่อออนไลน์</span>
             </h5>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">ในทางอาชีพ สังคม การเมือง (อดีตและปัจจุบัน)</p>
           </div>
@@ -151,53 +153,63 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
 
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
+                    <label htmlFor={`rpb1_p4_mem_fromYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
                     <input
+                      id={`rpb1_p4_mem_fromYear_${idx}`}
                       type="text"
                       placeholder="2560"
                       value={item.fromYear}
                       onChange={(e) => updateMembership(idx, 'fromYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปี พ.ศ. (จาก) ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
+                    <label htmlFor={`rpb1_p4_mem_toYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
                     <input
+                      id={`rpb1_p4_mem_toYear_${idx}`}
                       type="text"
                       placeholder="ปัจจุบัน"
                       value={item.toYear}
                       onChange={(e) => updateMembership(idx, 'toYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปี พ.ศ. (ถึง) ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ชื่อองค์กร/สมาคม</label>
+                    <label htmlFor={`rpb1_p4_mem_org_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ชื่อองค์กร/สมาคม</label>
                     <input
+                      id={`rpb1_p4_mem_org_${idx}`}
                       type="text"
                       placeholder="สมาคมวิทยุสมัครเล่นฯ"
                       value={item.organizationName}
                       onChange={(e) => updateMembership(idx, 'organizationName', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ชื่อองค์กร/สมาคม ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ที่ตั้ง</label>
+                    <label htmlFor={`rpb1_p4_mem_location_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ที่ตั้ง</label>
                     <input
+                      id={`rpb1_p4_mem_location_${idx}`}
                       type="text"
                       placeholder="กรุงเทพมหานคร"
                       value={item.location}
                       onChange={(e) => updateMembership(idx, 'location', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ที่ตั้ง ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">หมายเลขสมาชิก</label>
+                    <label htmlFor={`rpb1_p4_mem_no_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">หมายเลขสมาชิก</label>
                     <input
+                      id={`rpb1_p4_mem_no_${idx}`}
                       type="text"
                       placeholder="เช่น M-12345"
                       value={item.memberNo}
                       onChange={(e) => updateMembership(idx, 'memberNo', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`หมายเลขสมาชิก ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -212,7 +224,7 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
         <div className="flex items-center justify-between">
           <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <i className="fa-solid fa-plane"></i>
-            <span>๑๘. การเดินทางไปต่างประเทศ (กรอกตามลำดับก่อน-หลัง)</span>
+            <span>18. การเดินทางไปต่างประเทศ (กรอกตามลำดับก่อน-หลัง)</span>
           </h5>
           <button
             type="button"
@@ -246,43 +258,51 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
+                    <label htmlFor={`rpb1_p4_travel_fromYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (จาก)</label>
                     <input
+                      id={`rpb1_p4_travel_fromYear_${idx}`}
                       type="text"
                       placeholder="2561"
                       value={item.fromYear}
                       onChange={(e) => updateTravel(idx, 'fromYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปี พ.ศ. (จาก) ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
+                    <label htmlFor={`rpb1_p4_travel_toYear_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ปี พ.ศ. (ถึง)</label>
                     <input
+                      id={`rpb1_p4_travel_toYear_${idx}`}
                       type="text"
                       placeholder="2561"
                       value={item.toYear}
                       onChange={(e) => updateTravel(idx, 'toYear', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ปี พ.ศ. (ถึง) ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">เมืองและประเทศ</label>
+                    <label htmlFor={`rpb1_p4_travel_city_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">เมืองและประเทศ</label>
                     <input
+                      id={`rpb1_p4_travel_city_${idx}`}
                       type="text"
                       placeholder="เช่น โตเกียว, ญี่ปุ่น"
                       value={item.cityCountry}
                       onChange={(e) => updateTravel(idx, 'cityCountry', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`เมืองและประเทศ ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-500 mb-0.5">ความมุ่งหมายและทุนที่ได้รับ</label>
+                    <label htmlFor={`rpb1_p4_travel_purpose_${idx}`} className="block text-[10px] text-slate-500 mb-0.5">ความมุ่งหมายและทุนที่ได้รับ</label>
                     <input
+                      id={`rpb1_p4_travel_purpose_${idx}`}
                       type="text"
                       placeholder="ฝึกอบรมดูงาน ทุน ทอ."
                       value={item.purposeAndSponsorship}
                       onChange={(e) => updateTravel(idx, 'purposeAndSponsorship', e.target.value)}
-                      className="form-control text-xs p-1.5"
+                      aria-label={`ความมุ่งหมายและทุนที่ได้รับ ลำดับ ${idx + 1}`}
+                      className="form-input text-xs p-1.5"
                     />
                   </div>
                 </div>
@@ -294,3 +314,4 @@ export default function Page4SocialForeign({ formData, setFormData }: PageProps)
     </div>
   );
 }
+

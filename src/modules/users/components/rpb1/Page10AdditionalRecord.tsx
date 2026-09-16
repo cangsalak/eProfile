@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Rpb1FormData } from '../types';
+import { Rpb1FormData } from '../../types';
+import { ImageUpload } from '@/components/ui';
 
 interface PageProps {
   formData: Rpb1FormData;
@@ -15,17 +16,6 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
     setFormData((prev) => ({ ...prev, [name]: val }));
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFormData((prev) => ({ ...prev, photoUrl: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <div className="space-y-6 font-prompt animate-fade-in">
       {/* Header */}
@@ -35,7 +25,7 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
             10
           </span>
           <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-            หน้า ๑๐ — บันทึกประวัติบุคคลเพิ่มเติม และรูปถ่าย (ขนาด ๔.๕ x ๖ ซม.)
+            หน้า 10 — บันทึกประวัติบุคคลเพิ่มเติม และรูปถ่าย (ขนาด 4.5 x 6 ซม.)
           </h4>
         </div>
         <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
@@ -54,10 +44,11 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  ๑. คำนำหน้าชื่อ / ชื่อ / นามสกุล
+                <label htmlFor="rpb1_p10_extraTitleName" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  1. คำนำหน้าชื่อ / ชื่อ / นามสกุล
                 </label>
                 <input
+                  id="rpb1_p10_extraTitleName"
                   type="text"
                   name="extraTitleName"
                   value={
@@ -65,38 +56,44 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
                     `${formData.titleRank || ''} ${formData.firstName || ''} ${formData.lastName || ''}`.trim()
                   }
                   onChange={handleChange}
-                  className="form-control text-xs"
+                  aria-label="คำนำหน้าชื่อ ชื่อ นามสกุล เพิ่มเติม"
+                  className="form-input text-xs"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">เพศ</label>
+                <label htmlFor="rpb1_p10_extraGender" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">เพศ</label>
                 <input
+                  id="rpb1_p10_extraGender"
                   type="text"
                   name="extraGender"
                   value={formData.extraGender || formData.gender || ''}
                   onChange={handleChange}
-                  className="form-control text-xs"
+                  aria-label="เพศ เพิ่มเติม"
+                  className="form-input text-xs"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">๒. กรุ๊ปเลือด</label>
+              <label htmlFor="rpb1_p10_extraBloodGroup" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">2. หมู่โลหิต</label>
               <input
+                id="rpb1_p10_extraBloodGroup"
                 type="text"
                 name="extraBloodGroup"
                 value={formData.extraBloodGroup || formData.bloodGroup || ''}
                 onChange={handleChange}
                 placeholder="เช่น A, B, AB, O"
-                className="form-control text-xs"
+                aria-label="กรุ๊ปเลือด เพิ่มเติม"
+                className="form-input text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                ๓. ที่อยู่ตามทะเบียนบ้าน
+              <label htmlFor="rpb1_p10_extraRegisteredAddress" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                3. ที่อยู่ตามทะเบียนบ้าน
               </label>
               <textarea
+                id="rpb1_p10_extraRegisteredAddress"
                 name="extraRegisteredAddress"
                 rows={2}
                 value={
@@ -104,14 +101,15 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
                   `${formData.registeredHouseNo || ''} ม.${formData.registeredMoo || '-'} ซ.${formData.registeredSoi || '-'} ถ.${formData.registeredRoad || '-'} ต.${formData.registeredSubdistrict || '-'} อ.${formData.registeredDistrict || '-'} จ.${formData.registeredProvince || ''}`.trim()
                 }
                 onChange={handleChange}
-                className="form-control text-xs"
+                aria-label="ที่อยู่ตามทะเบียนบ้าน เพิ่มเติม"
+                className="form-textarea text-xs"
               />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  ๔. ที่อยู่จริงปัจจุบัน
+                <label htmlFor="rpb1_p10_extraCurrentAddress" className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  4. ที่อยู่จริงปัจจุบัน
                 </label>
                 <label className="flex items-center gap-1.5 cursor-pointer text-xs text-primary-600 dark:text-primary-400">
                   <input
@@ -125,6 +123,7 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
                 </label>
               </div>
               <textarea
+                id="rpb1_p10_extraCurrentAddress"
                 name="extraCurrentAddress"
                 rows={2}
                 value={
@@ -135,51 +134,60 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
                 }
                 onChange={handleChange}
                 disabled={formData.extraIsSameAddress}
-                className="form-control text-xs"
+                aria-label="ที่อยู่จริงปัจจุบัน เพิ่มเติม"
+                className="form-textarea text-xs"
               />
             </div>
 
             <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 space-y-2">
-              <h6 className="text-xs font-bold text-slate-800 dark:text-slate-200">๕. หมายเลขโทรศัพท์และอีเมลที่ติดต่อได้</h6>
+              <h6 className="text-xs font-bold text-slate-800 dark:text-slate-200">5. หมายเลขโทรศัพท์และอีเมลที่ติดต่อได้</h6>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์มือถือ</label>
+                  <label htmlFor="rpb1_p10_extraMobilePhone" className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์มือถือ</label>
                   <input
+                    id="rpb1_p10_extraMobilePhone"
                     type="text"
                     name="extraMobilePhone"
                     value={formData.extraMobilePhone || formData.phoneMobile || ''}
                     onChange={handleChange}
-                    className="form-control text-xs"
+                    aria-label="โทรศัพท์มือถือ เพิ่มเติม"
+                    className="form-input text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์บ้าน</label>
+                  <label htmlFor="rpb1_p10_extraHomePhone" className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์บ้าน</label>
                   <input
+                    id="rpb1_p10_extraHomePhone"
                     type="text"
                     name="extraHomePhone"
                     value={formData.extraHomePhone || formData.phoneLandline || ''}
                     onChange={handleChange}
-                    className="form-control text-xs"
+                    aria-label="โทรศัพท์บ้าน เพิ่มเติม"
+                    className="form-input text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์สำนักงาน</label>
+                  <label htmlFor="rpb1_p10_extraOfficePhone" className="block text-[10px] text-slate-500 mb-0.5">โทรศัพท์สำนักงาน</label>
                   <input
+                    id="rpb1_p10_extraOfficePhone"
                     type="text"
                     name="extraOfficePhone"
                     value={formData.extraOfficePhone || ''}
                     onChange={handleChange}
-                    className="form-control text-xs"
+                    aria-label="โทรศัพท์สำนักงาน เพิ่มเติม"
+                    className="form-input text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-500 mb-0.5">E-mail Address</label>
+                  <label htmlFor="rpb1_p10_extraEmail" className="block text-[10px] text-slate-500 mb-0.5">E-mail Address</label>
                   <input
+                    id="rpb1_p10_extraEmail"
                     type="email"
                     name="extraEmail"
                     value={formData.extraEmail || formData.email || ''}
                     onChange={handleChange}
-                    className="form-control text-xs"
+                    aria-label="อีเมล ติดต่อ เพิ่มเติม"
+                    className="form-input text-xs"
                   />
                 </div>
               </div>
@@ -189,49 +197,18 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
 
         {/* Right 1 Col: Photo Upload Box & Officer Sign */}
         <div className="space-y-4">
-          <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 flex flex-col items-center text-center space-y-3">
-            <h5 className="text-xs font-bold text-primary-600 dark:text-primary-400">
-              ภาพถ่ายครึ่งตัว หน้าตรงไม่สวมหมวก
-            </h5>
-            <p className="text-[10px] text-slate-400">(ขนาดมาตรฐาน ๔.๕ x ๖ ซม.)</p>
-
-            {/* Photo Box */}
-            <div className="w-36 h-48 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden flex flex-col items-center justify-center relative shadow-xs">
-              {formData.photoUrl ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={formData.photoUrl}
-                    alt="รูปถ่าย รปภ.1"
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFormData((prev) => ({ ...prev, photoUrl: '' }))}
-                    className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 text-white text-xs flex items-center justify-center shadow-md hover:bg-rose-500"
-                    title="ลบรูป"
-                  >
-                    <i className="fa-solid fa-xmark"></i>
-                  </button>
-                </>
-              ) : (
-                <div className="p-3 text-center space-y-1">
-                  <i className="fa-regular fa-image text-3xl text-slate-300 dark:text-slate-600"></i>
-                  <p className="text-[10px] text-slate-400">ขนาด 4.5 x 6 ซม.</p>
-                </div>
-              )}
-            </div>
-
-            <label className="px-3 py-1.5 bg-primary-600 hover:bg-primary-500 text-white text-xs font-semibold rounded-xl shadow-xs cursor-pointer flex items-center gap-1.5 transition-all">
-              <i className="fa-solid fa-camera text-xs"></i>
-              <span>{formData.photoUrl ? 'เปลี่ยนรูปถ่าย' : 'อัปโหลดรูปถ่าย'}</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="sr-only"
-              />
-            </label>
+          {/* Photo 4.5 x 6 cm Box */}
+          <div className="bg-slate-50/70 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-3">
+            <ImageUpload
+              id="rpb1_p10_photoUpload"
+              label="ภาพถ่ายครึ่งตัว หน้าตรงไม่สวมหมวก"
+              value={formData.photoUrl}
+              onChange={(url) => setFormData((prev) => ({ ...prev, photoUrl: url }))}
+              onRemove={() => setFormData((prev) => ({ ...prev, photoUrl: '' }))}
+              variant="id-photo"
+              placeholder="คลิกหรือลากรูปถ่าย 4.5 x 6 ซม. มาวาง"
+              helperText="ขนาดมาตรฐาน 4.5 x 6 ซม. (ถ่ายไว้ไม่เกิน 6 เดือน)"
+            />
           </div>
 
           {/* Officer Verification */}
@@ -240,36 +217,42 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
               เจ้าหน้าที่ควบคุมการบันทึกประวัติ
             </h6>
             <div>
-              <label className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
+              <label htmlFor="rpb1_p10_extraOfficerName" className="block text-[10px] text-slate-500 mb-0.5">ยศ ชื่อตัว ชื่อสกุล</label>
               <input
+                id="rpb1_p10_extraOfficerName"
                 type="text"
                 name="extraOfficerName"
                 value={formData.extraOfficerName || formData.inspectorRankName || ''}
                 onChange={handleChange}
                 placeholder="ยศ ชื่อ สกุล"
-                className="form-control text-xs p-1.5"
+                aria-label="ยศ ชื่อตัว ชื่อสกุล เจ้าหน้าที่"
+                className="form-input text-xs p-1.5"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-slate-500 mb-0.5">ตำแหน่ง</label>
+              <label htmlFor="rpb1_p10_extraOfficerPosition" className="block text-[10px] text-slate-500 mb-0.5">ตำแหน่ง</label>
               <input
+                id="rpb1_p10_extraOfficerPosition"
                 type="text"
                 name="extraOfficerPosition"
                 value={formData.extraOfficerPosition || formData.inspectorPosition || ''}
                 onChange={handleChange}
                 placeholder="ตำแหน่งเจ้าหน้าที่"
-                className="form-control text-xs p-1.5"
+                aria-label="ตำแหน่ง เจ้าหน้าที่"
+                className="form-input text-xs p-1.5"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-slate-500 mb-0.5">วัน เดือน ปี ที่บันทึก</label>
+              <label htmlFor="rpb1_p10_extraOfficerSignatureDate" className="block text-[10px] text-slate-500 mb-0.5">วัน เดือน ปี ที่บันทึก</label>
               <input
+                id="rpb1_p10_extraOfficerSignatureDate"
                 type="text"
                 name="extraOfficerSignatureDate"
                 value={formData.extraOfficerSignatureDate || formData.inspectorSignatureDate || ''}
                 onChange={handleChange}
                 placeholder="เช่น 15 มี.ค. 2567"
-                className="form-control text-xs p-1.5"
+                aria-label="วัน เดือน ปี ที่บันทึก เจ้าหน้าที่"
+                className="form-input text-xs p-1.5"
               />
             </div>
           </div>
@@ -278,3 +261,4 @@ export default function Page10AdditionalRecord({ formData, setFormData }: PagePr
     </div>
   );
 }
+

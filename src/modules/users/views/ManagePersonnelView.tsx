@@ -13,7 +13,7 @@ import PersonnelDashboard from '../components/PersonnelDashboard';
 import { downloadPersonnelTemplate, exportPersonnelToExcel } from '../lib/excelUtils';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { Card, Button, Badge } from '@/components/ui';
+import { Card, Button, Badge, Modal } from '@/components/ui';
 import { Download, Upload, Image, FileSpreadsheet, Plus, Search, Filter } from 'lucide-react';
 
 interface SubDepartmentItem {
@@ -31,13 +31,6 @@ interface DepartmentItem {
 export default function ManagePersonnelView() {
   const [personnelList, setPersonnelList] = useState<Personnel[]>([]);
   const [departments, setDepartments] = useState<DepartmentItem[]>([]);
-  const [personnelTypes, setPersonnelTypes] = useState<string[]>([
-    'นายทหารสัญญาบัตร', 'นายทหารประทวน', 'พนักงานราชการ', 'ลูกจ้าง', 'ทหารกองประจำการ'
-  ]);
-  const [statusList, setStatusList] = useState<string[]>([
-    'ปฏิบัติงานปกติ', 'ไปช่วยราชการ', 'ไปช่วยราชการภายนอกหน่วย', 'มาช่วยราชการ', 'ลาพักผ่อน', 'ลาป่วย/ลากิจ', 'ศึกษา/ดูงาน', 'ย้ายหน่วย/พ้นสภาพ'
-  ]);
-
   const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -139,12 +132,6 @@ export default function ManagePersonnelView() {
           if (!isNaN(size) && size > 0) {
             setPageSize(size);
           }
-        }
-        if (settings.personnelTypes) {
-          try { setPersonnelTypes(JSON.parse(settings.personnelTypes)); } catch (_) {}
-        }
-        if (settings.statusList) {
-          try { setStatusList(JSON.parse(settings.statusList)); } catch (_) {}
         }
       }
     } catch (err) {
@@ -515,7 +502,6 @@ export default function ManagePersonnelView() {
                 setTypeFilter(e.target.value || 'all');
                 setCurrentPage(1);
               }}
-              personnelTypes={personnelTypes}
               allowAll
               allLabel="ประเภท: ทั้งหมด"
               size="sm"
@@ -532,7 +518,6 @@ export default function ManagePersonnelView() {
                 setStatusFilter(e.target.value || 'all');
                 setCurrentPage(1);
               }}
-              statusList={statusList}
               allowAll
               allLabel="สถานะ: ทั้งหมด"
               size="sm"
@@ -616,28 +601,16 @@ export default function ManagePersonnelView() {
       )}
 
       {leaveModalPerson && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-4xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <i className="fa-solid fa-calendar-days text-primary-500"></i> ประวัติและจัดการการลา
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  {leaveModalPerson.prefix}{leaveModalPerson.firstName} {leaveModalPerson.lastName} ({leaveModalPerson.badgeNo}) - {leaveModalPerson.department}
-                </p>
-              </div>
-              <button
-                onClick={() => setLeaveModalPerson(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 transition-colors"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <LeaveList personnelId={leaveModalPerson.id} />
-          </div>
-        </div>
+        <Modal
+          isOpen={!!leaveModalPerson}
+          onClose={() => setLeaveModalPerson(null)}
+          title="ประวัติและจัดการการลา"
+          subtitle={`${leaveModalPerson.prefix || ''}${leaveModalPerson.firstName} ${leaveModalPerson.lastName} (${leaveModalPerson.badgeNo}) - ${leaveModalPerson.department}`}
+          icon="fa-solid fa-calendar-days"
+          size="xl"
+        >
+          <LeaveList personnelId={leaveModalPerson.id} />
+        </Modal>
       )}
 
       {/* Styled Confirmation Modal */}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import TablePagination from '@/components/common/TablePagination';
+import { Modal, Button, Badge } from '@/components/ui';
 
 interface ContactMessage {
   id: string;
@@ -509,90 +510,91 @@ export default function ManageContactsView() {
 
       {/* Message Detail Modal */}
       {selectedMessage && (
-        <div className="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/75 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-xl border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden animate-scale-up">
-            
-            <div className="px-6 py-4.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900/40 flex items-center justify-center text-sm font-bold shadow-xs">
-                  <i className="fa-solid fa-envelope-open"></i>
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                  รายละเอียดข้อความติดต่อ
-                </h3>
-              </div>
-              <button
-                onClick={() => setSelectedMessage(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                title="ปิด"
-              >
-                <i className="fa-solid fa-xmark text-sm"></i>
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4 text-xs sm:text-sm">
-              {/* Sender Details Grid */}
-              <div className="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                <div>
-                  <div className="text-[11px] text-slate-400">ชื่อผู้ติดต่อ:</div>
-                  <div className="font-bold text-slate-900 dark:text-white mt-0.5">{selectedMessage.name}</div>
-                </div>
-                <div>
-                  <div className="text-[11px] text-slate-400">วันที่ส่งข้อความ:</div>
-                  <div className="font-mono text-slate-700 dark:text-slate-300 mt-0.5">
-                    {new Date(selectedMessage.createdAt).toLocaleString('th-TH')}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[11px] text-slate-400">อีเมล:</div>
-                  <a href={`mailto:${selectedMessage.email}`} className="text-primary-600 dark:text-primary-400 hover:underline font-medium">
-                    {selectedMessage.email}
-                  </a>
-                </div>
-                <div>
-                  <div className="text-[11px] text-slate-400">เบอร์โทรศัพท์:</div>
-                  <div className="text-slate-700 dark:text-slate-300 font-mono">
-                    {selectedMessage.phone || '-'}
-                  </div>
-                </div>
+        <Modal
+          isOpen={!!selectedMessage}
+          onClose={() => setSelectedMessage(null)}
+          title="รายละเอียดข้อความติดต่อ"
+          subtitle={`ส่งเมื่อ ${new Date(selectedMessage.createdAt).toLocaleString('th-TH')}`}
+          icon="fa-solid fa-envelope-open"
+          size="lg"
+          footer={
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">สถานะข้อความ:</span>
+                <select
+                  disabled={!canManage || isUpdatingStatus}
+                  value={selectedMessage.status}
+                  onChange={(e) => updateStatus(selectedMessage.id, e.target.value)}
+                  className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 outline-none focus:ring-1 focus:ring-primary-500"
+                >
+                  <option value="unread">🔴 ยังไม่อ่าน</option>
+                  <option value="read">🟡 อ่านแล้ว</option>
+                  <option value="replied">🟢 ตอบกลับแล้ว</option>
+                </select>
               </div>
 
-              {/* Message Content */}
-              <div>
-                <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">เนื้อหาข้อความ:</div>
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap min-h-[120px]">
-                  {selectedMessage.message}
-                </div>
-              </div>
-
-              {/* Status Switcher in Modal */}
-              <div className="flex items-center justify-between pt-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-600 dark:text-slate-400">สถานะข้อความ:</span>
-                  <select
-                    disabled={!canManage || isUpdatingStatus}
-                    value={selectedMessage.status}
-                    onChange={(e) => updateStatus(selectedMessage.id, e.target.value)}
-                    className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 outline-none focus:ring-2 focus:ring-primary-500"
-                  >
-                    <option value="unread">🔴 ยังไม่อ่าน</option>
-                    <option value="read">🟡 อ่านแล้ว</option>
-                    <option value="replied">🟢 ตอบกลับแล้ว</option>
-                  </select>
-                </div>
-
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setSelectedMessage(null)}
+                >
+                  ปิด
+                </Button>
                 <a
                   href={`mailto:${selectedMessage.email}?subject=ตอบกลับข้อความติดต่อ - eProfile System`}
-                  className="bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md flex items-center gap-2"
+                  className="inline-flex"
                 >
-                  <i className="fa-solid fa-paper-plane text-xs"></i>
-                  <span>ตอบกลับอีเมล</span>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    icon="fa-solid fa-paper-plane"
+                  >
+                    ตอบกลับอีเมล
+                  </Button>
                 </a>
               </div>
             </div>
+          }
+        >
+          <div className="space-y-4 text-xs sm:text-sm">
+            {/* Sender Details Grid */}
+            <div className="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60">
+              <div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">ชื่อผู้ติดต่อ:</div>
+                <div className="font-bold text-slate-900 dark:text-white mt-0.5">{selectedMessage.name}</div>
+              </div>
+              <div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">วันที่ส่งข้อความ:</div>
+                <div className="font-mono text-slate-700 dark:text-slate-300 mt-0.5">
+                  {new Date(selectedMessage.createdAt).toLocaleString('th-TH')}
+                </div>
+              </div>
+              <div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">อีเมล:</div>
+                <a href={`mailto:${selectedMessage.email}`} className="text-primary-600 dark:text-primary-400 hover:underline font-medium">
+                  {selectedMessage.email}
+                </a>
+              </div>
+              <div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">เบอร์โทรศัพท์:</div>
+                <div className="text-slate-700 dark:text-slate-300 font-mono">
+                  {selectedMessage.phone || '-'}
+                </div>
+              </div>
+            </div>
 
+            {/* Message Content */}
+            <div>
+              <div className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">เนื้อหาข้อความ:</div>
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap min-h-[120px]">
+                {selectedMessage.message}
+              </div>
+            </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Confirm Delete Modal */}

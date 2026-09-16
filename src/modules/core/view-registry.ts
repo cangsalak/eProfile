@@ -14,7 +14,7 @@ import { BackupModule } from '@/modules/backup';
 import { ModuleManagerModule } from '@/modules/module-manager';
 import { SiteModule, SiteContentModule } from '@/modules/site';
 import { TestSlipModule } from '@/modules/test-slip';
-import { Rpb1Module } from '@/modules/rpb1';
+
 import { ApiDocsModule } from '@/modules/api-docs';
 import { UploadModule } from '@/modules/upload';
 import { AuthModule } from '@/modules/auth';
@@ -56,7 +56,7 @@ export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'site': SiteModule,
   'site-content': SiteModule,
   'test-slip': TestSlipModule,
-  'rpb1': Rpb1Module,
+
 };
 
 export { UsersModule, PersonnelModule, RolesModule, SiteModule, SiteContentModule, InspectorModule, SystemInspectorModule, AuthModule, PrintModule };

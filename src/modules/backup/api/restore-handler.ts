@@ -18,8 +18,8 @@ export async function handleRestoreDatabase(request: Request) {
   const safetyBackupPath = path.join(process.cwd(), 'prisma', `dev.db.safety_backup_${Date.now()}`);
 
   try {
-    const { error, user } = await requireRole(request, ['SUPER_ADMIN', 'ADMIN']);
-    if (error || !user) return error || NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { error, user } = await requireRole(request, ['SUPER_ADMIN']);
+    if (error || !user) return error || NextResponse.json({ error: 'Unauthorized: เฉพาะ SUPER_ADMIN เท่านั้นที่มีสิทธิ์กู้คืนฐานข้อมูล' }, { status: 403 });
 
     const formData = await request.formData();
     const file = formData.get('file') as File | null;

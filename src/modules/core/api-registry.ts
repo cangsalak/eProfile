@@ -13,7 +13,7 @@ import * as SiteApi from '@/modules/site/api';
 import * as RolesApi from '@/modules/roles/api';
 import * as UsersApi from '@/modules/users/api';
 import * as ContactsApi from '@/modules/contacts/api';
-import * as Rpb1Api from '@/modules/rpb1/api';
+
 import * as AuthApi from '@/modules/auth/api';
 import * as InstallApi from '@/modules/install/api';
 import * as CoreApi from './api';
@@ -90,6 +90,13 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
       PUT: UsersApi.handleUpdateDepartment as any,
       DELETE: UsersApi.handleDeleteDepartment as any,
     },
+    'rpb1': {
+      GET: UsersApi.handleGetRpb1List as any,
+    },
+    'rpb1/[id]': {
+      GET: UsersApi.handleGetRpb1ByPersonnelId as any,
+      POST: UsersApi.handleSaveRpb1ByPersonnelId as any,
+    },
   },
   'personnel': {
     '': {
@@ -128,19 +135,7 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
       POST: ContactsApi.handleCreateContact as any,
     },
   },
-  'rpb1': {
-    '': {
-      GET: Rpb1Api.handleGetRpb1List as any,
-    },
-    '[personnelId]': {
-      GET: Rpb1Api.handleGetRpb1ByPersonnelId as any,
-      POST: Rpb1Api.handleSaveRpb1ByPersonnelId as any,
-    },
-    '[id]': {
-      GET: Rpb1Api.handleGetRpb1ByPersonnelId as any,
-      POST: Rpb1Api.handleSaveRpb1ByPersonnelId as any,
-    },
-  },
+
   'roles': {
     '': {
       GET: RolesApi.handleGetRoles as any,

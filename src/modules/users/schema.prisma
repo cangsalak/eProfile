@@ -109,3 +109,183 @@ model PersonnelDocument {
   @@index([category])
   @@index([createdAt])
 }
+// ================================================================
+// RPB1 Module Schema
+// Contains: Rpb1Record (ทะเบียนประวัติบุคคล ร.พ.บ.1)
+// ================================================================
+
+model Rpb1Record {
+  id                        String      @id @default(cuid())
+  personnelId               String
+  personnel                 Personnel   @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  status                    String      @default("DRAFT") // DRAFT, COMPLETED, APPROVED, ARCHIVED
+  version                   Int         @default(1)
+  classification            String      @default("ลับ") // ชั้นความลับ
+  photoUrl                  String?     // รูปถ่าย 4.5 x 6 ซม.
+
+  // --- หน้า 1 (หมวด 1 - 7) ---
+  titleRank                 String?     // ยศ/คำนำหน้า
+  firstName                 String?     // ชื่อตัว
+  middleName                String?     // ชื่อรอง
+  lastName                  String?     // ชื่อสกุล
+  gender                    String?     // เพศ
+  age                       Int?        // อายุ (ปี)
+  formerFirstName           String?     // ชื่อตัวเดิม
+  nameChangeDoc             String?     // หลักฐานการเปลี่ยนชื่อ
+  formerLastName            String?     // ชื่อสกุลเดิม
+  lastNameChangeDoc         String?     // หลักฐานการเปลี่ยนชื่อสกุล
+  nickname                  String?     // ชื่อเล่นหรือชื่ออื่น ๆ
+  citizenId                 String?     // เลขประจำตัวประชาชน 13 หลัก
+  dateOfBirth               String?     // วัน เดือน ปี เกิด
+  birthPlaceHospital        String?     // สถานที่จดทะเบียนเกิด/โรงพยาบาลที่เกิด
+  race                      String?     // เชื้อชาติ
+  nationality               String?     // สัญชาติ
+  formerNationality         String?     // สัญชาติเดิม
+  naturalizationDoc         String?     // หลักฐานการแปลงสัญชาติ
+  religion                  String?     // ศาสนา
+  formerReligion            String?     // ศาสนาเดิม
+  // ที่อยู่ตามทะเบียนบ้าน
+  registeredHouseNo         String?
+  registeredVillage         String?
+  registeredMoo             String?
+  registeredSoi             String?
+  registeredRoad            String?
+  registeredSubdistrict     String?
+  registeredDistrict        String?
+  registeredProvince        String?
+  registeredPhone           String?
+  // ที่อยู่ปัจจุบัน
+  currentHouseNo            String?
+  currentVillage            String?
+  currentMoo                String?
+  currentSoi                String?
+  currentRoad               String?
+  currentSubdistrict        String?
+  currentDistrict           String?
+  currentProvince           String?
+  currentPhone              String?
+  // ช่องทางติดต่อ
+  phoneLandline             String?
+  phoneMobile               String?
+  email                     String?
+  lineId                    String?
+  facebook                  String?
+  instagram                 String?
+  otherContact              String?
+  // ต่างด้าว/พื้นที่สูง
+  alienCardNo               String?
+  alienCardDate             String?
+  alienCardIssuedAt         String?
+  alienResidenceDocNo       String?
+  alienResidenceDocDate     String?
+  alienResidenceIssuedAt    String?
+  alienIdInThailand         String?
+  birthCountry              String?
+  entryDateToThailand       String?
+  workPermitNo              String?
+  workPermitIssuedBy        String?
+  workPermitIssueDate       String?
+  workPermitExpiryDate      String?
+
+  // --- หน้า 2 (หมวด 8 - 11) ---
+  height                    Float?      // ส่วนสูง (ซม.)
+  weight                    Float?      // น้ำหนัก (กก.)
+  scarsDistinguishingMarks  String?     // ตำหนิ
+  bloodGroup                String?     // กลุ่มเลือด
+  addressesPast15Years      String      @default("[]") // JSON
+  educations                String      @default("[]") // JSON
+  specialActivities         String      @default("[]") // JSON
+
+  // --- หน้า 3 (หมวด 12 - 15) ---
+  languages                 String      @default("[]") // JSON
+  workHistory               String      @default("[]") // JSON
+  specialOccupationsHobbies String?
+  // การรับราชการทหาร
+  militaryStatus            String?
+  militaryRank              String?
+  militaryRegNumber         String?
+  militaryBranchUnit        String?
+  militaryUnitLocation      String?
+  militaryServiceFrom       String?
+  militaryServiceTo         String?
+  militaryYearsServed       String?
+  militaryDischargeReason   String?
+  militaryLastCommander     String?
+  militarySpecialOperations String?
+  militarySpecialOpDate     String?
+  militarySpecialOpDuration String?
+  militaryExemptionReason   String?
+
+  // --- หน้า 4 (หมวด 16 - 18) ---
+  writerDetails             String?
+  politicalSocialMemberships String     @default("[]") // JSON
+  foreignTravels            String      @default("[]") // JSON
+
+  // --- หน้า 5 (หมวด 19 - 21) ---
+  identificationDocuments   String      @default("[]") // JSON
+  legalCases                String      @default("[]") // JSON
+  disciplinaryPunishments   String?
+  fatherDetails             String?     // JSON
+  motherDetails             String?     // JSON
+
+  // --- หน้า 6 (หมวด 22 - 23) ---
+  maritalStatus             String?
+  spouseFormerDetails       String?     // JSON
+  spouseCurrentDetails      String?     // JSON
+  children                  String      @default("[]") // JSON
+
+  // --- หน้า 7 (หมวด 24 - 26) ---
+  siblings                  String      @default("[]") // JSON
+  relativesInGovernment     String      @default("[]") // JSON
+  overseasContacts          String      @default("[]") // JSON
+
+  // --- หน้า 8 (หมวด 27 - 30) ---
+  cohabitants               String      @default("[]") // JSON
+  closeFriendsRef           String      @default("[]") // JSON
+  supporters                String      @default("[]") // JSON
+  additionalExplanations    String?
+  // ลายมือชื่อ
+  ownerSignatureDate        String?
+  inspectorRankName         String?
+  inspectorPosition         String?
+  inspectorSignatureDate    String?
+
+  // --- หน้า 9: แผนที่สังเขป & ผู้ติดต่อเร่งด่วน ---
+  sketchMapImage            String?
+  mapHouseNo                String?
+  mapVillage                String?
+  mapMoo                    String?
+  mapSoi                    String?
+  mapRoad                   String?
+  mapSubdistrict            String?
+  mapDistrict               String?
+  mapProvince               String?
+  mapPhone                  String?
+  mapHouseOwnerName         String?
+  mapHouseOwnerPhone        String?
+  emergencyContactRankName  String?
+  emergencyContactRelation  String?
+  emergencyContactAddress   String?
+
+  // --- หน้า 10: บันทึกประวัติบุคคลเพิ่มเติม ---
+  extraTitleName            String?
+  extraGender               String?
+  extraBloodGroup           String?
+  extraRegisteredAddress    String?
+  extraCurrentAddress       String?
+  extraIsSameAddress        Boolean     @default(true)
+  extraMobilePhone          String?
+  extraHomePhone            String?
+  extraOfficePhone          String?
+  extraEmail                String?
+  extraOwnerSignatureDate   String?
+  extraOfficerName          String?
+  extraOfficerPosition      String?
+  extraOfficerSignatureDate String?
+
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+
+  @@index([personnelId])
+  @@index([status])
+}

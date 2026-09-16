@@ -1,22 +1,23 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { Rpb1FormData, INITIAL_RPB1_FORM_DATA } from '../types';
-import Page1Personal from '../components/Page1Personal';
-import Page2Education from '../components/Page2Education';
-import Page3WorkMilitary from '../components/Page3WorkMilitary';
-import Page4SocialForeign from '../components/Page4SocialForeign';
-import Page5LegalParents from '../components/Page5LegalParents';
-import Page6MarriageChildren from '../components/Page6MarriageChildren';
-import Page7RelativesOverseas from '../components/Page7RelativesOverseas';
-import Page8CohabitantsSignatures from '../components/Page8CohabitantsSignatures';
-import Page9SketchMap from '../components/Page9SketchMap';
-import Page10AdditionalRecord from '../components/Page10AdditionalRecord';
-import Rpb1PrintDocument from '../components/Rpb1PrintDocument';
+import { Rpb1FormData, INITIAL_RPB1_FORM_DATA } from '../../types';
+import Page1Personal from '../../components/rpb1/Page1Personal';
+import Page2Education from '../../components/rpb1/Page2Education';
+import Page3WorkMilitary from '../../components/rpb1/Page3WorkMilitary';
+import Page4SocialForeign from '../../components/rpb1/Page4SocialForeign';
+import Page5LegalParents from '../../components/rpb1/Page5LegalParents';
+import Page6MarriageChildren from '../../components/rpb1/Page6MarriageChildren';
+import Page7RelativesOverseas from '../../components/rpb1/Page7RelativesOverseas';
+import Page8CohabitantsSignatures from '../../components/rpb1/Page8CohabitantsSignatures';
+import Page9SketchMap from '../../components/rpb1/Page9SketchMap';
+import Page10AdditionalRecord from '../../components/rpb1/Page10AdditionalRecord';
+import Rpb1PrintDocument from '../../components/rpb1/Rpb1PrintDocument';
 
 interface Rpb1FormViewProps {
-  personnelId: string;
+  personnelId?: string;
   currentUser?: any;
   initialPage?: number;
   initialPrintMode?: boolean;
@@ -24,19 +25,40 @@ interface Rpb1FormViewProps {
 }
 
 export default function Rpb1FormView({
-  personnelId,
+  personnelId: propPersonnelId,
   currentUser: initialUser,
   initialPage = 1,
   initialPrintMode = false,
   onBack,
 }: Rpb1FormViewProps) {
-  const [currentPage, setCurrentPage] = useState<number>(initialPage || 1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const queryId = searchParams?.get('id');
+  const queryPrint = searchParams?.get('print') === 'true';
+  const queryPage = searchParams?.get('page');
+  const parsedPage = queryPage ? parseInt(queryPage, 10) : initialPage;
+  const initialPageNumber = !isNaN(parsedPage) && parsedPage >= 1 && parsedPage <= 10 ? parsedPage : 1;
+
+  const personnelId = propPersonnelId || queryId;
+
+  const [currentPage, setCurrentPage] = useState<number>(initialPageNumber);
   const [formData, setFormData] = useState<Rpb1FormData>(INITIAL_RPB1_FORM_DATA);
   const [personnel, setPersonnel] = useState<any>(null);
   const [currentUser, setCurrentUser] = useState<any>(initialUser || null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [isPrintMode, setIsPrintMode] = useState<boolean>(Boolean(initialPrintMode));
+  const [isPrintMode, setIsPrintMode] = useState<boolean>(initialPrintMode || queryPrint);
+
+  useEffect(() => {
+    const p = searchParams?.get('page');
+    if (p) {
+      const pageNum = parseInt(p, 10);
+      if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= 10) {
+        setCurrentPage(pageNum);
+      }
+    }
+  }, [searchParams]);
 
   // Fetch Current User if not passed
   useEffect(() => {
@@ -56,6 +78,7 @@ export default function Rpb1FormView({
 
   // Fetch or Auto-fill RPB1
   useEffect(() => {
+    if (!personnelId) return;
     setIsLoading(true);
     fetch(`/api/rpb1/${personnelId}`)
       .then((res) => res.json())
@@ -67,14 +90,26 @@ export default function Rpb1FormView({
       })
       .catch((err) => {
         console.error('Failed to load RPB-1:', err);
-        toast.error('ไม่สามารถโหลดข้อมูล รปภ. ๑ ได้');
+        toast.error('ไม่สามารถโหลดข้อมูล รปภ. 1 ได้');
       })
       .finally(() => setIsLoading(false));
   }, [personnelId]);
 
-  const handleSave = async (status: 'DRAFT' | 'COMPLETED' = 'COMPLETED') => {
+  if (!personnelId) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] py-20 font-prompt">
+        <div className="w-16 h-16 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-2xl mb-4">
+          <i className="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h2 className="text-xl font-bold text-slate-800">ไม่พบรหัสกำลังพล</h2>
+        <p className="text-slate-500 mt-2">กรุณาระบุรหัสกำลังพลเพื่อเข้าสู่หน้าจัดการ รปภ. 1</p>
+      </div>
+    );
+  }
+
+  const handleSave = async (status: 'DRAFT' | 'COMPLETED' = 'COMPLETED', silent = false) => {
     if (isReadOnly) {
-      toast.error('ไม่อนุญาตให้แก้ไขข้อมูลแทนผู้อื่น (ผู้ดูแลระบบทั่วไปมีสิทธิ์อ่านและพิมพ์เท่านั้น)');
+      if (!silent) toast.error('ไม่อนุญาตให้แก้ไขข้อมูลแทนผู้อื่น (ผู้ดูแลระบบทั่วไปมีสิทธิ์อ่านและพิมพ์เท่านั้น)');
       return;
     }
     setIsSaving(true);
@@ -91,26 +126,35 @@ export default function Rpb1FormView({
       const data = await res.json();
       if (res.ok && data.success) {
         setFormData((prev) => ({ ...prev, status }));
-        toast.success(status === 'DRAFT' ? 'บันทึกฉบับร่างเรียบร้อยแล้ว' : 'บันทึกข้อมูล รปภ. ๑ สำเร็จแล้ว');
-      } else {
+        if (!silent) {
+          toast.success(status === 'DRAFT' ? 'บันทึกฉบับร่างเรียบร้อยแล้ว' : 'บันทึกข้อมูล รปภ. 1 สำเร็จแล้ว');
+        }
+      } else if (!silent) {
         toast.error(data.message || data.error || 'บันทึกข้อมูลไม่สำเร็จ');
       }
     } catch (err) {
-      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+      if (!silent) toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
     } finally {
       setIsSaving(false);
     }
   };
 
+  const handlePageChange = (newPage: number) => {
+    if (!isReadOnly) {
+      handleSave('DRAFT', true); // Auto save draft on page navigation
+    }
+    setCurrentPage(newPage);
+  };
+
   const pages = [
-    { num: 1, title: 'ข้อมูลส่วนบุคคล (หมวด ๑-๗)', short: 'ข้อมูลทั่วไป' },
-    { num: 2, title: 'รูปพรรณ/การศึกษา (หมวด ๘-๑๑)', short: 'การศึกษา/รูปพรรณ' },
-    { num: 3, title: 'ทำงาน/รับราชการ (หมวด ๑๒-๑๕)', short: 'การทำงาน/ทหาร' },
-    { num: 4, title: 'สื่อสิ่งพิมพ์/ต่างประเทศ (หมวด ๑๖-๑๘)', short: 'ต่างประเทศ/สื่อ' },
-    { num: 5, title: 'หนังสือสำคัญ/บิดามารดา (หมวด ๑๙-๒๑)', short: 'คดี/บิดามารดา' },
-    { num: 6, title: 'การสมรส/บุตร (หมวด ๒๒-๒๓)', short: 'สมรส/บุตร' },
-    { num: 7, title: 'พี่น้อง/ญาติ (หมวด ๒๔-๒๖)', short: 'พี่น้อง/ญาติ' },
-    { num: 8, title: 'ผู้ร่วมอาศัย/คำรับรอง (หมวด ๒๗-๓๐)', short: 'ผู้ร่วมอาศัย/ลงนาม' },
+    { num: 1, title: 'ข้อมูลส่วนบุคคล (หมวด 1-7)', short: 'ข้อมูลทั่วไป' },
+    { num: 2, title: 'รูปพรรณ/การศึกษา (หมวด 8-11)', short: 'การศึกษา/รูปพรรณ' },
+    { num: 3, title: 'ทำงาน/รับราชการ (หมวด 12-15)', short: 'การทำงาน/ทหาร' },
+    { num: 4, title: 'สื่อสิ่งพิมพ์/ต่างประเทศ (หมวด 16-18)', short: 'ต่างประเทศ/สื่อ' },
+    { num: 5, title: 'หนังสือสำคัญ/บิดามารดา (หมวด 19-21)', short: 'คดี/บิดามารดา' },
+    { num: 6, title: 'การสมรส/บุตร (หมวด 22-23)', short: 'สมรส/บุตร' },
+    { num: 7, title: 'พี่น้อง/ญาติ (หมวด 24-26)', short: 'พี่น้อง/ญาติ' },
+    { num: 8, title: 'ผู้ร่วมอาศัย/คำรับรอง (หมวด 27-30)', short: 'ผู้ร่วมอาศัย/ลงนาม' },
     { num: 9, title: 'แผนที่สังเขปที่อยู่ปัจจุบัน', short: 'แผนที่สังเขป' },
     { num: 10, title: 'บันทึกประวัติเพิ่มเติม & รูปถ่าย', short: 'ประวัติเพิ่มเติม' },
   ];
@@ -119,7 +163,7 @@ export default function Rpb1FormView({
     return (
       <div className="py-20 text-center font-prompt space-y-3">
         <i className="fa-solid fa-circle-notch fa-spin text-3xl text-primary-500"></i>
-        <p className="text-sm text-slate-500">กำลังโหลดแบบฟอร์ม รปภ. ๑...</p>
+        <p className="text-sm text-slate-500">กำลังโหลดแบบฟอร์ม รปภ. 1...</p>
       </div>
     );
   }
@@ -142,7 +186,7 @@ export default function Rpb1FormView({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-bold px-2 py-0.5 rounded bg-primary-500/10 text-primary-600 dark:text-primary-400">
-                แบบฟอร์ม รปภ. ๑
+                แบบฟอร์ม รปภ. 1
               </span>
               <span
                 className={`text-[11px] font-semibold px-2 py-0.5 rounded ${
@@ -218,7 +262,7 @@ export default function Rpb1FormView({
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1.5"
             >
               <i className="fa-solid fa-print"></i>
-              <span>พิมพ์เอกสาร ๑๐ หน้า (A4)</span>
+              <span>พิมพ์เอกสาร 10 หน้า (A4)</span>
             </button>
           )}
         </div>
@@ -235,7 +279,7 @@ export default function Rpb1FormView({
               สิทธิ์ผู้ดูแลระบบระดับสูงสุด (Super Admin Edit Mode)
             </p>
             <p className="text-primary-800 dark:text-primary-300 leading-relaxed">
-              ท่านกำลังเข้าแก้ไขแบบฟอร์ม รปภ. ๑ ของ <strong>{personnel?.prefix} {personnel?.firstName} {personnel?.lastName}</strong> ในฐานะผู้ดูแลระบบระดับสูงสุด (SUPER_ADMIN)
+              ท่านกำลังเข้าแก้ไขแบบฟอร์ม รปภ. 1 ของ <strong>{personnel?.prefix} {personnel?.firstName} {personnel?.lastName}</strong> ในฐานะผู้ดูแลระบบระดับสูงสุด (SUPER_ADMIN)
             </p>
           </div>
         </div>
@@ -252,7 +296,7 @@ export default function Rpb1FormView({
               โหมดตรวจสอบข้อมูล (Read-Only) สำหรับผู้ดูแลระบบ
             </p>
             <p className="text-amber-800 dark:text-amber-300 leading-relaxed">
-              ตามระเบียบการรักษาความปลอดภัย แบบฟอร์ม รปภ. ๑ เป็นรายงานประวัติส่วนบุคคลเฉพาะตัวของ <strong>{personnel?.prefix} {personnel?.firstName} {personnel?.lastName}</strong> โดยเจ้าของประวัติต้องเป็นผู้กรอกข้อมูลด้วยตนเองเท่านั้น ผู้ดูแลระบบทั่วไปมีสิทธิ์ตรวจสอบและสั่งพิมพ์เอกสารได้ แต่ไม่สามารถแก้ไขข้อมูลแทนได้
+              ตามระเบียบการรักษาความปลอดภัย แบบฟอร์ม รปภ. 1 เป็นรายงานประวัติส่วนบุคคลเฉพาะตัวของ <strong>{personnel?.prefix} {personnel?.firstName} {personnel?.lastName}</strong> โดยเจ้าของประวัติต้องเป็นผู้กรอกข้อมูลด้วยตนเองเท่านั้น ผู้ดูแลระบบทั่วไปมีสิทธิ์ตรวจสอบและสั่งพิมพ์เอกสารได้ แต่ไม่สามารถแก้ไขข้อมูลแทนได้
             </p>
           </div>
         </div>
@@ -270,21 +314,21 @@ export default function Rpb1FormView({
                 <button
                   key={p.num}
                   type="button"
-                  onClick={() => setCurrentPage(p.num)}
+                  onClick={() => handlePageChange(p.num)}
                   className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 ${
                     isActive
                       ? 'bg-primary-600 text-white shadow-sm shadow-primary-500/30'
-                      : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
                   }`}
                 >
                   <span
-                    className={`w-5 h-5 rounded-full text-[11px] flex items-center justify-center font-bold ${
-                      isActive ? 'bg-white text-primary-600' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    className={`w-5 h-5 rounded-full text-[10px] flex items-center justify-center font-bold ${
+                      isActive ? 'bg-white text-primary-600' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     {p.num}
                   </span>
-                  <span className="hidden sm:inline">{p.short}</span>
+                  <span>{p.short}</span>
                 </button>
               );
             })}
@@ -292,10 +336,10 @@ export default function Rpb1FormView({
         </div>
       )}
 
-      {/* Form Container */}
+      {/* Main Form Page Container */}
       {!isPrintMode ? (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 sm:p-7 shadow-xs">
-          <fieldset disabled={isReadOnly} className="border-0 p-0 m-0 min-w-0">
+        <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm relative">
+          <fieldset disabled={isReadOnly} className="disabled:opacity-90 space-y-6">
             {currentPage === 1 && <Page1Personal formData={formData} setFormData={setFormData} />}
             {currentPage === 2 && <Page2Education formData={formData} setFormData={setFormData} />}
             {currentPage === 3 && <Page3WorkMilitary formData={formData} setFormData={setFormData} />}
@@ -308,12 +352,12 @@ export default function Rpb1FormView({
             {currentPage === 10 && <Page10AdditionalRecord formData={formData} setFormData={setFormData} />}
           </fieldset>
 
-          {/* Bottom Pagination Controls */}
-          <div className="flex items-center justify-between pt-6 mt-8 border-t border-slate-200 dark:border-slate-800">
+          {/* Bottom Pagination Controls & Quick Save */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6 mt-8 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 transition-all"
             >
               <i className="fa-solid fa-chevron-left text-[10px]"></i>
@@ -321,7 +365,7 @@ export default function Rpb1FormView({
             </button>
 
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-              หน้า {currentPage} จาก ๑๐
+              หน้า {currentPage} จาก 10
             </span>
 
             {currentPage < 10 ? (
@@ -350,7 +394,7 @@ export default function Rpb1FormView({
                 className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-500/20 flex items-center gap-1.5 transition-all"
               >
                 <i className="fa-solid fa-check-double"></i>
-                <span>บันทึกข้อมูลสมบูรณ์ทั้ง ๑๐ หน้า</span>
+                <span>บันทึกข้อมูลสมบูรณ์ทั้ง 10 หน้า</span>
               </button>
             )}
           </div>

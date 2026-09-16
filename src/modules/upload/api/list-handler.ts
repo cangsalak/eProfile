@@ -22,7 +22,6 @@ export async function handleListMedia(req: Request) {
     if (query.trim()) {
       where.filename = {
         contains: query.trim(),
-        mode: 'insensitive',
       };
     }
 
@@ -35,7 +34,8 @@ export async function handleListMedia(req: Request) {
     } else if (category === 'pdf') {
       where.OR = [
         { mimetype: 'application/pdf' },
-        { filename: { endsWith: '.pdf', mode: 'insensitive' } },
+        { filename: { endsWith: '.pdf' } },
+        { filename: { endsWith: '.PDF' } },
       ];
     } else if (category === 'document') {
       where.OR = [
@@ -44,11 +44,16 @@ export async function handleListMedia(req: Request) {
         { mimetype: { contains: 'spreadsheet' } },
         { mimetype: { contains: 'presentation' } },
         { mimetype: { contains: 'text/' } },
-        { filename: { endsWith: '.docx', mode: 'insensitive' } },
-        { filename: { endsWith: '.xlsx', mode: 'insensitive' } },
-        { filename: { endsWith: '.pptx', mode: 'insensitive' } },
-        { filename: { endsWith: '.txt', mode: 'insensitive' } },
-        { filename: { endsWith: '.csv', mode: 'insensitive' } },
+        { filename: { endsWith: '.docx' } },
+        { filename: { endsWith: '.DOCX' } },
+        { filename: { endsWith: '.xlsx' } },
+        { filename: { endsWith: '.XLSX' } },
+        { filename: { endsWith: '.pptx' } },
+        { filename: { endsWith: '.PPTX' } },
+        { filename: { endsWith: '.txt' } },
+        { filename: { endsWith: '.TXT' } },
+        { filename: { endsWith: '.csv' } },
+        { filename: { endsWith: '.CSV' } },
       ];
     }
 

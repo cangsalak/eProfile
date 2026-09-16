@@ -64,3 +64,4 @@ export interface Vehicle {
   createdAt?: string;
   updatedAt?: string;
 }
+export * from './rpb1-types';

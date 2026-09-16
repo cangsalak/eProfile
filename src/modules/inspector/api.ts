@@ -468,7 +468,7 @@ export async function handleGetDatabase(req: Request) {
       { name: 'Post', thaiName: 'ข่าวสารและประกาศ', count: postCount, category: 'Operations' },
       { name: 'Notification', thaiName: 'การแจ้งเตือน', count: notificationCount, category: 'System' },
       { name: 'PersonnelDocument', thaiName: 'เอกสารประจำตัว', count: documentCount, category: 'HR' },
-      { name: 'Rpb1Record', thaiName: 'ทะเบียนประวัติ ร.พ.บ.๑', count: rpb1Count, category: 'HR' },
+      { name: 'Rpb1Record', thaiName: 'ทะเบียนประวัติ ร.พ.บ. 1', count: rpb1Count, category: 'HR' },
       { name: 'Service', thaiName: 'บริการหน่วยงาน', count: serviceCount, category: 'Site' },
       { name: 'Inspection', thaiName: 'ผลการตรวจความปลอดภัย', count: inspectionCount, category: 'Security' },
       { name: 'InspectionFinding', thaiName: 'รายการข้อบกพร่องความปลอดภัย', count: findingCount, category: 'Security' },

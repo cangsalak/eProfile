@@ -18,9 +18,11 @@ export default function PublicContactView() {
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    website: '', // Honeypot anti-spam field
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSettings();
@@ -41,6 +43,7 @@ export default function PublicContactView() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null);
 
     try {
       const res = await fetch('/api/contacts', {
@@ -49,12 +52,18 @@ export default function PublicContactView() {
         body: JSON.stringify(formData)
       });
       
-      if (!res.ok) throw new Error('ไม่สามารถส่งข้อความได้');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errText = data.error || 'ไม่สามารถส่งข้อความได้ กรุณาตรวจสอบข้อมูลและลองใหม่อีกครั้ง';
+        setErrorMessage(errText);
+        throw new Error(errText);
+      }
       
       toast.success('ส่งข้อความเรียบร้อยแล้ว เราจะติดต่อกลับโดยเร็วที่สุด');
-      setFormData({ name: '', email: '', phone: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', message: '', website: '' });
+      setErrorMessage(null);
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(err.message || 'เกิดข้อผิดพลาดในการส่งข้อความ');
     } finally {
       setIsLoading(false);
     }
@@ -195,8 +204,41 @@ export default function PublicContactView() {
         {/* Contact Form */}
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 lg:p-12 border border-slate-100 dark:border-slate-700">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">ส่งข้อความถึงเรา</h2>
-          
+
+          {/* Descriptive Error Alert Banner */}
+          {errorMessage && (
+            <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 flex items-start gap-3 animate-fade-in text-sm shadow-sm">
+              <i className="fa-solid fa-circle-exclamation text-base mt-0.5 shrink-0 text-rose-500"></i>
+              <div className="flex-1">
+                <span className="font-semibold block mb-0.5">แจ้งเตือนจากระบบ:</span>
+                <span>{errorMessage}</span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setErrorMessage(null)} 
+                className="text-rose-400 hover:text-rose-600 dark:hover:text-rose-200 p-1"
+                aria-label="ปิดการแจ้งเตือน"
+              >
+                <i className="fa-solid fa-xmark text-xs"></i>
+              </button>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot field for bot/spam protection */}
+            <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+              <label htmlFor="contact-website">กรุณาเว้นว่างช่องนี้</label>
+              <input
+                id="contact-website"
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website || ''}
+                onChange={e => setFormData({ ...formData, website: e.target.value })}
+              />
+            </div>
+
             <div>
               <label htmlFor="contact-name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 ชื่อ-นามสกุล <span className="text-red-500">*</span>

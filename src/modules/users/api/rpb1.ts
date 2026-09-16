@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/modules/core';
 import { requireAuth } from '@/modules/core';
-import { INITIAL_RPB1_FORM_DATA, Rpb1FormData } from '@/modules/rpb1/types';
+import { INITIAL_RPB1_FORM_DATA, Rpb1FormData } from '@/modules/users/types';
 
 /**
  * Returns list of personnel with their Rpb1Record status.
@@ -109,7 +109,7 @@ export async function handleGetRpb1ByPersonnelId(
 
     if (!isOwner && !isAdmin) {
       return NextResponse.json(
-        { error: 'ไม่อนุญาตให้เข้าดูแบบฟอร์ม รปภ. ๑ ของผู้อื่น (ดูได้เฉพาะของตนเองเท่านั้น)' },
+        { error: 'ไม่อนุญาตให้เข้าดูแบบฟอร์ม รปภ. 1 ของผู้อื่น (ดูได้เฉพาะของตนเองเท่านั้น)' },
         { status: 403 }
       );
     }
@@ -258,7 +258,7 @@ export async function handleSaveRpb1ByPersonnelId(
     if (!isOwner && !isSuperAdmin) {
       return NextResponse.json(
         {
-          error: 'ไม่อนุญาตให้บันทึกหรือแก้ไขแบบฟอร์ม รปภ. ๑ แทนผู้อื่น (กรอกได้เฉพาะของตนเอง หรือผู้ดูแลระบบระดับสูงสุด SUPER_ADMIN เท่านั้น)',
+          error: 'ไม่อนุญาตให้บันทึกหรือแก้ไขแบบฟอร์ม รปภ. 1 แทนผู้อื่น (กรอกได้เฉพาะของตนเอง หรือผู้ดูแลระบบระดับสูงสุด SUPER_ADMIN เท่านั้น)',
         },
         { status: 403 }
       );
@@ -441,7 +441,7 @@ export async function handleSaveRpb1ByPersonnelId(
 
     return NextResponse.json({
       success: true,
-      message: 'บันทึกข้อมูลแบบฟอร์ม รปภ. ๑ เรียบร้อยแล้ว',
+      message: 'บันทึกข้อมูลแบบฟอร์ม รปภ. 1 เรียบร้อยแล้ว',
       data: savedRecord,
     });
   } catch (error: unknown) {

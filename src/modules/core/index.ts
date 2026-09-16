@@ -14,6 +14,7 @@ export * from './lib/developer-credit';
 export * from './lib/qr-payment-data';
 export * from './lib/schema-merger';
 export * from './lib/cn';
+export * from './lib/date-utils';
 export * from './manifest';
 
 // 2. Registries (Metadata only)

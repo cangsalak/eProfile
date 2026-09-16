@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { ALL_SYSTEM_MODULES } from '@/modules/core/registry';
 import { ModuleManifest, ModuleCategory } from '@/modules/core/types';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { Card, Button, Badge, Input, Select } from '@/components/ui';
+import { Card, Button, Badge, Input, Select, Modal } from '@/components/ui';
 import {
   Puzzle,
   Upload,
@@ -749,160 +749,130 @@ export default function ModuleManagerSettings({ settings, setSettings }: ModuleM
       </div>
 
       {/* ── Upload ZIP Module Modal ── */}
-      {isUploadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in font-prompt">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 animate-scale-up">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
-                  <Upload className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">ติดตั้งโมดูลเสริม (.ZIP)</h3>
-                  <p className="text-xs text-slate-400">อัปโหลดแพ็กเกจโมดูลที่ถูกต้องตามข้อกำหนด</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsUploadModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleInstallUpload} className="space-y-4">
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/30"
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".zip"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                />
-                <Upload className="w-10 h-10 mx-auto text-slate-400 mb-2" />
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  {selectedFile ? selectedFile.name : 'คลิกเพื่อเลือกไฟล์ .zip ของโมดูล'}
-                </p>
-                <p className="text-[11px] text-slate-400 mt-1">ขนาดไฟล์ไม่เกิน 50MB และต้องมี manifest.json</p>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2">
-                <Button variant="outline" type="button" onClick={() => setIsUploadModalOpen(false)}>
-                  ยกเลิก
-                </Button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={!selectedFile || isUploading}
-                  className="flex items-center gap-1.5"
-                >
-                  {isUploading ? (
-                    <>
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>กำลังติดตั้ง...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>ยืนยันการติดตั้ง</span>
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
+      <Modal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        title="ติดตั้งโมดูลเสริม (.ZIP)"
+        subtitle="อัปโหลดแพ็กเกจโมดูลที่ถูกต้องตามข้อกำหนด"
+        icon="fa-solid fa-upload"
+        size="md"
+        footer={
+          <div className="flex justify-end gap-2 w-full">
+            <Button variant="outline" type="button" onClick={() => setIsUploadModalOpen(false)}>
+              ยกเลิก
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              form="install-upload-form"
+              disabled={!selectedFile || isUploading}
+              className="flex items-center gap-1.5"
+            >
+              {isUploading ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>กำลังติดตั้ง...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>ยืนยันการติดตั้ง</span>
+                </>
+              )}
+            </Button>
           </div>
-        </div>
-      )}
+        }
+      >
+        <form id="install-upload-form" onSubmit={handleInstallUpload} className="space-y-4">
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/30"
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip"
+              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+              className="hidden"
+            />
+            <Upload className="w-10 h-10 mx-auto text-slate-400 mb-2" />
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {selectedFile ? selectedFile.name : 'คลิกเพื่อเลือกไฟล์ .zip ของโมดูล'}
+            </p>
+            <p className="text-[11px] text-slate-400 mt-1">ขนาดไฟล์ไม่เกิน 50MB และต้องมี manifest.json</p>
+          </div>
+        </form>
+      </Modal>
 
       {/* ── Update ZIP Module Modal ── */}
-      {updateTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in font-prompt">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6 animate-scale-up">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
-                  <ArrowUpCircle className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    อัปเดตโมดูล: {updateTarget.name}
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    เวอร์ชันปัจจุบัน: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">v{updateTarget.version}</span>
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setUpdateTarget(null);
-                  setSelectedUpdateFile(null);
-                }}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleUpdateUpload} className="space-y-4">
-              <div
-                onClick={() => updateFileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/30"
-              >
-                <input
-                  ref={updateFileInputRef}
-                  type="file"
-                  accept=".zip"
-                  onChange={(e) => setSelectedUpdateFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                />
-                <Upload className="w-10 h-10 mx-auto text-slate-400 mb-2" />
-                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  {selectedUpdateFile ? selectedUpdateFile.name : 'คลิกเพื่อเลือกไฟล์ .zip ของเวอร์ชันใหม่'}
-                </p>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  ต้องเป็นเวอร์ชันที่สูงกว่า v{updateTarget.version} และใช้ module ID เดียวกัน ("{updateTarget.id}")
-                </p>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={() => {
-                    setUpdateTarget(null);
-                    setSelectedUpdateFile(null);
-                  }}
-                >
-                  ยกเลิก
-                </Button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={!selectedUpdateFile || isUpdating}
-                  className="flex items-center gap-1.5"
-                >
-                  {isUpdating ? (
-                    <>
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>กำลังอัปเดต...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>ยืนยันการอัปเดต</span>
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
+      <Modal
+        isOpen={!!updateTarget}
+        onClose={() => {
+          setUpdateTarget(null);
+          setSelectedUpdateFile(null);
+        }}
+        title={updateTarget ? `อัปเดตโมดูล: ${updateTarget.name}` : 'อัปเดตโมดูล'}
+        subtitle={updateTarget ? `เวอร์ชันปัจจุบัน: v${updateTarget.version}` : undefined}
+        icon="fa-solid fa-circle-arrow-up"
+        size="md"
+        footer={
+          <div className="flex justify-end gap-2 w-full">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => {
+                setUpdateTarget(null);
+                setSelectedUpdateFile(null);
+              }}
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              form="update-upload-form"
+              disabled={!selectedUpdateFile || isUpdating}
+              className="flex items-center gap-1.5"
+            >
+              {isUpdating ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>กำลังอัปเดต...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>ยืนยันการอัปเดต</span>
+                </>
+              )}
+            </Button>
           </div>
-        </div>
-      )}
+        }
+      >
+        {updateTarget && (
+          <form id="update-upload-form" onSubmit={handleUpdateUpload} className="space-y-4">
+            <div
+              onClick={() => updateFileInputRef.current?.click()}
+              className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary-500 dark:hover:border-primary-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/30"
+            >
+              <input
+                ref={updateFileInputRef}
+                type="file"
+                accept=".zip"
+                onChange={(e) => setSelectedUpdateFile(e.target.files?.[0] || null)}
+                className="hidden"
+              />
+              <Upload className="w-10 h-10 mx-auto text-slate-400 mb-2" />
+              <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {selectedUpdateFile ? selectedUpdateFile.name : 'คลิกเพื่อเลือกไฟล์ .zip ของเวอร์ชันใหม่'}
+              </p>
+              <p className="text-[11px] text-slate-400 mt-1">
+                ต้องเป็นเวอร์ชันที่สูงกว่า v{updateTarget.version} และใช้ module ID เดียวกัน ("{updateTarget.id}")
+              </p>
+            </div>
+          </form>
+        )}
+      </Modal>
 
       {/* ── Uninstall Confirmation Modal ── */}
       <ConfirmModal

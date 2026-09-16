@@ -199,9 +199,9 @@ export async function executeLeaveApprovalWorkflow({
     throw new ScopeError('ไม่มีสิทธิ์ดำเนินการใบลาของกำลังพลนอกหน่วยงานหรือหน่วยย่อยที่รับผิดชอบ');
   }
 
-  // 4. Self-Approval Check
+  // 4. Anti-Self Approval Check (Strictly enforce for all roles including SUPER_ADMIN)
   const isSelfApproval = leave.personnelId === authUser.id;
-  if (isSelfApproval && authUser.role !== 'SUPER_ADMIN') {
+  if (isSelfApproval) {
     throw new ForbiddenActionError('ไม่อนุญาตให้อนุมัติหรือปฏิเสธใบลาของตนเอง');
   }
 

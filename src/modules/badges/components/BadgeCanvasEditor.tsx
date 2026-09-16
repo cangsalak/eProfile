@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import toast from 'react-hot-toast';
+import { Modal, Button } from '@/components/ui';
 
 export type CanvasElementType = 'text' | 'image' | 'rect' | 'circle' | 'line' | 'ribbon' | 'hologram' | 'qr' | 'barcode' | 'emblem';
 export type FieldMapping = 
@@ -1692,38 +1693,38 @@ export default function BadgeCanvasEditor({
 
       {/* ─── Confirmation Modal ─── */}
       {confirmModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">
-                <i className={confirmModal.icon || 'fa-solid fa-triangle-exclamation text-amber-400'} />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-sm font-bold text-white">{confirmModal.title}</h4>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{confirmModal.message}</p>
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
-              <button
+        <Modal
+          isOpen={!!confirmModal}
+          onClose={() => setConfirmModal(null)}
+          title={confirmModal.title}
+          icon={confirmModal.icon || 'fa-solid fa-triangle-exclamation text-amber-400'}
+          size="sm"
+          footer={
+            <div className="flex justify-end gap-2 w-full">
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setConfirmModal(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
               >
                 ยกเลิก
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant={confirmModal.confirmColor?.includes('red') || confirmModal.confirmColor?.includes('rose') ? 'danger' : 'primary'}
+                size="sm"
                 onClick={() => {
                   confirmModal.onConfirm();
                   setConfirmModal(null);
                 }}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-sm transition ${confirmModal.confirmColor || 'bg-primary-600 hover:bg-primary-500'}`}
               >
                 {confirmModal.confirmText || 'ยืนยัน'}
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{confirmModal.message}</p>
+        </Modal>
       )}
     </div>
   );

@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import TablePagination from '@/components/common/TablePagination';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { Card, Button, Badge, Input, Select } from '@/components/ui';
+import { Card, Button, Badge, Input, Select, DatePicker } from '@/components/ui';
+import { formatShortThaiDate } from '@/modules/core/lib/date-utils';
 import {
   Calendar,
   CalendarCheck,
@@ -349,11 +350,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('th-TH', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+    return formatShortThaiDate(dateString);
   };
 
   // Pagination calculation
@@ -571,17 +568,13 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
                     placeholder="ที่อยู่ของวัด"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    กำหนดวันอุปสมบท
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.ordainDate || ''}
-                    onChange={(e) => setFormData({ ...formData, ordainDate: e.target.value })}
-                    className="form-input"
-                  />
-                </div>
+                <DatePicker
+                  id="leave-ordainDate"
+                  label="กำหนดวันอุปสมบท"
+                  placeholder="เลือกวันอุปสมบท (พ.ศ.)"
+                  value={formData.ordainDate || ''}
+                  onChange={(val) => setFormData({ ...formData, ordainDate: val })}
+                />
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                     ชื่อวัดที่จำพรรษา (ถ้ามี)
@@ -691,31 +684,23 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
             )}
 
             {/* Date Range */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                วันที่เริ่มต้นลา <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="date"
-                value={formData.startDate || ''}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
+            <DatePicker
+              id="leave-startDate"
+              label="วันที่เริ่มต้นลา"
+              placeholder="เลือกวันเริ่มต้น (พ.ศ.)"
+              value={formData.startDate || ''}
+              onChange={(val) => setFormData({ ...formData, startDate: val })}
+              required
+            />
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                วันที่สิ้นสุดลา <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="date"
-                value={formData.endDate || ''}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
+            <DatePicker
+              id="leave-endDate"
+              label="วันที่สิ้นสุดลา"
+              placeholder="เลือกวันสิ้นสุด (พ.ศ.)"
+              value={formData.endDate || ''}
+              onChange={(val) => setFormData({ ...formData, endDate: val })}
+              required
+            />
           </div>
 
           <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">

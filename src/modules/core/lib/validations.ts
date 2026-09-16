@@ -41,10 +41,10 @@ export const changePasswordSchema = z.object({
 });
 
 export const contactSchema = z.object({
-  name: z.string().min(2, 'กรุณากรอกชื่อ').max(100),
-  email: z.string().email('รูปแบบอีเมลไม่ถูกต้อง').max(100),
-  phone: z.string().max(20).optional().or(z.literal('')),
-  message: z.string().min(10, 'ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร').max(2000),
+  name: z.string().trim().min(1, 'กรุณากรอกชื่อผู้ติดต่อ').max(100),
+  email: z.string().trim().email('รูปแบบอีเมลไม่ถูกต้อง').max(100),
+  phone: z.string().trim().max(20).optional().or(z.literal('')),
+  message: z.string().trim().min(1, 'กรุณากรอกข้อความที่ต้องการติดต่อ').max(2000),
 });
 
 export const installRequestSchema = z.object({

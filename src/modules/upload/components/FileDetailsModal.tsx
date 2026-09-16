@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Card, Button, Badge } from '@/components/ui';
+import { Modal, Card, Button, Badge } from '@/components/ui';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { formatBytes, getCategoryBadgeColor } from '../lib/file-utils';
 import {
@@ -96,43 +96,71 @@ export default function FileDetailsModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in font-prompt">
-        <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-3 min-w-0 pr-4">
-              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
-                {file.category === 'image' && <ImageIcon className="h-5 w-5" />}
-                {file.category === 'audio' && <Music className="h-5 w-5" />}
-                {file.category === 'video' && <Film className="h-5 w-5" />}
-                {(file.category === 'pdf' || file.category === 'document') && <FileText className="h-5 w-5" />}
-                {file.category === 'other' && <HardDrive className="h-5 w-5" />}
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate" title={file.filename}>
-                  {file.filename}
-                </h3>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${categoryBadge.bg} ${categoryBadge.text}`}>
-                    {categoryBadge.label}
-                  </span>
-                  <span className="text-xs text-slate-400 font-mono">
-                    {formatBytes(file.size)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={onClose}
-              className="h-9 w-9 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center transition shrink-0"
+      <Modal
+        isOpen={!!file}
+        onClose={onClose}
+        title={file.filename}
+        subtitle={
+          <span className="flex items-center gap-2 mt-0.5">
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${categoryBadge.bg} ${categoryBadge.text}`}>
+              {categoryBadge.label}
+            </span>
+            <span className="text-xs text-slate-400 font-mono">
+              {formatBytes(file.size)}
+            </span>
+          </span>
+        }
+        icon={
+          file.category === 'image'
+            ? 'fa-solid fa-image'
+            : file.category === 'audio'
+            ? 'fa-solid fa-music'
+            : file.category === 'video'
+            ? 'fa-solid fa-film'
+            : 'fa-solid fa-file-lines'
+        }
+        size="lg"
+        className="p-0 overflow-hidden"
+        footer={
+          <div className="flex items-center justify-between w-full">
+            <Button
+              variant="danger"
+              onClick={() => setIsDeleteConfirmOpen(true)}
+              className="gap-2"
+              disabled={isDeleting}
             >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+              <Trash2 className="h-4 w-4" />
+              <span>ลบไฟล์</span>
+            </Button>
 
-          {/* Body */}
-          <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
+            <div className="flex items-center gap-2">
+              <a
+                href={file.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                download={file.filename}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+              >
+                <Download className="h-4 w-4" />
+                <span>ดาวน์โหลด</span>
+              </a>
+
+              {isPickerMode && onSelect && (
+                <Button
+                  variant="primary"
+                  onClick={() => onSelect(file)}
+                  className="gap-2 shadow-sm"
+                >
+                  <Check className="h-4 w-4" />
+                  <span>เลือกไฟล์นี้</span>
+                </Button>
+              )}
+            </div>
+          </div>
+        }
+      >
+        {/* Body */}
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-6 max-h-[70vh]">
             {/* Media Preview Box */}
             <div className="rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 flex items-center justify-center overflow-hidden min-h-[220px] max-h-[380px] p-2">
               {file.category === 'image' && (
@@ -286,45 +314,8 @@ export default function FileDetailsModal({
                 </span>
               </div>
             </div>
-          </div>
-
-          {/* Footer Actions */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-100 dark:border-slate-800">
-            <Button
-              variant="outline"
-              onClick={() => setIsDeleteConfirmOpen(true)}
-              className="gap-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 border-rose-200 dark:border-rose-900/50"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span>ลบไฟล์ออกจากระบบ</span>
-            </Button>
-
-            <div className="flex items-center gap-2">
-              <a
-                href={file.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                download={file.filename}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
-              >
-                <Download className="h-4 w-4" />
-                <span>ดาวน์โหลด</span>
-              </a>
-
-              {isPickerMode && onSelect && (
-                <Button
-                  variant="primary"
-                  onClick={() => onSelect(file)}
-                  className="gap-2 shadow-sm"
-                >
-                  <Check className="h-4 w-4" />
-                  <span>เลือกไฟล์นี้</span>
-                </Button>
-              )}
-            </div>
-          </div>
         </div>
-      </div>
+      </Modal>
 
       {/* Delete Confirmation */}
       <ConfirmModal

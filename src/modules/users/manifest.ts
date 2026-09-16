@@ -38,6 +38,16 @@ export const UsersManifest: ModuleManifest = {
       key: 'MANAGE_PERSONNEL',
       name: 'จัดการข้อมูลบุคลากร',
       description: 'สิทธิ์ในการเพิ่ม ลบ แก้ไข ข้อมูลประวัติและโครงสร้างหน่วยงานของกำลังพล'
+    },
+    {
+      key: 'VIEW_RPB1',
+      name: 'ดูแบบ รปภ. 1',
+      description: 'สิทธิ์ในการเข้าดูและดาวน์โหลด/พิมพ์แบบ รปภ. 1',
+    },
+    {
+      key: 'MANAGE_RPB1',
+      name: 'จัดการแบบ รปภ. 1',
+      description: 'สิทธิ์ในการแก้ไขหรือบันทึกข้อมูลแบบ รปภ. 1 ของกำลังพล',
     }
   ],
   legacyRoutes: {

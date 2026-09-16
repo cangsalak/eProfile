@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Personnel } from '@/modules/users';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
@@ -235,6 +236,14 @@ export default function PersonnelTable({
                         )}
                       </button>
                     )}
+                    <Link
+                      href={`/modules/users/rpb1/form?id=${person.id}`}
+                      className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800/50 transition-all flex items-center justify-center"
+                      title="จัดการแบบ รปภ. 1"
+                      aria-label={`จัดการ รปภ. 1 ของ ${person.firstName} ${person.lastName}`}
+                    >
+                      <i className="fa-solid fa-file-shield text-xs"></i>
+                    </Link>
                     <button
                       onClick={() => {
                         setEditingPerson(person);
