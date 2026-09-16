@@ -9,6 +9,8 @@ import CR80Pair from '../components/CR80Pair';
 import PrintPreviewModal from '@/modules/print/components/PrintPreviewModal';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 import { Button, Badge, Card } from '@/components/ui';
+import { toPng } from 'html-to-image';
+import toast from 'react-hot-toast';
 
 export default function MyBadgesView() {
   const router = useRouter();
@@ -17,6 +19,30 @@ export default function MyBadgesView() {
   const [isLoading, setIsLoading] = useState(true);
   const [printMode, setPrintMode] = useState<'pair' | 'front' | 'back'>('pair');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportPng = async () => {
+    const node = document.getElementById('printable-badge-sheet');
+    if (!node) return;
+    try {
+      setIsExporting(true);
+      const dataUrl = await toPng(node, {
+        pixelRatio: 3,
+        backgroundColor: 'transparent',
+        cacheBust: true,
+      });
+      const link = document.createElement('a');
+      link.download = `badge-${currentUser?.firstName || 'personnel'}-${printMode}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast.success('ดาวน์โหลดไฟล์รูปภาพบัตร (PNG) เรียบร้อยแล้ว');
+    } catch (err) {
+      console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการบันทึกภาพ PNG');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   useEffect(() => {
     const savedUser = localStorage.getItem('currentUser');
@@ -134,6 +160,15 @@ export default function MyBadgesView() {
             </div>
 
             <div className="flex items-center gap-2.5">
+              <Button
+                variant="outline"
+                size="sm"
+                icon={isExporting ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-image'}
+                onClick={handleExportPng}
+                disabled={isExporting}
+              >
+                {isExporting ? 'กำลังบันทึก...' : 'บันทึกภาพ PNG'}
+              </Button>
               <Button
                 variant="outline"
                 size="sm"

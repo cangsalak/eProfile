@@ -10,6 +10,7 @@ import PrintPreviewModal from '@/modules/print/components/PrintPreviewModal';
 import toast from 'react-hot-toast';
 import { PageHeaderExtra } from '@/components/layout/PageHeaderContext';
 import { Button, Badge, Card, CardHeader, Input, Checkbox } from '@/components/ui';
+import { toPng } from 'html-to-image';
 
 export default function BulkBadgePrintView() {
   const router = useRouter();
@@ -22,6 +23,30 @@ export default function BulkBadgePrintView() {
   const [printSide, setPrintSide] = useState<'pair' | 'front' | 'back'>('pair');
   const [isLoading, setIsLoading] = useState(true);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportPng = async () => {
+    const node = document.getElementById('printable-badges-grid');
+    if (!node) return;
+    try {
+      setIsExporting(true);
+      const dataUrl = await toPng(node, {
+        pixelRatio: 3,
+        backgroundColor: '#ffffff',
+        cacheBust: true,
+      });
+      const link = document.createElement('a');
+      link.download = `badges-bulk-print-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast.success('ดาวน์โหลดไฟล์รูปภาพบัตร (PNG) เรียบร้อยแล้ว');
+    } catch (err) {
+      console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการบันทึกภาพ PNG');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   useEffect(() => {
     const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
@@ -367,6 +392,15 @@ export default function BulkBadgePrintView() {
                 <Button
                   variant="outline"
                   size="sm"
+                  icon={isExporting ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-image'}
+                  onClick={handleExportPng}
+                  disabled={isExporting}
+                >
+                  {isExporting ? 'กำลังบันทึก...' : 'บันทึกภาพ PNG'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   icon="fa-solid fa-eye"
                   onClick={() => setIsPreviewOpen(true)}
                 >
@@ -385,7 +419,7 @@ export default function BulkBadgePrintView() {
           </Card>
 
           {/* Badges Layout Grid (Printable Area) */}
-          <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0 print:shadow-none print:rounded-none">
+          <div id="printable-badges-grid" className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0 print:shadow-none print:rounded-none">
             <div className="flex flex-wrap gap-6 print:gap-[6mm] justify-center print:justify-start">
               {personnelList.map((person) => (
                 <div key={person.id} className="flex flex-col items-center print:break-inside-avoid mb-4">
