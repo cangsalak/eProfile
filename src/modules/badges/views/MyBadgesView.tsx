@@ -155,7 +155,7 @@ export default function MyBadgesView() {
         </div>
 
         {/* Badge View Area (Fills Container Width) */}
-        <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex justify-center items-center min-h-[460px] print:p-0 print:m-0 print:bg-transparent">
+        <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex flex-col justify-center items-center min-h-[460px] print:p-0 print:m-0 print:bg-transparent">
           <div id="printable-badge-sheet" className="badge-print-container flex justify-center items-center print:w-auto">
             {printMode === 'pair' ? (
               <CR80Pair
@@ -176,7 +176,10 @@ export default function MyBadgesView() {
                 }
               />
             ) : (
-              <div className="relative p-0 print:p-0 shadow-sm print:shadow-none rounded-[12px] overflow-hidden">
+              <div 
+                className="relative p-0 print:p-0 shadow-sm print:shadow-none overflow-hidden shrink-0"
+                style={{ width: '53.98mm', height: '85.60mm' }}
+              >
                 <IDBadge
                   personnel={currentUser}
                   settings={settings}
@@ -185,6 +188,14 @@ export default function MyBadgesView() {
                 />
               </div>
             )}
+          </div>
+
+          {/* User Guidance Banner on Screen */}
+          <div className="mt-8 px-4 py-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2 max-w-xl no-print print:hidden">
+            <i className="fa-solid fa-circle-info text-amber-600 dark:text-amber-400 text-sm shrink-0" />
+            <span>
+              <strong>ขนาดมาตรฐาน ISO CR80 (5.4 × 8.6 ซม.):</strong> ในหน้าต่างพิมพ์ ให้ตั้งค่า <strong>Scale = 100%</strong> (หรือเอาติ๊ก <em>Scale to fit</em> ออก) และนำติ๊ก <em>Headers/Footers</em> ออก
+            </span>
           </div>
         </div>
       </Card>

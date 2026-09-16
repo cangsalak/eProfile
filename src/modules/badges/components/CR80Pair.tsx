@@ -27,7 +27,10 @@ export default function CR80Pair({
       style={{ gap: CR80_DIMENSIONS.pairGap }}
     >
       {/* Front Card Container */}
-      <div className="relative p-0 print:p-0 shadow-sm print:shadow-none rounded-[12px] overflow-hidden">
+      <div
+        className="relative p-0 print:p-0 shadow-sm print:shadow-none overflow-visible shrink-0"
+        style={{ width: CR80_DIMENSIONS.width, height: CR80_DIMENSIONS.height }}
+      >
         {showCropMarks && (
           <>
             <div className="absolute -top-2 -left-2 w-3 h-3 border-t-2 border-l-2 border-black pointer-events-none no-print print:block" />
@@ -41,15 +44,18 @@ export default function CR80Pair({
 
       {/* Center Fold / Cut Dividing Guide (0.05mm) */}
       <div
-        className="self-stretch border-r border-dashed border-slate-300 print:border-slate-400 opacity-70 pointer-events-none"
+        className="self-stretch border-r border-dashed border-slate-300 print:border-slate-400 opacity-70 pointer-events-none shrink-0"
         style={{
           width: CR80_DIMENSIONS.pairGap,
-          minHeight: CR80_DIMENSIONS.height,
+          height: CR80_DIMENSIONS.height,
         }}
       />
 
       {/* Back Card Container */}
-      <div className="relative p-0 print:p-0 shadow-sm print:shadow-none rounded-[12px] overflow-hidden">
+      <div
+        className="relative p-0 print:p-0 shadow-sm print:shadow-none overflow-visible shrink-0"
+        style={{ width: CR80_DIMENSIONS.width, height: CR80_DIMENSIONS.height }}
+      >
         {showCropMarks && (
           <>
             <div className="absolute -top-2 -right-2 w-3 h-3 border-t-2 border-r-2 border-black pointer-events-none no-print print:block" />
