@@ -49,7 +49,7 @@ export default function MyBadgesView() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in font-prompt max-w-5xl mx-auto">
+    <div className="space-y-6 animate-fade-in font-prompt w-full">
       {/* Submenu Slots in Universal Header */}
       <PageHeaderExtra>
         <div className="flex items-center gap-1.5 p-1 bg-white/60 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm backdrop-blur-md">
@@ -77,11 +77,12 @@ export default function MyBadgesView() {
         </div>
       </PageHeaderExtra>
 
-      {/* Control Panel Card (Hidden on Print) */}
-      <Card className="no-print print:hidden">
-        <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Main Unified Container */}
+      <Card padding="none" className="w-full overflow-hidden">
+        {/* Top Control Toolbar (Hidden on Print) */}
+        <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800/80 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 no-print print:hidden">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary-500/10 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg">
+            <div className="w-10 h-10 rounded-xl bg-primary-500/10 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg shrink-0">
               <i className="fa-solid fa-address-card" />
             </div>
             <div>
@@ -94,95 +95,99 @@ export default function MyBadgesView() {
             </div>
           </div>
 
-          {/* Print Mode Selector */}
-          <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold no-print">
-            <button
-              type="button"
-              onClick={() => setPrintMode('pair')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                printMode === 'pair'
-                  ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>พิมพ์คู่หน้า-หลัง (ระยะ 0.05mm)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setPrintMode('front')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                printMode === 'front'
-                  ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>เฉพาะหน้า</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setPrintMode('back')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                printMode === 'back'
-                  ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>เฉพาะหลัง</span>
-            </button>
-          </div>
+          <div className="flex flex-wrap items-center gap-3 justify-between lg:justify-end">
+            {/* Print Mode Selector */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setPrintMode('pair')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  printMode === 'pair'
+                    ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>พิมพ์คู่หน้า-หลัง (ระยะ 0.05mm)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPrintMode('front')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  printMode === 'front'
+                    ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>เฉพาะหน้า</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPrintMode('back')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  printMode === 'back'
+                    ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>เฉพาะหลัง</span>
+              </button>
+            </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              icon="fa-solid fa-eye"
-              onClick={() => setIsPreviewOpen(true)}
-            >
-              ดูตัวอย่างก่อนพิมพ์
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              icon="fa-solid fa-print"
-              onClick={() => setIsPreviewOpen(true)}
-            >
-              สั่งพิมพ์บัตร (Print)
-            </Button>
+            <div className="flex items-center gap-2.5">
+              <Button
+                variant="outline"
+                size="sm"
+                icon="fa-solid fa-eye"
+                onClick={() => setIsPreviewOpen(true)}
+              >
+                ดูตัวอย่างก่อนพิมพ์
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                icon="fa-solid fa-print"
+                onClick={() => setIsPreviewOpen(true)}
+              >
+                สั่งพิมพ์บัตร (Print)
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Badge View Area (Fills Container Width) */}
+        <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex justify-center items-center min-h-[460px] print:p-0 print:m-0 print:bg-transparent">
+          <div id="printable-badge-sheet" className="badge-print-container flex justify-center items-center print:w-auto">
+            {printMode === 'pair' ? (
+              <CR80Pair
+                front={
+                  <IDBadge
+                    personnel={currentUser}
+                    settings={settings}
+                    qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${currentUser.id}` : ''}
+                  />
+                }
+                back={
+                  <IDBadge
+                    personnel={currentUser}
+                    settings={settings}
+                    qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${currentUser.id}` : ''}
+                    isBack={true}
+                  />
+                }
+              />
+            ) : (
+              <div className="relative p-0 print:p-0 shadow-sm print:shadow-none rounded-[12px] overflow-hidden">
+                <IDBadge
+                  personnel={currentUser}
+                  settings={settings}
+                  qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${currentUser.id}` : ''}
+                  isBack={printMode === 'back'}
+                />
+              </div>
+            )}
           </div>
         </div>
       </Card>
-
-      {/* Badge View Area (Printable) */}
-      <div id="printable-badge-sheet" className="badge-print-container p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0 print:m-0 print:shadow-none print:rounded-none flex justify-center">
-        {printMode === 'pair' ? (
-          <CR80Pair
-            front={
-              <IDBadge
-                personnel={currentUser}
-                settings={settings}
-                qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${currentUser.id}` : ''}
-              />
-            }
-            back={
-              <IDBadge
-                personnel={currentUser}
-                settings={settings}
-                qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${currentUser.id}` : ''}
-                isBack={true}
-              />
-            }
-          />
-        ) : (
-          <div className="relative p-2 border border-dashed border-slate-300 dark:border-slate-700 print:border-none print:p-0 rounded-2xl bg-white dark:bg-slate-900 shadow-sm print:shadow-none">
-            <IDBadge
-              personnel={currentUser}
-              settings={settings}
-              qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${currentUser.id}` : ''}
-              isBack={printMode === 'back'}
-            />
-          </div>
-        )}
-      </div>
 
       {/* Print Preview Modal */}
       <PrintPreviewModal
