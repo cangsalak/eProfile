@@ -1,6 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import initialData from '../src/modules/users/data/personnel.json';
+import fs from 'fs';
+import path from 'path';
+
+let initialData: any[] = [];
+try {
+  const jsonPath = path.resolve(__dirname, '../src/modules/users/data/personnel.json');
+  if (fs.existsSync(jsonPath)) {
+    initialData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  }
+} catch (e) {
+  console.warn('Could not load personnel.json', e);
+}
 
 const prisma = new PrismaClient();
 

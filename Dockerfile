@@ -1,6 +1,6 @@
 # Dockerfile for Next.js eProfile System with Prisma, SQLite, and OpenSSL support
 FROM node:22-alpine AS base
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat openssl git
 WORKDIR /app
 
 # ── Stage 1: Dependencies ──────────────────────────────────────
