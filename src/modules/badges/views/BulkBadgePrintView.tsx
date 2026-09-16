@@ -280,186 +280,184 @@ export default function BulkBadgePrintView() {
         </div>
       ) : (
         /* Printable Ready View */
-        <div className="space-y-6">
-          <style dangerouslySetInnerHTML={{
-            __html: `
-              @media print {
-                @page {
-                  size: A4 portrait;
-                  margin: 8mm 6mm !important;
-                }
-                html, body, #__next, main, .main-content {
-                  background: white !important;
-                  background-color: white !important;
-                  -webkit-print-color-adjust: exact !important;
-                  print-color-adjust: exact !important;
-                  margin: 0 !important;
-                  padding: 0 !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-                header, nav, aside, footer, .sidebar, .navbar, .page-header, .page-header-extra, .no-print, .print\\:hidden, [class*="print:hidden"], [class*="no-print"] {
-                  display: none !important;
-                  visibility: hidden !important;
-                  height: 0 !important;
-                  margin: 0 !important;
-                  padding: 0 !important;
-                }
-                .cr80-card {
-                  width: 5.4cm !important;
-                  height: 8.6cm !important;
-                  overflow: hidden !important;
-                  position: relative !important;
-                  page-break-inside: avoid !important;
-                  break-inside: avoid !important;
-                }
-              }
-              @media screen {
-                .cr80-card {
-                  width: 216px;
-                  height: 344px;
-                  overflow: hidden;
-                  position: relative;
-                }
-              }
-            `
-          }} />
-
-          {/* Control Bar (Hidden on Print) */}
-          <Card className="no-print print:hidden">
-            <div className="p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-              <div>
-                <div className="flex items-center gap-2.5">
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    พร้อมพิมพ์บัตรแบบกลุ่ม ({personnelList.length} ใบ)
-                  </h3>
-                  <Badge variant="success" size="sm">
-                    CR80 Standard (5.4 x 8.6 cm)
-                  </Badge>
+        <div className="space-y-6 w-full">
+          <Card padding="none" className="w-full overflow-hidden">
+            {/* Control Toolbar (Hidden on Print) */}
+            <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800/80 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 no-print print:hidden">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-primary-500/10 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400 flex items-center justify-center text-lg shrink-0">
+                  <i className="fa-solid fa-print" />
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  กรุณาตั้งค่าเครื่องพิมพ์เป็นกระดาษขนาด <strong>A4 (No Margins)</strong> และเปิดใช้งานตัวเลือก <strong>"Print Background Graphics"</strong>
-                </p>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-bold text-slate-900 dark:text-white truncate">
+                      ระบบพิมพ์บัตรประจำตัวแบบกลุ่ม
+                    </h2>
+                    <Badge variant="primary" size="sm">
+                      {personnelList.length} ใบ
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    CR80 Standard (53.98 × 85.60 mm) • รองรับการพิมพ์ 2 หน้าพร้อมเส้นพับ
+                  </p>
+                </div>
               </div>
 
-              {/* Print Side Selector */}
-              <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => setPrintSide('pair')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
-                    printSide === 'pair'
-                      ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <i className="fa-solid fa-table-columns text-xs" />
-                  <span>หน้า-หลังคู่กัน (0.05 มม.)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPrintSide('front')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
-                    printSide === 'front'
-                      ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <span>เฉพาะหน้า</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPrintSide('back')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
-                    printSide === 'back'
-                      ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <span>เฉพาะหลัง</span>
-                </button>
+              <div className="flex flex-wrap items-center gap-3 justify-between lg:justify-end">
+                {/* Print Side Selector */}
+                <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 items-center text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setPrintSide('pair')}
+                    className={`px-3 py-1.5 rounded-lg transition-all ${
+                      printSide === 'pair'
+                        ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>พิมพ์คู่หน้า-หลัง (ระยะ 0.05mm)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPrintSide('front')}
+                    className={`px-3 py-1.5 rounded-lg transition-all ${
+                      printSide === 'front'
+                        ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>เฉพาะหน้า</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPrintSide('back')}
+                    className={`px-3 py-1.5 rounded-lg transition-all ${
+                      printSide === 'back'
+                        ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-xs'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <span>เฉพาะหลัง</span>
+                  </button>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon="fa-solid fa-user-plus"
+                    onClick={() => setIsPickingMode(true)}
+                  >
+                    เลือกรายชื่อเพิ่ม
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    icon={isExporting ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-image'}
+                    onClick={handleExportPng}
+                    disabled={isExporting}
+                  >
+                    {isExporting ? 'กำลังบันทึก...' : 'บันทึกภาพ PNG'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    icon="fa-solid fa-eye"
+                    onClick={() => setIsPreviewOpen(true)}
+                  >
+                    ดูตัวอย่างก่อนพิมพ์
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    icon="fa-solid fa-print"
+                    onClick={() => window.print()}
+                  >
+                    สั่งพิมพ์ทันที (Print)
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Badges Layout Workspace */}
+            <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex flex-col justify-center items-center min-h-[460px] print:p-0 print:m-0 print:bg-transparent">
+              <div id="printable-badge-sheet" className="badge-print-container flex flex-wrap gap-8 print:gap-[6mm] justify-center items-start print:w-auto">
+                {personnelList.map((person) => (
+                  <div key={person.id} className="flex flex-col items-center print:break-inside-avoid group">
+                    {/* Personnel Info Card Pill (Hidden on Print) */}
+                    <div className="no-print print:hidden mb-2.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs flex items-center justify-between gap-2 max-w-[240px] transition-all group-hover:border-primary-300 dark:group-hover:border-primary-700">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-5 h-5 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-400 text-[10px] font-bold flex items-center justify-center shrink-0">
+                          {person.firstName?.[0] || 'U'}
+                        </div>
+                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate">
+                          {person.prefix || ''}{person.firstName} {person.lastName}
+                        </span>
+                      </div>
+                      {personnelList.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = personnelList.filter((p) => p.id !== person.id);
+                            setPersonnelList(updated);
+                            setSelectedIds((prev) => prev.filter((i) => i !== person.id));
+                            sessionStorage.setItem('bulkPrintIds', JSON.stringify(updated.map((p) => p.id)));
+                            toast.success('นำรายชื่อออกจากคิวพิมพ์แล้ว');
+                          }}
+                          className="text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors p-0.5"
+                          title="นำออกจากรายการพิมพ์"
+                        >
+                          <i className="fa-solid fa-xmark text-xs" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Print Card Container */}
+                    {printSide === 'pair' ? (
+                      <CR80Pair
+                        front={
+                          <IDBadge
+                            personnel={person}
+                            settings={settings}
+                            qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                          />
+                        }
+                        back={
+                          <IDBadge
+                            personnel={person}
+                            settings={settings}
+                            qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                            isBack={true}
+                          />
+                        }
+                      />
+                    ) : (
+                      <div 
+                        className="relative p-0 print:p-0 shadow-sm print:shadow-none overflow-hidden shrink-0"
+                        style={{ width: '53.98mm', height: '85.60mm' }}
+                      >
+                        <IDBadge
+                          personnel={person}
+                          settings={settings}
+                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
+                          isBack={printSide === 'back'}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
 
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon="fa-solid fa-user-plus"
-                  onClick={() => setIsPickingMode(true)}
-                >
-                  เลือกรายชื่อเพิ่ม
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  icon={isExporting ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-image'}
-                  onClick={handleExportPng}
-                  disabled={isExporting}
-                >
-                  {isExporting ? 'กำลังบันทึก...' : 'บันทึกภาพ PNG'}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  icon="fa-solid fa-eye"
-                  onClick={() => setIsPreviewOpen(true)}
-                >
-                  ดูตัวอย่างก่อนพิมพ์
-                </Button>
-                <Button
-                  variant="primary"
-                  size="md"
-                  icon="fa-solid fa-print"
-                  onClick={() => window.print()}
-                >
-                  สั่งพิมพ์ทันที (Print)
-                </Button>
+              {/* Print Scale Helper Note (Hidden on Print) */}
+              <div className="mt-8 px-4 py-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 text-amber-800 dark:text-amber-200 text-xs flex items-center gap-2 max-w-xl no-print print:hidden">
+                <i className="fa-solid fa-circle-info text-amber-600 dark:text-amber-400 text-sm shrink-0" />
+                <span>
+                  <strong>ขนาดมาตรฐาน ISO CR80 (5.4 × 8.6 ซม.):</strong> ในหน้าต่างพิมพ์ ให้ตั้งค่า <strong>Scale = 100%</strong> (หรือเอาติ๊ก <em>Scale to fit</em> ออก) และนำติ๊ก <em>Headers/Footers</em> ออก
+                </span>
               </div>
             </div>
           </Card>
-
-          {/* Badges Layout Grid (Printable Area) */}
-          <div id="printable-badges-grid" className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 print:bg-transparent print:border-none print:p-0 print:shadow-none print:rounded-none">
-            <div className="flex flex-wrap gap-6 print:gap-[6mm] justify-center print:justify-start">
-              {personnelList.map((person) => (
-                <div key={person.id} className="flex flex-col items-center print:break-inside-avoid mb-4">
-                  <span className="no-print print:hidden text-slate-500 dark:text-slate-400 text-xs mb-2 text-center font-medium truncate max-w-[216px]">
-                    {person.firstName} {person.lastName}
-                  </span>
-
-                  {/* Print Card Container with exact 0.05mm gap between front and back */}
-                  {printSide === 'pair' ? (
-                    <CR80Pair
-                      front={
-                        <IDBadge
-                          personnel={person}
-                          settings={settings}
-                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
-                        />
-                      }
-                      back={
-                        <IDBadge
-                          personnel={person}
-                          settings={settings}
-                          qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
-                          isBack={true}
-                        />
-                      }
-                    />
-                  ) : (
-                    <div className="relative p-2 border border-dashed border-slate-300 dark:border-slate-700 print:border-none print:p-0 rounded-2xl bg-white dark:bg-slate-900 shadow-sm print:shadow-none">
-                      <IDBadge
-                        personnel={person}
-                        settings={settings}
-                        qrValue={typeof window !== 'undefined' ? `${window.location.origin}/verify/${person.id}` : ''}
-                        isBack={printSide === 'back'}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Print Preview Modal */}
           <PrintPreviewModal
