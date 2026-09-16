@@ -376,7 +376,7 @@ export default function BulkBadgePrintView() {
                   variant="primary"
                   size="md"
                   icon="fa-solid fa-print"
-                  onClick={() => setIsPreviewOpen(true)}
+                  onClick={() => window.print()}
                 >
                   สั่งพิมพ์ทันที (Print)
                 </Button>

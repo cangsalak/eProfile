@@ -146,7 +146,7 @@ export default function MyBadgesView() {
                 variant="primary"
                 size="md"
                 icon="fa-solid fa-print"
-                onClick={() => setIsPreviewOpen(true)}
+                onClick={() => window.print()}
               >
                 สั่งพิมพ์บัตร (Print)
               </Button>
