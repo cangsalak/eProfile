@@ -23,12 +23,18 @@ export async function handleGetRpb1List(req: Request) {
     if (!isAdmin) {
       where.id = user.id;
     } else {
+      where.id = { notIn: ['ALL', 'ADMIN'] };
+      where.badgeNo = { notIn: ['SYSTEM_ALL', 'SYSTEM_ADMIN'] };
       if (search) {
-        where.OR = [
-          { firstName: { contains: search } },
-          { lastName: { contains: search } },
-          { citizenId: { contains: search } },
-          { badgeNo: { contains: search } },
+        where.AND = [
+          {
+            OR: [
+              { firstName: { contains: search } },
+              { lastName: { contains: search } },
+              { citizenId: { contains: search } },
+              { badgeNo: { contains: search } },
+            ],
+          },
         ];
       }
       if (department) {

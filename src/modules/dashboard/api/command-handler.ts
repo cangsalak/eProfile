@@ -169,7 +169,10 @@ export async function handleGetCommandDashboard(req: Request) {
     }
 
     // Construct Prisma WHERE clause for scoped personnel
-    const personnelWhere: Prisma.PersonnelWhereInput = {};
+    const personnelWhere: Prisma.PersonnelWhereInput = {
+      id: { notIn: ['ALL', 'ADMIN'] },
+      badgeNo: { notIn: ['SYSTEM_ALL', 'SYSTEM_ADMIN'] },
+    };
     if (effectiveDept) {
       personnelWhere.department = effectiveDept;
     }

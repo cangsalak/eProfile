@@ -17,6 +17,11 @@ export async function handleGetDashboardStats(req: Request) {
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
 
+    const systemFilter = {
+      id: { notIn: ['ALL', 'ADMIN'] },
+      badgeNo: { notIn: ['SYSTEM_ALL', 'SYSTEM_ADMIN'] },
+    };
+
     // Parallel fetch core metrics
     const [
       totalPersonnel,
@@ -29,7 +34,9 @@ export async function handleGetDashboardStats(req: Request) {
       leaveTypeCounts,
     ] = await Promise.all([
       // 1. Total Personnel
-      prisma.personnel.count(),
+      prisma.personnel.count({
+        where: systemFilter,
+      }),
 
       // 2. Active leaves today
       prisma.leaveRecord.count({
@@ -37,6 +44,7 @@ export async function handleGetDashboardStats(req: Request) {
           status: 'อนุมัติแล้ว',
           startDate: { lte: todayEnd },
           endDate: { gte: todayStart },
+          personnel: systemFilter,
         },
       }),
 
@@ -44,6 +52,7 @@ export async function handleGetDashboardStats(req: Request) {
       prisma.leaveRecord.count({
         where: {
           status: 'รออนุมัติ',
+          personnel: systemFilter,
         },
       }),
 
@@ -79,6 +88,7 @@ export async function handleGetDashboardStats(req: Request) {
       // 7. Department Breakdown
       prisma.personnel.groupBy({
         by: ['department'],
+        where: systemFilter,
         _count: { id: true },
         orderBy: { _count: { id: 'desc' } },
         take: 6,
@@ -87,7 +97,10 @@ export async function handleGetDashboardStats(req: Request) {
       // 8. Leave Type Distribution
       prisma.leaveRecord.groupBy({
         by: ['leaveType'],
-        where: { status: 'อนุมัติแล้ว' },
+        where: {
+          status: 'อนุมัติแล้ว',
+          personnel: systemFilter,
+        },
         _count: { id: true },
         orderBy: { _count: { id: 'desc' } },
         take: 5,

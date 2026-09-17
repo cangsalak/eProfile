@@ -60,17 +60,24 @@ export async function handleGetPersonnel(req: Request) {
       return NextResponse.json({ error: 'Invalid sortOrder. Allowed: asc, desc' }, { status: 400 });
     }
 
-    const where: any = {};
+    const where: any = {
+      id: { notIn: ['ALL', 'ADMIN'] },
+      badgeNo: { notIn: ['SYSTEM_ALL', 'SYSTEM_ADMIN'] },
+    };
 
     if (search) {
-      where.OR = [
-        { firstName: { contains: search } },
-        { lastName: { contains: search } },
-        { badgeNo: { contains: search } },
-        { position: { contains: search } },
-        { department: { contains: search } },
-        { subDepartment: { contains: search } },
-        { officialId: { contains: search } },
+      where.AND = [
+        {
+          OR: [
+            { firstName: { contains: search } },
+            { lastName: { contains: search } },
+            { badgeNo: { contains: search } },
+            { position: { contains: search } },
+            { department: { contains: search } },
+            { subDepartment: { contains: search } },
+            { officialId: { contains: search } },
+          ],
+        },
       ];
     }
 
@@ -452,20 +459,28 @@ export async function handleGetPersonnelStats(req: Request) {
     const { error: authError } = await requireAuth(req);
     if (authError) return authError;
 
-    const total = await prisma.personnel.count();
-    const active = await prisma.personnel.count({ where: { status: 'ปฏิบัติงานปกติ' } });
+    const systemFilter = {
+      id: { notIn: ['ALL', 'ADMIN'] },
+      badgeNo: { notIn: ['SYSTEM_ALL', 'SYSTEM_ADMIN'] },
+    };
+
+    const total = await prisma.personnel.count({ where: systemFilter });
+    const active = await prisma.personnel.count({ where: { ...systemFilter, status: 'ปฏิบัติงานปกติ' } });
     const byDepartmentRaw = await prisma.personnel.groupBy({
       by: ['department'],
+      where: systemFilter,
       _count: { id: true },
       orderBy: { _count: { id: 'desc' } },
     });
     const byPersonnelTypeRaw = await prisma.personnel.groupBy({
       by: ['personnelType'],
+      where: systemFilter,
       _count: { id: true },
       orderBy: { _count: { id: 'desc' } },
     });
     const byStatusRaw = await prisma.personnel.groupBy({
       by: ['status'],
+      where: systemFilter,
       _count: { id: true },
       orderBy: { _count: { id: 'desc' } },
     });
@@ -520,17 +535,24 @@ export async function handleExportPersonnel(req: Request) {
     const status = searchParams.get('status') || '';
     const personnelType = searchParams.get('personnelType') || '';
 
-    const where: any = {};
+    const where: any = {
+      id: { notIn: ['ALL', 'ADMIN'] },
+      badgeNo: { notIn: ['SYSTEM_ALL', 'SYSTEM_ADMIN'] },
+    };
 
     if (search) {
-      where.OR = [
-        { firstName: { contains: search } },
-        { lastName: { contains: search } },
-        { badgeNo: { contains: search } },
-        { position: { contains: search } },
-        { department: { contains: search } },
-        { subDepartment: { contains: search } },
-        { officialId: { contains: search } },
+      where.AND = [
+        {
+          OR: [
+            { firstName: { contains: search } },
+            { lastName: { contains: search } },
+            { badgeNo: { contains: search } },
+            { position: { contains: search } },
+            { department: { contains: search } },
+            { subDepartment: { contains: search } },
+            { officialId: { contains: search } },
+          ],
+        },
       ];
     }
 

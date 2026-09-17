@@ -564,17 +564,18 @@ export async function handleGetSecurity(req: Request) {
       recentFailedLogins,
       recentInspections,
     ] = await Promise.all([
-      prisma.personnel.count({ where: { role: 'SUPER_ADMIN' } }),
-      prisma.personnel.count({ where: { role: 'ADMIN' } }),
-      prisma.personnel.count(),
+      prisma.personnel.count({ where: { role: 'SUPER_ADMIN', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'ADMIN', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { id: { notIn: ['ALL', 'ADMIN'] } } }),
       prisma.personnel.count({
         where: {
+          id: { notIn: ['ALL', 'ADMIN'] },
           lockedUntil: {
             gt: new Date(),
           },
         },
       }),
-      prisma.personnel.count({ where: { mustChangePassword: true } }),
+      prisma.personnel.count({ where: { mustChangePassword: true, id: { notIn: ['ALL', 'ADMIN'] } } }),
       prisma.auditLog.findMany({
         where: {
           OR: [
@@ -947,14 +948,14 @@ export async function handleGetChecklist(req: Request) {
       generalUsers,
       auditLogsCount,
     ] = await Promise.all([
-      prisma.personnel.count(),
-      prisma.personnel.count({ where: { role: 'SUPER_ADMIN' } }),
-      prisma.personnel.count({ where: { role: 'ADMIN' } }),
-      prisma.personnel.count({ where: { role: 'HR_MANAGER' } }),
-      prisma.personnel.count({ where: { role: 'DEPARTMENT_COMMANDER' } }),
-      prisma.personnel.count({ where: { role: 'COMMANDER' } }),
-      prisma.personnel.count({ where: { role: 'OFFICER' } }),
-      prisma.personnel.count({ where: { role: 'USER' } }),
+      prisma.personnel.count({ where: { id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'SUPER_ADMIN', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'ADMIN', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'HR_MANAGER', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'DEPARTMENT_COMMANDER', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'COMMANDER', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'OFFICER', id: { notIn: ['ALL', 'ADMIN'] } } }),
+      prisma.personnel.count({ where: { role: 'USER', id: { notIn: ['ALL', 'ADMIN'] } } }),
       prisma.auditLog.count(),
     ]);
 
