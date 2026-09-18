@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const ApprovalTable = ({ toPerson }: { toPerson: string | null }) => (
-  <div className="w-full h-full bg-white relative pt-8">
+  <div className="w-full h-full bg-white relative pt-2">
     <table className="w-full border-collapse border border-black text-[11pt] text-black">
       <thead>
         <tr>

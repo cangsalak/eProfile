@@ -1,26 +1,17 @@
 import { ModuleManifest } from '@/modules/core/types';
 
 export const PrintManifest: ModuleManifest = {
-  id: 'print',
-  name: 'ศูนย์รวมการพิมพ์เอกสารราชการ',
-  nameEn: 'Print Center',
+  id: 'print-service',
+  name: 'ระบบการพิมพ์ส่วนกลาง',
+  nameEn: 'Print Service',
   description: 'ศูนย์รวมการพิมพ์แบบฟอร์มเอกสารราชการ ใบลา สลิปเงินเดือน บัตรประจำตัว รพบ.1 ทำเนียบกำลังพล และตารางเวร พร้อมตัวจำลองกระดาษ A4',
   version: '1.0.0',
   author: 'eProfile Team',
   icon: 'fa-solid fa-print',
-  category: 'tools',
-  isCore: false,
+  category: 'core',
+  isCore: true,
   defaultEnabled: true,
-  menus: [
-    {
-      id: 'print-center-menu',
-      title: 'ศูนย์รวมการพิมพ์เอกสาร',
-      icon: 'fa-solid fa-print',
-      path: '/modules/print',
-      requiredRoles: ['SUPER_ADMIN', 'ADMIN', 'HR_MANAGER', 'DEPARTMENT_COMMANDER', 'COMMANDER', 'OFFICER', 'EDITOR', 'USER'],
-      order: 38,
-    },
-  ],
+  menus: [],
   permissions: [
     {
       key: 'PRINT_DOCUMENTS',

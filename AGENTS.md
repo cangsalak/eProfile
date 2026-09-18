@@ -40,6 +40,13 @@ src/
   npm run db:generate  # สร้าง Prisma Client สำหรับ SQLite, MySQL, PostgreSQL
   ```
 
+### 1.2 กฎการจัดกลุ่มเมนูและการเข้าถึง (Menu Grouping & Role-Based UI)
+- เมนูทั้งหมดของระบบต้องถูกจัดกลุ่ม (Group) ตามระดับการใช้งานเพื่อไม่ให้ UI รกเกินไป โดยกำหนด property `group` ใน `ModuleMenu` ภายใน `manifest.ts` ดังนี้:
+  1. `personal`: "ส่วนตัวและทั่วไป" (แสดงผลสำหรับทุกคน เช่น Dashboard, การลา, บัตรประจำตัว, ทำเนียบ)
+  2. `operations`: "ปฏิบัติการและอนุมัติ" (แสดงเฉพาะหัวหน้างาน, HR_MANAGER, ADMIN เช่น อนุมัติใบลา, พิมพ์บัตร, ศูนย์บัญชาการ)
+  3. `system`: "การตั้งค่าระบบ" (แสดงเฉพาะ SUPER_ADMIN, ADMIN เช่น สิทธิ์ผู้ใช้งาน, ตั้งค่าเว็บไซต์, สำรองข้อมูล, API)
+- ห้ามดึงเมนูทุกอย่างไปกองรวมกัน การเพิ่มโมดูลใหม่ต้องระบุ `group` และกำหนด `requiredRoles` หรือ `requiredPermission` ให้ชัดเจนเสมอ
+
 ---
 
 ## 🔒 2. กฎเหล็กด้านความมั่นคงปลอดภัย (Mandatory Security & RBAC Rules)

@@ -19,6 +19,7 @@ export const CalendarManifest: ModuleManifest = {
       icon: 'fa-solid fa-calendar-days',
       path: '/modules/calendar',
       order: 20,
+      group: 'personal',
     },
     {
       id: 'calendar-settings',
@@ -29,6 +30,7 @@ export const CalendarManifest: ModuleManifest = {
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       isSetting: true,
       order: 21,
+      group: 'personal',
     },
   ],
   permissions: [

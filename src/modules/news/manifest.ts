@@ -20,6 +20,7 @@ export const NewsManifest: ModuleManifest = {
       path: '/modules/news',
       requiredPermission: 'MANAGE_POSTS',
       order: 55,
+      group: 'personal',
     },
     {
       id: 'news-inbox',
@@ -27,6 +28,7 @@ export const NewsManifest: ModuleManifest = {
       icon: 'fa-solid fa-bell',
       path: '/modules/news/inbox',
       order: 56,
+      group: 'personal',
     },
     {
       id: 'news-settings',
@@ -36,6 +38,7 @@ export const NewsManifest: ModuleManifest = {
       requiredPermission: 'MANAGE_SYSTEM',
       isSetting: true,
       order: 57,
+      group: 'personal',
     },
   ],
   permissions: [

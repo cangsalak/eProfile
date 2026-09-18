@@ -61,7 +61,7 @@
 
 ## 🔐 สิทธิ์และการเข้าถึง (Permission Matrix)
 
-ดูรายละเอียดโครงสร้างสิทธิ์ทั้งหมด, นโยบายการตรวจสอบสิทธิ์, และ API Role Matrix ได้ที่ [PERMISSION_MATRIX.md](PERMISSION_MATRIX.md)
+ดูรายละเอียดโครงสร้างสิทธิ์ทั้งหมด, นโยบายการตรวจสอบสิทธิ์, และ API Role Matrix ได้ที่ [PERMISSION_MATRIX.md](docs/PERMISSION_MATRIX.md)
 
 ---
 

@@ -87,13 +87,19 @@ export default function FileUpload({
 
     const files = Array.from(fileList);
 
-    if (value.length + files.length > maxFiles) {
+    // If maxFiles is 1, replace previous file automatically
+    let newUploadedList: UploadedMediaResult[] = [...value];
+    if (maxFiles === 1) {
+      newUploadedList = [];
+    } else if (value.length + files.length > maxFiles) {
       toast.error(`สามารถอัปโหลดไฟล์ได้สูงสุด ${maxFiles} ไฟล์`);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       return;
     }
 
     setIsUploading(true);
-    const newUploadedList: UploadedMediaResult[] = [...value];
 
     for (const file of files) {
       if (file.size > maxSizeBytes) {
@@ -207,7 +213,12 @@ export default function FileUpload({
             size="sm"
             variant="primary"
             disabled={disabled || isUploading}
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => {
+              if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+              }
+              fileInputRef.current?.click();
+            }}
             className="text-xs px-3 py-1.5"
           >
             {isUploading ? (
@@ -245,6 +256,9 @@ export default function FileUpload({
           multiple={maxFiles > 1}
           accept={acceptedTypes}
           disabled={disabled || isUploading}
+          onClick={(e) => {
+            (e.target as HTMLInputElement).value = '';
+          }}
           onChange={(e) => handleFiles(e.target.files)}
           className="hidden"
           aria-label={label || 'อัปโหลดไฟล์'}

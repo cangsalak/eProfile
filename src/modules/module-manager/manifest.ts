@@ -19,6 +19,7 @@ export const ModuleManagerManifest: ModuleManifest = {
       path: '/modules/module-manager',
       requiredPermission: 'MANAGE_SYSTEM',
       order: 88,
+      group: 'personal',
     },
     {
       id: 'manage-module-menus',
@@ -28,6 +29,7 @@ export const ModuleManagerManifest: ModuleManifest = {
       requiredPermission: 'MANAGE_SYSTEM',
       isSetting: true,
       order: 89,
+      group: 'personal',
     },
   ],
   permissions: [

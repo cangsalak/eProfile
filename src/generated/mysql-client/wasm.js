@@ -180,6 +180,28 @@ exports.Prisma.ContactMessageScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DocumentCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DocumentTemplateScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  name: 'name',
+  code: 'code',
+  pdfUrl: 'pdfUrl',
+  docxUrl: 'docxUrl',
+  isActive: 'isActive',
+  mappingJson: 'mappingJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.InspectionScalarFieldEnum = {
   id: 'id',
   page: 'page',
@@ -542,6 +564,8 @@ exports.Prisma.ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   CalendarEvent: 'CalendarEvent',
   ContactMessage: 'ContactMessage',
+  DocumentCategory: 'DocumentCategory',
+  DocumentTemplate: 'DocumentTemplate',
   Inspection: 'Inspection',
   InspectionFinding: 'InspectionFinding',
   LeaveRecord: 'LeaveRecord',

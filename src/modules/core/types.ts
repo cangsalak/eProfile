@@ -10,6 +10,7 @@ export interface ModuleMenu {
   subItems?: { name: string; path: string; requiredPermission?: string }[];
   isSetting?: boolean;
   order: number;
+  group?: 'personal' | 'operations' | 'system';
 }
 
 export interface ModulePermission {

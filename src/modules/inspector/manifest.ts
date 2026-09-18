@@ -21,6 +21,7 @@ export const InspectorManifest: ModuleManifest = {
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       isSetting: true,
       order: 100,
+      group: 'personal',
       subItems: [
         { name: 'ภาพรวมสถานะ (Health)', path: '/modules/inspector' },
         { name: 'ความพร้อมระบบ (Checklist)', path: '/modules/inspector/checklist' },

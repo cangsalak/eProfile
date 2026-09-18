@@ -44,6 +44,16 @@ export type CalendarEvent = $Result.DefaultSelection<Prisma.$CalendarEventPayloa
  */
 export type ContactMessage = $Result.DefaultSelection<Prisma.$ContactMessagePayload>
 /**
+ * Model DocumentCategory
+ * 
+ */
+export type DocumentCategory = $Result.DefaultSelection<Prisma.$DocumentCategoryPayload>
+/**
+ * Model DocumentTemplate
+ * 
+ */
+export type DocumentTemplate = $Result.DefaultSelection<Prisma.$DocumentTemplatePayload>
+/**
  * Model Inspection
  * 
  */
@@ -287,6 +297,26 @@ export class PrismaClient<
     * ```
     */
   get contactMessage(): Prisma.ContactMessageDelegate<ExtArgs>;
+
+  /**
+   * `prisma.documentCategory`: Exposes CRUD operations for the **DocumentCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentCategories
+    * const documentCategories = await prisma.documentCategory.findMany()
+    * ```
+    */
+  get documentCategory(): Prisma.DocumentCategoryDelegate<ExtArgs>;
+
+  /**
+   * `prisma.documentTemplate`: Exposes CRUD operations for the **DocumentTemplate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DocumentTemplates
+    * const documentTemplates = await prisma.documentTemplate.findMany()
+    * ```
+    */
+  get documentTemplate(): Prisma.DocumentTemplateDelegate<ExtArgs>;
 
   /**
    * `prisma.inspection`: Exposes CRUD operations for the **Inspection** model.
@@ -854,6 +884,8 @@ export namespace Prisma {
     PasswordResetToken: 'PasswordResetToken',
     CalendarEvent: 'CalendarEvent',
     ContactMessage: 'ContactMessage',
+    DocumentCategory: 'DocumentCategory',
+    DocumentTemplate: 'DocumentTemplate',
     Inspection: 'Inspection',
     InspectionFinding: 'InspectionFinding',
     LeaveRecord: 'LeaveRecord',
@@ -881,7 +913,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "systemSetting" | "systemRole" | "auditLog" | "passwordResetToken" | "calendarEvent" | "contactMessage" | "inspection" | "inspectionFinding" | "leaveRecord" | "post" | "notification" | "notificationRead" | "service" | "mediaFile" | "personnel" | "department" | "personnelDocument" | "rpb1Record"
+      modelProps: "systemSetting" | "systemRole" | "auditLog" | "passwordResetToken" | "calendarEvent" | "contactMessage" | "documentCategory" | "documentTemplate" | "inspection" | "inspectionFinding" | "leaveRecord" | "post" | "notification" | "notificationRead" | "service" | "mediaFile" | "personnel" | "department" | "personnelDocument" | "rpb1Record"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1278,6 +1310,138 @@ export namespace Prisma {
           count: {
             args: Prisma.ContactMessageCountArgs<ExtArgs>
             result: $Utils.Optional<ContactMessageCountAggregateOutputType> | number
+          }
+        }
+      }
+      DocumentCategory: {
+        payload: Prisma.$DocumentCategoryPayload<ExtArgs>
+        fields: Prisma.DocumentCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DocumentCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>
+          }
+          update: {
+            args: Prisma.DocumentCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DocumentCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentCategory>
+          }
+          groupBy: {
+            args: Prisma.DocumentCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      DocumentTemplate: {
+        payload: Prisma.$DocumentTemplatePayload<ExtArgs>
+        fields: Prisma.DocumentTemplateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentTemplateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentTemplateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentTemplateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentTemplateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
+          }
+          findMany: {
+            args: Prisma.DocumentTemplateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>[]
+          }
+          create: {
+            args: Prisma.DocumentTemplateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
+          }
+          createMany: {
+            args: Prisma.DocumentTemplateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DocumentTemplateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
+          }
+          update: {
+            args: Prisma.DocumentTemplateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentTemplateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentTemplateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DocumentTemplateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentTemplatePayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentTemplateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentTemplate>
+          }
+          groupBy: {
+            args: Prisma.DocumentTemplateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentTemplateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentTemplateCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentTemplateCountAggregateOutputType> | number
           }
         }
       }
@@ -2227,6 +2391,37 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type DocumentCategoryCountOutputType
+   */
+
+  export type DocumentCategoryCountOutputType = {
+    templates: number
+  }
+
+  export type DocumentCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    templates?: boolean | DocumentCategoryCountOutputTypeCountTemplatesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DocumentCategoryCountOutputType without action
+   */
+  export type DocumentCategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategoryCountOutputType
+     */
+    select?: DocumentCategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DocumentCategoryCountOutputType without action
+   */
+  export type DocumentCategoryCountOutputTypeCountTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentTemplateWhereInput
+  }
 
 
   /**
@@ -7624,6 +7819,1852 @@ export namespace Prisma {
      * Select specific fields to fetch from the ContactMessage
      */
     select?: ContactMessageSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DocumentCategory
+   */
+
+  export type AggregateDocumentCategory = {
+    _count: DocumentCategoryCountAggregateOutputType | null
+    _min: DocumentCategoryMinAggregateOutputType | null
+    _max: DocumentCategoryMaxAggregateOutputType | null
+  }
+
+  export type DocumentCategoryMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    code: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentCategoryMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    code: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentCategoryCountAggregateOutputType = {
+    id: number
+    name: number
+    code: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentCategoryMinAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentCategoryMaxAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentCategoryCountAggregateInputType = {
+    id?: true
+    name?: true
+    code?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentCategory to aggregate.
+     */
+    where?: DocumentCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentCategories to fetch.
+     */
+    orderBy?: DocumentCategoryOrderByWithRelationInput | DocumentCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DocumentCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DocumentCategories
+    **/
+    _count?: true | DocumentCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentCategoryMaxAggregateInputType
+  }
+
+  export type GetDocumentCategoryAggregateType<T extends DocumentCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentCategory[P]>
+      : GetScalarType<T[P], AggregateDocumentCategory[P]>
+  }
+
+
+
+
+  export type DocumentCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentCategoryWhereInput
+    orderBy?: DocumentCategoryOrderByWithAggregationInput | DocumentCategoryOrderByWithAggregationInput[]
+    by: DocumentCategoryScalarFieldEnum[] | DocumentCategoryScalarFieldEnum
+    having?: DocumentCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentCategoryCountAggregateInputType | true
+    _min?: DocumentCategoryMinAggregateInputType
+    _max?: DocumentCategoryMaxAggregateInputType
+  }
+
+  export type DocumentCategoryGroupByOutputType = {
+    id: string
+    name: string
+    code: string
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentCategoryCountAggregateOutputType | null
+    _min: DocumentCategoryMinAggregateOutputType | null
+    _max: DocumentCategoryMaxAggregateOutputType | null
+  }
+
+  type GetDocumentCategoryGroupByPayload<T extends DocumentCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    templates?: boolean | DocumentCategory$templatesArgs<ExtArgs>
+    _count?: boolean | DocumentCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentCategory"]>
+
+
+  export type DocumentCategorySelectScalar = {
+    id?: boolean
+    name?: boolean
+    code?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    templates?: boolean | DocumentCategory$templatesArgs<ExtArgs>
+    _count?: boolean | DocumentCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentCategory"
+    objects: {
+      templates: Prisma.$DocumentTemplatePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      code: string
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentCategory"]>
+    composites: {}
+  }
+
+  type DocumentCategoryGetPayload<S extends boolean | null | undefined | DocumentCategoryDefaultArgs> = $Result.GetResult<Prisma.$DocumentCategoryPayload, S>
+
+  type DocumentCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<DocumentCategoryFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: DocumentCategoryCountAggregateInputType | true
+    }
+
+  export interface DocumentCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentCategory'], meta: { name: 'DocumentCategory' } }
+    /**
+     * Find zero or one DocumentCategory that matches the filter.
+     * @param {DocumentCategoryFindUniqueArgs} args - Arguments to find a DocumentCategory
+     * @example
+     * // Get one DocumentCategory
+     * const documentCategory = await prisma.documentCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentCategoryFindUniqueArgs>(args: SelectSubset<T, DocumentCategoryFindUniqueArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one DocumentCategory that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {DocumentCategoryFindUniqueOrThrowArgs} args - Arguments to find a DocumentCategory
+     * @example
+     * // Get one DocumentCategory
+     * const documentCategory = await prisma.documentCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first DocumentCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryFindFirstArgs} args - Arguments to find a DocumentCategory
+     * @example
+     * // Get one DocumentCategory
+     * const documentCategory = await prisma.documentCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentCategoryFindFirstArgs>(args?: SelectSubset<T, DocumentCategoryFindFirstArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first DocumentCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryFindFirstOrThrowArgs} args - Arguments to find a DocumentCategory
+     * @example
+     * // Get one DocumentCategory
+     * const documentCategory = await prisma.documentCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more DocumentCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentCategories
+     * const documentCategories = await prisma.documentCategory.findMany()
+     * 
+     * // Get first 10 DocumentCategories
+     * const documentCategories = await prisma.documentCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentCategoryWithIdOnly = await prisma.documentCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DocumentCategoryFindManyArgs>(args?: SelectSubset<T, DocumentCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a DocumentCategory.
+     * @param {DocumentCategoryCreateArgs} args - Arguments to create a DocumentCategory.
+     * @example
+     * // Create one DocumentCategory
+     * const DocumentCategory = await prisma.documentCategory.create({
+     *   data: {
+     *     // ... data to create a DocumentCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends DocumentCategoryCreateArgs>(args: SelectSubset<T, DocumentCategoryCreateArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many DocumentCategories.
+     * @param {DocumentCategoryCreateManyArgs} args - Arguments to create many DocumentCategories.
+     * @example
+     * // Create many DocumentCategories
+     * const documentCategory = await prisma.documentCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DocumentCategoryCreateManyArgs>(args?: SelectSubset<T, DocumentCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DocumentCategory.
+     * @param {DocumentCategoryDeleteArgs} args - Arguments to delete one DocumentCategory.
+     * @example
+     * // Delete one DocumentCategory
+     * const DocumentCategory = await prisma.documentCategory.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DocumentCategoryDeleteArgs>(args: SelectSubset<T, DocumentCategoryDeleteArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one DocumentCategory.
+     * @param {DocumentCategoryUpdateArgs} args - Arguments to update one DocumentCategory.
+     * @example
+     * // Update one DocumentCategory
+     * const documentCategory = await prisma.documentCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DocumentCategoryUpdateArgs>(args: SelectSubset<T, DocumentCategoryUpdateArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more DocumentCategories.
+     * @param {DocumentCategoryDeleteManyArgs} args - Arguments to filter DocumentCategories to delete.
+     * @example
+     * // Delete a few DocumentCategories
+     * const { count } = await prisma.documentCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DocumentCategoryDeleteManyArgs>(args?: SelectSubset<T, DocumentCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentCategories
+     * const documentCategory = await prisma.documentCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DocumentCategoryUpdateManyArgs>(args: SelectSubset<T, DocumentCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DocumentCategory.
+     * @param {DocumentCategoryUpsertArgs} args - Arguments to update or create a DocumentCategory.
+     * @example
+     * // Update or create a DocumentCategory
+     * const documentCategory = await prisma.documentCategory.upsert({
+     *   create: {
+     *     // ... data to create a DocumentCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentCategoryUpsertArgs>(args: SelectSubset<T, DocumentCategoryUpsertArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of DocumentCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryCountArgs} args - Arguments to filter DocumentCategories to count.
+     * @example
+     * // Count the number of DocumentCategories
+     * const count = await prisma.documentCategory.count({
+     *   where: {
+     *     // ... the filter for the DocumentCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentCategoryCountArgs>(
+      args?: Subset<T, DocumentCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentCategoryAggregateArgs>(args: Subset<T, DocumentCategoryAggregateArgs>): Prisma.PrismaPromise<GetDocumentCategoryAggregateType<T>>
+
+    /**
+     * Group by DocumentCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DocumentCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentCategory model
+   */
+  readonly fields: DocumentCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    templates<T extends DocumentCategory$templatesArgs<ExtArgs> = {}>(args?: Subset<T, DocumentCategory$templatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentCategory model
+   */ 
+  interface DocumentCategoryFieldRefs {
+    readonly id: FieldRef<"DocumentCategory", 'String'>
+    readonly name: FieldRef<"DocumentCategory", 'String'>
+    readonly code: FieldRef<"DocumentCategory", 'String'>
+    readonly description: FieldRef<"DocumentCategory", 'String'>
+    readonly createdAt: FieldRef<"DocumentCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DocumentCategory findUnique
+   */
+  export type DocumentCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentCategory to fetch.
+     */
+    where: DocumentCategoryWhereUniqueInput
+  }
+
+  /**
+   * DocumentCategory findUniqueOrThrow
+   */
+  export type DocumentCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentCategory to fetch.
+     */
+    where: DocumentCategoryWhereUniqueInput
+  }
+
+  /**
+   * DocumentCategory findFirst
+   */
+  export type DocumentCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentCategory to fetch.
+     */
+    where?: DocumentCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentCategories to fetch.
+     */
+    orderBy?: DocumentCategoryOrderByWithRelationInput | DocumentCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentCategories.
+     */
+    cursor?: DocumentCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentCategories.
+     */
+    distinct?: DocumentCategoryScalarFieldEnum | DocumentCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentCategory findFirstOrThrow
+   */
+  export type DocumentCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentCategory to fetch.
+     */
+    where?: DocumentCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentCategories to fetch.
+     */
+    orderBy?: DocumentCategoryOrderByWithRelationInput | DocumentCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentCategories.
+     */
+    cursor?: DocumentCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentCategories.
+     */
+    distinct?: DocumentCategoryScalarFieldEnum | DocumentCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentCategory findMany
+   */
+  export type DocumentCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentCategories to fetch.
+     */
+    where?: DocumentCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentCategories to fetch.
+     */
+    orderBy?: DocumentCategoryOrderByWithRelationInput | DocumentCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DocumentCategories.
+     */
+    cursor?: DocumentCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentCategories.
+     */
+    skip?: number
+    distinct?: DocumentCategoryScalarFieldEnum | DocumentCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentCategory create
+   */
+  export type DocumentCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentCategory.
+     */
+    data: XOR<DocumentCategoryCreateInput, DocumentCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentCategory createMany
+   */
+  export type DocumentCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentCategories.
+     */
+    data: DocumentCategoryCreateManyInput | DocumentCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DocumentCategory update
+   */
+  export type DocumentCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentCategory.
+     */
+    data: XOR<DocumentCategoryUpdateInput, DocumentCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentCategory to update.
+     */
+    where: DocumentCategoryWhereUniqueInput
+  }
+
+  /**
+   * DocumentCategory updateMany
+   */
+  export type DocumentCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentCategories.
+     */
+    data: XOR<DocumentCategoryUpdateManyMutationInput, DocumentCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentCategories to update
+     */
+    where?: DocumentCategoryWhereInput
+  }
+
+  /**
+   * DocumentCategory upsert
+   */
+  export type DocumentCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentCategory to update in case it exists.
+     */
+    where: DocumentCategoryWhereUniqueInput
+    /**
+     * In case the DocumentCategory found by the `where` argument doesn't exist, create a new DocumentCategory with this data.
+     */
+    create: XOR<DocumentCategoryCreateInput, DocumentCategoryUncheckedCreateInput>
+    /**
+     * In case the DocumentCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentCategoryUpdateInput, DocumentCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentCategory delete
+   */
+  export type DocumentCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which DocumentCategory to delete.
+     */
+    where: DocumentCategoryWhereUniqueInput
+  }
+
+  /**
+   * DocumentCategory deleteMany
+   */
+  export type DocumentCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentCategories to delete
+     */
+    where?: DocumentCategoryWhereInput
+  }
+
+  /**
+   * DocumentCategory.templates
+   */
+  export type DocumentCategory$templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    where?: DocumentTemplateWhereInput
+    orderBy?: DocumentTemplateOrderByWithRelationInput | DocumentTemplateOrderByWithRelationInput[]
+    cursor?: DocumentTemplateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentTemplateScalarFieldEnum | DocumentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentCategory without action
+   */
+  export type DocumentCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCategory
+     */
+    select?: DocumentCategorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentCategoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DocumentTemplate
+   */
+
+  export type AggregateDocumentTemplate = {
+    _count: DocumentTemplateCountAggregateOutputType | null
+    _min: DocumentTemplateMinAggregateOutputType | null
+    _max: DocumentTemplateMaxAggregateOutputType | null
+  }
+
+  export type DocumentTemplateMinAggregateOutputType = {
+    id: string | null
+    categoryId: string | null
+    name: string | null
+    code: string | null
+    pdfUrl: string | null
+    docxUrl: string | null
+    isActive: boolean | null
+    mappingJson: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentTemplateMaxAggregateOutputType = {
+    id: string | null
+    categoryId: string | null
+    name: string | null
+    code: string | null
+    pdfUrl: string | null
+    docxUrl: string | null
+    isActive: boolean | null
+    mappingJson: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DocumentTemplateCountAggregateOutputType = {
+    id: number
+    categoryId: number
+    name: number
+    code: number
+    pdfUrl: number
+    docxUrl: number
+    isActive: number
+    mappingJson: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DocumentTemplateMinAggregateInputType = {
+    id?: true
+    categoryId?: true
+    name?: true
+    code?: true
+    pdfUrl?: true
+    docxUrl?: true
+    isActive?: true
+    mappingJson?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentTemplateMaxAggregateInputType = {
+    id?: true
+    categoryId?: true
+    name?: true
+    code?: true
+    pdfUrl?: true
+    docxUrl?: true
+    isActive?: true
+    mappingJson?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DocumentTemplateCountAggregateInputType = {
+    id?: true
+    categoryId?: true
+    name?: true
+    code?: true
+    pdfUrl?: true
+    docxUrl?: true
+    isActive?: true
+    mappingJson?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DocumentTemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentTemplate to aggregate.
+     */
+    where?: DocumentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentTemplates to fetch.
+     */
+    orderBy?: DocumentTemplateOrderByWithRelationInput | DocumentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DocumentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DocumentTemplates
+    **/
+    _count?: true | DocumentTemplateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentTemplateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentTemplateMaxAggregateInputType
+  }
+
+  export type GetDocumentTemplateAggregateType<T extends DocumentTemplateAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentTemplate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentTemplate[P]>
+      : GetScalarType<T[P], AggregateDocumentTemplate[P]>
+  }
+
+
+
+
+  export type DocumentTemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentTemplateWhereInput
+    orderBy?: DocumentTemplateOrderByWithAggregationInput | DocumentTemplateOrderByWithAggregationInput[]
+    by: DocumentTemplateScalarFieldEnum[] | DocumentTemplateScalarFieldEnum
+    having?: DocumentTemplateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentTemplateCountAggregateInputType | true
+    _min?: DocumentTemplateMinAggregateInputType
+    _max?: DocumentTemplateMaxAggregateInputType
+  }
+
+  export type DocumentTemplateGroupByOutputType = {
+    id: string
+    categoryId: string
+    name: string
+    code: string
+    pdfUrl: string | null
+    docxUrl: string | null
+    isActive: boolean
+    mappingJson: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DocumentTemplateCountAggregateOutputType | null
+    _min: DocumentTemplateMinAggregateOutputType | null
+    _max: DocumentTemplateMaxAggregateOutputType | null
+  }
+
+  type GetDocumentTemplateGroupByPayload<T extends DocumentTemplateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentTemplateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentTemplateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentTemplateGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentTemplateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentTemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    categoryId?: boolean
+    name?: boolean
+    code?: boolean
+    pdfUrl?: boolean
+    docxUrl?: boolean
+    isActive?: boolean
+    mappingJson?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | DocumentCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["documentTemplate"]>
+
+
+  export type DocumentTemplateSelectScalar = {
+    id?: boolean
+    categoryId?: boolean
+    name?: boolean
+    code?: boolean
+    pdfUrl?: boolean
+    docxUrl?: boolean
+    isActive?: boolean
+    mappingJson?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DocumentTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | DocumentCategoryDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DocumentTemplate"
+    objects: {
+      category: Prisma.$DocumentCategoryPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      categoryId: string
+      name: string
+      code: string
+      pdfUrl: string | null
+      docxUrl: string | null
+      isActive: boolean
+      mappingJson: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["documentTemplate"]>
+    composites: {}
+  }
+
+  type DocumentTemplateGetPayload<S extends boolean | null | undefined | DocumentTemplateDefaultArgs> = $Result.GetResult<Prisma.$DocumentTemplatePayload, S>
+
+  type DocumentTemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<DocumentTemplateFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: DocumentTemplateCountAggregateInputType | true
+    }
+
+  export interface DocumentTemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DocumentTemplate'], meta: { name: 'DocumentTemplate' } }
+    /**
+     * Find zero or one DocumentTemplate that matches the filter.
+     * @param {DocumentTemplateFindUniqueArgs} args - Arguments to find a DocumentTemplate
+     * @example
+     * // Get one DocumentTemplate
+     * const documentTemplate = await prisma.documentTemplate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentTemplateFindUniqueArgs>(args: SelectSubset<T, DocumentTemplateFindUniqueArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one DocumentTemplate that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {DocumentTemplateFindUniqueOrThrowArgs} args - Arguments to find a DocumentTemplate
+     * @example
+     * // Get one DocumentTemplate
+     * const documentTemplate = await prisma.documentTemplate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentTemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentTemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first DocumentTemplate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateFindFirstArgs} args - Arguments to find a DocumentTemplate
+     * @example
+     * // Get one DocumentTemplate
+     * const documentTemplate = await prisma.documentTemplate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentTemplateFindFirstArgs>(args?: SelectSubset<T, DocumentTemplateFindFirstArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first DocumentTemplate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateFindFirstOrThrowArgs} args - Arguments to find a DocumentTemplate
+     * @example
+     * // Get one DocumentTemplate
+     * const documentTemplate = await prisma.documentTemplate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentTemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentTemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more DocumentTemplates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DocumentTemplates
+     * const documentTemplates = await prisma.documentTemplate.findMany()
+     * 
+     * // Get first 10 DocumentTemplates
+     * const documentTemplates = await prisma.documentTemplate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentTemplateWithIdOnly = await prisma.documentTemplate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DocumentTemplateFindManyArgs>(args?: SelectSubset<T, DocumentTemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a DocumentTemplate.
+     * @param {DocumentTemplateCreateArgs} args - Arguments to create a DocumentTemplate.
+     * @example
+     * // Create one DocumentTemplate
+     * const DocumentTemplate = await prisma.documentTemplate.create({
+     *   data: {
+     *     // ... data to create a DocumentTemplate
+     *   }
+     * })
+     * 
+     */
+    create<T extends DocumentTemplateCreateArgs>(args: SelectSubset<T, DocumentTemplateCreateArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many DocumentTemplates.
+     * @param {DocumentTemplateCreateManyArgs} args - Arguments to create many DocumentTemplates.
+     * @example
+     * // Create many DocumentTemplates
+     * const documentTemplate = await prisma.documentTemplate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DocumentTemplateCreateManyArgs>(args?: SelectSubset<T, DocumentTemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DocumentTemplate.
+     * @param {DocumentTemplateDeleteArgs} args - Arguments to delete one DocumentTemplate.
+     * @example
+     * // Delete one DocumentTemplate
+     * const DocumentTemplate = await prisma.documentTemplate.delete({
+     *   where: {
+     *     // ... filter to delete one DocumentTemplate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DocumentTemplateDeleteArgs>(args: SelectSubset<T, DocumentTemplateDeleteArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one DocumentTemplate.
+     * @param {DocumentTemplateUpdateArgs} args - Arguments to update one DocumentTemplate.
+     * @example
+     * // Update one DocumentTemplate
+     * const documentTemplate = await prisma.documentTemplate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DocumentTemplateUpdateArgs>(args: SelectSubset<T, DocumentTemplateUpdateArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more DocumentTemplates.
+     * @param {DocumentTemplateDeleteManyArgs} args - Arguments to filter DocumentTemplates to delete.
+     * @example
+     * // Delete a few DocumentTemplates
+     * const { count } = await prisma.documentTemplate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DocumentTemplateDeleteManyArgs>(args?: SelectSubset<T, DocumentTemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DocumentTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DocumentTemplates
+     * const documentTemplate = await prisma.documentTemplate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DocumentTemplateUpdateManyArgs>(args: SelectSubset<T, DocumentTemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DocumentTemplate.
+     * @param {DocumentTemplateUpsertArgs} args - Arguments to update or create a DocumentTemplate.
+     * @example
+     * // Update or create a DocumentTemplate
+     * const documentTemplate = await prisma.documentTemplate.upsert({
+     *   create: {
+     *     // ... data to create a DocumentTemplate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DocumentTemplate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentTemplateUpsertArgs>(args: SelectSubset<T, DocumentTemplateUpsertArgs<ExtArgs>>): Prisma__DocumentTemplateClient<$Result.GetResult<Prisma.$DocumentTemplatePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of DocumentTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateCountArgs} args - Arguments to filter DocumentTemplates to count.
+     * @example
+     * // Count the number of DocumentTemplates
+     * const count = await prisma.documentTemplate.count({
+     *   where: {
+     *     // ... the filter for the DocumentTemplates we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentTemplateCountArgs>(
+      args?: Subset<T, DocumentTemplateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentTemplateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DocumentTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentTemplateAggregateArgs>(args: Subset<T, DocumentTemplateAggregateArgs>): Prisma.PrismaPromise<GetDocumentTemplateAggregateType<T>>
+
+    /**
+     * Group by DocumentTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentTemplateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DocumentTemplateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentTemplateGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentTemplateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentTemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DocumentTemplate model
+   */
+  readonly fields: DocumentTemplateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DocumentTemplate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends DocumentCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocumentCategoryDefaultArgs<ExtArgs>>): Prisma__DocumentCategoryClient<$Result.GetResult<Prisma.$DocumentCategoryPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DocumentTemplate model
+   */ 
+  interface DocumentTemplateFieldRefs {
+    readonly id: FieldRef<"DocumentTemplate", 'String'>
+    readonly categoryId: FieldRef<"DocumentTemplate", 'String'>
+    readonly name: FieldRef<"DocumentTemplate", 'String'>
+    readonly code: FieldRef<"DocumentTemplate", 'String'>
+    readonly pdfUrl: FieldRef<"DocumentTemplate", 'String'>
+    readonly docxUrl: FieldRef<"DocumentTemplate", 'String'>
+    readonly isActive: FieldRef<"DocumentTemplate", 'Boolean'>
+    readonly mappingJson: FieldRef<"DocumentTemplate", 'String'>
+    readonly createdAt: FieldRef<"DocumentTemplate", 'DateTime'>
+    readonly updatedAt: FieldRef<"DocumentTemplate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DocumentTemplate findUnique
+   */
+  export type DocumentTemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentTemplate to fetch.
+     */
+    where: DocumentTemplateWhereUniqueInput
+  }
+
+  /**
+   * DocumentTemplate findUniqueOrThrow
+   */
+  export type DocumentTemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentTemplate to fetch.
+     */
+    where: DocumentTemplateWhereUniqueInput
+  }
+
+  /**
+   * DocumentTemplate findFirst
+   */
+  export type DocumentTemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentTemplate to fetch.
+     */
+    where?: DocumentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentTemplates to fetch.
+     */
+    orderBy?: DocumentTemplateOrderByWithRelationInput | DocumentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentTemplates.
+     */
+    cursor?: DocumentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentTemplates.
+     */
+    distinct?: DocumentTemplateScalarFieldEnum | DocumentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentTemplate findFirstOrThrow
+   */
+  export type DocumentTemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentTemplate to fetch.
+     */
+    where?: DocumentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentTemplates to fetch.
+     */
+    orderBy?: DocumentTemplateOrderByWithRelationInput | DocumentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DocumentTemplates.
+     */
+    cursor?: DocumentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DocumentTemplates.
+     */
+    distinct?: DocumentTemplateScalarFieldEnum | DocumentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentTemplate findMany
+   */
+  export type DocumentTemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which DocumentTemplates to fetch.
+     */
+    where?: DocumentTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DocumentTemplates to fetch.
+     */
+    orderBy?: DocumentTemplateOrderByWithRelationInput | DocumentTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DocumentTemplates.
+     */
+    cursor?: DocumentTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DocumentTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DocumentTemplates.
+     */
+    skip?: number
+    distinct?: DocumentTemplateScalarFieldEnum | DocumentTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * DocumentTemplate create
+   */
+  export type DocumentTemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DocumentTemplate.
+     */
+    data: XOR<DocumentTemplateCreateInput, DocumentTemplateUncheckedCreateInput>
+  }
+
+  /**
+   * DocumentTemplate createMany
+   */
+  export type DocumentTemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DocumentTemplates.
+     */
+    data: DocumentTemplateCreateManyInput | DocumentTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DocumentTemplate update
+   */
+  export type DocumentTemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DocumentTemplate.
+     */
+    data: XOR<DocumentTemplateUpdateInput, DocumentTemplateUncheckedUpdateInput>
+    /**
+     * Choose, which DocumentTemplate to update.
+     */
+    where: DocumentTemplateWhereUniqueInput
+  }
+
+  /**
+   * DocumentTemplate updateMany
+   */
+  export type DocumentTemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DocumentTemplates.
+     */
+    data: XOR<DocumentTemplateUpdateManyMutationInput, DocumentTemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which DocumentTemplates to update
+     */
+    where?: DocumentTemplateWhereInput
+  }
+
+  /**
+   * DocumentTemplate upsert
+   */
+  export type DocumentTemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DocumentTemplate to update in case it exists.
+     */
+    where: DocumentTemplateWhereUniqueInput
+    /**
+     * In case the DocumentTemplate found by the `where` argument doesn't exist, create a new DocumentTemplate with this data.
+     */
+    create: XOR<DocumentTemplateCreateInput, DocumentTemplateUncheckedCreateInput>
+    /**
+     * In case the DocumentTemplate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentTemplateUpdateInput, DocumentTemplateUncheckedUpdateInput>
+  }
+
+  /**
+   * DocumentTemplate delete
+   */
+  export type DocumentTemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
+    /**
+     * Filter which DocumentTemplate to delete.
+     */
+    where: DocumentTemplateWhereUniqueInput
+  }
+
+  /**
+   * DocumentTemplate deleteMany
+   */
+  export type DocumentTemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DocumentTemplates to delete
+     */
+    where?: DocumentTemplateWhereInput
+  }
+
+  /**
+   * DocumentTemplate without action
+   */
+  export type DocumentTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentTemplate
+     */
+    select?: DocumentTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentTemplateInclude<ExtArgs> | null
   }
 
 
@@ -21590,6 +23631,34 @@ export namespace Prisma {
   export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
 
 
+  export const DocumentCategoryScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    code: 'code',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentCategoryScalarFieldEnum = (typeof DocumentCategoryScalarFieldEnum)[keyof typeof DocumentCategoryScalarFieldEnum]
+
+
+  export const DocumentTemplateScalarFieldEnum: {
+    id: 'id',
+    categoryId: 'categoryId',
+    name: 'name',
+    code: 'code',
+    pdfUrl: 'pdfUrl',
+    docxUrl: 'docxUrl',
+    isActive: 'isActive',
+    mappingJson: 'mappingJson',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DocumentTemplateScalarFieldEnum = (typeof DocumentTemplateScalarFieldEnum)[keyof typeof DocumentTemplateScalarFieldEnum]
+
+
   export const InspectionScalarFieldEnum: {
     id: 'id',
     page: 'page',
@@ -22395,6 +24464,147 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"ContactMessage"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ContactMessage"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ContactMessage"> | Date | string
+  }
+
+  export type DocumentCategoryWhereInput = {
+    AND?: DocumentCategoryWhereInput | DocumentCategoryWhereInput[]
+    OR?: DocumentCategoryWhereInput[]
+    NOT?: DocumentCategoryWhereInput | DocumentCategoryWhereInput[]
+    id?: StringFilter<"DocumentCategory"> | string
+    name?: StringFilter<"DocumentCategory"> | string
+    code?: StringFilter<"DocumentCategory"> | string
+    description?: StringNullableFilter<"DocumentCategory"> | string | null
+    createdAt?: DateTimeFilter<"DocumentCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentCategory"> | Date | string
+    templates?: DocumentTemplateListRelationFilter
+  }
+
+  export type DocumentCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    templates?: DocumentTemplateOrderByRelationAggregateInput
+  }
+
+  export type DocumentCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: DocumentCategoryWhereInput | DocumentCategoryWhereInput[]
+    OR?: DocumentCategoryWhereInput[]
+    NOT?: DocumentCategoryWhereInput | DocumentCategoryWhereInput[]
+    name?: StringFilter<"DocumentCategory"> | string
+    description?: StringNullableFilter<"DocumentCategory"> | string | null
+    createdAt?: DateTimeFilter<"DocumentCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentCategory"> | Date | string
+    templates?: DocumentTemplateListRelationFilter
+  }, "id" | "code">
+
+  export type DocumentCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentCategoryCountOrderByAggregateInput
+    _max?: DocumentCategoryMaxOrderByAggregateInput
+    _min?: DocumentCategoryMinOrderByAggregateInput
+  }
+
+  export type DocumentCategoryScalarWhereWithAggregatesInput = {
+    AND?: DocumentCategoryScalarWhereWithAggregatesInput | DocumentCategoryScalarWhereWithAggregatesInput[]
+    OR?: DocumentCategoryScalarWhereWithAggregatesInput[]
+    NOT?: DocumentCategoryScalarWhereWithAggregatesInput | DocumentCategoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DocumentCategory"> | string
+    name?: StringWithAggregatesFilter<"DocumentCategory"> | string
+    code?: StringWithAggregatesFilter<"DocumentCategory"> | string
+    description?: StringNullableWithAggregatesFilter<"DocumentCategory"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentCategory"> | Date | string
+  }
+
+  export type DocumentTemplateWhereInput = {
+    AND?: DocumentTemplateWhereInput | DocumentTemplateWhereInput[]
+    OR?: DocumentTemplateWhereInput[]
+    NOT?: DocumentTemplateWhereInput | DocumentTemplateWhereInput[]
+    id?: StringFilter<"DocumentTemplate"> | string
+    categoryId?: StringFilter<"DocumentTemplate"> | string
+    name?: StringFilter<"DocumentTemplate"> | string
+    code?: StringFilter<"DocumentTemplate"> | string
+    pdfUrl?: StringNullableFilter<"DocumentTemplate"> | string | null
+    docxUrl?: StringNullableFilter<"DocumentTemplate"> | string | null
+    isActive?: BoolFilter<"DocumentTemplate"> | boolean
+    mappingJson?: StringNullableFilter<"DocumentTemplate"> | string | null
+    createdAt?: DateTimeFilter<"DocumentTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentTemplate"> | Date | string
+    category?: XOR<DocumentCategoryRelationFilter, DocumentCategoryWhereInput>
+  }
+
+  export type DocumentTemplateOrderByWithRelationInput = {
+    id?: SortOrder
+    categoryId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    pdfUrl?: SortOrderInput | SortOrder
+    docxUrl?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    mappingJson?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    category?: DocumentCategoryOrderByWithRelationInput
+  }
+
+  export type DocumentTemplateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    categoryId_code?: DocumentTemplateCategoryIdCodeCompoundUniqueInput
+    AND?: DocumentTemplateWhereInput | DocumentTemplateWhereInput[]
+    OR?: DocumentTemplateWhereInput[]
+    NOT?: DocumentTemplateWhereInput | DocumentTemplateWhereInput[]
+    categoryId?: StringFilter<"DocumentTemplate"> | string
+    name?: StringFilter<"DocumentTemplate"> | string
+    code?: StringFilter<"DocumentTemplate"> | string
+    pdfUrl?: StringNullableFilter<"DocumentTemplate"> | string | null
+    docxUrl?: StringNullableFilter<"DocumentTemplate"> | string | null
+    isActive?: BoolFilter<"DocumentTemplate"> | boolean
+    mappingJson?: StringNullableFilter<"DocumentTemplate"> | string | null
+    createdAt?: DateTimeFilter<"DocumentTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentTemplate"> | Date | string
+    category?: XOR<DocumentCategoryRelationFilter, DocumentCategoryWhereInput>
+  }, "id" | "categoryId_code">
+
+  export type DocumentTemplateOrderByWithAggregationInput = {
+    id?: SortOrder
+    categoryId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    pdfUrl?: SortOrderInput | SortOrder
+    docxUrl?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    mappingJson?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DocumentTemplateCountOrderByAggregateInput
+    _max?: DocumentTemplateMaxOrderByAggregateInput
+    _min?: DocumentTemplateMinOrderByAggregateInput
+  }
+
+  export type DocumentTemplateScalarWhereWithAggregatesInput = {
+    AND?: DocumentTemplateScalarWhereWithAggregatesInput | DocumentTemplateScalarWhereWithAggregatesInput[]
+    OR?: DocumentTemplateScalarWhereWithAggregatesInput[]
+    NOT?: DocumentTemplateScalarWhereWithAggregatesInput | DocumentTemplateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DocumentTemplate"> | string
+    categoryId?: StringWithAggregatesFilter<"DocumentTemplate"> | string
+    name?: StringWithAggregatesFilter<"DocumentTemplate"> | string
+    code?: StringWithAggregatesFilter<"DocumentTemplate"> | string
+    pdfUrl?: StringNullableWithAggregatesFilter<"DocumentTemplate"> | string | null
+    docxUrl?: StringNullableWithAggregatesFilter<"DocumentTemplate"> | string | null
+    isActive?: BoolWithAggregatesFilter<"DocumentTemplate"> | boolean
+    mappingJson?: StringNullableWithAggregatesFilter<"DocumentTemplate"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DocumentTemplate"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DocumentTemplate"> | Date | string
   }
 
   export type InspectionWhereInput = {
@@ -24750,6 +26960,163 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     message?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentCategoryCreateInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    templates?: DocumentTemplateCreateNestedManyWithoutCategoryInput
+  }
+
+  export type DocumentCategoryUncheckedCreateInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    templates?: DocumentTemplateUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type DocumentCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    templates?: DocumentTemplateUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type DocumentCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    templates?: DocumentTemplateUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type DocumentCategoryCreateManyInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentTemplateCreateInput = {
+    id?: string
+    name: string
+    code: string
+    pdfUrl?: string | null
+    docxUrl?: string | null
+    isActive?: boolean
+    mappingJson?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: DocumentCategoryCreateNestedOneWithoutTemplatesInput
+  }
+
+  export type DocumentTemplateUncheckedCreateInput = {
+    id?: string
+    categoryId: string
+    name: string
+    code: string
+    pdfUrl?: string | null
+    docxUrl?: string | null
+    isActive?: boolean
+    mappingJson?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentTemplateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: DocumentCategoryUpdateOneRequiredWithoutTemplatesNestedInput
+  }
+
+  export type DocumentTemplateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentTemplateCreateManyInput = {
+    id?: string
+    categoryId: string
+    name: string
+    code: string
+    pdfUrl?: string | null
+    docxUrl?: string | null
+    isActive?: boolean
+    mappingJson?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentTemplateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentTemplateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27492,6 +29859,92 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type DocumentTemplateListRelationFilter = {
+    every?: DocumentTemplateWhereInput
+    some?: DocumentTemplateWhereInput
+    none?: DocumentTemplateWhereInput
+  }
+
+  export type DocumentTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentCategoryRelationFilter = {
+    is?: DocumentCategoryWhereInput
+    isNot?: DocumentCategoryWhereInput
+  }
+
+  export type DocumentTemplateCategoryIdCodeCompoundUniqueInput = {
+    categoryId: string
+    code: string
+  }
+
+  export type DocumentTemplateCountOrderByAggregateInput = {
+    id?: SortOrder
+    categoryId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    pdfUrl?: SortOrder
+    docxUrl?: SortOrder
+    isActive?: SortOrder
+    mappingJson?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentTemplateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    categoryId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    pdfUrl?: SortOrder
+    docxUrl?: SortOrder
+    isActive?: SortOrder
+    mappingJson?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DocumentTemplateMinOrderByAggregateInput = {
+    id?: SortOrder
+    categoryId?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    pdfUrl?: SortOrder
+    docxUrl?: SortOrder
+    isActive?: SortOrder
+    mappingJson?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -28902,6 +31355,62 @@ export namespace Prisma {
     upsert?: PersonnelUpsertWithoutPasswordResetTokensInput
     connect?: PersonnelWhereUniqueInput
     update?: XOR<XOR<PersonnelUpdateToOneWithWhereWithoutPasswordResetTokensInput, PersonnelUpdateWithoutPasswordResetTokensInput>, PersonnelUncheckedUpdateWithoutPasswordResetTokensInput>
+  }
+
+  export type DocumentTemplateCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<DocumentTemplateCreateWithoutCategoryInput, DocumentTemplateUncheckedCreateWithoutCategoryInput> | DocumentTemplateCreateWithoutCategoryInput[] | DocumentTemplateUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: DocumentTemplateCreateOrConnectWithoutCategoryInput | DocumentTemplateCreateOrConnectWithoutCategoryInput[]
+    createMany?: DocumentTemplateCreateManyCategoryInputEnvelope
+    connect?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+  }
+
+  export type DocumentTemplateUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<DocumentTemplateCreateWithoutCategoryInput, DocumentTemplateUncheckedCreateWithoutCategoryInput> | DocumentTemplateCreateWithoutCategoryInput[] | DocumentTemplateUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: DocumentTemplateCreateOrConnectWithoutCategoryInput | DocumentTemplateCreateOrConnectWithoutCategoryInput[]
+    createMany?: DocumentTemplateCreateManyCategoryInputEnvelope
+    connect?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+  }
+
+  export type DocumentTemplateUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<DocumentTemplateCreateWithoutCategoryInput, DocumentTemplateUncheckedCreateWithoutCategoryInput> | DocumentTemplateCreateWithoutCategoryInput[] | DocumentTemplateUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: DocumentTemplateCreateOrConnectWithoutCategoryInput | DocumentTemplateCreateOrConnectWithoutCategoryInput[]
+    upsert?: DocumentTemplateUpsertWithWhereUniqueWithoutCategoryInput | DocumentTemplateUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: DocumentTemplateCreateManyCategoryInputEnvelope
+    set?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    disconnect?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    delete?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    connect?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    update?: DocumentTemplateUpdateWithWhereUniqueWithoutCategoryInput | DocumentTemplateUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: DocumentTemplateUpdateManyWithWhereWithoutCategoryInput | DocumentTemplateUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: DocumentTemplateScalarWhereInput | DocumentTemplateScalarWhereInput[]
+  }
+
+  export type DocumentTemplateUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<DocumentTemplateCreateWithoutCategoryInput, DocumentTemplateUncheckedCreateWithoutCategoryInput> | DocumentTemplateCreateWithoutCategoryInput[] | DocumentTemplateUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: DocumentTemplateCreateOrConnectWithoutCategoryInput | DocumentTemplateCreateOrConnectWithoutCategoryInput[]
+    upsert?: DocumentTemplateUpsertWithWhereUniqueWithoutCategoryInput | DocumentTemplateUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: DocumentTemplateCreateManyCategoryInputEnvelope
+    set?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    disconnect?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    delete?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    connect?: DocumentTemplateWhereUniqueInput | DocumentTemplateWhereUniqueInput[]
+    update?: DocumentTemplateUpdateWithWhereUniqueWithoutCategoryInput | DocumentTemplateUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: DocumentTemplateUpdateManyWithWhereWithoutCategoryInput | DocumentTemplateUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: DocumentTemplateScalarWhereInput | DocumentTemplateScalarWhereInput[]
+  }
+
+  export type DocumentCategoryCreateNestedOneWithoutTemplatesInput = {
+    create?: XOR<DocumentCategoryCreateWithoutTemplatesInput, DocumentCategoryUncheckedCreateWithoutTemplatesInput>
+    connectOrCreate?: DocumentCategoryCreateOrConnectWithoutTemplatesInput
+    connect?: DocumentCategoryWhereUniqueInput
+  }
+
+  export type DocumentCategoryUpdateOneRequiredWithoutTemplatesNestedInput = {
+    create?: XOR<DocumentCategoryCreateWithoutTemplatesInput, DocumentCategoryUncheckedCreateWithoutTemplatesInput>
+    connectOrCreate?: DocumentCategoryCreateOrConnectWithoutTemplatesInput
+    upsert?: DocumentCategoryUpsertWithoutTemplatesInput
+    connect?: DocumentCategoryWhereUniqueInput
+    update?: XOR<XOR<DocumentCategoryUpdateToOneWithWhereWithoutTemplatesInput, DocumentCategoryUpdateWithoutTemplatesInput>, DocumentCategoryUncheckedUpdateWithoutTemplatesInput>
   }
 
   export type PersonnelCreateNestedOneWithoutInspectionsInput = {
@@ -30366,6 +32875,124 @@ export namespace Prisma {
     documents?: PersonnelDocumentUncheckedUpdateManyWithoutPersonnelNestedInput
     inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
     rpb1Records?: Rpb1RecordUncheckedUpdateManyWithoutPersonnelNestedInput
+  }
+
+  export type DocumentTemplateCreateWithoutCategoryInput = {
+    id?: string
+    name: string
+    code: string
+    pdfUrl?: string | null
+    docxUrl?: string | null
+    isActive?: boolean
+    mappingJson?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentTemplateUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    name: string
+    code: string
+    pdfUrl?: string | null
+    docxUrl?: string | null
+    isActive?: boolean
+    mappingJson?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentTemplateCreateOrConnectWithoutCategoryInput = {
+    where: DocumentTemplateWhereUniqueInput
+    create: XOR<DocumentTemplateCreateWithoutCategoryInput, DocumentTemplateUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type DocumentTemplateCreateManyCategoryInputEnvelope = {
+    data: DocumentTemplateCreateManyCategoryInput | DocumentTemplateCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DocumentTemplateUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: DocumentTemplateWhereUniqueInput
+    update: XOR<DocumentTemplateUpdateWithoutCategoryInput, DocumentTemplateUncheckedUpdateWithoutCategoryInput>
+    create: XOR<DocumentTemplateCreateWithoutCategoryInput, DocumentTemplateUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type DocumentTemplateUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: DocumentTemplateWhereUniqueInput
+    data: XOR<DocumentTemplateUpdateWithoutCategoryInput, DocumentTemplateUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type DocumentTemplateUpdateManyWithWhereWithoutCategoryInput = {
+    where: DocumentTemplateScalarWhereInput
+    data: XOR<DocumentTemplateUpdateManyMutationInput, DocumentTemplateUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type DocumentTemplateScalarWhereInput = {
+    AND?: DocumentTemplateScalarWhereInput | DocumentTemplateScalarWhereInput[]
+    OR?: DocumentTemplateScalarWhereInput[]
+    NOT?: DocumentTemplateScalarWhereInput | DocumentTemplateScalarWhereInput[]
+    id?: StringFilter<"DocumentTemplate"> | string
+    categoryId?: StringFilter<"DocumentTemplate"> | string
+    name?: StringFilter<"DocumentTemplate"> | string
+    code?: StringFilter<"DocumentTemplate"> | string
+    pdfUrl?: StringNullableFilter<"DocumentTemplate"> | string | null
+    docxUrl?: StringNullableFilter<"DocumentTemplate"> | string | null
+    isActive?: BoolFilter<"DocumentTemplate"> | boolean
+    mappingJson?: StringNullableFilter<"DocumentTemplate"> | string | null
+    createdAt?: DateTimeFilter<"DocumentTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"DocumentTemplate"> | Date | string
+  }
+
+  export type DocumentCategoryCreateWithoutTemplatesInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentCategoryUncheckedCreateWithoutTemplatesInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentCategoryCreateOrConnectWithoutTemplatesInput = {
+    where: DocumentCategoryWhereUniqueInput
+    create: XOR<DocumentCategoryCreateWithoutTemplatesInput, DocumentCategoryUncheckedCreateWithoutTemplatesInput>
+  }
+
+  export type DocumentCategoryUpsertWithoutTemplatesInput = {
+    update: XOR<DocumentCategoryUpdateWithoutTemplatesInput, DocumentCategoryUncheckedUpdateWithoutTemplatesInput>
+    create: XOR<DocumentCategoryCreateWithoutTemplatesInput, DocumentCategoryUncheckedCreateWithoutTemplatesInput>
+    where?: DocumentCategoryWhereInput
+  }
+
+  export type DocumentCategoryUpdateToOneWithWhereWithoutTemplatesInput = {
+    where?: DocumentCategoryWhereInput
+    data: XOR<DocumentCategoryUpdateWithoutTemplatesInput, DocumentCategoryUncheckedUpdateWithoutTemplatesInput>
+  }
+
+  export type DocumentCategoryUpdateWithoutTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentCategoryUncheckedUpdateWithoutTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PersonnelCreateWithoutInspectionsInput = {
@@ -34063,6 +36690,54 @@ export namespace Prisma {
     inspections?: InspectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type DocumentTemplateCreateManyCategoryInput = {
+    id?: string
+    name: string
+    code: string
+    pdfUrl?: string | null
+    docxUrl?: string | null
+    isActive?: boolean
+    mappingJson?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentTemplateUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentTemplateUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentTemplateUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    pdfUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    docxUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mappingJson?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type InspectionFindingCreateManyInspectionInput = {
     id?: string
     findingCode: string
@@ -35353,6 +38028,10 @@ export namespace Prisma {
    * Aliases for legacy arg types
    */
     /**
+     * @deprecated Use DocumentCategoryCountOutputTypeDefaultArgs instead
+     */
+    export type DocumentCategoryCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DocumentCategoryCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use InspectionCountOutputTypeDefaultArgs instead
      */
     export type InspectionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InspectionCountOutputTypeDefaultArgs<ExtArgs>
@@ -35388,6 +38067,14 @@ export namespace Prisma {
      * @deprecated Use ContactMessageDefaultArgs instead
      */
     export type ContactMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ContactMessageDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use DocumentCategoryDefaultArgs instead
+     */
+    export type DocumentCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DocumentCategoryDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use DocumentTemplateDefaultArgs instead
+     */
+    export type DocumentTemplateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DocumentTemplateDefaultArgs<ExtArgs>
     /**
      * @deprecated Use InspectionDefaultArgs instead
      */

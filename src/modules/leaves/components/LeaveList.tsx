@@ -7,6 +7,7 @@ import TablePagination from '@/components/common/TablePagination';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import { Card, Button, Badge, Input, Select, DatePicker } from '@/components/ui';
 import { formatShortThaiDate } from '@/modules/core/lib/date-utils';
+import DynamicLeaveForm from './DynamicLeaveForm';
 import {
   Calendar,
   CalendarCheck,
@@ -16,6 +17,7 @@ import {
   Edit,
   Printer,
   Check,
+  CheckCircle,
   X,
   Ban,
   Clock,
@@ -57,6 +59,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [editingLeaveId, setEditingLeaveId] = useState<string | null>(null);
+  const [useDynamicForm, setUseDynamicForm] = useState(true);
 
   // Pagination states
   const [page, setPage] = useState(1);
@@ -255,45 +258,6 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
     }
   };
 
-  const handleStatusUpdate = async (id: string, status: string) => {
-    try {
-      let res: Response;
-      if (status === 'อนุมัติแล้ว') {
-        res = await fetch(`/api/leaves/${id}/approve`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ note: 'อนุมัติจากรายการข้อมูลส่วนบุคคล' }),
-        });
-      } else if (status === 'ไม่อนุมัติ') {
-        const reason = window.prompt('กรุณาระบุเหตุผลการไม่อนุมัติ:');
-        if (!reason || reason.trim().length < 2) {
-          toast.error('กรุณาระบุเหตุผลการไม่อนุมัติอย่างน้อย 2 ตัวอักษร');
-          return;
-        }
-        res = await fetch(`/api/leaves/${id}/reject`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason: reason.trim() }),
-        });
-      } else {
-        res = await fetch(`/api/leaves/${id}`, {
-          method: 'DELETE',
-        });
-      }
-
-      if (res.ok) {
-        fetchLeaves();
-        toast.success(`ดำเนินการ "${status}" เรียบร้อย`);
-      } else {
-        const errJson = await res.json().catch(() => ({}));
-        toast.error(errJson.error || 'ไม่สามารถดำเนินการได้');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-    }
-  };
-
   const getLeaveTypeVariant = (type: string) => {
     switch (type) {
       case 'ลากิจ':
@@ -313,24 +277,19 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'รออนุมัติ':
+      case 'ยื่นคำขอแล้ว':
+      case 'บันทึกแล้ว':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-            <Clock className="w-3 h-3 animate-pulse" />
-            <span>รออนุมัติ</span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20">
+            <CheckCircle className="w-3 h-3 text-primary-500" />
+            <span>ยื่นคำขอแล้ว</span>
           </span>
         );
       case 'อนุมัติแล้ว':
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             <Check className="w-3 h-3" />
-            <span>อนุมัติแล้ว</span>
-          </span>
-        );
-      case 'ไม่อนุมัติ':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-            <X className="w-3 h-3" />
-            <span>ไม่อนุมัติ</span>
+            <span>สมบูรณ์</span>
           </span>
         );
       case 'ยกเลิก':
@@ -343,7 +302,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
       default:
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-            {status}
+            {status || 'ยื่นคำขอแล้ว'}
           </span>
         );
     }
@@ -392,26 +351,61 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
 
       {/* Leave Application Form */}
       {isAdding && (
-        <form
-          onSubmit={handleSave}
-          className="bg-slate-50/70 dark:bg-slate-800/40 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-5 animate-fade-in"
-        >
-          <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-primary-500" />
-              <span>{editingLeaveId ? 'แก้ไขข้อมูลการลา' : 'แบบฟอร์มยื่นขอลา'}</span>
-            </h3>
-            <button
-              type="button"
-              onClick={() => {
+        useDynamicForm ? (
+          <div className="space-y-2 animate-fade-in">
+            <div className="flex justify-end pr-2">
+              <button
+                type="button"
+                onClick={() => setUseDynamicForm(false)}
+                className="text-[11px] text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 underline transition-colors"
+              >
+                สลับไปใช้แบบฟอร์มคลาสสิก (Classic Form)
+              </button>
+            </div>
+            <DynamicLeaveForm
+              personnelId={personnelId}
+              editingLeaveId={editingLeaveId}
+              initialData={editingLeaveId ? formData : undefined}
+              initialLeaveType={editingLeaveId ? formData.leaveType : (typeParam || 'ลากิจ')}
+              onClose={() => {
                 setIsAdding(false);
                 setEditingLeaveId(null);
               }}
-              className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-            >
-              ✕ ปิดฟอร์ม
-            </button>
+              onSuccess={() => {
+                fetchLeaves();
+              }}
+            />
           </div>
+        ) : (
+          <form
+            onSubmit={handleSave}
+            className="bg-slate-50/70 dark:bg-slate-800/40 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-5 animate-fade-in"
+          >
+            <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-3">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-primary-500" />
+                  <span>{editingLeaveId ? 'แก้ไขข้อมูลการลา (Classic Form)' : 'แบบฟอร์มยื่นขอลา (Classic Form)'}</span>
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setUseDynamicForm(true)}
+                  className="text-[11px] text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  (สลับเป็นแบบฟอร์มแม่แบบเอกสาร)
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAdding(false);
+                  setEditingLeaveId(null);
+                }}
+                className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+              >
+                ✕ ปิดฟอร์ม
+              </button>
+            </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Written At */}
@@ -724,6 +718,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
             </Button>
           </div>
         </form>
+        )
       )}
 
       {/* Leave Records List */}
@@ -769,33 +764,6 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
                     </td>
                     <td className="px-4 py-3 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
-                        {isAdmin && leave.status === 'รออนุมัติ' && (
-                          <>
-                            <button
-                              onClick={() => handleStatusUpdate(leave.id, 'อนุมัติแล้ว')}
-                              className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors"
-                              title="อนุมัติการลา"
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleStatusUpdate(leave.id, 'ไม่อนุมัติ')}
-                              className="p-1.5 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
-                              title="ไม่อนุมัติ"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </>
-                        )}
-                        {!isAdmin && leave.status === 'รออนุมัติ' && (
-                          <button
-                            onClick={() => handleStatusUpdate(leave.id, 'ยกเลิก')}
-                            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition-colors"
-                            title="ยกเลิกคำขอลา"
-                          >
-                            <Ban className="w-4 h-4" />
-                          </button>
-                        )}
                         <button
                           onClick={() => {
                             setEditingLeaveId(leave.id);
@@ -831,7 +799,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
                           <Edit className="w-4 h-4" />
                         </button>
                         <a
-                          href={`/leave/print/${leave.id}`}
+                          href={`/api/modules/leaves/${leave.id}/pdf`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-1.5 text-slate-500 hover:text-primary-600 bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-950/40 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"

@@ -18,7 +18,8 @@ export const UsersManifest: ModuleManifest = {
       title: 'ทำเนียบบุคลากร (Directory)',
       icon: 'fa-solid fa-address-book',
       path: '/modules/users/directory',
-      order: 30
+      order: 30,
+      group: 'personal'
     },
     {
       id: 'manage-personnel',
@@ -27,6 +28,7 @@ export const UsersManifest: ModuleManifest = {
       path: '/modules/users/manage',
       requiredPermission: 'MANAGE_PERSONNEL',
       order: 70,
+      group: 'operations',
       subItems: [
         { name: 'ข้อมูลกำลังพล', path: '/modules/users/manage' },
         { name: 'โครงสร้างหน่วยงาน', path: '/modules/users/departments' },

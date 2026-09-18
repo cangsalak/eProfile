@@ -164,6 +164,8 @@ export default function DashboardOverviewPage() {
   }
 
   const isAdmin = ['ADMIN', 'SUPER_ADMIN'].includes(currentUser?.role || '');
+  const isLeadership = ['HR_MANAGER', 'DEPARTMENT_COMMANDER', 'COMMANDER'].includes(currentUser?.role || '') || isAdmin;
+  const isOfficerOrEditor = ['OFFICER', 'EDITOR'].includes(currentUser?.role || '');
 
   return (
     <div className="pb-16 space-y-6 animate-fade-in font-prompt">
@@ -227,8 +229,9 @@ export default function DashboardOverviewPage() {
         </div>
       </Card>
 
-      {/* 4 Overview StatCards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Overview StatCards (Leadership & Admin Only) */}
+      {isLeadership && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="กำลังพลทั้งหมด"
           value={personnelStats.total}
@@ -250,14 +253,15 @@ export default function DashboardOverviewPage() {
           icon="fa-solid fa-plane-departure"
           trend={{ value: '+2.59%', isPositive: true }}
         />
-        <StatCard
-          title="พร้อมปฏิบัติหน้าที่"
-          value={personnelStats.active}
-          unit="นาย"
-          icon="fa-solid fa-user-check"
-          trend={{ value: '98.4%', isPositive: true }}
-        />
-      </div>
+          <StatCard
+            title="พร้อมปฏิบัติหน้าที่"
+            value={personnelStats.active}
+            unit="นาย"
+            icon="fa-solid fa-user-check"
+            trend={{ value: '98.4%', isPositive: true }}
+          />
+        </div>
+      )}
 
       {/* Quick Actions Control Hub */}
       <Card variant="convex" className="p-6 sm:p-7 space-y-4 rounded-[24px]">
@@ -279,7 +283,8 @@ export default function DashboardOverviewPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2">
           {/* Personnel Management */}
-          <Link
+          {isLeadership && (
+            <Link
             href="/manage/personnel"
             className="group p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-primary-500/50 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4 shadow-2xs"
           >
@@ -295,6 +300,7 @@ export default function DashboardOverviewPage() {
               </p>
             </div>
           </Link>
+          )}
 
           {/* Leaves System */}
           <Link
@@ -315,7 +321,8 @@ export default function DashboardOverviewPage() {
           </Link>
 
           {/* Print Badges */}
-          <Link
+          {(isAdmin || isOfficerOrEditor) && (
+            <Link
             href="/profile/badges"
             className="group p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-primary-500/50 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4 shadow-2xs"
           >
@@ -331,9 +338,11 @@ export default function DashboardOverviewPage() {
               </p>
             </div>
           </Link>
+          )}
 
           {/* Notifications Hub */}
-          <Link
+          {(isAdmin || currentUser?.role === 'EDITOR') && (
+            <Link
             href="/manage/notifications"
             className="group p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-primary-500/50 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4 shadow-2xs"
           >
@@ -349,6 +358,7 @@ export default function DashboardOverviewPage() {
               </p>
             </div>
           </Link>
+          )}
 
           {/* Work Calendar */}
           <Link
@@ -369,7 +379,8 @@ export default function DashboardOverviewPage() {
           </Link>
 
           {/* Settings */}
-          <Link
+          {isAdmin && (
+            <Link
             href="/settings"
             className="group p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-rose-500/50 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4 shadow-2xs"
           >
@@ -385,6 +396,7 @@ export default function DashboardOverviewPage() {
               </p>
             </div>
           </Link>
+          )}
         </div>
       </Card>
 

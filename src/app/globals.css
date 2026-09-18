@@ -8,6 +8,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Niramit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;700&family=Nunito:wght@400;600;700;800;900&display=swap');
 
 
+
+
 /* ─── Global Design Tokens (NextAdmin HQ Unified Theme System & Claymorphic Engine) ─── */
 :root,
 [data-theme="nextadmin"] {
@@ -715,29 +717,25 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
     background: #ffffff !important;
     background-color: #ffffff !important;
     color: #000000 !important;
-    font-size: 12pt !important;
-    line-height: 1.4 !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 210mm !important;
-    min-width: 210mm !important;
-    max-width: 210mm !important;
-    height: 297mm !important;
-    min-height: 297mm !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto !important;
     overflow: visible !important;
     box-shadow: none !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* 2. Hide ALL Web Navigation, Chrome, Dev Tools, Modals, and Interactive Overlays */
+  /* 2. Hide Web Navigation, Chrome, Dev Tools, Modals, and Action Bars */
   header,
   aside,
   nav,
   footer,
   .no-print,
   .print-hidden,
-  .print\\:hidden,
+  .print\:hidden,
   [class*="print:hidden"],
   [class*="no-print"],
   [data-print-ignore="true"],
@@ -746,16 +744,11 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
   .theme-switcher,
   .top-navbar,
   .sidebar,
+  .sidebar-container,
   .dev-checklist-banner,
   .fixed-action-bar,
-  .bg-blobs,
-  .backdrop-blur-xl,
-  .backdrop-blur-2xl,
-  .shadow-glass,
-  .shadow-clay-card,
-  .shadow-neu-flat,
-  .shadow-neu-inset,
-  .modal-backdrop {
+  .modal-backdrop,
+  .bg-blobs {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
@@ -765,6 +758,21 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
     padding: 0 !important;
     overflow: hidden !important;
     pointer-events: none !important;
+  }
+
+  /* Strip card shadows, blur, and borders during print without hiding cards */
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .shadow-glass,
+  .shadow-clay-card,
+  .shadow-neu-flat,
+  .shadow-neu-inset,
+  .shadow-clay-pressed {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: transparent !important;
+    border-color: transparent !important;
   }
 
   /* 3. Document Canvas Display */
@@ -779,10 +787,7 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
     justify-content: center !important;
     align-items: flex-start !important;
     position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
     width: 100% !important;
-    max-width: 100% !important;
     margin: 0 !important;
     padding: 10mm 12mm !important;
     background: transparent !important;
@@ -800,20 +805,12 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 210mm !important;
-    height: 297mm !important;
-    max-width: 210mm !important;
-    max-height: 297mm !important;
-    margin: 0 auto !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 20mm auto 0 auto !important;
     padding: 0 !important;
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    z-index: 999999 !important;
+    background: transparent !important;
+    background-color: transparent !important;
     border: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
@@ -845,8 +842,15 @@ html[data-density="compact"] .mb-8 { margin-bottom: 1rem !important; }
     border-color: #000000 !important;
   }
 
-  /* 5. Typography and Contrast Preservation */
-  p, span, div, h1, h2, h3, h4, h5, h6, td, th {
+  /* 5. Typography and Contrast Preservation (Only for documents, not for ID Badges) */
+  .printable-document p, 
+  .printable-document span, 
+  .printable-document td, 
+  .printable-document th,
+  .a4-page p, 
+  .a4-page span, 
+  .a4-page td, 
+  .a4-page th {
     color: #000000 !important;
     text-shadow: none !important;
   }

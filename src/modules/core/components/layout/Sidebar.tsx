@@ -7,6 +7,7 @@ export interface MenuItem {
   name: string;
   icon: string;
   path: string;
+  group?: string;
   subItems?: { name: string; path: string }[];
 }
 

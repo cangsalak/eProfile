@@ -185,7 +185,12 @@ export default function UploadDropzone({
           setIsDragging(false);
           handleFiles(e.dataTransfer.files);
         }}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => {
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+          fileInputRef.current?.click();
+        }}
         className={`relative border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200 text-center flex flex-col items-center justify-center ${
           compact ? 'p-6' : 'p-8 sm:p-12'
         } ${
@@ -199,6 +204,9 @@ export default function UploadDropzone({
           type="file"
           multiple
           accept={acceptedTypes}
+          onClick={(e) => {
+            (e.target as HTMLInputElement).value = '';
+          }}
           onChange={(e) => handleFiles(e.target.files)}
           className="hidden"
         />

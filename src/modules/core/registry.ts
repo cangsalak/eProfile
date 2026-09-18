@@ -15,55 +15,16 @@ export interface MenuOverride {
   subItems?: { name: string; path: string; requiredPermission?: string }[];
 }
 
-import { UsersManifest, PersonnelManifest } from '@/modules/users/manifest';
-import { LeavesManifest } from '@/modules/leaves/manifest';
-import { BadgesManifest } from '@/modules/badges/manifest';
-import { CalendarManifest } from '@/modules/calendar/manifest';
-import { NewsManifest } from '@/modules/news/manifest';
-import { ContactsManifest } from '@/modules/contacts/manifest';
-import { DashboardManifest } from '@/modules/dashboard/manifest';
-import { RolesManifest } from '@/modules/roles/manifest';
-import { InspectorManifest, SystemInspectorManifest } from '@/modules/inspector/manifest';
-import { themeManifest } from '@/modules/theme/manifest';
-import { backupManifest } from '@/modules/backup/manifest';
-import { ModuleManagerManifest } from '@/modules/module-manager/manifest';
-import { SiteManifest, SiteContentManifest } from '@/modules/site/manifest';
-import { TestSlipManifest } from '@/modules/test-slip/manifest';
-
-import { ApiDocsManifest } from '@/modules/api-docs/manifest';
-import { UploadManifest } from '@/modules/upload/manifest';
-
-import { AuthManifest } from '@/modules/auth/manifest';
-import { InstallManifest } from '@/modules/install/manifest';
+import { GENERATED_MANIFESTS, GENERATED_MANIFEST_EXPORTS } from './generated-manifests';
 import { SettingsManifest } from './manifest';
 
-import { PrintManifest } from '@/modules/print/manifest';
-
 export const ALL_SYSTEM_MODULES: ModuleManifest[] = [
-  DashboardManifest,
   SettingsManifest,
-  AuthManifest,
-  InstallManifest,
-  UsersManifest,
-  RolesManifest,
-  LeavesManifest,
-  BadgesManifest,
-  CalendarManifest,
-  NewsManifest,
-  ContactsManifest,
-  UploadManifest,
-  PrintManifest,
-  InspectorManifest,
-  ApiDocsManifest,
-  themeManifest,
-  backupManifest,
-  ModuleManagerManifest,
-  SiteManifest,
-  TestSlipManifest,
-
+  ...GENERATED_MANIFESTS,
 ];
 
-export { UsersManifest, PersonnelManifest, RolesManifest, SiteManifest, SiteContentManifest, InspectorManifest, SystemInspectorManifest, AuthManifest, InstallManifest, SettingsManifest, PrintManifest };
+export const { UsersManifest, PersonnelManifest, RolesManifest, SiteManifest, SiteContentManifest, InspectorManifest, SystemInspectorManifest, AuthManifest, InstallManifest, PrintManifest } = GENERATED_MANIFEST_EXPORTS;
+export { SettingsManifest };
 
 export class ModuleRegistry {
   /**
@@ -104,7 +65,7 @@ export class ModuleRegistry {
     enabledModuleIds: string[],
     customModules: ModuleManifest[] = [],
     menuOverrides: MenuOverride[] = []
-  ): { name: string; icon: string; path: string; subItems?: { name: string; path: string }[] }[] {
+  ): { name: string; icon: string; path: string; group?: string; subItems?: { name: string; path: string }[] }[] {
     if (!user) return [];
 
     const enabledModules = this.getEnabledModules(enabledModuleIds, customModules);
@@ -113,7 +74,7 @@ export class ModuleRegistry {
     const isLeadership = ['HR_MANAGER', 'DEPARTMENT_COMMANDER', 'COMMANDER'].includes(user.role || '');
 
     // All menu items are sourced from module manifests — no hardcoded items here
-    const allMenus: { name: string; icon: string; path: string; order: number; subItems?: { name: string; path: string }[] }[] = [];
+    const allMenus: { name: string; icon: string; path: string; order: number; group?: string; subItems?: { name: string; path: string }[] }[] = [];
 
     enabledModules.forEach((mod) => {
       mod.menus.forEach((menu) => {
@@ -156,6 +117,7 @@ export class ModuleRegistry {
             icon: menuIcon,
             path: menuPath,
             order: menuOrder,
+            group: menu.group || 'personal',
             subItems,
           });
         }
@@ -187,6 +149,7 @@ export class ModuleRegistry {
               icon: override.icon || 'fa-solid fa-link',
               path: override.path.trim(),
               order: override.order ?? 500,
+              group: 'system',
               subItems,
             });
           }

@@ -13,6 +13,7 @@ import * as SiteApi from '@/modules/site/api';
 import * as RolesApi from '@/modules/roles/api';
 import * as UsersApi from '@/modules/users/api';
 import * as ContactsApi from '@/modules/contacts/api';
+import * as DocumentTemplatesApi from '@/modules/document-templates/api';
 
 import * as AuthApi from '@/modules/auth/api';
 import * as InstallApi from '@/modules/install/api';
@@ -60,6 +61,29 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
     },
     'setup-admin': {
       POST: AuthApi.handleSetupAdmin as any,
+    },
+  },
+  'document-templates': {
+    'categories': {
+      GET: DocumentTemplatesApi.handleCategoriesApi as any,
+      POST: DocumentTemplatesApi.handleCategoriesApi as any,
+    },
+    'categories/[id]': {
+      GET: DocumentTemplatesApi.handleCategoriesApi as any,
+      PUT: DocumentTemplatesApi.handleCategoriesApi as any,
+      DELETE: DocumentTemplatesApi.handleCategoriesApi as any,
+    },
+    'templates': {
+      GET: DocumentTemplatesApi.handleTemplatesApi as any,
+      POST: DocumentTemplatesApi.handleTemplatesApi as any,
+    },
+    'templates/[id]': {
+      GET: DocumentTemplatesApi.handleTemplatesApi as any,
+      PUT: DocumentTemplatesApi.handleTemplatesApi as any,
+      DELETE: DocumentTemplatesApi.handleTemplatesApi as any,
+    },
+    'scan-docx': {
+      POST: DocumentTemplatesApi.handleScanDocxTags as any,
     },
   },
   'users': {
@@ -133,6 +157,10 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
     '': {
       GET: ContactsApi.handleGetContacts as any,
       POST: ContactsApi.handleCreateContact as any,
+    },
+    '[id]': {
+      PUT: ContactsApi.handleUpdateContact as any,
+      DELETE: ContactsApi.handleDeleteContact as any,
     },
   },
 
@@ -212,6 +240,12 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
     },
     '[id]/reject': {
       POST: LeavesApi.handleRejectLeave as any,
+    },
+    '[id]/pdf': {
+      GET: LeavesApi.handleGeneratePDF as any,
+    },
+    '[id]/docx': {
+      GET: LeavesApi.handleGenerateDocx as any,
     },
     'approvals': {
       GET: LeavesApi.handleGetLeaveApprovals as any,

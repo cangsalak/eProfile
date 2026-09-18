@@ -82,15 +82,20 @@ async function dispatchModuleApi(
   if (apiMap[subPath] && apiMap[subPath]![method]) {
     matchedHandler = apiMap[subPath]![method];
   } else {
-    // 3.2 Dynamic pattern match (e.g. tokens/[id] -> tokens/123)
+    // 3.2 Dynamic pattern match (e.g. tokens/[id] or tokens/:id -> tokens/123)
     for (const pattern of Object.keys(apiMap)) {
-      if (!pattern.includes('[')) continue;
+      if (!pattern.includes('[') && !pattern.includes(':')) continue;
 
       const paramNames: string[] = [];
-      const regexPattern = pattern.replace(/\[([^\]]+)\]/g, (_, paramName) => {
-        paramNames.push(paramName);
-        return '([^/]+)';
-      });
+      const regexPattern = pattern
+        .replace(/\[([^\]]+)\]/g, (_, paramName) => {
+          paramNames.push(paramName);
+          return '([^/]+)';
+        })
+        .replace(/:([a-zA-Z0-9_]+)/g, (_, paramName) => {
+          paramNames.push(paramName);
+          return '([^/]+)';
+        });
 
       const regex = new RegExp(`^${regexPattern}$`);
       const match = subPath.match(regex);

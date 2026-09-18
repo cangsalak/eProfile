@@ -1,25 +1,6 @@
 import { ModuleDefinition } from './types';
 
-import { UsersModule, PersonnelModule } from '@/modules/users';
-import { RolesModule } from '@/modules/roles';
-import { LeavesModule } from '@/modules/leaves';
-import { BadgesModule } from '@/modules/badges';
-import { CalendarModule } from '@/modules/calendar';
-import { NewsModule } from '@/modules/news';
-import { ContactsModule } from '@/modules/contacts';
-import { DashboardModule } from '@/modules/dashboard';
-import { InspectorModule, SystemInspectorModule } from '@/modules/inspector';
-import { ThemeModule } from '@/modules/theme';
-import { BackupModule } from '@/modules/backup';
-import { ModuleManagerModule } from '@/modules/module-manager';
-import { SiteModule, SiteContentModule } from '@/modules/site';
-import { TestSlipModule } from '@/modules/test-slip';
-
-import { ApiDocsModule } from '@/modules/api-docs';
-import { UploadModule } from '@/modules/upload';
-import { AuthModule } from '@/modules/auth';
-import { InstallModule } from '@/modules/install';
-import { PrintModule } from '@/modules/print';
+import { GENERATED_MODULE_ARRAY, GENERATED_MODULE_EXPORTS } from './generated-views';
 import { SettingsManifest } from './manifest';
 import SettingsView from './views/SettingsView';
 
@@ -33,33 +14,17 @@ export const SettingsModule: ModuleDefinition = {
 
 export const BUILTIN_MODULE_DEFINITIONS: Record<string, ModuleDefinition> = {
   'settings': SettingsModule,
-  'install': InstallModule,
-  'dashboard': DashboardModule,
-  'command-dashboard': DashboardModule,
-  'auth': AuthModule,
-  'personnel': UsersModule,
-  'users': UsersModule,
-  'roles': RolesModule,
-  'leaves': LeavesModule,
-  'badges': BadgesModule,
-  'calendar': CalendarModule,
-  'news': NewsModule,
-  'contacts': ContactsModule,
-  'upload': UploadModule,
-  'print': PrintModule,
-  'system-inspector': InspectorModule,
-  'inspector': InspectorModule,
-  'api-docs': ApiDocsModule,
-  'theme': ThemeModule,
-  'backup': BackupModule,
-  'module-manager': ModuleManagerModule,
-  'site': SiteModule,
-  'site-content': SiteModule,
-  'test-slip': TestSlipModule,
-
 };
 
-export { UsersModule, PersonnelModule, RolesModule, SiteModule, SiteContentModule, InspectorModule, SystemInspectorModule, AuthModule, PrintModule };
+// Map generated modules by their manifest ID
+for (const rawMod of GENERATED_MODULE_ARRAY) {
+  const mod = rawMod as any;
+  if (mod && mod.manifest && mod.manifest.id) {
+    BUILTIN_MODULE_DEFINITIONS[mod.manifest.id] = mod;
+  }
+}
+
+export const { UsersModule, PersonnelModule, RolesModule, SiteModule, SiteContentModule, InspectorModule, SystemInspectorModule, AuthModule, PrintModule } = GENERATED_MODULE_EXPORTS as any;
 
 export class ModuleViewRegistry {
   private static customDefinitions: Map<string, ModuleDefinition> = new Map();

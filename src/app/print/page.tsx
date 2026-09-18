@@ -1,5 +1,6 @@
-import DynamicModuleHost from '@/modules/core/components/DynamicModuleHost';
+import { redirect } from 'next/navigation';
 
 export default function PrintPage() {
-  return <DynamicModuleHost moduleId="print" />;
+  redirect('/modules');
 }
+

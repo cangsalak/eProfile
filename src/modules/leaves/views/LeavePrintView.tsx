@@ -1,7 +1,7 @@
 import React from 'react';
 import { prisma } from '@/modules/core/lib/prisma';
-import { notFound } from 'next/navigation';
-import './print.css';
+import { notFound, redirect } from 'next/navigation';
+import '@/modules/print/styles/print.css';
 import { PersonalLeavePrintForm } from '../components/forms/PersonalLeavePrintForm';
 import { SickLeavePrintForm } from '../components/forms/SickLeavePrintForm';
 import { LeavePrintFormProps } from '../components/forms/types';
@@ -22,6 +22,24 @@ export default async function PrintLeavePage({ params }: { params: { id: string 
 
   if (!leave) {
     return notFound();
+  }
+
+  // If an active DocumentTemplate exists for this leave, redirect directly to the official template PDF
+  const docTemplate = await prisma.documentTemplate.findFirst({
+    where: {
+      isActive: true,
+      OR: [
+        { code: leave.leaveType },
+        { name: leave.leaveType },
+        { name: { contains: leave.leaveType } },
+        { category: { code: { in: ['leaves', 'LEAVES'] } } },
+      ],
+    },
+    orderBy: { updatedAt: 'desc' },
+  });
+
+  if (docTemplate) {
+    redirect(`/api/modules/leaves/${id}/pdf`);
   }
 
   const { personnel } = leave;

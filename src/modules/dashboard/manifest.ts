@@ -18,6 +18,7 @@ export const DashboardManifest: ModuleManifest = {
       icon: 'fa-solid fa-chart-pie',
       path: '/modules/dashboard',
       order: 10,
+      group: 'personal',
     },
     {
       id: 'dashboard-command',
@@ -27,6 +28,7 @@ export const DashboardManifest: ModuleManifest = {
       requiredPermission: 'VIEW_COMMAND_DASHBOARD',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN', 'HR_MANAGER', 'DEPARTMENT_COMMANDER', 'COMMANDER'],
       order: 11,
+      group: 'personal',
     },
   ],
   permissions: [

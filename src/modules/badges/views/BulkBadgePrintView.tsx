@@ -381,8 +381,8 @@ export default function BulkBadgePrintView() {
             </div>
 
             {/* Badges Layout Workspace */}
-            <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex flex-col justify-center items-center min-h-[460px] print:p-0 print:m-0 print:bg-transparent">
-              <div id="printable-badge-sheet" className="badge-print-container flex flex-wrap gap-8 print:gap-[6mm] justify-center items-start print:w-auto">
+            <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex flex-col justify-center items-center min-h-[460px] print:min-h-0 print:p-0 print:m-0 print:bg-transparent print:border-none print:shadow-none print:overflow-visible">
+              <div id="printable-badge-sheet" className="badge-print-container flex flex-wrap gap-8 print:gap-[6mm] justify-center items-start print:w-auto print:overflow-visible">
                 {personnelList.map((person) => (
                   <div key={person.id} className="flex flex-col items-center print:break-inside-avoid group">
                     {/* Personnel Info Card Pill (Hidden on Print) */}

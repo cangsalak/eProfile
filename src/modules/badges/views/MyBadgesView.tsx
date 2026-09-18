@@ -190,8 +190,8 @@ export default function MyBadgesView() {
         </div>
 
         {/* Badge View Area (Fills Container Width) */}
-        <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex flex-col justify-center items-center min-h-[460px] print:p-0 print:m-0 print:bg-transparent">
-          <div id="printable-badge-sheet" className="badge-print-container flex justify-center items-center print:w-auto">
+        <div className="p-6 sm:p-10 bg-slate-50/50 dark:bg-slate-900/30 w-full flex flex-col justify-center items-center min-h-[460px] print:min-h-0 print:p-0 print:m-0 print:bg-transparent print:border-none print:shadow-none print:overflow-visible">
+          <div id="printable-badge-sheet" className="badge-print-container flex justify-center items-center print:w-auto print:overflow-visible">
             {printMode === 'pair' ? (
               <CR80Pair
                 front={
@@ -212,7 +212,7 @@ export default function MyBadgesView() {
               />
             ) : (
               <div 
-                className="relative p-0 print:p-0 shadow-sm print:shadow-none overflow-hidden shrink-0"
+                className="relative p-0 print:p-0 shadow-sm print:shadow-none overflow-hidden print:overflow-visible shrink-0"
                 style={{ width: '53.98mm', height: '85.60mm' }}
               >
                 <IDBadge

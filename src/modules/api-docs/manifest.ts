@@ -20,6 +20,7 @@ export const ApiDocsManifest: ModuleManifest = {
       path: '/modules/api-docs',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       order: 104,
+      group: 'personal',
     },
   ],
   permissions: [],

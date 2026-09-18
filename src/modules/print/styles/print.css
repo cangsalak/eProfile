@@ -1,0 +1,158 @@
+/* ============================================================
+ * 🖨️ Universal Print Stylesheet (eProfile System)
+ * ตัดปัญหา Dark Mode / สี Theme รั่วไหลลงบนกระดาษพิมพ์ 100%
+ * บังคับใช้ฟอนต์มาตรฐานราชการ: TH Sarabun New (สารบรรณ)
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
+
+/* ── TH Sarabun New Standard National Font Definitions ── */
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New'), local('THSarabunNew'), local('THSarabunNew-Regular'),
+    url('https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@master/fonts/THSarabunNew/THSarabunNew.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@master/fonts/THSarabunNew/THSarabunNew.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New Bold'), local('THSarabunNew-Bold'),
+    url('https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@master/fonts/THSarabunNew/THSarabunNew-Bold.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@master/fonts/THSarabunNew/THSarabunNew-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New Italic'), local('THSarabunNew-Italic'),
+    url('https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@master/fonts/THSarabunNew/THSarabunNew-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New BoldItalic'), local('THSarabunNew-BoldItalic'),
+    url('https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@master/fonts/THSarabunNew/THSarabunNew-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+
+  /* ── 1. บังคับ Background ขาวบริสุทธิ์ และสีตัวอักษรดำสนิท ── */
+  html,
+  body,
+  #__next,
+  .print-root,
+  .print-page,
+  .a4-page {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    color-scheme: light !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', 'TH Sarabun PSK', sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ── 2. ซ่อนส่วนประกอบ UI เว็บไซต์ทั้งหมดที่ไม่เกี่ยวกับงานพิมพ์ ── */
+  .no-print,
+  .print-hidden,
+  nav,
+  header,
+  aside,
+  footer:not(.print-footer),
+  .sidebar-container,
+  .floating-action-bar,
+  button:not(.print-include) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* ── 3. กำหนดขนาดกระดาษ A4 และขอบกระดาษตามระเบียบงานสารบรรณ ทบ. (บน 1.5 ซม. / ขวา 2 ซม. / ล่าง 1.5 ซม. / ซ้าย 3 ซม.) ── */
+  .a4-page {
+    font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', 'TH Sarabun PSK', sans-serif !important;
+    font-size: 10.5pt !important;
+    line-height: 1.4 !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    max-width: 210mm !important;
+    margin: 0 auto !important;
+    padding: 1.5cm 2cm 1.5cm 3cm !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    border-radius: 0 !important;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .a4-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .break-before-page {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* ── 4. จัดการเส้นตารางและลายเซ็นให้คมชัด ── */
+  table,
+  th,
+  td {
+    font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', 'TH Sarabun PSK', sans-serif !important;
+    font-size: 10.5pt !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+  }
+
+  input,
+  select,
+  textarea {
+    font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', 'TH Sarabun PSK', sans-serif !important;
+    font-size: 10.5pt !important;
+    border: none !important;
+    background: transparent !important;
+    color: #000000 !important;
+  }
+}
+
+/* Screen Preview Paper Styling (มาตรฐานระเบียบสารบรรณ ทบ. บน 1.5 ซม. / ขวา 2 ซม. / ล่าง 1.5 ซม. / ซ้าย 3 ซม.) */
+.a4-page {
+  font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', 'TH Sarabun PSK', sans-serif !important;
+  font-size: 10.5pt;
+  line-height: 1.4;
+  width: 210mm;
+  min-height: 297mm;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 1.5cm 2cm 1.5cm 3cm;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}

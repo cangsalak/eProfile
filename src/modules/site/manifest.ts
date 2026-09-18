@@ -21,6 +21,7 @@ export const SiteManifest: ModuleManifest = {
       requiredPermission: 'MANAGE_SYSTEM',
       isSetting: true,
       order: 95,
+      group: 'personal',
       subItems: [
         { name: 'หน้าแรก (Home)', path: '/modules/site' },
         { name: 'เกี่ยวกับเรา (About)', path: '/modules/site' },

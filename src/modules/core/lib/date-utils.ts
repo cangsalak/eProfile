@@ -193,3 +193,14 @@ export function thaiToArabicNumerals(str: string): string {
   const thaiNumerals = ['๐', '๑', '๒', '๓', '๔', '๕', '๖', '๗', '๘', '๙'];
   return str.replace(/[๐-๙]/g, (ch) => String(thaiNumerals.indexOf(ch)));
 }
+
+/**
+ * Converts Arabic numerals in a string or number to Thai numerals (เลขไทย).
+ * Example: 18 -> "๑๘", "2569" -> "๒๕๖๙", "วันที่ 16 ตุลาคม 2569" -> "วันที่ ๑๖ ตุลาคม ๒๕๖๙"
+ */
+export function toThaiDigits(str: string | number | null | undefined): string {
+  if (str === null || str === undefined) return '';
+  const thaiDigits = ['๐', '๑', '๒', '๓', '๔', '๕', '๖', '๗', '๘', '๙'];
+  return str.toString().replace(/[0-9]/g, (d) => thaiDigits[parseInt(d, 10)]);
+}
+

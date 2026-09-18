@@ -79,3 +79,46 @@ export async function handleCreateContact(req: Request) {
     return NextResponse.json({ error: error.message || 'Failed to submit contact message' }, { status: 500 });
   }
 }
+
+export async function handleUpdateContact(req: Request, context: { params: Record<string, string | string[]> }) {
+  try {
+    const { error: authError } = await requireRole(req, ['ADMIN', 'SUPER_ADMIN']);
+    if (authError) return authError;
+
+    const id = context.params.id as string;
+    const body = await req.json().catch(() => ({}));
+
+    if (!id || !body.status) {
+      return NextResponse.json({ error: 'Missing ID or status' }, { status: 400 });
+    }
+
+    const updated = await prisma.contactMessage.update({
+      where: { id },
+      data: { status: body.status },
+    });
+
+    return NextResponse.json(updated);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to update contact' }, { status: 500 });
+  }
+}
+
+export async function handleDeleteContact(req: Request, context: { params: Record<string, string | string[]> }) {
+  try {
+    const { error: authError } = await requireRole(req, ['ADMIN', 'SUPER_ADMIN']);
+    if (authError) return authError;
+
+    const id = context.params.id as string;
+    if (!id) {
+      return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
+    }
+
+    await prisma.contactMessage.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to delete contact' }, { status: 500 });
+  }
+}

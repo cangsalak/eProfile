@@ -2,42 +2,29 @@ import { ModuleManifest } from '@/modules/core/types';
 
 export const LeavesManifest: ModuleManifest = {
   id: 'leaves',
-  name: 'ระบบการลา',
-  nameEn: 'Leave Management',
-  description: 'ระบบขออนุมัติการลาและโควตาการลา',
+  name: 'ระบบยื่นแบบฟอร์ม (e-Forms)',
+  nameEn: 'e-Forms System',
+  description: 'ระบบยื่นและจัดการเอกสารแบบฟอร์มตามแม่แบบ',
   version: '1.0.0',
   author: 'System',
-  icon: 'fa-calendar-alt',
+  icon: 'fa-file-signature',
   category: 'hr',
   isCore: false,
   defaultEnabled: true,
   menus: [
     {
       id: 'leave',
-      title: 'การลา (Leave)',
-      icon: 'fa-solid fa-calendar-alt',
+      title: 'ยื่นแบบฟอร์ม (e-Forms)',
+      icon: 'fa-solid fa-file-signature',
       path: '/modules/leaves',
-      order: 40
-    },
-    {
-      id: 'manage-leave-approvals',
-      title: 'อนุมัติการลา',
-      icon: 'fa-solid fa-clipboard-check',
-      path: '/modules/leaves/approvals',
-      requiredPermission: 'APPROVE_LEAVE',
-      order: 80
+      order: 40,
+      group: 'personal'
     }
   ],
-  permissions: [
-    {
-      key: 'APPROVE_LEAVE',
-      name: 'อนุมัติการลา',
-      description: 'สิทธิ์ในการตรวจสอบและอนุมัติการลาของกำลังพลในสังกัด'
-    }
-  ],
+  settingsPath: '/modules/leaves/templates',
+  permissions: [],
   legacyRoutes: {
     '/leave': '/modules/leaves',
     '/leave/print/:id': '/print/leave/:id',
-    '/manage/leave-approvals': '/modules/leaves/approvals',
   }
 };

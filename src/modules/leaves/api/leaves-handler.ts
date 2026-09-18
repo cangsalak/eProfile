@@ -10,7 +10,7 @@ const VALID_LEAVE_TYPES = [
 
 const CreateLeaveSchema = z.object({
   personnelId:          z.string().min(1).optional(), // overridden for normal users
-  leaveType:            z.enum(VALID_LEAVE_TYPES),
+  leaveType:            z.string().min(1).max(100),
   startDate:            z.string().datetime({ offset: true }).or(z.string().regex(/^\d{4}-\d{2}-\d{2}/)),
   endDate:              z.string().datetime({ offset: true }).or(z.string().regex(/^\d{4}-\d{2}-\d{2}/)),
   reason:               z.string().max(1000).optional().default(''),

@@ -18,7 +18,8 @@ export const ContactsManifest: ModuleManifest = {
       icon: 'fa-solid fa-envelope',
       path: '/modules/contacts',
       requiredPermission: 'MANAGE_SYSTEM', // Re-using manage_system for now, can be updated
-      order: 95
+      order: 95,
+      group: 'personal'
     }
   ],
   permissions: [],

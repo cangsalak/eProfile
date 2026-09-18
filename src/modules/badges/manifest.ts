@@ -20,6 +20,7 @@ export const BadgesManifest: ModuleManifest = {
       path: '/modules/badges',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN', 'OFFICER', 'EDITOR'],
       order: 35,
+      group: 'personal',
     },
     {
       id: 'badges-studio-menu',
@@ -30,6 +31,7 @@ export const BadgesManifest: ModuleManifest = {
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       isSetting: true,
       order: 36,
+      group: 'personal',
     },
     {
       id: 'badges-my-menu',
@@ -38,6 +40,7 @@ export const BadgesManifest: ModuleManifest = {
       path: '/modules/badges/my',
       requiredRoles: ['SUPER_ADMIN', 'ADMIN', 'OFFICER', 'EDITOR', 'USER'],
       order: 37,
+      group: 'personal',
     },
   ],
   permissions: [

@@ -65,6 +65,50 @@ export default function Sidebar({
     return getActiveMenuPath(pathname, allMenuPaths, searchParamsStr);
   }, [pathname, allMenuPaths, searchParamsStr]);
 
+  const { personalMenus, operationsMenus, systemMenus } = React.useMemo(() => {
+    return {
+      personalMenus: menuItems?.filter(i => i.group === 'personal' || !i.group) || [],
+      operationsMenus: menuItems?.filter(i => i.group === 'operations') || [],
+      systemMenus: menuItems?.filter(i => i.group === 'system') || [],
+    };
+  }, [menuItems]);
+
+  const renderMenuGroup = (items: MenuItem[], title: string) => {
+    if (items.length === 0) return null;
+    return (
+      <div className="mb-4">
+        {isExpanded ? (
+          <div className="flex items-center gap-2 px-3 pb-2 pt-1">
+            <span className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
+              {title}
+            </span>
+            <div className="h-px flex-1 bg-slate-200/60 dark:bg-slate-800/60" />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center py-2 text-slate-400 dark:text-slate-600">
+            <ThreeDots />
+          </div>
+        )}
+
+        <div className={cn('space-y-0.5', !isExpanded && 'space-y-1')}>
+          {items.map((item) => (
+            <NavItem
+              key={item.path}
+              id={item.path}
+              icon={getMenuIcon(item.icon)}
+              label={item.name}
+              href={item.path}
+              items={item.subItems?.map((sub) => ({ title: sub.name, url: sub.path }))}
+              collapsed={!isExpanded}
+              activePath={activePath}
+              onItemClick={onItemClick}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex h-full flex-col overflow-hidden bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800/80 transition-colors">
       {/* System Brand Header */}
@@ -135,34 +179,9 @@ export default function Sidebar({
         )}
       >
         <div>
-          {isExpanded ? (
-            <div className="flex items-center gap-2 px-3 pb-2 pt-1">
-              <span className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
-                เมนูหลัก (Main Menu)
-              </span>
-              <div className="h-px flex-1 bg-slate-200/60 dark:bg-slate-800/60" />
-            </div>
-          ) : (
-            <div className="flex items-center justify-center py-2 text-slate-400 dark:text-slate-600">
-              <ThreeDots />
-            </div>
-          )}
-
-          <div className={cn('space-y-0.5', !isExpanded && 'space-y-1')}>
-            {menuItems?.map((item) => (
-              <NavItem
-                key={item.path}
-                id={item.path}
-                icon={getMenuIcon(item.icon)}
-                label={item.name}
-                href={item.path}
-                items={item.subItems?.map((sub) => ({ title: sub.name, url: sub.path }))}
-                collapsed={!isExpanded}
-                activePath={activePath}
-                onItemClick={onItemClick}
-              />
-            ))}
-          </div>
+          {renderMenuGroup(personalMenus, 'ส่วนตัวและทั่วไป')}
+          {renderMenuGroup(operationsMenus, 'ปฏิบัติการและอนุมัติ')}
+          {renderMenuGroup(systemMenus, 'การตั้งค่าระบบ')}
         </div>
       </nav>
 

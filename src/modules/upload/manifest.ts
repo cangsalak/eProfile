@@ -19,6 +19,7 @@ export const UploadManifest: ModuleManifest = {
       path: '/modules/upload',
       requiredPermission: 'MANAGE_MEDIA',
       order: 70,
+      group: 'personal',
     },
     {
       id: 'upload-settings',
@@ -28,6 +29,7 @@ export const UploadManifest: ModuleManifest = {
       requiredPermission: 'MANAGE_SYSTEM',
       isSetting: true,
       order: 71,
+      group: 'personal',
     },
   ],
   permissions: [

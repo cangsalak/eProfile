@@ -22,6 +22,7 @@ export const backupManifest: ModuleManifest = {
       requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
       isSetting: true,
       order: 80,
+      group: 'personal',
     },
   ],
   permissions: [

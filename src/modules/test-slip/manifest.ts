@@ -18,6 +18,7 @@ export const TestSlipManifest: ModuleManifest = {
       icon: 'fa-solid fa-file-invoice-dollar',
       path: '/modules/test-slip',
       order: 38,
+      group: 'personal',
     },
     {
       id: 'test-slip-manage',
@@ -25,6 +26,7 @@ export const TestSlipManifest: ModuleManifest = {
       icon: 'fa-solid fa-receipt',
       path: '/modules/test-slip/manage',
       order: 39,
+      group: 'personal',
       requiredPermission: 'MANAGE_SALARY_SLIP',
     },
   ],

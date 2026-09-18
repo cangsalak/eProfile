@@ -22,6 +22,7 @@ export const RolesManifest: ModuleManifest = {
       requiredPermission: 'MANAGE_ROLES',
       isSetting: true,
       order: 75,
+      group: 'personal',
     },
   ],
   permissions: [
