@@ -1,4 +1,4 @@
-import { prisma, requireAuth, requirePermission } from '@/modules/core';
+import { prisma, requireAuth, requireRole } from '@/modules/core';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function handleCategoriesApi(req: NextRequest, context: { params: Record<string, string | string[]> }) {
@@ -7,8 +7,8 @@ export async function handleCategoriesApi(req: NextRequest, context: { params: R
     const { error: authError } = await requireAuth(req as any);
     if (authError) return authError;
   } else {
-    const { error: permError } = await requirePermission(req as any, 'MANAGE_SYSTEM');
-    if (permError) return permError;
+    const { error: roleError } = await requireRole(req as any, ['SUPER_ADMIN', 'ADMIN', 'HR_MANAGER']);
+    if (roleError) return roleError;
   }
 
   const id = context.params?.id as string;
@@ -17,7 +17,10 @@ export async function handleCategoriesApi(req: NextRequest, context: { params: R
     switch (method) {
       case 'GET':
         if (id) {
-          const category = await prisma.documentCategory.findUnique({ where: { id } });
+          const category = await prisma.documentCategory.findUnique({
+            where: { id },
+            include: { _count: { select: { templates: true } } }
+          });
           return NextResponse.json({ success: true, data: category });
         }
         const categories = await prisma.documentCategory.findMany({
@@ -26,32 +29,83 @@ export async function handleCategoriesApi(req: NextRequest, context: { params: R
         });
         return NextResponse.json({ success: true, data: categories });
 
-      case 'POST':
+      case 'POST': {
         const createBody = await req.json();
+        const name = createBody.name?.trim();
+        const code = createBody.code?.trim()?.toUpperCase();
+        const description = createBody.description?.trim() || null;
+
+        if (!name || !code) {
+          return NextResponse.json({ error: 'กรุณาระบุชื่อและรหัสหมวดหมู่ให้ครบถ้วน' }, { status: 400 });
+        }
+
+        const existingCategory = await prisma.documentCategory.findUnique({
+          where: { code }
+        });
+        if (existingCategory) {
+          return NextResponse.json({ error: `รหัสหมวดหมู่ "${code}" มีอยู่ในระบบแล้ว กรุณาใช้รหัสอื่น` }, { status: 400 });
+        }
+
         const newCategory = await prisma.documentCategory.create({
           data: {
-            name: createBody.name,
-            code: createBody.code,
-            description: createBody.description,
+            name,
+            code,
+            description,
           },
         });
         return NextResponse.json({ success: true, data: newCategory });
+      }
 
-      case 'PUT':
+      case 'PUT': {
+        if (!id) {
+          return NextResponse.json({ error: 'ไม่พบ ID หมวดหมู่ที่ต้องการแก้ไข' }, { status: 400 });
+        }
         const updateBody = await req.json();
+        const name = updateBody.name?.trim();
+        const code = updateBody.code?.trim()?.toUpperCase();
+        const description = updateBody.description?.trim() || null;
+
+        if (!name || !code) {
+          return NextResponse.json({ error: 'กรุณาระบุชื่อและรหัสหมวดหมู่ให้ครบถ้วน' }, { status: 400 });
+        }
+
+        const duplicateCode = await prisma.documentCategory.findFirst({
+          where: {
+            code,
+            id: { not: id }
+          }
+        });
+        if (duplicateCode) {
+          return NextResponse.json({ error: `รหัสหมวดหมู่ "${code}" ถูกใช้งานโดยหมวดหมู่อื่นแล้ว` }, { status: 400 });
+        }
+
         const updatedCategory = await prisma.documentCategory.update({
           where: { id },
           data: {
-            name: updateBody.name,
-            code: updateBody.code,
-            description: updateBody.description,
+            name,
+            code,
+            description,
           },
         });
         return NextResponse.json({ success: true, data: updatedCategory });
+      }
 
-      case 'DELETE':
+      case 'DELETE': {
+        if (!id) {
+          return NextResponse.json({ error: 'ไม่พบ ID หมวดหมู่ที่ต้องการลบ' }, { status: 400 });
+        }
+        const templateCount = await prisma.documentTemplate.count({
+          where: { categoryId: id }
+        });
+        if (templateCount > 0) {
+          return NextResponse.json({
+            error: `ไม่สามารถลบหมวดหมู่นี้ได้ เนื่องจากมีแม่แบบเอกสาร ${templateCount} รายการสังกัดอยู่ กรุณาย้ายหรือลบแม่แบบก่อน`
+          }, { status: 400 });
+        }
+
         await prisma.documentCategory.delete({ where: { id } });
         return NextResponse.json({ success: true });
+      }
 
       default:
         return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });

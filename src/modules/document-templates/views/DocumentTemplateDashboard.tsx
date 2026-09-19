@@ -9,6 +9,10 @@ interface Category {
   id: string;
   name: string;
   code: string;
+  description?: string | null;
+  _count?: {
+    templates: number;
+  };
 }
 
 interface Template {
@@ -35,10 +39,13 @@ export default function DocumentTemplateDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTemplate, setEditTemplate] = useState<Partial<Template>>({});
 
-  // Category Modal State
+  // Category Management Modal State
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
-  const [newCatName, setNewCatName] = useState('');
-  const [newCatCode, setNewCatCode] = useState('');
+  const [editingCatId, setEditingCatId] = useState<string | null>(null);
+  const [catName, setCatName] = useState('');
+  const [catCode, setCatCode] = useState('');
+  const [catDescription, setCatDescription] = useState('');
+  const [catSubmitting, setCatSubmitting] = useState(false);
 
   // Canvas Tag Editor State
   const [canvasTemplate, setCanvasTemplate] = useState<Template | null>(null);
@@ -107,25 +114,93 @@ export default function DocumentTemplateDashboard() {
     }
   };
 
-  const handleAddCategory = async () => {
-    if (!newCatName || !newCatCode) return toast.error('กรุณากรอกข้อมูลหมวดหมู่ให้ครบ');
+  const resetCatForm = () => {
+    setEditingCatId(null);
+    setCatName('');
+    setCatCode('');
+    setCatDescription('');
+  };
+
+  const handleOpenCatModal = () => {
+    resetCatForm();
+    setIsCatModalOpen(true);
+  };
+
+  const handleEditCategory = (cat: Category) => {
+    setEditingCatId(cat.id);
+    setCatName(cat.name);
+    setCatCode(cat.code);
+    setCatDescription(cat.description || '');
+  };
+
+  const handleSaveCategory = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const trimmedName = catName.trim();
+    const trimmedCode = catCode.trim().toUpperCase();
+    if (!trimmedName || !trimmedCode) {
+      return toast.error('กรุณากรอกชื่อและรหัสหมวดหมู่ให้ครบถ้วน');
+    }
+
+    setCatSubmitting(true);
     try {
-      const res = await fetch('/api/modules/document-templates/categories', {
-        method: 'POST',
+      const isEdit = !!editingCatId;
+      const url = isEdit
+        ? `/api/modules/document-templates/categories/${editingCatId}`
+        : '/api/modules/document-templates/categories';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCatName, code: newCatCode }),
+        body: JSON.stringify({
+          name: trimmedName,
+          code: trimmedCode,
+          description: catDescription.trim() || null,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success(isEdit ? 'แก้ไขหมวดหมู่สำเร็จ' : 'เพิ่มหมวดหมู่สำเร็จ');
+        resetCatForm();
+        fetchData();
+      } else {
+        toast.error(data.error || 'เกิดข้อผิดพลาดในการบันทึกหมวดหมู่');
+      }
+    } catch (error) {
+      toast.error('ไม่สามารถติดต่อเซิร์ฟเวอร์ได้');
+    } finally {
+      setCatSubmitting(false);
+    }
+  };
+
+  const handleDeleteCategory = async (cat: Category) => {
+    const count = cat._count?.templates ?? 0;
+    if (count > 0) {
+      return toast.error(`ไม่สามารถลบหมวดหมู่นี้ได้ เนื่องจากมีแม่แบบเอกสาร ${count} รายการใช้งานอยู่`);
+    }
+
+    if (!confirm(`ยืนยันการลบหมวดหมู่ "${cat.name}" (${cat.code})?`)) return;
+
+    try {
+      const res = await fetch(`/api/modules/document-templates/categories/${cat.id}`, {
+        method: 'DELETE',
       });
       const data = await res.json();
       if (data.success) {
-        toast.success('เพิ่มหมวดหมู่สำเร็จ');
-        setNewCatName('');
-        setNewCatCode('');
+        toast.success('ลบหมวดหมู่สำเร็จ');
+        if (selectedCategory === cat.id) {
+          setSelectedCategory('all');
+        }
+        if (editingCatId === cat.id) {
+          resetCatForm();
+        }
         fetchData();
       } else {
-        toast.error(data.error || 'เกิดข้อผิดพลาด');
+        toast.error(data.error || 'เกิดข้อผิดพลาดในการลบหมวดหมู่');
       }
     } catch (error) {
-      toast.error('เพิ่มหมวดหมู่ไม่สำเร็จ');
+      toast.error('ลบหมวดหมู่ไม่สำเร็จ');
     }
   };
 
@@ -151,8 +226,8 @@ export default function DocumentTemplateDashboard() {
             <i className="fa-solid fa-file-arrow-down mr-1.5 text-emerald-600 dark:text-emerald-400" />
             ดาวน์โหลดไฟล์ Word ตัวอย่าง (มีแท็กครบ)
           </a>
-          <Button variant="outline" onClick={() => setIsCatModalOpen(true)}>
-            <i className="fa-solid fa-folder-plus mr-2" /> เพิ่มหมวดหมู่
+          <Button variant="outline" onClick={handleOpenCatModal}>
+            <i className="fa-solid fa-folder-tree mr-2 text-primary-500" /> จัดการหมวดหมู่
           </Button>
           <Button variant="primary" onClick={() => { setEditTemplate({ isActive: true }); setIsModalOpen(true); }}>
             <i className="fa-solid fa-file-circle-plus mr-2" /> เพิ่มแม่แบบใหม่
@@ -160,17 +235,31 @@ export default function DocumentTemplateDashboard() {
         </div>
       </div>
 
-      <div className="flex space-x-4 mb-4">
-        <Select 
-          value={selectedCategory} 
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-64"
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-slate-600 dark:text-slate-300">หมวดหมู่:</label>
+          <Select 
+            value={selectedCategory} 
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-64"
+          >
+            <option value="all">ดูทุกหมวดหมู่ ({templates.length})</option>
+            {categories.map(c => (
+              <option key={c.id} value={c.id}>
+                {c.name} ({c._count?.templates ?? 0})
+              </option>
+            ))}
+          </Select>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleOpenCatModal}
+          className="text-xs flex items-center gap-1.5"
+          title="จัดการ เพิ่ม แก้ไข ลบหมวดหมู่"
         >
-          <option value="all">ดูทุกหมวดหมู่</option>
-          {categories.map(c => (
-            <option key={c.id} value={c.id}>{c.name} ({c.code})</option>
-          ))}
-        </Select>
+          <i className="fa-solid fa-pen-to-square text-primary-500" /> จัดการหมวดหมู่
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -338,22 +427,207 @@ export default function DocumentTemplateDashboard() {
       )}
 
       {isCatModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md shadow-2xl p-6">
-            <h3 className="text-xl font-bold mb-4">เพิ่มหมวดหมู่ใหม่</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">ชื่อหมวดหมู่ (Name)</label>
-                <Input value={newCatName} onChange={e => setNewCatName(e.target.value)} placeholder="เช่น หมวดใบลา" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-slate-200 dark:border-slate-800">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/40">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-primary-50 dark:bg-primary-950/50 flex items-center justify-center text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
+                  <i className="fa-solid fa-folder-tree text-lg" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-white">จัดการหมวดหมู่แม่แบบเอกสาร</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">สร้าง แก้ไข หรือลบหมวดหมู่สำหรับจัดระเบียบแม่แบบในระบบ</p>
+                </div>
               </div>
+              <button 
+                type="button"
+                onClick={() => { setIsCatModalOpen(false); resetCatForm(); }}
+                className="w-8 h-8 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors"
+                title="ปิดหน้าต่าง"
+              >
+                <i className="fa-solid fa-xmark text-lg" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              {/* Form Section */}
+              <div className={`p-5 rounded-2xl border transition-all ${
+                editingCatId 
+                  ? 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/60' 
+                  : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200/80 dark:border-slate-700/60'
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-bold flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                    <i className={`fa-solid ${editingCatId ? 'fa-pen-to-square text-amber-500' : 'fa-plus text-primary-500'}`} />
+                    {editingCatId ? 'แก้ไขข้อมูลหมวดหมู่' : 'เพิ่มหมวดหมู่ใหม่'}
+                  </h4>
+                  {editingCatId && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={resetCatForm}
+                      className="text-xs py-1 px-2.5 h-auto text-slate-500"
+                    >
+                      <i className="fa-solid fa-arrow-rotate-left mr-1" /> ยกเลิกการแก้ไข
+                    </Button>
+                  )}
+                </div>
+
+                <form onSubmit={handleSaveCategory} className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                        ชื่อหมวดหมู่ <span className="text-rose-500">*</span>
+                      </label>
+                      <Input
+                        value={catName}
+                        onChange={(e) => setCatName(e.target.value)}
+                        placeholder="เช่น หมวดใบลา, หมวดคำร้องทั่วไป"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                        รหัสหมวดหมู่ (Code) <span className="text-rose-500">*</span>
+                      </label>
+                      <Input
+                        value={catCode}
+                        onChange={(e) => setCatCode(e.target.value.toUpperCase())}
+                        placeholder="เช่น LEAVES, GENERAL"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                      คำอธิบาย (ไม่บังคับ)
+                    </label>
+                    <Input
+                      value={catDescription}
+                      onChange={(e) => setCatDescription(e.target.value)}
+                      placeholder="เช่น รวมแบบฟอร์มการลาทุกประเภทของข้าราชการและลูกจ้าง"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-1">
+                    <Button 
+                      type="submit" 
+                      variant={editingCatId ? 'candy' : 'primary'}
+                      size="sm"
+                      disabled={catSubmitting}
+                      className="flex items-center gap-2"
+                    >
+                      <i className={`fa-solid ${catSubmitting ? 'fa-spinner fa-spin' : editingCatId ? 'fa-check' : 'fa-plus'}`} />
+                      {editingCatId ? 'บันทึกการแก้ไข' : 'เพิ่มหมวดหมู่'}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Categories Table/List */}
               <div>
-                <label className="block text-sm font-medium mb-1">รหัสหมวดหมู่ (Code)</label>
-                <Input value={newCatCode} onChange={e => setNewCatCode(e.target.value)} placeholder="เช่น LEAVES" />
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                    <i className="fa-solid fa-list text-slate-400" />
+                    รายการหมวดหมู่ทั้งหมด ({categories.length})
+                  </h4>
+                </div>
+
+                <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                      <tr>
+                        <th className="px-4 py-3">รหัส</th>
+                        <th className="px-4 py-3">ชื่อหมวดหมู่</th>
+                        <th className="px-4 py-3 text-center">จำนวนแม่แบบ</th>
+                        <th className="px-4 py-3 text-right">การจัดการ</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
+                      {categories.map((cat) => {
+                        const isCurrentlyEditing = editingCatId === cat.id;
+                        const templateCount = cat._count?.templates ?? 0;
+                        return (
+                          <tr 
+                            key={cat.id} 
+                            className={`transition-colors ${
+                              isCurrentlyEditing 
+                                ? 'bg-amber-50/60 dark:bg-amber-950/30 font-medium' 
+                                : 'hover:bg-slate-50/70 dark:hover:bg-slate-800/50'
+                            }`}
+                          >
+                            <td className="px-4 py-3">
+                              <Badge variant="primary" className="font-mono text-xs">
+                                {cat.code}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="font-medium text-slate-800 dark:text-white">
+                                {cat.name}
+                              </div>
+                              {cat.description && (
+                                <div className="text-xs text-slate-400 dark:text-slate-500 truncate max-w-xs">
+                                  {cat.description}
+                                </div>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-center">
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                templateCount > 0 
+                                  ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' 
+                                  : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                              }`}>
+                                {templateCount} รายการ
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleEditCategory(cat)}
+                                  className="h-8 px-2.5 text-xs flex items-center gap-1"
+                                  title="แก้ไขหมวดหมู่"
+                                >
+                                  <i className="fa-solid fa-pen text-amber-500" />
+                                  <span>แก้ไข</span>
+                                </Button>
+                                <Button
+                                  variant="danger"
+                                  size="sm"
+                                  onClick={() => handleDeleteCategory(cat)}
+                                  disabled={templateCount > 0}
+                                  className="h-8 px-2.5 text-xs flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                                  title={templateCount > 0 ? `ไม่สามารถลบได้เนื่องจากมีแม่แบบ ${templateCount} รายการ` : 'ลบหมวดหมู่'}
+                                >
+                                  <i className="fa-solid fa-trash" />
+                                  <span>ลบ</span>
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {categories.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="px-4 py-8 text-center text-slate-400 dark:text-slate-500">
+                            ยังไม่มีหมวดหมู่ในระบบ
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-            <div className="flex justify-end space-x-3 mt-8">
-              <Button variant="outline" onClick={() => setIsCatModalOpen(false)}>ปิด</Button>
-              <Button variant="primary" onClick={handleAddCategory}>เพิ่ม</Button>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex justify-end">
+              <Button variant="outline" onClick={() => { setIsCatModalOpen(false); resetCatForm(); }}>
+                ปิดหน้าต่าง
+              </Button>
             </div>
           </div>
         </div>
