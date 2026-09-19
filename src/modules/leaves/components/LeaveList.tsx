@@ -13,6 +13,7 @@ import {
   CalendarCheck,
   Plus,
   FileText,
+  FileSignature,
   Trash2,
   Edit,
   Printer,
@@ -29,21 +30,22 @@ import {
 
 interface LeaveRecord {
   id: string;
+  personnelId: string;
   leaveType: string;
   startDate: string;
   endDate: string;
-  reason: string;
-  writtenAt: string;
-  toPerson: string;
-  contactAddress: string;
-  contactTambon: string;
-  contactAmphoe: string;
-  contactProvince: string;
-  status: string;
-  createdAt: string;
+  reason?: string;
+  writtenAt?: string;
+  toPerson?: string;
+  contactAddress?: string;
+  contactTambon?: string;
+  contactAmphoe?: string;
+  contactProvince?: string;
   substitutePerson?: string;
+  status: string;
   accumulatedLeaveDays?: number;
   thisYearLeaveDays?: number;
+  totalLeaveDays?: number;
   ordainedBefore?: boolean;
   ordainTempleName?: string;
   ordainTempleLocation?: string;
@@ -52,20 +54,35 @@ interface LeaveRecord {
   stayTempleLocation?: string;
   maternityLeaveTimes?: number;
   maternityLeaveDays?: number;
+  createdAt: string;
+  personnel?: {
+    prefix?: string;
+    firstName: string;
+    lastName: string;
+    department?: string;
+    subDepartment?: string;
+  };
 }
 
-export default function LeaveList({ personnelId, isAdmin = false }: { personnelId: string; isAdmin?: boolean }) {
+interface LeaveListProps {
+  personnelId?: string;
+  isAdmin?: boolean;
+}
+
+export default function LeaveList({ personnelId: propPersonnelId, isAdmin = false }: LeaveListProps) {
+  const searchParams = useSearchParams();
+  const typeParam = searchParams ? searchParams.get('type') : null;
+
   const [leaves, setLeaves] = useState<LeaveRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [personnelId, setPersonnelId] = useState<string>(propPersonnelId || '');
+
+  // Form State
   const [isAdding, setIsAdding] = useState(false);
-  const [editingLeaveId, setEditingLeaveId] = useState<string | null>(null);
   const [useDynamicForm, setUseDynamicForm] = useState(true);
+  const [editingLeaveId, setEditingLeaveId] = useState<string | null>(null);
 
-  // Pagination states
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-
-  const [formData, setFormData] = useState<Partial<LeaveRecord>>({
+  const [formData, setFormData] = useState({
     leaveType: 'ลากิจ',
     startDate: '',
     endDate: '',
@@ -97,61 +114,62 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
     'ลาอุปสมบท',
     'ไปช่วยราชการ',
   ]);
+
+  // Delete State
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const typeParam = searchParams ? searchParams.get('type') : null;
 
-  const fetchPersonnelData = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/personnel/${personnelId}`);
-      if (res.ok) {
-        const data = await res.json();
-        const fullAddr = data.address || '';
-        let defaultParsed = { address: '', tambon: '', amphoe: '', province: '' };
-
-        if (fullAddr) {
-          const tMatch = fullAddr.match(/ต\.\s*([^\s]+)|ตำบล\s*([^\s]+)/);
-          const aMatch = fullAddr.match(/อ\.\s*([^\s]+)|อำเภอ\s*([^\s]+)/);
-          const jMatch = fullAddr.match(/จ\.\s*([^\s]+)|จังหวัด\s*([^\s]+)/);
-
-          defaultParsed = {
-            address: fullAddr.split(/ต\.|ตำบล/)[0].trim() || fullAddr,
-            tambon: tMatch ? tMatch[1] || tMatch[2] : '',
-            amphoe: aMatch ? aMatch[1] || aMatch[2] : '',
-            province: jMatch ? jMatch[1] || jMatch[2] : '',
-          };
-        }
-
-        setFormData((prev) => ({
-          ...prev,
-          contactAddress: defaultParsed.address || prev.contactAddress,
-          contactTambon: defaultParsed.tambon || prev.contactTambon,
-          contactAmphoe: defaultParsed.amphoe || prev.contactAmphoe,
-          contactProvince: defaultParsed.province || prev.contactProvince,
-        }));
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [personnelId]);
+  // Pagination & Filtering State
+  const [selectedType, setSelectedType] = useState<string>('all');
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(20);
 
   const fetchLeaves = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const res = await fetch(`/api/leaves?personnelId=${personnelId}`);
+      let url = '/api/leaves';
+      const params = new URLSearchParams();
+      if (personnelId) params.append('personnelId', personnelId);
+      if (selectedType !== 'all') params.append('type', selectedType);
+      if (selectedStatus !== 'all') params.append('status', selectedStatus);
+
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setLeaves(data);
+      } else {
+        toast.error('ไม่สามารถดึงข้อมูลประวัติแบบฟอร์มได้');
       }
     } catch (err) {
       console.error(err);
+      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     } finally {
       setIsLoading(false);
+    }
+  }, [personnelId, selectedType, selectedStatus]);
+
+  useEffect(() => {
+    if (!personnelId) {
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          setPersonnelId(user.id);
+        } catch (e) {
+          console.error(e);
+        }
+      }
     }
   }, [personnelId]);
 
   useEffect(() => {
-    fetchPersonnelData();
-    fetchLeaves();
+    if (personnelId) {
+      fetchLeaves();
+    }
 
     fetch('/api/settings')
       .then((res) => res.json())
@@ -169,7 +187,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
         }
       })
       .catch(console.error);
-  }, [personnelId, fetchPersonnelData, fetchLeaves]);
+  }, [personnelId, fetchLeaves]);
 
   useEffect(() => {
     if (typeParam) {
@@ -246,7 +264,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
       const res = await fetch(`/api/leaves/${deleteTargetId}`, { method: 'DELETE' });
       if (res.ok) {
         fetchLeaves();
-        toast.success('ลบประวัติการลาเรียบร้อย');
+        toast.success('ลบรายการแบบฟอร์มเรียบร้อย');
       } else {
         toast.error('ไม่สามารถลบรายการได้');
       }
@@ -261,7 +279,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
   const getLeaveTypeVariant = (type: string) => {
     switch (type) {
       case 'ลากิจ':
-        return 'info' as const;
+        return 'primary' as const;
       case 'ลาป่วย':
         return 'danger' as const;
       case 'ลาพักผ่อน':
@@ -314,9 +332,9 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
 
   // Pagination calculation
   const totalItems = leaves.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const currentPage = Math.min(page, totalPages);
-  const indexOfFirstItem = (currentPage - 1) * pageSize;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const page = Math.min(currentPage, totalPages);
+  const indexOfFirstItem = (page - 1) * pageSize;
   const indexOfLastItem = Math.min(indexOfFirstItem + pageSize, totalItems);
   const paginatedLeaves = leaves.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -325,12 +343,12 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <CalendarCheck className="w-5 h-5 text-primary-500" />
-            <span>ประวัติการลา (Leave History)</span>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+            <FileSignature className="w-5 h-5 text-primary-500" />
+            <span>ประวัติการยื่นแบบฟอร์ม (e-Forms History)</span>
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            บันทึกคำขอลา พิมพ์ใบลา และติดตามสถานะการพิจารณา
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            บันทึกประวัติการยื่นแบบฟอร์ม พิมพ์เอกสารราชการ และติดตามสถานะคำขอ
           </p>
         </div>
 
@@ -341,10 +359,10 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
               setEditingLeaveId(null);
               setIsAdding(true);
             }}
-            className="flex items-center gap-2 shadow-sm shadow-primary-500/30"
+            className="flex items-center gap-2 shrink-0 whitespace-nowrap shadow-sm shadow-primary-500/30"
           >
             <Plus className="w-4 h-4" />
-            <span>ยื่นขอลาใหม่</span>
+            <span>ยื่นแบบฟอร์มใหม่</span>
           </Button>
         )}
       </div>
@@ -725,12 +743,12 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
       {isLoading ? (
         <div className="text-center py-12 text-slate-400">
           <div className="w-8 h-8 border-3 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-          <p className="text-xs">กำลังโหลดประวัติการลา...</p>
+          <p className="text-xs">กำลังโหลดประวัติการยื่นแบบฟอร์ม...</p>
         </div>
       ) : leaves.length === 0 ? (
         <div className="text-center py-12 text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
-          <Calendar className="w-10 h-10 mx-auto mb-2 opacity-40 text-slate-400" />
-          <p className="font-semibold text-xs">ยังไม่มีประวัติการลาในระบบ</p>
+          <FileSignature className="w-10 h-10 mx-auto mb-2 opacity-40 text-slate-400" />
+          <p className="font-semibold text-xs">ยังไม่มีประวัติการยื่นแบบฟอร์มในระบบ</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -738,9 +756,9 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
             <table className="w-full text-left text-xs text-slate-600 dark:text-slate-400">
               <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 uppercase tracking-wider font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
                 <tr>
-                  <th className="px-4 py-3">ประเภทการลา</th>
-                  <th className="px-4 py-3">ช่วงเวลาที่ลา</th>
-                  <th className="px-4 py-3">เหตุผลการลา</th>
+                  <th className="px-4 py-3">ประเภทแบบฟอร์ม / เอกสาร</th>
+                  <th className="px-4 py-3">ช่วงเวลา / วันที่</th>
+                  <th className="px-4 py-3">เหตุผล / วัตถุประสงค์</th>
                   <th className="px-4 py-3 text-center">สถานะ</th>
                   <th className="px-4 py-3 text-right">จัดการ</th>
                 </tr>
@@ -771,13 +789,13 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
                               leaveType: leave.leaveType,
                               startDate: leave.startDate ? new Date(leave.startDate).toISOString().split('T')[0] : '',
                               endDate: leave.endDate ? new Date(leave.endDate).toISOString().split('T')[0] : '',
-                              reason: leave.reason,
-                              writtenAt: leave.writtenAt,
-                              toPerson: leave.toPerson,
-                              contactAddress: leave.contactAddress,
-                              contactTambon: leave.contactTambon,
-                              contactAmphoe: leave.contactAmphoe,
-                              contactProvince: leave.contactProvince,
+                              reason: leave.reason || '',
+                              writtenAt: leave.writtenAt || '',
+                              toPerson: leave.toPerson || '',
+                              contactAddress: leave.contactAddress || '',
+                              contactTambon: leave.contactTambon || '',
+                              contactAmphoe: leave.contactAmphoe || '',
+                              contactProvince: leave.contactProvince || '',
                               substitutePerson: leave.substitutePerson || '',
                               accumulatedLeaveDays: leave.accumulatedLeaveDays || 0,
                               thisYearLeaveDays: leave.thisYearLeaveDays || 10,
@@ -803,7 +821,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-1.5 text-slate-500 hover:text-primary-600 bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-950/40 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"
-                          title="พิมพ์ใบลา (PDF)"
+                          title="พิมพ์เอกสาร (PDF)"
                         >
                           <Printer className="w-4 h-4" />
                         </a>
@@ -833,7 +851,7 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
             pageSize={pageSize}
             unitName="รายการ"
             setPageSize={setPageSize}
-            setCurrentPage={setPage}
+            setCurrentPage={setCurrentPage}
           />
         </div>
       )}
@@ -841,8 +859,8 @@ export default function LeaveList({ personnelId, isAdmin = false }: { personnelI
       {/* Styled Confirmation Modal */}
       <ConfirmModal
         isOpen={!!deleteTargetId}
-        title="ยืนยันการลบประวัติการลา?"
-        message="คุณแน่ใจหรือไม่ที่จะลบรายการประวัติการลานี้? ข้อมูลที่ลบจะไม่สามารถกู้คืนได้"
+        title="ยืนยันการลบแบบฟอร์มคำขอ?"
+        message="คุณแน่ใจหรือไม่ที่จะลบรายการคำขอนี้? ข้อมูลที่ลบจะไม่สามารถกู้คืนได้"
         confirmText="ยืนยันการลบ"
         cancelText="ยกเลิก"
         isDestructive={true}

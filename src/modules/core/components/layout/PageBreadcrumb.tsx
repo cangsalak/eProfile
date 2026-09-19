@@ -27,13 +27,13 @@ const staticPageMap: Record<string, PageMeta> = {
     title: 'หน้าหลัก (Dashboard)',
     description: 'ภาพรวมระบบและสถิติข้อมูลบุคลากร',
     icon: 'fa-solid fa-house',
-    items: [{ href: '/', label: 'หน้าหลัก' }, { href: '/dashboard', label: 'Dashboard' }],
+    items: [{ href: '/', label: 'หน้าหลัก' }],
   },
   '/dashboard': {
     title: 'หน้าหลัก (Dashboard)',
     description: 'ภาพรวมระบบและสถิติข้อมูลบุคลากร',
     icon: 'fa-solid fa-house',
-    items: [{ href: '/', label: 'หน้าหลัก' }, { href: '/dashboard', label: 'Dashboard' }],
+    items: [{ href: '/', label: 'หน้าหลัก' }],
   },
   '/settings': {
     title: 'ตั้งค่าระบบ',
@@ -73,6 +73,31 @@ const staticPageMap: Record<string, PageMeta> = {
   },
 };
 
+function deduplicateBreadcrumbs(items: BreadcrumbItem[]): BreadcrumbItem[] {
+  const result: BreadcrumbItem[] = [];
+  const seenHrefs = new Set<string>();
+
+  for (const item of items) {
+    const cleanHref = item.href.replace(/\/+$/, '') || '/';
+    const cleanLabel = item.label.trim().toLowerCase();
+
+    // Skip if same href or home alias is already in the trail
+    if (seenHrefs.has(cleanHref) || (cleanHref === '/dashboard' && seenHrefs.has('/'))) {
+      continue;
+    }
+
+    // Skip if previous item has the exact same label
+    const prev = result[result.length - 1];
+    if (prev && prev.label.trim().toLowerCase() === cleanLabel) {
+      continue;
+    }
+
+    seenHrefs.add(cleanHref);
+    result.push(item);
+  }
+  return result;
+}
+
 /**
  * Automatically resolves Page Title, Subtitle, Icon, Breadcrumbs, and Sub-menus for any module.
  * Reads directly from Module Manifests so new modules work with zero configuration.
@@ -107,11 +132,16 @@ function resolvePageMeta(pathname: string): PageMeta {
     // B. Match menus or subItems defined in the manifest
     for (const menu of mod.menus) {
       if (menu.path === path) {
+        const isRoot = menu.path === modBaseUrl;
+        const items = isRoot
+          ? [{ href: '/', label: 'หน้าหลัก' }, { href: modBaseUrl, label: menu.title || modName }]
+          : [{ href: '/', label: 'หน้าหลัก' }, { href: modBaseUrl, label: modName }, { href: path, label: menu.title }];
+
         return {
           title: menu.title,
           description: modDesc,
           icon: menu.icon || modIcon,
-          items: [{ href: '/', label: 'หน้าหลัก' }, { href: modBaseUrl, label: modName }, { href: path, label: menu.title }],
+          items: deduplicateBreadcrumbs(items),
           moduleMenus: mod.menus,
           currentModuleId: mod.id,
         };
@@ -124,12 +154,12 @@ function resolvePageMeta(pathname: string): PageMeta {
               title: sub.name,
               description: modDesc,
               icon: menu.icon || modIcon,
-              items: [
+              items: deduplicateBreadcrumbs([
                 { href: '/', label: 'หน้าหลัก' },
                 { href: modBaseUrl, label: modName },
                 { href: menu.path, label: menu.title },
                 { href: sub.path, label: sub.name },
-              ],
+              ]),
               moduleMenus: mod.menus,
               currentModuleId: mod.id,
             };
@@ -166,11 +196,11 @@ function resolvePageMeta(pathname: string): PageMeta {
         title: matchedMenu ? matchedMenu.title : `${modName} (${formattedSlug})`,
         description: modDesc,
         icon: matchedMenu?.icon || modIcon,
-        items: [
+        items: deduplicateBreadcrumbs([
           { href: '/', label: 'หน้าหลัก' },
           { href: modBaseUrl, label: modName },
           { href: path, label: matchedMenu ? matchedMenu.title : formattedSlug },
-        ],
+        ]),
         moduleMenus: mod.menus,
         currentModuleId: mod.id,
       };
@@ -197,7 +227,7 @@ function resolvePageMeta(pathname: string): PageMeta {
   return {
     title: autoTitle,
     icon: 'fa-solid fa-layer-group',
-    items,
+    items: deduplicateBreadcrumbs(items),
   };
 }
 
@@ -233,29 +263,33 @@ export default function PageBreadcrumb() {
 
   return (
     <div className="mb-6 animate-fade-in font-prompt no-print print:hidden">
-      {/* Small Top Breadcrumb Trail */}
-      <nav className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2">
-        {items.map((item, idx) => {
-          const isLast = idx === items.length - 1;
-          return (
-            <React.Fragment key={item.href + idx}>
-              {idx > 0 && <span className="text-slate-300 dark:text-slate-600">/</span>}
-              {isLast ? (
-                <span className="text-slate-700 dark:text-slate-200 font-medium">
-                  {item.label}
-                </span>
-              ) : (
-                <Link
-                  href={item.href}
-                  className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                >
-                  {item.label}
-                </Link>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </nav>
+      {/* Modern Breadcrumb Trail (rendered only when there is a parent hierarchy) */}
+      {items.length > 1 && (
+        <nav className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2.5">
+          {items.map((item, idx) => {
+            const isLast = idx === items.length - 1;
+            const isFirst = idx === 0;
+            return (
+              <React.Fragment key={item.href + idx}>
+                {idx > 0 && <i className="fa-solid fa-chevron-right text-[8px] text-slate-300 dark:text-slate-600 px-0.5" />}
+                {isLast ? (
+                  <span className="text-slate-700 dark:text-slate-200 font-medium">
+                    {item.label}
+                  </span>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
+                  >
+                    {isFirst && <i className="fa-solid fa-house text-[10px] text-slate-400" />}
+                    <span>{item.label}</span>
+                  </Link>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </nav>
+      )}
 
       {/* Main Page Title Header Bar with Right-side Sub-Menu / Action Slot (Yellow Box Area) */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

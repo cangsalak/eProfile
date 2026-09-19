@@ -163,22 +163,8 @@ export default function PersonnelFormView() {
   return (
     <div className="pb-24 space-y-6 font-prompt animate-fade-in">
       
-      {/* 1. Breadcrumbs Navigation */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          <Link href="/modules/users" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            ทำเนียบบุคลากร
-          </Link>
-          <span>/</span>
-          <Link href="/modules/users/manage" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-            จัดการบุคลากร
-          </Link>
-          <span>/</span>
-          <span className="font-semibold text-slate-900 dark:text-white">
-            {isEditMode ? `แก้ไขข้อมูล: ${formData.prefix || ''}${formData.firstName || ''} ${formData.lastName || ''}` : 'เพิ่มข้อมูลกำลังพลใหม่'}
-          </span>
-        </nav>
-
+      {/* Back Button Action Bar */}
+      <div className="flex items-center justify-end gap-4">
         <Link href="/modules/users/manage">
           <Button
             type="button"
