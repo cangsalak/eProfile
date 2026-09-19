@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import TablePagination from '@/components/common/TablePagination';
@@ -18,6 +19,7 @@ import {
   CheckCircle,
   Clock,
   Ban,
+  Sliders,
 } from 'lucide-react';
 
 interface LeaveRecord {
@@ -263,19 +265,32 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
           </p>
         </div>
 
-        {!isAdding && (
-          <button
-            type="button"
-            onClick={() => {
-              setEditingLeaveId(null);
-              setIsAdding(true);
-            }}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-white bg-primary-600 hover:bg-primary-700 shadow-sm shadow-primary-500/20 active:scale-[0.98] transition-all shrink-0 whitespace-nowrap"
-          >
-            <Plus className="w-4 h-4" />
-            <span>ยื่นแบบฟอร์มใหม่</span>
-          </button>
-        )}
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {isAdmin && (
+            <Link
+              href="/modules/document-templates"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all shrink-0 whitespace-nowrap"
+              title="เปิดหน้าจอจัดการแม่แบบเอกสารและวางแท็ก"
+            >
+              <Sliders className="w-3.5 h-3.5 text-primary-500" />
+              <span>จัดการแม่แบบ/วางแท็ก</span>
+            </Link>
+          )}
+
+          {!isAdding && (
+            <button
+              type="button"
+              onClick={() => {
+                setEditingLeaveId(null);
+                setIsAdding(true);
+              }}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-white bg-primary-600 hover:bg-primary-700 shadow-sm shadow-primary-500/20 active:scale-[0.98] transition-all shrink-0 whitespace-nowrap"
+            >
+              <Plus className="w-4 h-4" />
+              <span>ยื่นแบบฟอร์มใหม่</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Dynamic Document Template Form */}

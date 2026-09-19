@@ -11,8 +11,18 @@ export const manifest: ModuleManifest = {
   category: 'system',
   isCore: false,
   defaultEnabled: true,
-  menus: [],
-  settingsPath: '/modules/document-templates/dashboard',
+  menus: [
+    {
+      id: 'document-templates-manage',
+      title: 'จัดการแม่แบบ (วางแท็ก)',
+      icon: 'fa-solid fa-tags',
+      path: '/modules/document-templates',
+      order: 42,
+      group: 'operations',
+      requiredRoles: ['ADMIN', 'SUPER_ADMIN', 'HR_MANAGER']
+    }
+  ],
+  settingsPath: '/modules/document-templates',
   permissions: [
     {
       key: 'MANAGE_TEMPLATES',
