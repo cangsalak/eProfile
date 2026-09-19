@@ -14,11 +14,11 @@ export const manifest: ModuleManifest = {
   menus: [
     {
       id: 'document-templates-manage',
-      title: 'จัดการแม่แบบ (วางแท็ก)',
-      icon: 'fa-solid fa-tags',
+      title: 'จัดการแม่แบบเอกสารส่วนกลาง',
+      icon: 'fa-solid fa-file-invoice',
       path: '/modules/document-templates',
-      order: 42,
-      group: 'operations',
+      order: 92,
+      group: 'system',
       requiredRoles: ['ADMIN', 'SUPER_ADMIN', 'HR_MANAGER']
     }
   ],

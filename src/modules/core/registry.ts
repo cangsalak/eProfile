@@ -170,7 +170,7 @@ export class ModuleRegistry {
         }
       });
 
-    return uniqueMenus.map(({ name, icon, path, subItems }) => ({ name, icon, path, subItems }));
+    return uniqueMenus.map(({ name, icon, path, group, subItems }) => ({ name, icon, path, group, subItems }));
   }
 
   /**
