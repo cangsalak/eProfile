@@ -1267,12 +1267,57 @@ export default function TemplateCanvasEditor({
                   )}
                 </>
               ) : (
-                <div className="absolute inset-0 p-8 border border-slate-200 pointer-events-none flex flex-col justify-between text-slate-300">
-                  <div className="text-center font-bold text-xs uppercase tracking-widest text-slate-400">
-                    หน้า {currentPage} (ขนาดมาตรฐาน A4: 595.28 x 841.89 pt)
+                <div className="absolute inset-0 p-8 border-2 border-dashed border-indigo-200 dark:border-indigo-800/60 bg-gradient-to-b from-indigo-50/20 via-white to-slate-50 dark:from-slate-900/60 dark:via-slate-900 dark:to-slate-950 flex flex-col justify-between text-slate-400">
+                  <div className="text-center font-bold text-xs uppercase tracking-widest text-indigo-500 dark:text-indigo-400 flex items-center justify-center gap-2">
+                    <i className="fa-solid fa-file-word text-blue-500" />
+                    <span>แม่แบบนี้เชื่อมโยงด้วยไฟล์ Word (.docx) — หน้า {currentPage}</span>
                   </div>
-                  <div className="text-center text-xs text-slate-400">
-                    ลากแท็กไปวางในช่องว่าง หรือบนเส้นประของแบบฟอร์ม
+
+                  {docxUrl && (
+                    <div className="max-w-md mx-auto p-5 bg-white/95 dark:bg-slate-850/95 rounded-2xl border border-indigo-100 dark:border-indigo-900/50 shadow-md text-center space-y-3 pointer-events-auto z-10">
+                      <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto text-xl border border-blue-100 dark:border-blue-900/40">
+                        <i className="fa-solid fa-file-word" />
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-800 dark:text-white">
+                        ไฟล์ Word ใช้ระบบแทนที่แท็กในเนื้อหาเอกสาร
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        ไฟล์ Word (.docx) ไม่ได้ใช้ระบบพิกัด X, Y แต่จะ<strong>ค้นหาและแทนที่แท็กตัวแปร</strong>ในเนื้อหาเอกสารโดยตรง เช่น <code className="text-indigo-600 dark:text-indigo-400 font-mono font-bold bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">{"{fullName}"}</code>, <code className="text-indigo-600 dark:text-indigo-400 font-mono font-bold bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">{"{reason}"}</code>, <code className="text-indigo-600 dark:text-indigo-400 font-mono font-bold bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">{"{todayDay}"}</code>
+                      </p>
+                      <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200/60 dark:border-amber-900/40 text-left text-[11px] text-amber-800 dark:text-amber-300 space-y-1">
+                        <div className="font-bold flex items-center gap-1.5">
+                          <i className="fa-solid fa-circle-info text-amber-500" />
+                          <span>หากต้องการวางแท็กทาบพิกัดบนหน้าเอกสาร (Visual Overlay):</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                          กรุณาบันทึก (Save As) หรือ Export ไฟล์ Word เป็น <strong>PDF</strong> แล้วอัปโหลดในช่อง <strong>"ไฟล์ PDF (ทาบข้อความ)"</strong> ของแม่แบบนี้ เพื่อให้หน้าเอกสารแสดงเป็นพื้นหลังใน Canvas ครับ
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleScanDocx}
+                          disabled={isScanningDocx}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all"
+                        >
+                          <i className={`fa-solid ${isScanningDocx ? 'fa-spinner fa-spin' : 'fa-magnifying-glass'}`} />
+                          <span>{isScanningDocx ? 'กำลังสแกน...' : 'สแกนแท็กในไฟล์ Word'}</span>
+                        </button>
+                        <a
+                          href={docxUrl}
+                          download
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-all"
+                        >
+                          <i className="fa-solid fa-file-arrow-down text-blue-500" />
+                          <span>ดาวน์โหลดไฟล์ Word</span>
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-center text-xs text-slate-400 font-mono">
+                    ขนาดมาตรฐาน A4: 595.28 x 841.89 pt
                   </div>
                 </div>
               )}

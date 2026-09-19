@@ -379,7 +379,8 @@ export default function DocumentTemplateDashboard() {
 
               <div className="grid grid-cols-2 gap-6 mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                 <div>
-                  <label className="block text-sm font-bold mb-2 text-rose-600"><i className="fa-solid fa-file-pdf mr-2" /> ไฟล์ PDF (ทาบข้อความ)</label>
+                  <label className="block text-sm font-bold mb-1 text-rose-600"><i className="fa-solid fa-file-pdf mr-2" /> ไฟล์ PDF (ทาบข้อความพิกัด)</label>
+                  <p className="text-[11px] text-slate-500 mb-2">จำเป็นสำหรับการเรนเดอร์หน้าเอกสารและลากวางแท็กพิกัด X, Y</p>
                   <FileUpload
                     onChange={(files) => {
                       if (files && files.length > 0) {
@@ -409,7 +410,8 @@ export default function DocumentTemplateDashboard() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold mb-2 text-blue-600"><i className="fa-solid fa-file-word mr-2" /> ไฟล์ Word (แก้ Manual)</label>
+                  <label className="block text-sm font-bold mb-1 text-blue-600"><i className="fa-solid fa-file-word mr-2" /> ไฟล์ Word (.docx แทนที่แท็กอัตโนมัติ)</label>
+                  <p className="text-[11px] text-slate-500 mb-2">ระบบจะแทนที่แท็กตัวแปร เช่น {"{fullName}"}, {"{reason}"} ในไฟล์ Word ให้อัตโนมัติ</p>
                   <FileUpload
                     onChange={(files) => {
                       if (files && files.length > 0) {

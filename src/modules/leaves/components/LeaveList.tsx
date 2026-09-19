@@ -277,6 +277,16 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
             </Link>
           )}
 
+          <a
+            href="/templates/docx/starter_leave_template.docx"
+            download="แบบฟอร์มใบลา_ทบ100-006.docx"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 transition-all shrink-0 whitespace-nowrap shadow-2xs"
+            title="ดาวน์โหลดแบบฟอร์มใบลาเปล่า (Word .docx)"
+          >
+            <i className="fa-solid fa-file-arrow-down text-blue-600 dark:text-blue-400" />
+            <span>ดาวน์โหลดแบบฟอร์มใบลา (Word)</span>
+          </a>
+
           {!isAdding && (
             <button
               type="button"
@@ -391,6 +401,14 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
                         >
                           <Edit className="w-4 h-4" />
                         </button>
+                        <a
+                          href={`/api/modules/leaves/${leave.id}/docx`}
+                          download={`leave_${leave.id}.docx`}
+                          className="p-1.5 text-blue-600 hover:text-blue-700 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors border border-blue-200 dark:border-blue-800"
+                          title="ดาวน์โหลดเอกสาร Word (.docx)"
+                        >
+                          <i className="fa-solid fa-file-word text-sm" />
+                        </a>
                         <a
                           href={`/api/modules/leaves/${leave.id}/pdf`}
                           target="_blank"

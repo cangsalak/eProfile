@@ -450,6 +450,61 @@ export default function DynamicLeaveForm({
             })
           )}
         </div>
+
+        {/* Selected Template Download Actions Banner */}
+        {currentTemplate && (
+          <div className="pt-3 border-t border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                <FileText className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                  <span>แบบฟอร์มต้นฉบับ:</span>
+                  <span className="text-primary-600 dark:text-primary-400">{currentTemplate.name}</span>
+                </div>
+                <div className="text-[11px] text-slate-400 dark:text-slate-500">
+                  ดาวน์โหลดไฟล์แบบฟอร์มเปล่าเพื่อนำไปกรอกข้อมูลด้วยตนเอง หรือแก้ไขใน Word/PDF
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {currentTemplate.docxUrl ? (
+                <a
+                  href={currentTemplate.docxUrl}
+                  download
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 transition-all shadow-2xs"
+                >
+                  <i className="fa-solid fa-file-word text-blue-600 dark:text-blue-400" />
+                  <span>ดาวน์โหลดแบบฟอร์ม Word (.docx)</span>
+                </a>
+              ) : (
+                <a
+                  href="/templates/docx/starter_leave_template.docx"
+                  download="แบบฟอร์มใบลา_ทบ100-006.docx"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:hover:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 transition-all shadow-2xs"
+                >
+                  <i className="fa-solid fa-file-word text-blue-600 dark:text-blue-400" />
+                  <span>ดาวน์โหลดแบบฟอร์ม Word ตัวอย่าง (ทบ. 100-006)</span>
+                </a>
+              )}
+
+              {currentTemplate.pdfUrl && (
+                <a
+                  href={currentTemplate.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:hover:bg-rose-900/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 transition-all shadow-2xs"
+                >
+                  <i className="fa-solid fa-file-pdf text-rose-600 dark:text-rose-400" />
+                  <span>ดาวน์โหลดแบบฟอร์ม PDF</span>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Auto-filled Personnel Profile Summary (Only if personnel tags are configured) ── */}
@@ -648,15 +703,30 @@ export default function DynamicLeaveForm({
           )}
 
           {/* ── Submit & Action Buttons ── */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
-              ยกเลิก
-            </Button>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div>
+              {currentTemplate?.docxUrl && (
+                <a
+                  href={currentTemplate.docxUrl}
+                  download
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors shadow-2xs"
+                  title="ดาวน์โหลดไฟล์แบบฟอร์ม Word ต้นฉบับ"
+                >
+                  <i className="fa-solid fa-file-word text-blue-600 dark:text-blue-400" />
+                  <span>ดาวน์โหลดไฟล์ Word เปล่า</span>
+                </a>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={isSubmitting}
+              >
+                ยกเลิก
+              </Button>
             <Button
               type="submit"
               variant="primary"
@@ -674,6 +744,7 @@ export default function DynamicLeaveForm({
             </Button>
           </div>
         </div>
+      </div>
       )}
     </form>
   );
