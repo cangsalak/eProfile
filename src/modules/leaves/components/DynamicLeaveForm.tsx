@@ -45,6 +45,7 @@ interface DynamicLeaveFormProps {
   onClose: () => void;
   onSuccess: () => void;
   initialLeaveType?: string;
+  initialCategoryCode?: string;
   editingLeaveId?: string | null;
   initialData?: Record<string, any>;
 }
@@ -54,11 +55,12 @@ export default function DynamicLeaveForm({
   onClose,
   onSuccess,
   initialLeaveType = 'ลากิจ',
+  initialCategoryCode,
   editingLeaveId = null,
   initialData,
 }: DynamicLeaveFormProps) {
   const [categories, setCategories] = useState<CategoryOption[]>([]);
-  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>('all');
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>(initialCategoryCode || 'all');
   const [templates, setTemplates] = useState<TemplateOption[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [loadingTemplates, setLoadingTemplates] = useState<boolean>(true);
@@ -121,16 +123,28 @@ export default function DynamicLeaveForm({
             const activeTemplates = tplData.data.filter((t: any) => t.isActive !== false);
             setTemplates(activeTemplates);
 
-            // Auto-select template matching target leaveType or first template
+            // Auto-select template matching target leaveType or category
             if (activeTemplates.length > 0) {
-              const targetType = initialData?.leaveType || initialLeaveType;
-              const matched = activeTemplates.find(
-                (t: any) => t.name.includes(targetType) || t.code.includes(targetType)
-              );
-              const chosen = matched || activeTemplates[0];
-              setSelectedTemplateId(chosen.id);
-              if (chosen?.category?.code) {
-                setSelectedCategoryCode(chosen.category.code);
+              if (initialCategoryCode && initialCategoryCode !== 'all') {
+                setSelectedCategoryCode(initialCategoryCode);
+                const matchingCatTpl = activeTemplates.find(
+                  (t: any) => t.category?.code?.toUpperCase() === initialCategoryCode.toUpperCase()
+                );
+                if (matchingCatTpl) {
+                  setSelectedTemplateId(matchingCatTpl.id);
+                } else {
+                  setSelectedTemplateId(activeTemplates[0].id);
+                }
+              } else {
+                const targetType = initialData?.leaveType || initialLeaveType;
+                const matched = activeTemplates.find(
+                  (t: any) => t.name.includes(targetType) || t.code.includes(targetType)
+                );
+                const chosen = matched || activeTemplates[0];
+                setSelectedTemplateId(chosen.id);
+                if (chosen?.category?.code) {
+                  setSelectedCategoryCode(chosen.category.code);
+                }
               }
             }
           }
@@ -145,7 +159,7 @@ export default function DynamicLeaveForm({
     return () => {
       isMounted = false;
     };
-  }, [initialLeaveType, initialData?.leaveType]);
+  }, [initialLeaveType, initialData?.leaveType, initialCategoryCode]);
 
   // 2. Fetch Personnel data for autofill
   useEffect(() => {

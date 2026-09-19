@@ -23,10 +23,18 @@ export async function handleCategoriesApi(req: NextRequest, context: { params: R
           });
           return NextResponse.json({ success: true, data: category });
         }
-        const categories = await prisma.documentCategory.findMany({
-          orderBy: { name: 'asc' },
+        let categories = await prisma.documentCategory.findMany({
+          orderBy: { code: 'asc' },
           include: { _count: { select: { templates: true } } }
         });
+        if (categories.length === 0) {
+          const { seedDocumentCategories } = await import('@/modules/leaves/lib/seed-categories');
+          await seedDocumentCategories(prisma as any);
+          categories = await prisma.documentCategory.findMany({
+            orderBy: { code: 'asc' },
+            include: { _count: { select: { templates: true } } }
+          });
+        }
         return NextResponse.json({ success: true, data: categories });
 
       case 'POST': {

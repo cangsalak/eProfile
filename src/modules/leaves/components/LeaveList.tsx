@@ -20,7 +20,33 @@ import {
   Clock,
   Ban,
   Sliders,
+  Layers,
+  Search,
+  X,
+  Sparkles,
+  Filter,
 } from 'lucide-react';
+
+interface DocumentCategoryItem {
+  id: string;
+  name: string;
+  code: string;
+  description?: string | null;
+  _count?: {
+    templates: number;
+  };
+}
+
+interface DocumentTemplateItem {
+  id: string;
+  name: string;
+  code: string;
+  category?: {
+    id: string;
+    code: string;
+    name: string;
+  };
+}
 
 interface LeaveRecord {
   id: string;
@@ -68,6 +94,10 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
   const typeParam = searchParams ? searchParams.get('type') : null;
 
   const [leaves, setLeaves] = useState<LeaveRecord[]>([]);
+  const [categories, setCategories] = useState<DocumentCategoryItem[]>([]);
+  const [templates, setTemplates] = useState<DocumentTemplateItem[]>([]);
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [personnelId, setPersonnelId] = useState<string>(propPersonnelId || '');
 
@@ -132,6 +162,29 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
     }
   }, [personnelId]);
 
+  // Fetch categories and templates
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      fetch('/api/modules/document-templates/categories').then((r) => (r.ok ? r.json() : null)),
+      fetch('/api/modules/document-templates/templates').then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([catData, tplData]) => {
+        if (!isMounted) return;
+        if (catData?.success && Array.isArray(catData.data)) {
+          setCategories(catData.data);
+        }
+        if (tplData?.success && Array.isArray(tplData.data)) {
+          setTemplates(tplData.data.filter((t: any) => t.isActive !== false));
+        }
+      })
+      .catch(console.error);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   useEffect(() => {
     if (!personnelId) {
       const savedUser = localStorage.getItem('currentUser');
@@ -169,6 +222,89 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
       }, 100);
     }
   }, [typeParam]);
+
+  // Helper to resolve category for a leave record
+  const getCategoryForLeave = useCallback(
+    (leaveType: string) => {
+      if (!leaveType) return null;
+      const cleanType = leaveType.trim().toLowerCase();
+
+      // 1. Direct template match
+      const matchedTpl = templates.find(
+        (t) =>
+          t.name.trim().toLowerCase() === cleanType ||
+          t.code.trim().toLowerCase() === cleanType
+      );
+      if (matchedTpl?.category) {
+        return matchedTpl.category;
+      }
+
+      // 2. Standard leave fallback -> '100' (แบบพิมพ์สายงาน กพ.)
+      const standardLeaves = [
+        'ลากิจ',
+        'ลาป่วย',
+        'ลาพักผ่อน',
+        'ลาพักผ่อนประจำปี',
+        'ลาคลอดบุตร',
+        'ลาอุปสมบท',
+        'ไปช่วยราชการ',
+      ];
+      if (standardLeaves.some((s) => cleanType.includes(s.toLowerCase()))) {
+        const cat100 = categories.find((c) => c.code === '100');
+        return cat100
+          ? { id: cat100.id, code: cat100.code, name: cat100.name }
+          : { code: '100', name: 'แบบพิมพ์สายงาน กพ.' };
+      }
+
+      // 3. Fallback match category code in leaveType string
+      const codeMatch = cleanType.match(
+        /\b(10[0-9]|11[0-9]|12[0-3]|200|300|400|500|600|700|800|900)\b/
+      );
+      if (codeMatch) {
+        const foundCat = categories.find((c) => c.code === codeMatch[1]);
+        if (foundCat) return { id: foundCat.id, code: foundCat.code, name: foundCat.name };
+      }
+
+      return null;
+    },
+    [categories, templates]
+  );
+
+  // Count leaves per category
+  const categoryCounts = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    leaves.forEach((l) => {
+      const cat = getCategoryForLeave(l.leaveType);
+      const code = cat?.code ? cat.code.toUpperCase() : 'OTHER';
+      counts[code] = (counts[code] || 0) + 1;
+    });
+    return counts;
+  }, [leaves, getCategoryForLeave]);
+
+  // Filtered leaves by selected category and search query
+  const filteredLeaves = React.useMemo(() => {
+    return leaves.filter((leave) => {
+      const cat = getCategoryForLeave(leave.leaveType);
+      const matchesCategory =
+        selectedCategoryCode === 'all' ||
+        (cat?.code && cat.code.toUpperCase() === selectedCategoryCode.toUpperCase());
+
+      const q = searchQuery.trim().toLowerCase();
+      const matchesSearch =
+        !q ||
+        leave.leaveType.toLowerCase().includes(q) ||
+        (leave.reason && leave.reason.toLowerCase().includes(q)) ||
+        (cat?.name && cat.name.toLowerCase().includes(q)) ||
+        (cat?.code && cat.code.toLowerCase().includes(q));
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [leaves, selectedCategoryCode, searchQuery, getCategoryForLeave]);
+
+  // Reset page on filter change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategoryCode, searchQuery]);
 
   const confirmDelete = async () => {
     if (!deleteTargetId) return;
@@ -311,6 +447,7 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
             editingLeaveId={editingLeaveId}
             initialData={editingLeaveId ? formData : undefined}
             initialLeaveType={editingLeaveId ? formData.leaveType : (typeParam || "ลากิจ")}
+            initialCategoryCode={selectedCategoryCode !== 'all' ? selectedCategoryCode : undefined}
             onClose={() => {
               setIsAdding(false);
               setEditingLeaveId(null);
@@ -321,6 +458,174 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
               fetchLeaves();
             }}
           />
+        </div>
+      )}
+
+      {/* Category Filter & Navigation Bar */}
+      {!isAdding && (
+        <div className="space-y-3 bg-slate-50/80 dark:bg-slate-900/50 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-primary-500/10 text-primary-600 dark:text-primary-400">
+                <Layers className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  หมวดหมู่แบบพิมพ์ 24 สายงาน ทบ.
+                </span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 ml-1.5 hidden sm:inline">
+                  (เลือกหมวดเพื่อกรองเอกสารหรือยื่นแบบฟอร์มประจำสายงาน)
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Search & Category Select Dropdown */}
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="ค้นหาแบบฟอร์ม/เหตุผล..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 pr-7 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-hidden focus:ring-1 focus:ring-primary-500 text-slate-800 dark:text-slate-200 w-40 sm:w-52"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Dropdown for quick jump */}
+              <select
+                value={selectedCategoryCode}
+                onChange={(e) => setSelectedCategoryCode(e.target.value)}
+                aria-label="เลือกสายงาน"
+                className="px-2.5 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium focus:outline-hidden focus:ring-1 focus:ring-primary-500 max-w-[160px] truncate"
+              >
+                <option value="all">ทุกหมวดหมู่ ({leaves.length})</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.code}>
+                    [{c.code}] {c.name.replace('แบบพิมพ์สายงาน ', '')}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Horizontal Scrollable Pills for 24 Categories */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 text-xs">
+            <button
+              type="button"
+              onClick={() => setSelectedCategoryCode('all')}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition-all text-xs ${
+                selectedCategoryCode === 'all'
+                  ? 'bg-primary-600 text-white shadow-xs shadow-primary-500/25'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700'
+              }`}
+            >
+              <span>ทั้งหมด</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                  selectedCategoryCode === 'all'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                {leaves.length}
+              </span>
+            </button>
+
+            {categories.map((cat) => {
+              const isSelected = selectedCategoryCode.toUpperCase() === cat.code.toUpperCase();
+              const count = categoryCounts[cat.code.toUpperCase()] || 0;
+              const shortName = cat.name.replace('แบบพิมพ์สายงาน ', '');
+
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategoryCode(isSelected ? 'all' : cat.code)}
+                  title={cat.description || cat.name}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all text-xs ${
+                    isSelected
+                      ? 'bg-primary-600 text-white font-bold shadow-xs shadow-primary-500/25'
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700'
+                  }`}
+                >
+                  <span
+                    className={`font-mono text-[11px] ${
+                      isSelected ? 'text-white' : 'text-primary-600 dark:text-primary-400 font-semibold'
+                    }`}
+                  >
+                    {cat.code}
+                  </span>
+                  <span>{shortName}</span>
+                  {count > 0 && (
+                    <span
+                      className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        isSelected
+                          ? 'bg-white/20 text-white'
+                          : 'bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-200/60 dark:border-primary-800/60'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Category Information Banner */}
+          {selectedCategoryCode !== 'all' && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-primary-500/5 dark:bg-primary-500/10 border border-primary-500/20 text-xs animate-fade-in">
+              <div className="flex items-start gap-2.5">
+                <div className="p-1 rounded-md bg-primary-500/10 text-primary-600 dark:text-primary-400 mt-0.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200">
+                    <Badge variant="primary">{selectedCategoryCode}</Badge>
+                    <span>
+                      {categories.find((c) => c.code.toUpperCase() === selectedCategoryCode.toUpperCase())?.name ||
+                        `สายงาน ${selectedCategoryCode}`}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {categories.find((c) => c.code.toUpperCase() === selectedCategoryCode.toUpperCase())
+                      ?.description || 'แบบพิมพ์มาตรฐานประจำสายงาน'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingLeaveId(null);
+                    setIsAdding(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary-600 hover:bg-primary-700 shadow-xs active:scale-95 transition-all"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>ยื่นแบบฟอร์มในหมวดนี้</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryCode('all')}
+                  className="px-2.5 py-1.5 rounded-lg text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                >
+                  แสดงทั้งหมด
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -335,6 +640,33 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
           <FileSignature className="w-10 h-10 mx-auto mb-2 opacity-40 text-slate-400" />
           <p className="font-semibold text-xs">ยังไม่มีประวัติการยื่นแบบฟอร์มในระบบ</p>
         </div>
+      ) : filteredLeaves.length === 0 ? (
+        <div className="text-center py-12 text-slate-400 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl space-y-2">
+          <Filter className="w-9 h-9 mx-auto opacity-40 text-slate-400" />
+          <p className="font-semibold text-xs text-slate-600 dark:text-slate-300">
+            ไม่พบรายการแบบฟอร์มที่ตรงกับเงื่อนไขการค้นหา
+          </p>
+          <div className="flex items-center justify-center gap-2 pt-2">
+            {selectedCategoryCode !== 'all' && (
+              <button
+                type="button"
+                onClick={() => setSelectedCategoryCode('all')}
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              >
+                ดูทุกหมวดหมู่
+              </button>
+            )}
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              >
+                ล้างคำค้นหา
+              </button>
+            )}
+          </div>
+        </div>
       ) : (
         <div className="space-y-4">
           <div className="overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-800">
@@ -342,6 +674,7 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
               <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 uppercase tracking-wider font-bold text-[11px] border-b border-slate-200 dark:border-slate-800">
                 <tr>
                   <th className="px-4 py-3">ประเภทแบบฟอร์ม / เอกสาร</th>
+                  <th className="px-4 py-3">หมวดหมู่ / สายงาน</th>
                   <th className="px-4 py-3">ช่วงเวลา / วันที่</th>
                   <th className="px-4 py-3">เหตุผล / วัตถุประสงค์</th>
                   <th className="px-4 py-3 text-center">สถานะ</th>
@@ -349,86 +682,103 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                {paginatedLeaves.map((leave) => (
-                  <tr key={leave.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <Badge variant={getLeaveTypeVariant(leave.leaveType)}>
-                        {leave.leaveType}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-white whitespace-nowrap">
-                      {formatDate(leave.startDate)} – {formatDate(leave.endDate)}
-                    </td>
-                    <td className="px-4 py-3 max-w-xs truncate" title={leave.reason}>
-                      {leave.reason || '-'}
-                    </td>
-                    <td className="px-4 py-3 text-center whitespace-nowrap">
-                      {getStatusBadge(leave.status)}
-                    </td>
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => {
-                            setEditingLeaveId(leave.id);
-                            setFormData({
-                              leaveType: leave.leaveType,
-                              startDate: leave.startDate ? new Date(leave.startDate).toISOString().split('T')[0] : '',
-                              endDate: leave.endDate ? new Date(leave.endDate).toISOString().split('T')[0] : '',
-                              reason: leave.reason || '',
-                              writtenAt: leave.writtenAt || '',
-                              toPerson: leave.toPerson || '',
-                              contactAddress: leave.contactAddress || '',
-                              contactTambon: leave.contactTambon || '',
-                              contactAmphoe: leave.contactAmphoe || '',
-                              contactProvince: leave.contactProvince || '',
-                              substitutePerson: leave.substitutePerson || '',
-                              accumulatedLeaveDays: leave.accumulatedLeaveDays || 0,
-                              thisYearLeaveDays: leave.thisYearLeaveDays || 10,
-                              ordainedBefore: leave.ordainedBefore || false,
-                              ordainTempleName: leave.ordainTempleName || '',
-                              ordainTempleLocation: leave.ordainTempleLocation || '',
-                              ordainDate: leave.ordainDate ? new Date(leave.ordainDate).toISOString().split('T')[0] : '',
-                              stayTempleName: leave.stayTempleName || '',
-                              stayTempleLocation: leave.stayTempleLocation || '',
-                              maternityLeaveTimes: leave.maternityLeaveTimes || 0,
-                              maternityLeaveDays: leave.maternityLeaveDays || 0,
-                            });
-                            setIsAdding(true);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
-                          className="p-1.5 text-slate-400 hover:text-blue-500 rounded-lg transition-colors"
-                          title="แก้ไขรายการ"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <a
-                          href={`/api/modules/leaves/${leave.id}/docx`}
-                          download={`leave_${leave.id}.docx`}
-                          className="p-1.5 text-blue-600 hover:text-blue-700 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors border border-blue-200 dark:border-blue-800"
-                          title="ดาวน์โหลดเอกสาร Word (.docx)"
-                        >
-                          <i className="fa-solid fa-file-word text-sm" />
-                        </a>
-                        <a
-                          href={`/api/modules/leaves/${leave.id}/pdf`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 text-slate-500 hover:text-primary-600 bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-950/40 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"
-                          title="พิมพ์เอกสาร (PDF)"
-                        >
-                          <Printer className="w-4 h-4" />
-                        </a>
-                        <button
-                          onClick={() => setDeleteTargetId(leave.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
-                          title="ลบรายการ"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {paginatedLeaves.map((leave) => {
+                  const categoryInfo = getCategoryForLeave(leave.leaveType);
+                  return (
+                    <tr key={leave.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <Badge variant={getLeaveTypeVariant(leave.leaveType)}>
+                          {leave.leaveType}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {categoryInfo ? (
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                              {categoryInfo.code}
+                            </span>
+                            <span className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                              {categoryInfo.name.replace('แบบพิมพ์สายงาน ', '')}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 text-[11px]">-</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-white whitespace-nowrap">
+                        {formatDate(leave.startDate)} – {formatDate(leave.endDate)}
+                      </td>
+                      <td className="px-4 py-3 max-w-xs truncate" title={leave.reason}>
+                        {leave.reason || '-'}
+                      </td>
+                      <td className="px-4 py-3 text-center whitespace-nowrap">
+                        {getStatusBadge(leave.status)}
+                      </td>
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => {
+                              setEditingLeaveId(leave.id);
+                              setFormData({
+                                leaveType: leave.leaveType,
+                                startDate: leave.startDate ? new Date(leave.startDate).toISOString().split('T')[0] : '',
+                                endDate: leave.endDate ? new Date(leave.endDate).toISOString().split('T')[0] : '',
+                                reason: leave.reason || '',
+                                writtenAt: leave.writtenAt || '',
+                                toPerson: leave.toPerson || '',
+                                contactAddress: leave.contactAddress || '',
+                                contactTambon: leave.contactTambon || '',
+                                contactAmphoe: leave.contactAmphoe || '',
+                                contactProvince: leave.contactProvince || '',
+                                substitutePerson: leave.substitutePerson || '',
+                                accumulatedLeaveDays: leave.accumulatedLeaveDays || 0,
+                                thisYearLeaveDays: leave.thisYearLeaveDays || 10,
+                                ordainedBefore: leave.ordainedBefore || false,
+                                ordainTempleName: leave.ordainTempleName || '',
+                                ordainTempleLocation: leave.ordainTempleLocation || '',
+                                ordainDate: leave.ordainDate ? new Date(leave.ordainDate).toISOString().split('T')[0] : '',
+                                stayTempleName: leave.stayTempleName || '',
+                                stayTempleLocation: leave.stayTempleLocation || '',
+                                maternityLeaveTimes: leave.maternityLeaveTimes || 0,
+                                maternityLeaveDays: leave.maternityLeaveDays || 0,
+                              });
+                              setIsAdding(true);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="p-1.5 text-slate-400 hover:text-blue-500 rounded-lg transition-colors"
+                            title="แก้ไขรายการ"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <a
+                            href={`/api/modules/leaves/${leave.id}/docx`}
+                            download={`leave_${leave.id}.docx`}
+                            className="p-1.5 text-blue-600 hover:text-blue-700 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors border border-blue-200 dark:border-blue-800"
+                            title="ดาวน์โหลดเอกสาร Word (.docx)"
+                          >
+                            <i className="fa-solid fa-file-word text-sm" />
+                          </a>
+                          <a
+                            href={`/api/modules/leaves/${leave.id}/pdf`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 text-slate-500 hover:text-primary-600 bg-slate-100 dark:bg-slate-800 hover:bg-primary-50 dark:hover:bg-primary-950/40 rounded-lg transition-colors border border-slate-200 dark:border-slate-700"
+                            title="พิมพ์เอกสาร (PDF)"
+                          >
+                            <Printer className="w-4 h-4" />
+                          </a>
+                          <button
+                            onClick={() => setDeleteTargetId(leave.id)}
+                            className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors"
+                            title="ลบรายการ"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
