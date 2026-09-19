@@ -159,6 +159,32 @@ async function main() {
     }
   });
 
+  // Seed Document Categories (Leaves & Military Forms)
+  console.log('🌱 Seeding Document Categories (Leaves & Forms)...');
+  try {
+    const catJsonPath = path.resolve(__dirname, '../src/modules/leaves/data/document-categories.json');
+    if (fs.existsSync(catJsonPath)) {
+      const docCategories = JSON.parse(fs.readFileSync(catJsonPath, 'utf8'));
+      for (const cat of docCategories) {
+        await prisma.documentCategory.upsert({
+          where: { code: cat.code },
+          update: {
+            name: cat.name,
+            description: cat.description || null,
+          },
+          create: {
+            code: cat.code,
+            name: cat.name,
+            description: cat.description || null,
+          },
+        });
+      }
+      console.log(`✅ Seeded ${docCategories.length} Document Categories.`);
+    }
+  } catch (e) {
+    console.warn('⚠️ Could not seed document categories:', e);
+  }
+
   console.log('✅ SQLite Database Seeding Completed Successfully!');
 }
 

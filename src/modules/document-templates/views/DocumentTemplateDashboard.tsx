@@ -204,6 +204,29 @@ export default function DocumentTemplateDashboard() {
     }
   };
 
+  const handleSeedDefaultCategories = async () => {
+    if (!confirm('ต้องการนำเข้าหรือกู้คืนหมวดหมู่มาตรฐาน 24 สายงาน ทบ. (รหัส 100 - 581) เข้าสู่ระบบใช่หรือไม่? (หมวดหมู่ที่มีอยู่แล้วจะไม่สูญหาย)')) return;
+    setCatSubmitting(true);
+    try {
+      const res = await fetch('/api/modules/document-templates/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'seed_defaults' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || 'นำเข้าหมวดหมู่มาตรฐาน 24 สายงานสำเร็จ');
+        fetchData();
+      } else {
+        toast.error(data.error || 'เกิดข้อผิดพลาดในการนำเข้า');
+      }
+    } catch (error) {
+      toast.error('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
+    } finally {
+      setCatSubmitting(false);
+    }
+  };
+
   const filteredTemplates = selectedCategory === 'all' 
     ? templates 
     : templates.filter(t => t.categoryId === selectedCategory);
@@ -528,11 +551,22 @@ export default function DocumentTemplateDashboard() {
 
               {/* Categories Table/List */}
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                   <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
                     <i className="fa-solid fa-list text-slate-400" />
                     รายการหมวดหมู่ทั้งหมด ({categories.length})
                   </h4>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSeedDefaultCategories}
+                    disabled={catSubmitting}
+                    className="text-xs h-8 px-3 flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/60 bg-emerald-50/50 hover:bg-emerald-100 dark:bg-emerald-950/30"
+                    title="นำเข้าหรือกู้คืนหมวดหมู่สายงาน ทบ. ทั้ง 24 สายงาน (100 - 581)"
+                  >
+                    <i className="fa-solid fa-cloud-arrow-down text-emerald-600 dark:text-emerald-400" />
+                    <span>นำเข้า/กู้คืน 24 สายงาน ทบ.</span>
+                  </Button>
                 </div>
 
                 <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">

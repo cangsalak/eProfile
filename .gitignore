@@ -48,7 +48,8 @@ next-env.d.ts
 *.sqlite
 prisma/backups/
 backups/
-data/
+/data/
+!src/**/data/
 
 # env
 .env

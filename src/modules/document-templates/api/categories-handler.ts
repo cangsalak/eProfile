@@ -31,6 +31,21 @@ export async function handleCategoriesApi(req: NextRequest, context: { params: R
 
       case 'POST': {
         const createBody = await req.json();
+
+        if (createBody.action === 'seed_defaults') {
+          const { seedDocumentCategories } = await import('@/modules/leaves/lib/seed-categories');
+          const { count } = await seedDocumentCategories(prisma as any);
+          const allCategories = await prisma.documentCategory.findMany({
+            orderBy: { code: 'asc' },
+            include: { _count: { select: { templates: true } } }
+          });
+          return NextResponse.json({ 
+            success: true, 
+            message: `นำเข้า/กู้คืนหมวดหมู่มาตรฐานเรียบร้อย (${count} หมวดหมู่)`,
+            data: allCategories 
+          });
+        }
+
         const name = createBody.name?.trim();
         const code = createBody.code?.trim()?.toUpperCase();
         const description = createBody.description?.trim() || null;
