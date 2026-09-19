@@ -390,40 +390,40 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
   return (
     <Card className="p-6 space-y-6 shadow-sm">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-        <div>
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-            <FileSignature className="w-5 h-5 text-primary-500" />
-            <span>ประวัติการยื่นแบบฟอร์ม (e-Forms History)</span>
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            บันทึกประวัติการยื่นแบบฟอร์ม พิมพ์เอกสารราชการ และติดตามสถานะคำขอ
-          </p>
-        </div>
+      {!isAdding && (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+              <FileSignature className="w-5 h-5 text-primary-500" />
+              <span>ประวัติการยื่นแบบฟอร์ม (e-Forms History)</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              บันทึกประวัติการยื่นแบบฟอร์ม พิมพ์เอกสารราชการ และติดตามสถานะคำขอ
+            </p>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
-          {isAdmin && (
-            <Link
-              href="/modules/document-templates"
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all shrink-0 whitespace-nowrap"
-              title="เปิดหน้าจอจัดการแม่แบบเอกสารและวางแท็ก"
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {isAdmin && (
+              <Link
+                href="/modules/document-templates"
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all shrink-0 whitespace-nowrap"
+                title="เปิดหน้าจอจัดการแม่แบบเอกสารและวางแท็ก"
+              >
+                <Sliders className="w-3.5 h-3.5 text-primary-500" />
+                <span>จัดการแม่แบบ/วางแท็ก</span>
+              </Link>
+            )}
+
+            <a
+              href="/templates/docx/starter_leave_template.docx"
+              download="แบบฟอร์มใบลา_ทบ100-006.docx"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 transition-all shrink-0 whitespace-nowrap shadow-2xs"
+              title="ดาวน์โหลดแบบฟอร์มใบลาเปล่า (Word .docx)"
             >
-              <Sliders className="w-3.5 h-3.5 text-primary-500" />
-              <span>จัดการแม่แบบ/วางแท็ก</span>
-            </Link>
-          )}
+              <i className="fa-solid fa-file-arrow-down text-blue-600 dark:text-blue-400" />
+              <span>ดาวน์โหลดแบบฟอร์มใบลา (Word)</span>
+            </a>
 
-          <a
-            href="/templates/docx/starter_leave_template.docx"
-            download="แบบฟอร์มใบลา_ทบ100-006.docx"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 transition-all shrink-0 whitespace-nowrap shadow-2xs"
-            title="ดาวน์โหลดแบบฟอร์มใบลาเปล่า (Word .docx)"
-          >
-            <i className="fa-solid fa-file-arrow-down text-blue-600 dark:text-blue-400" />
-            <span>ดาวน์โหลดแบบฟอร์มใบลา (Word)</span>
-          </a>
-
-          {!isAdding && (
             <button
               type="button"
               onClick={() => {
@@ -435,9 +435,9 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
               <Plus className="w-4 h-4" />
               <span>ยื่นแบบฟอร์มใหม่</span>
             </button>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Dynamic Document Template Form */}
       {isAdding && (
