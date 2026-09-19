@@ -5,27 +5,19 @@ import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import TablePagination from '@/components/common/TablePagination';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { Card, Button, Badge, Input, Select, DatePicker } from '@/components/ui';
+import { Card, Badge } from '@/components/ui';
 import { formatShortThaiDate } from '@/modules/core/lib/date-utils';
 import DynamicLeaveForm from './DynamicLeaveForm';
 import {
-  Calendar,
-  CalendarCheck,
   Plus,
-  FileText,
   FileSignature,
   Trash2,
   Edit,
   Printer,
   Check,
   CheckCircle,
-  X,
-  Ban,
   Clock,
-  Send,
-  Building,
-  UserCheck,
-  Compass,
+  Ban,
 } from 'lucide-react';
 
 interface LeaveRecord {
@@ -79,7 +71,6 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
 
   // Form State
   const [isAdding, setIsAdding] = useState(false);
-  const [useDynamicForm, setUseDynamicForm] = useState(true);
   const [editingLeaveId, setEditingLeaveId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
@@ -106,21 +97,10 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
     maternityLeaveDays: 0,
   });
 
-  const [leaveTypesList, setLeaveTypesList] = useState<string[]>([
-    'ลากิจ',
-    'ลาป่วย',
-    'ลาคลอดบุตร',
-    'ลาพักผ่อนประจำปี',
-    'ลาอุปสมบท',
-    'ไปช่วยราชการ',
-  ]);
-
   // Delete State
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   // Pagination & Filtering State
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
 
@@ -130,8 +110,6 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
       let url = '/api/leaves';
       const params = new URLSearchParams();
       if (personnelId) params.append('personnelId', personnelId);
-      if (selectedType !== 'all') params.append('type', selectedType);
-      if (selectedStatus !== 'all') params.append('status', selectedStatus);
 
       if (params.toString()) {
         url += `?${params.toString()}`;
@@ -150,7 +128,7 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
     } finally {
       setIsLoading(false);
     }
-  }, [personnelId, selectedType, selectedStatus]);
+  }, [personnelId]);
 
   useEffect(() => {
     if (!personnelId) {
@@ -177,14 +155,6 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
         if (settings.defaultPageSize) {
           setPageSize(Number(settings.defaultPageSize));
         }
-        if (settings.leaveTypes) {
-          try {
-            const parsed = JSON.parse(settings.leaveTypes);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setLeaveTypesList(parsed);
-            }
-          } catch (_) {}
-        }
       })
       .catch(console.error);
   }, [personnelId, fetchLeaves]);
@@ -197,65 +167,6 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
       }, 100);
     }
   }, [typeParam]);
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.startDate || !formData.endDate) {
-      toast.error('กรุณาระบุวันที่เริ่มต้นและสิ้นสุด');
-      return;
-    }
-
-    try {
-      const payload = {
-        personnelId,
-        ...formData,
-      };
-
-      const url = editingLeaveId ? `/api/leaves/${editingLeaveId}` : '/api/leaves';
-      const method = editingLeaveId ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        toast.success(editingLeaveId ? 'อัปเดตข้อมูลสำเร็จ' : 'บันทึกข้อมูลสำเร็จ');
-        setIsAdding(false);
-        setEditingLeaveId(null);
-        setFormData({
-          leaveType: 'ลากิจ',
-          startDate: '',
-          endDate: '',
-          reason: '',
-          writtenAt: 'บก.ศฝยว.ทบ.',
-          toPerson: 'ผบ.ศฝยว.ทบ.',
-          contactAddress: '',
-          contactTambon: '',
-          contactAmphoe: '',
-          contactProvince: '',
-          substitutePerson: '',
-          accumulatedLeaveDays: 0,
-          thisYearLeaveDays: 10,
-          ordainedBefore: false,
-          ordainTempleName: '',
-          ordainTempleLocation: '',
-          ordainDate: '',
-          stayTempleName: '',
-          stayTempleLocation: '',
-          maternityLeaveTimes: 0,
-          maternityLeaveDays: 0,
-        });
-        fetchLeaves();
-      } else {
-        toast.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-    }
-  };
 
   const confirmDelete = async () => {
     if (!deleteTargetId) return;
@@ -353,390 +264,39 @@ export default function LeaveList({ personnelId: propPersonnelId, isAdmin = fals
         </div>
 
         {!isAdding && (
-          <Button
-            variant="primary"
+          <button
+            type="button"
             onClick={() => {
               setEditingLeaveId(null);
               setIsAdding(true);
             }}
-            className="flex items-center gap-2 shrink-0 whitespace-nowrap shadow-sm shadow-primary-500/30"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-white bg-primary-600 hover:bg-primary-700 shadow-sm shadow-primary-500/20 active:scale-[0.98] transition-all shrink-0 whitespace-nowrap"
           >
             <Plus className="w-4 h-4" />
             <span>ยื่นแบบฟอร์มใหม่</span>
-          </Button>
+          </button>
         )}
       </div>
 
-      {/* Leave Application Form */}
+      {/* Dynamic Document Template Form */}
       {isAdding && (
-        useDynamicForm ? (
-          <div className="space-y-2 animate-fade-in">
-            <div className="flex justify-end pr-2">
-              <button
-                type="button"
-                onClick={() => setUseDynamicForm(false)}
-                className="text-[11px] text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 underline transition-colors"
-              >
-                สลับไปใช้แบบฟอร์มคลาสสิก (Classic Form)
-              </button>
-            </div>
-            <DynamicLeaveForm
-              personnelId={personnelId}
-              editingLeaveId={editingLeaveId}
-              initialData={editingLeaveId ? formData : undefined}
-              initialLeaveType={editingLeaveId ? formData.leaveType : (typeParam || 'ลากิจ')}
-              onClose={() => {
-                setIsAdding(false);
-                setEditingLeaveId(null);
-              }}
-              onSuccess={() => {
-                fetchLeaves();
-              }}
-            />
-          </div>
-        ) : (
-          <form
-            onSubmit={handleSave}
-            className="bg-slate-50/70 dark:bg-slate-800/40 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-5 animate-fade-in"
-          >
-            <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-3">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-primary-500" />
-                  <span>{editingLeaveId ? 'แก้ไขข้อมูลการลา (Classic Form)' : 'แบบฟอร์มยื่นขอลา (Classic Form)'}</span>
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setUseDynamicForm(true)}
-                  className="text-[11px] text-primary-600 dark:text-primary-400 hover:underline"
-                >
-                  (สลับเป็นแบบฟอร์มแม่แบบเอกสาร)
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAdding(false);
-                  setEditingLeaveId(null);
-                }}
-                className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-              >
-                ✕ ปิดฟอร์ม
-              </button>
-            </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Written At */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                เขียนที่ (สถานที่เขียนใบลา)
-              </label>
-              <input
-                type="text"
-                value={formData.writtenAt || ''}
-                onChange={(e) => setFormData({ ...formData, writtenAt: e.target.value })}
-                className="form-input"
-                placeholder="เช่น บก.ศฝยว.ทบ."
-              />
-            </div>
-
-            {/* To Person */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                เรียน (ตำแหน่งผู้บังคับบัญชา)
-              </label>
-              <input
-                type="text"
-                value={formData.toPerson || ''}
-                onChange={(e) => setFormData({ ...formData, toPerson: e.target.value })}
-                className="form-input"
-                placeholder="เช่น ผบ.ศฝยว.ทบ."
-              />
-            </div>
-
-            {/* Leave Type */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                ประเภทการลา
-              </label>
-              <select
-                value={formData.leaveType}
-                onChange={(e) => setFormData({ ...formData, leaveType: e.target.value })}
-                className="form-select"
-              >
-                {leaveTypesList.map((type, idx) => (
-                  <option key={idx} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Reason */}
-            <div className="md:col-span-3">
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                {formData.leaveType === 'ลาป่วย' ? 'อาการป่วย (ป่วยเป็น...)' : 'เหตุผลการลา (เนื่องจาก/เพื่อ...)'}
-              </label>
-              <input
-                type="text"
-                value={formData.reason || ''}
-                onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                className="form-input"
-                placeholder={formData.leaveType === 'ลาป่วย' ? 'เช่น ไข้หวัดใหญ่, ปวดท้องเฉียบพลัน' : 'เช่น ไปติดต่อธุระส่วนตัว, ภารกิจครอบครัว'}
-              />
-            </div>
-
-            {/* Annual Leave Fields */}
-            {(formData.leaveType === 'ลาพักผ่อน' || formData.leaveType === 'ลาพักผ่อนประจำปี') && (
-              <>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    วันลาพักผ่อนสะสม (วัน)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.accumulatedLeaveDays || 0}
-                    onChange={(e) => setFormData({ ...formData, accumulatedLeaveDays: parseInt(e.target.value) || 0 })}
-                    className="form-input"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    มีสิทธิลาปีนี้ (วัน)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.thisYearLeaveDays || 0}
-                    onChange={(e) => setFormData({ ...formData, thisYearLeaveDays: parseInt(e.target.value) || 0 })}
-                    className="form-input"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ผู้ปฏิบัติหน้าที่แทน (ถ้ามี)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.substitutePerson || ''}
-                    onChange={(e) => setFormData({ ...formData, substitutePerson: e.target.value })}
-                    className="form-input"
-                    placeholder="ยศ นามสกุล"
-                  />
-                </div>
-              </>
-            )}
-
-            {/* Ordination Leave Fields */}
-            {formData.leaveType === 'ลาอุปสมบท' && (
-              <>
-                <div className="md:col-span-3">
-                  <span className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    เคยอุปสมบทมาก่อนหรือไม่
-                  </span>
-                  <div className="flex gap-6 mt-1">
-                    <label className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="ordainedBefore"
-                        checked={!formData.ordainedBefore}
-                        onChange={() => setFormData({ ...formData, ordainedBefore: false })}
-                        className="text-primary-600 focus:ring-primary-500"
-                      />
-                      ยังไม่เคย
-                    </label>
-                    <label className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="ordainedBefore"
-                        checked={formData.ordainedBefore}
-                        onChange={() => setFormData({ ...formData, ordainedBefore: true })}
-                        className="text-primary-600 focus:ring-primary-500"
-                      />
-                      เคย
-                    </label>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ชื่อวัดที่อุปสมบท
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.ordainTempleName || ''}
-                    onChange={(e) => setFormData({ ...formData, ordainTempleName: e.target.value })}
-                    className="form-input"
-                    placeholder="เช่น วัดบวรนิเวศวิหาร"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ที่ตั้งวัดที่อุปสมบท
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.ordainTempleLocation || ''}
-                    onChange={(e) => setFormData({ ...formData, ordainTempleLocation: e.target.value })}
-                    className="form-input"
-                    placeholder="ที่อยู่ของวัด"
-                  />
-                </div>
-                <DatePicker
-                  id="leave-ordainDate"
-                  label="กำหนดวันอุปสมบท"
-                  placeholder="เลือกวันอุปสมบท (พ.ศ.)"
-                  value={formData.ordainDate || ''}
-                  onChange={(val) => setFormData({ ...formData, ordainDate: val })}
-                />
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ชื่อวัดที่จำพรรษา (ถ้ามี)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.stayTempleName || ''}
-                    onChange={(e) => setFormData({ ...formData, stayTempleName: e.target.value })}
-                    className="form-input"
-                    placeholder="เว้นว่างถ้าเป็นวัดเดียวกับที่อุปสมบท"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ที่ตั้งวัดที่จำพรรษา
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.stayTempleLocation || ''}
-                    onChange={(e) => setFormData({ ...formData, stayTempleLocation: e.target.value })}
-                    className="form-input"
-                  />
-                </div>
-              </>
-            )}
-
-            {/* Maternity Leave Fields */}
-            {formData.leaveType === 'ลาคลอดบุตร' && (
-              <>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ลาคลอดในคราวเดียวกันนี้มาแล้ว (ครั้ง)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.maternityLeaveTimes || 0}
-                    onChange={(e) => setFormData({ ...formData, maternityLeaveTimes: parseInt(e.target.value) || 0 })}
-                    className="form-input"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    รวมวันลาคลอดก่อนหน้า (วัน)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.maternityLeaveDays || 0}
-                    onChange={(e) => setFormData({ ...formData, maternityLeaveDays: parseInt(e.target.value) || 0 })}
-                    className="form-input"
-                  />
-                </div>
-              </>
-            )}
-
-            {/* Contact Address */}
-            {formData.leaveType !== 'ลาอุปสมบท' && (
-              <>
-                <div className="md:col-span-3">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ที่อยู่ติดต่อได้ / สถานที่พักรักษาตัว (กรณีลาป่วย)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.contactAddress || ''}
-                    onChange={(e) => setFormData({ ...formData, contactAddress: e.target.value })}
-                    className="form-input"
-                    placeholder="บ้านเลขที่... หมู่... ถนน..."
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    ตำบล/แขวง
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.contactTambon || ''}
-                    onChange={(e) => setFormData({ ...formData, contactTambon: e.target.value })}
-                    className="form-input"
-                    placeholder="เช่น พระบรมมหาราชวัง"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    อำเภอ/เขต
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.contactAmphoe || ''}
-                    onChange={(e) => setFormData({ ...formData, contactAmphoe: e.target.value })}
-                    className="form-input"
-                    placeholder="เช่น พระนคร"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                    จังหวัด
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.contactProvince || ''}
-                    onChange={(e) => setFormData({ ...formData, contactProvince: e.target.value })}
-                    className="form-input"
-                    placeholder="เช่น กรุงเทพมหานคร"
-                  />
-                </div>
-              </>
-            )}
-
-            {/* Date Range */}
-            <DatePicker
-              id="leave-startDate"
-              label="วันที่เริ่มต้นลา"
-              placeholder="เลือกวันเริ่มต้น (พ.ศ.)"
-              value={formData.startDate || ''}
-              onChange={(val) => setFormData({ ...formData, startDate: val })}
-              required
-            />
-
-            <DatePicker
-              id="leave-endDate"
-              label="วันที่สิ้นสุดลา"
-              placeholder="เลือกวันสิ้นสุด (พ.ศ.)"
-              value={formData.endDate || ''}
-              onChange={(val) => setFormData({ ...formData, endDate: val })}
-              required
-            />
-          </div>
-
-          <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setIsAdding(false);
-                setEditingLeaveId(null);
-              }}
-            >
-              ยกเลิก
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              className="flex items-center gap-1.5 shadow-sm shadow-primary-500/30"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>บันทึกการลา</span>
-            </Button>
-          </div>
-        </form>
-        )
+        <div className="animate-fade-in">
+          <DynamicLeaveForm
+            personnelId={personnelId}
+            editingLeaveId={editingLeaveId}
+            initialData={editingLeaveId ? formData : undefined}
+            initialLeaveType={editingLeaveId ? formData.leaveType : (typeParam || "ลากิจ")}
+            onClose={() => {
+              setIsAdding(false);
+              setEditingLeaveId(null);
+            }}
+            onSuccess={() => {
+              setIsAdding(false);
+              setEditingLeaveId(null);
+              fetchLeaves();
+            }}
+          />
+        </div>
       )}
 
       {/* Leave Records List */}

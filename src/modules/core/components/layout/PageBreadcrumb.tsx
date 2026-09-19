@@ -263,8 +263,8 @@ export default function PageBreadcrumb() {
 
   return (
     <div className="mb-6 animate-fade-in font-prompt no-print print:hidden">
-      {/* Modern Breadcrumb Trail (rendered only when there is a parent hierarchy) */}
-      {items.length > 1 && (
+      {/* Modern Breadcrumb Trail (rendered only when on nested sub-pages deeper than module root) */}
+      {items.length > 2 && (
         <nav className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2.5">
           {items.map((item, idx) => {
             const isLast = idx === items.length - 1;

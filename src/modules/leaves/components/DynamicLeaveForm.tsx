@@ -19,6 +19,14 @@ import {
   Sliders,
 } from 'lucide-react';
 
+interface CategoryOption {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+  _count?: { templates: number };
+}
+
 interface TemplateOption {
   id: string;
   name: string;
@@ -49,6 +57,8 @@ export default function DynamicLeaveForm({
   editingLeaveId = null,
   initialData,
 }: DynamicLeaveFormProps) {
+  const [categories, setCategories] = useState<CategoryOption[]>([]);
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>('all');
   const [templates, setTemplates] = useState<TemplateOption[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [loadingTemplates, setLoadingTemplates] = useState<boolean>(true);
@@ -87,17 +97,28 @@ export default function DynamicLeaveForm({
     }
   }, [initialData]);
 
-  // 1. Fetch active templates from the "leaves" document category
+  // 1. Fetch active categories & templates across all document categories
   useEffect(() => {
     let isMounted = true;
-    async function loadTemplates() {
+    async function loadData() {
       setLoadingTemplates(true);
       try {
-        const res = await fetch('/api/modules/document-templates/templates?categoryCode=leaves');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && Array.isArray(data.data) && isMounted) {
-            const activeTemplates = data.data.filter((t: any) => t.isActive !== false);
+        const [catRes, tplRes] = await Promise.all([
+          fetch('/api/modules/document-templates/categories'),
+          fetch('/api/modules/document-templates/templates'),
+        ]);
+
+        if (catRes.ok) {
+          const catData = await catRes.json();
+          if (catData.success && Array.isArray(catData.data) && isMounted) {
+            setCategories(catData.data);
+          }
+        }
+
+        if (tplRes.ok) {
+          const tplData = await tplRes.json();
+          if (tplData.success && Array.isArray(tplData.data) && isMounted) {
+            const activeTemplates = tplData.data.filter((t: any) => t.isActive !== false);
             setTemplates(activeTemplates);
 
             // Auto-select template matching target leaveType or first template
@@ -106,17 +127,21 @@ export default function DynamicLeaveForm({
               const matched = activeTemplates.find(
                 (t: any) => t.name.includes(targetType) || t.code.includes(targetType)
               );
-              setSelectedTemplateId(matched ? matched.id : activeTemplates[0].id);
+              const chosen = matched || activeTemplates[0];
+              setSelectedTemplateId(chosen.id);
+              if (chosen?.category?.code) {
+                setSelectedCategoryCode(chosen.category.code);
+              }
             }
           }
         }
       } catch (err) {
-        console.error('Failed to load leave templates', err);
+        console.error('Failed to load templates and categories', err);
       } finally {
         if (isMounted) setLoadingTemplates(false);
       }
     }
-    loadTemplates();
+    loadData();
     return () => {
       isMounted = false;
     };
@@ -143,6 +168,14 @@ export default function DynamicLeaveForm({
     }
     if (personnelId) fetchPersonnel();
   }, [personnelId]);
+
+  // Filtered templates based on selected category tab
+  const filteredTemplates = useMemo(() => {
+    if (selectedCategoryCode === 'all') return templates;
+    return templates.filter(
+      (t) => t.category?.code?.toUpperCase() === selectedCategoryCode.toUpperCase()
+    );
+  }, [templates, selectedCategoryCode]);
 
   // Current selected template object
   const currentTemplate = useMemo(() => {
@@ -264,13 +297,13 @@ export default function DynamicLeaveForm({
               <Sparkles className="w-4 h-4" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              {editingLeaveId ? 'แก้ไขข้อมูลการลา (Dynamic Template Form)' : 'แบบฟอร์มยื่นขอลา (Dynamic Template Form)'}
+              {editingLeaveId ? 'แก้ไขข้อมูลแบบฟอร์ม (Dynamic Form)' : 'แบบฟอร์มยื่นเอกสาร (e-Forms Dynamic Form)'}
             </h3>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {editingLeaveId 
-              ? 'แก้ไขข้อมูลคำขอลาตามช่องกรอกที่กำหนดไว้ในแม่แบบเอกสาร' 
-              : 'สร้างช่องกรอกข้อมูลเฉพาะแท็กที่เปิดใช้งานในแม่แบบเอกสาร (หมวดใบลา)'}
+              ? 'แก้ไขข้อมูลตามช่องกรอกที่กำหนดไว้ในแม่แบบเอกสาร' 
+              : 'กรอกข้อมูลตามช่องกรอกที่กำหนดไว้ในแม่แบบเอกสาร รองรับทุกหมวดหมู่งานเอกสาร'}
           </p>
         </div>
 
@@ -284,31 +317,90 @@ export default function DynamicLeaveForm({
         </button>
       </div>
 
-      {/* ── Template Selector ── */}
-      <div className="bg-slate-50 dark:bg-slate-850/60 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-3">
-        <div className="flex items-center justify-between">
+      {/* ── Template Selector with Category Tabs ── */}
+      <div className="bg-slate-50 dark:bg-slate-850/60 p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800 space-y-3.5">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
             <Layers className="w-4 h-4 text-primary-500" />
-            <span>เลือกแม่แบบเอกสารใบลา (Document Template):</span>
+            <span>เลือกแม่แบบเอกสาร (Document Template):</span>
           </label>
           {currentTemplate && (
-            <Badge variant="primary">
-              รหัส: {currentTemplate.code}
-            </Badge>
+            <div className="flex items-center gap-2">
+              {currentTemplate.category?.name && (
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium">
+                  {currentTemplate.category.name}
+                </span>
+              )}
+              <Badge variant="primary">
+                รหัส: {currentTemplate.code}
+              </Badge>
+            </div>
           )}
         </div>
 
+        {/* Category Filter Tabs */}
+        {categories.length > 0 && (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+            <button
+              type="button"
+              onClick={() => setSelectedCategoryCode('all')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                selectedCategoryCode === 'all'
+                  ? 'bg-primary-600 text-white shadow-xs'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+              }`}
+            >
+              <span>ทุกหมวดหมู่</span>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                selectedCategoryCode === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500'
+              }`}>
+                {templates.length}
+              </span>
+            </button>
+            {categories.map((cat) => {
+              const count = templates.filter((t) => t.category?.code?.toUpperCase() === cat.code.toUpperCase()).length;
+              const isActive = selectedCategoryCode.toUpperCase() === cat.code.toUpperCase();
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategoryCode(cat.code)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-primary-600 text-white shadow-xs'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                  }`}
+                >
+                  <span>{cat.name}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {loadingTemplates ? (
-            <div className="col-span-full py-3 text-center text-xs text-slate-400">
-              กำลังโหลดรายการแม่แบบใบลา...
+            <div className="col-span-full py-4 text-center text-xs text-slate-400">
+              <div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-1.5"></div>
+              กำลังโหลดรายการแม่แบบเอกสาร...
             </div>
-          ) : templates.length === 0 ? (
-            <div className="col-span-full py-3 text-center text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-xl p-3 border border-amber-200/50">
-              ยังไม่มีแม่แบบในหมวดใบลา — สามารถสร้างได้ที่เมนู "จัดการแม่แบบเอกสาร"
+          ) : filteredTemplates.length === 0 ? (
+            <div className="col-span-full py-4 text-center text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 rounded-xl p-4 border border-amber-200/50">
+              <p className="font-semibold">ยังไม่มีแม่แบบเอกสารในหมวดหมู่นี้</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                สามารถสร้างและอัปโหลดแม่แบบเอกสารใหม่ได้ที่เมนู 
+                <a href="/modules/document-templates" target="_blank" rel="noopener noreferrer" className="text-primary-600 dark:text-primary-400 underline font-bold ml-1">
+                  "จัดการแม่แบบเอกสาร" &rarr;
+                </a>
+              </p>
             </div>
           ) : (
-            templates.map((tpl) => {
+            filteredTemplates.map((tpl) => {
               const isSelected = tpl.id === selectedTemplateId;
               let elCount = 0;
               let formFieldCount = 0;
@@ -337,13 +429,20 @@ export default function DynamicLeaveForm({
                     {isSelected && <CheckCircle className="w-3.5 h-3.5 text-primary-600 dark:text-primary-400 shrink-0" />}
                   </div>
                   <div className="flex items-center justify-between mt-2 text-[11px] text-slate-500 dark:text-slate-400">
-                    <span>รหัส: {tpl.code}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                    <div className="flex items-center gap-1.5 truncate">
+                      {tpl.category?.name && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                          {tpl.category.name}
+                        </span>
+                      )}
+                      <span className="truncate">รหัส: {tpl.code}</span>
+                    </div>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium shrink-0 ${
                       formFieldCount > 0 
                         ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
                     }`}>
-                      {formFieldCount} ช่องฟอร์ม / {elCount} แท็ก
+                      {formFieldCount} ช่อง / {elCount} แท็ก
                     </span>
                   </div>
                 </button>
@@ -569,7 +668,7 @@ export default function DynamicLeaveForm({
               ) : (
                 <>
                   <CheckCircle className="w-4 h-4" />
-                  <span>{editingLeaveId ? 'อัปเดตข้อมูลการลา' : 'บันทึกและยื่นคำขอลา'}</span>
+                  <span>{editingLeaveId ? 'อัปเดตข้อมูลแบบฟอร์ม' : 'บันทึกและยื่นแบบฟอร์ม'}</span>
                 </>
               )}
             </Button>
