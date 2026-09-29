@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Personnel } from '@/modules/users';
+import { Personnel, getPersonnelAvatarUrl } from '@/modules/users';
 import { Modal, Button } from '@/components/ui';
 
 interface ProfileModalProps {
@@ -57,8 +57,8 @@ export default function ProfileModal({ person, onClose, onPrintCard }: ProfileMo
         <div className="pt-4 relative z-10">
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-end gap-4 -mt-14 sm:-mt-16">
-              {person.avatarColor?.startsWith('data:image') || person.avatarColor?.startsWith('http') ? (
-                <img src={person.avatarColor} alt="Avatar" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-xl border-4 border-white dark:border-slate-900 bg-white dark:bg-slate-900 shrink-0" />
+              {getPersonnelAvatarUrl(person) ? (
+                <img src={getPersonnelAvatarUrl(person)!} alt="Avatar" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-xl border-4 border-white dark:border-slate-900 bg-white dark:bg-slate-900 shrink-0" />
               ) : (
                 <div
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center text-white font-bold text-3xl sm:text-4xl shadow-xl border-4 border-white dark:border-slate-900 bg-primary-600 shrink-0"

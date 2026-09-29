@@ -13,7 +13,42 @@ import {
   Activity,
   Calendar,
   Sparkles,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
+import { GENERATED_MODULE_ARRAY } from '@/modules/core/generated-views';
+import { ModuleWidget, ModuleDefinition } from '@/modules/core/types';
+
+// Wrapper for Dynamic Widgets to support resizing
+const WidgetWrapper = ({ widget, Component }: { widget: ModuleWidget; Component: React.ComponentType<any> }) => {
+  const [isExpanded, setIsExpanded] = useState(() => {
+    if (typeof window !== 'undefined') {
+       return localStorage.getItem(`widget-expanded-${widget.id}`) === 'true';
+    }
+    return false;
+  });
+
+  const toggleExpand = () => {
+    const nextState = !isExpanded;
+    setIsExpanded(nextState);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`widget-expanded-${widget.id}`, String(nextState));
+    }
+  };
+
+  const spanClass = isExpanded ? 'col-span-1 md:col-span-2 lg:col-span-2' : 'col-span-1';
+
+  return (
+    <div className={`relative group transition-all duration-300 ${spanClass}`}>
+      <div className="absolute top-4 right-14 z-10 opacity-0 group-hover:opacity-100 transition-opacity" title="ย่อ/ขยาย Widget">
+        <button onClick={toggleExpand} className="p-1.5 bg-slate-100/80 dark:bg-slate-700/80 rounded-full hover:bg-white dark:hover:bg-slate-600 shadow-sm text-slate-500 backdrop-blur-md">
+          {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+        </button>
+      </div>
+      <Component />
+    </div>
+  );
+};
 
 interface DashboardStatsData {
   totalPersonnel: number;
@@ -34,6 +69,25 @@ export default function DashboardView() {
     leaveTypeStats: { name: string; count: number }[];
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Extract all widgets from registered modules
+  const availableWidgets = React.useMemo(() => {
+    const list: { widget: ModuleWidget; Component: React.ComponentType<any> }[] = [];
+    GENERATED_MODULE_ARRAY.forEach((def) => {
+      const moduleDef = def as unknown as ModuleDefinition;
+      if (!moduleDef.manifest) return;
+      
+      const manifestWidgets = moduleDef.manifest.widgets || [];
+      const componentWidgets = moduleDef.widgets || {};
+      
+      manifestWidgets.forEach(w => {
+        if (componentWidgets[w.id]) {
+          list.push({ widget: w, Component: componentWidgets[w.id] });
+        }
+      });
+    });
+    return list;
+  }, []);
 
   useEffect(() => {
     async function loadStats() {
@@ -82,26 +136,6 @@ export default function DashboardView() {
         <div className="absolute h-[40vh] w-[40vh] -bottom-[10%] left-[25%] rounded-full bg-emerald-500/10 blur-3xl animate-clay-float" style={{ animationDelay: '6s' }} />
       </div>
 
-      {/* ── Submenu Header Navigation ── */}
-      <PageHeaderExtra>
-        <div className="flex items-center gap-1.5 p-1.5 bg-white/70 dark:bg-slate-800/80 rounded-2xl border border-white/60 dark:border-slate-700 shadow-clay-card backdrop-blur-xl">
-          <Link
-            href="/modules/dashboard"
-            className="px-3.5 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-clay-button"
-          >
-            <i className="fa-solid fa-chart-pie text-xs"></i>
-            <span>ภาพรวมระบบ (Overview)</span>
-          </Link>
-          <Link
-            href="/modules/dashboard/command"
-            className="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-700/60"
-          >
-            <i className="fa-solid fa-shield-halved text-xs text-slate-400"></i>
-            <span>ศูนย์บัญชาการ (Command)</span>
-          </Link>
-        </div>
-      </PageHeaderExtra>
-
       {/* ── Hero Welcome Banner with Claymorphic 3D Styling ── */}
       <div className="relative overflow-hidden rounded-[32px] sm:rounded-[36px] bg-gradient-to-br from-primary-600 via-primary-700 to-slate-900 p-6 sm:p-10 text-white shadow-clay-surface">
         <div className="absolute top-0 right-0 -mt-12 -mr-12 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -119,20 +153,6 @@ export default function DashboardView() {
             <p className="text-xs sm:text-sm text-primary-100/90 max-w-xl leading-relaxed">
               ติดตามความพร้อมรบ กำลังพลพร้อมปฏิบัติการ วันลา ยานพาหนะ และความเคลื่อนไหวล่าสุดของหน่วยงานแบบ Real-time
             </p>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/modules/dashboard/command">
-              <Button
-                type="button"
-                variant="secondary"
-                size="md"
-                icon="fa-solid fa-shield-halved"
-                className="bg-white hover:bg-slate-50 text-primary-900 font-black shadow-clay-button"
-              >
-                ศูนย์บัญชาการ
-              </Button>
-            </Link>
           </div>
         </div>
       </div>
@@ -211,9 +231,21 @@ export default function DashboardView() {
         />
       </div>
 
-      {/* ── Middle Section: Department Distribution & Quick Actions ── */}
+      {/* ── Dynamic Module Widgets (Quick Actions) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {availableWidgets.map(({ widget, Component }) => (
+          <WidgetWrapper key={widget.id} widget={widget} Component={Component} />
+        ))}
+        {availableWidgets.length === 0 && (
+          <div className="col-span-full text-center py-8 text-xs text-slate-500 font-bold bg-white/50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center min-h-[200px]">
+            ยังไม่มี Widget ในระบบ
+          </div>
+        )}
+      </div>
+
+      {/* ── Bottom Section: Department Distribution, Upcoming Events & Audit ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Department Personnel Breakdown (2 Cols) */}
+        {/* Department Personnel Breakdown */}
         <Card variant="convex" className="lg:col-span-2">
           <CardHeader
             title="การกระจายตัวกำลังพลตามหน่วยงาน"
@@ -254,138 +286,6 @@ export default function DashboardView() {
             ) : (
               <div className="text-center py-8 text-xs text-slate-500 font-bold">
                 ยังไม่มีข้อมูลกำลังพลในระบบ
-              </div>
-            )}
-          </div>
-        </Card>
-
-        {/* Right: Quick Action Shortcuts & Tools (1 Col) */}
-        <Card variant="convex" className="space-y-4">
-          <CardHeader
-            title="เครื่องมือและเมนูด่วน"
-            subtitle="ทางลัดไปยังโมดูลหลักที่ใช้งานบ่อย"
-            icon={<Activity className="w-5 h-5 text-white" />}
-            iconGradient="from-[#DB2777] to-[#7C3AED]"
-          />
-
-          <div className="grid grid-cols-1 gap-3">
-            <Link
-              href="/modules/users"
-              className="flex items-center justify-between p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:shadow-clay-card hover:-translate-y-1 transition-all duration-200 group"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-500 to-primary-600 text-white shadow-clay-orb flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
-                  <i className="fa-solid fa-users"></i>
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-primary-600 transition-colors truncate">
-                    ทำเนียบกำลังพล
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">ค้นหาและจัดการประวัติกำลังพล</p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-primary-600 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
-            </Link>
-
-            <Link
-              href="/modules/leaves"
-              className="flex items-center justify-between p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:shadow-clay-card hover:-translate-y-1 transition-all duration-200 group"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-clay-orb flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
-                  <i className="fa-solid fa-calendar-xmark"></i>
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors truncate">
-                    ระบบการลาและอนุมัติ
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">ยื่นใบลาและพิจารณาคำขอ</p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
-            </Link>
-
-            <Link
-              href="/modules/calendar"
-              className="flex items-center justify-between p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:shadow-clay-card hover:-translate-y-1 transition-all duration-200 group"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#A78BFA] to-[#7C3AED] text-white shadow-clay-orb flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
-                  <i className="fa-solid fa-calendar-days"></i>
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors truncate">
-                    ปฏิทินและตารางเวร
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">ลงตารางเวรยามและภารกิจ</p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
-            </Link>
-
-            <Link
-              href="/modules/vehicles"
-              className="flex items-center justify-between p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 hover:shadow-clay-card hover:-translate-y-1 transition-all duration-200 group"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white shadow-clay-orb flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
-                  <i className="fa-solid fa-car"></i>
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-sky-600 transition-colors truncate">
-                    ระบบยานพาหนะ
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">ขอใช้รถและบันทึกการเดินทาง</p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-sky-600 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
-            </Link>
-          </div>
-        </Card>
-      </div>
-
-      {/* ── Bottom Section: Upcoming Events & Recent Audit Trail ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Upcoming Events */}
-        <Card variant="convex">
-          <CardHeader
-            title="กิจกรรมและเวรปฏิบัติการใกล้ถึง"
-            subtitle="กำหนดการนัดหมายและตารางเวรยามเร็วๆ นี้"
-            icon={<Calendar className="w-5 h-5 text-white" />}
-            iconGradient="from-primary-500 to-indigo-600"
-            action={
-              <Link href="/modules/calendar">
-                <Button type="button" variant="secondary" size="xs" icon="fa-solid fa-calendar-days">
-                  ดูปฏิทิน
-                </Button>
-              </Link>
-            }
-          />
-
-          <div className="space-y-3 mt-2">
-            {data?.upcomingEvents && data.upcomingEvents.length > 0 ? (
-              data.upcomingEvents.map((ev, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-3.5 rounded-2xl bg-white/70 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800 shadow-xs hover:shadow-clay-card hover:-translate-y-0.5 transition-all"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-primary-500 to-emerald-400 shadow-xs shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{ev.title}</p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        {new Date(ev.startDate).toLocaleDateString('th-TH')} - {new Date(ev.startDate).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.
-                      </p>
-                    </div>
-                  </div>
-                  <Badge variant="candy" size="xs">
-                    {ev.type || 'ทั่วไป'}
-                  </Badge>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-xs text-slate-500 font-bold">
-                ไม่มีกิจกรรมหรือเวรยามในระยะเวลาอันใกล้
               </div>
             )}
           </div>

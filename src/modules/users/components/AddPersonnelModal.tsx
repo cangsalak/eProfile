@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Personnel } from '@/modules/users';
+import { Personnel, isImageSrc } from '@/modules/users';
 import PersonalInfoForm from './forms/PersonalInfoForm';
 import MilitaryInfoForm from './forms/MilitaryInfoForm';
 import ContactInfoForm from './forms/ContactInfoForm';
@@ -99,7 +99,7 @@ export default function AddPersonnelModal({
             <ImageUpload
               id="personnelAvatarUpload"
               label="รูปโปรไฟล์"
-              value={formData.avatarColor && (formData.avatarColor.startsWith('http') || formData.avatarColor.startsWith('data:image')) ? formData.avatarColor : null}
+              value={formData.avatarColor && isImageSrc(formData.avatarColor) ? formData.avatarColor : null}
               onChange={(url) => setFormData((prev) => ({ ...prev, avatarColor: url }))}
               onRemove={() =>
                 setFormData((prev) => ({
@@ -109,6 +109,8 @@ export default function AddPersonnelModal({
               }
               variant="avatar"
               placeholder="รูปโปรไฟล์"
+              module="users"
+              folder="avatars"
             />
           </div>
         </div>

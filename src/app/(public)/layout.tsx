@@ -55,7 +55,7 @@ export default async function PublicLayout({
         <div className="bg-amber-600 text-white text-xs px-4 py-2 text-center font-semibold flex items-center justify-center gap-2 shadow-sm z-50">
           <i className="fa-solid fa-triangle-exclamation"></i>
           <span>⚠️ ระบบกำลังอยู่ในโหมดปิดปรับปรุงเว็บไซต์ (คุณกำลังเข้าชมในฐานะผู้ดูแลระบบ)</span>
-          <Link href="/settings" className="underline font-bold ml-2 hover:text-amber-100">
+          <Link href="/modules/settings" className="underline font-bold ml-2 hover:text-amber-100">
             ไปที่หน้าตั้งค่าเพื่อปิดโหมดปรับปรุง &rarr;
           </Link>
         </div>

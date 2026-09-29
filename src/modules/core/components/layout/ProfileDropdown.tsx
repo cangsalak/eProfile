@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Personnel } from '@/modules/users';
+import { Personnel, getPersonnelAvatarUrl } from '@/modules/users';
 import { AltArrowDownIcon } from '@/modules/core/components/ui/icon';
 import { UserCircleIcon, GearIcon, LogoutIcon } from './icons';
 import { cn } from '@/modules/core/lib/cn';
@@ -27,6 +27,7 @@ export default function ProfileDropdown({ currentUser, handleLogout }: ProfileDr
   }, []);
 
   const fullName = `${currentUser.prefix || ''}${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || 'User';
+  const avatarUrl = getPersonnelAvatarUrl(currentUser);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -37,8 +38,8 @@ export default function ProfileDropdown({ currentUser, handleLogout }: ProfileDr
         aria-expanded={isOpen}
       >
         <div className="size-10 rounded-lg overflow-hidden border border-border-secondary-alt bg-background-gray-secondary_alt flex items-center justify-center shrink-0">
-          {currentUser.avatarColor?.startsWith('data:image') || currentUser.avatarColor?.startsWith('http') ? (
-            <img src={currentUser.avatarColor} alt={fullName} className="size-full object-cover" />
+          {avatarUrl ? (
+            <img src={avatarUrl} alt={fullName} className="size-full object-cover" />
           ) : (
             <div className="size-full bg-brand-500 flex items-center justify-center font-bold text-white text-sm">
               {currentUser.firstName?.[0] || 'U'}
@@ -67,8 +68,8 @@ export default function ProfileDropdown({ currentUser, handleLogout }: ProfileDr
       >
         <div className="flex w-full items-center justify-start gap-3 border-b border-border-secondary-alt px-4 py-3 bg-card-surface-area">
           <div className="size-10 rounded-lg overflow-hidden border border-border-secondary-alt shrink-0">
-            {currentUser.avatarColor?.startsWith('data:image') || currentUser.avatarColor?.startsWith('http') ? (
-              <img src={currentUser.avatarColor} alt={fullName} className="size-full object-cover" />
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={fullName} className="size-full object-cover" />
             ) : (
               <div className="size-full bg-brand-500 flex items-center justify-center font-bold text-white text-sm">
                 {currentUser.firstName?.[0] || 'U'}
@@ -94,7 +95,7 @@ export default function ProfileDropdown({ currentUser, handleLogout }: ProfileDr
           </Link>
 
           <Link 
-            href="/settings" 
+            href="/modules/settings" 
             onClick={() => setIsOpen(false)} 
             className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background-gray-primary hover:text-text-primary transition-colors group"
           >

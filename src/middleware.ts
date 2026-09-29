@@ -68,6 +68,7 @@ const publicPagePaths = [
   '/news',
 ];
 const publicPagePrefixes = [
+  '/uploads/',
   '/news/',
   '/verify/',
   '/badges/verify/',
@@ -76,6 +77,12 @@ const publicPagePrefixes = [
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Bypass all uploaded media files directly
+  if (pathname.startsWith('/uploads/')) {
+    return NextResponse.next();
+  }
+
   const token = request.cookies.get('auth_token')?.value;
 
   // ============================================================

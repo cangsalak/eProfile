@@ -8,12 +8,14 @@ import RoleSettingsView from './views/RoleSettingsView';
 import DepartmentsSettingsView from './views/DepartmentsSettingsView';
 import PersonnelFormView from './views/PersonnelFormView';
 import Rpb1FormView from './views/rpb1/Rpb1FormView';
+import PersonnelStatsWidget from './widgets/PersonnelStatsWidget';
 
 export * from './manifest';
 export * from './types';
 export * from './constants';
 export * from './components/dropdowns';
 export * from './lib/excelUtils';
+export * from './lib/avatar-utils';
 export { default as ManagePersonnelView } from './views/ManagePersonnelView';
 export { default as RoleSettingsView } from './views/RoleSettingsView';
 export { default as ProfileView } from './views/ProfileView';
@@ -24,6 +26,7 @@ export { default as DepartmentsManager } from './settings/DepartmentsManager';
 export { default as PersonnelFormView } from './views/PersonnelFormView';
 export { default as Rpb1FormView } from './views/rpb1/Rpb1FormView';
 export { default as Rpb1ProgressSection, calculateRpb1Progress } from './components/rpb1/Rpb1ProgressSection';
+export { default as PersonnelStatsWidget } from './widgets/PersonnelStatsWidget';
 
 export const UsersModule: ModuleDefinition = {
   manifest: UsersManifest,
@@ -41,6 +44,9 @@ export const UsersModule: ModuleDefinition = {
     'form': PersonnelFormView,
     'rpb1/form': Rpb1FormView,
   },
+  widgets: {
+    'personnel-stats-widget': PersonnelStatsWidget
+  }
 };
 
 // Backward compat alias

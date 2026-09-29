@@ -65,8 +65,11 @@ export default function ThemeSettingsView() {
         throw new Error(data.error || 'ไม่สามารถบันทึกการตั้งค่าได้');
       }
 
-      toast.success('บันทึกการตั้งค่าธีมเรียบร้อยแล้ว');
+      toast.success('บันทึกการตั้งค่าระบบและธีมเรียบร้อยแล้ว');
       applyThemeSettings(settings);
+      window.dispatchEvent(new CustomEvent('eprofile-settings-change', {
+        detail: settings
+      }));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'ไม่สามารถบันทึกการตั้งค่าได้');
     } finally {

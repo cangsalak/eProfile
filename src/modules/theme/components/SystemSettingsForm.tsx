@@ -21,9 +21,10 @@ export default function SystemSettingsForm({
   fileInputRef,
   autoSaveStatus = 'saved'
 }: SystemSettingsFormProps) {
-  const [subTab, setSubTab] = useState<'theme' | 'typography' | 'toast'>('theme');
+  const [subTab, setSubTab] = useState<'brand' | 'theme' | 'typography' | 'toast'>('brand');
 
   const subTabs = [
+    { id: 'brand', name: 'ชื่อระบบและโลโก้', icon: 'fa-id-badge' },
     { id: 'theme', name: 'ธีมและสีประจำระบบ', icon: 'fa-palette' },
     { id: 'typography', name: 'แบบอักษรและสไตล์', icon: 'fa-font' },
     { id: 'toast', name: 'การแจ้งเตือนป๊อปอัป', icon: 'fa-bell' },
@@ -77,6 +78,132 @@ export default function SystemSettingsForm({
           )}
         </div>
       </div>
+
+      {/* ─── BRANDING & SYSTEM LOGO ────────────────────────────────────────── */}
+      {subTab === 'brand' && (
+        <div 
+          role="tabpanel"
+          id="subtabpanel-brand"
+          aria-labelledby="subtab-brand"
+          className="space-y-6 animate-fade-in"
+        >
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center gap-2">
+              <i className="fa-solid fa-id-badge text-primary-500 text-sm"></i>
+              <span>อัตลักษณ์หน่วยงานและโลโก้ระบบ (Branding & System Logo)</span>
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              กำหนดโลโก้และชื่อระบบที่แสดงผลที่แถบเมนูหลักด้านซ้าย (Sidebar), แถบด้านบน (Navbar), และหัวเอกสารของเว็บไซต์
+            </p>
+          </div>
+
+          {/* Logo Upload Box */}
+          <div className="p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/80 space-y-4">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <i className="fa-solid fa-image text-primary-500"></i>
+              <span>โลโก้ของระบบเว็บไซต์ (System Logo)</span>
+            </h4>
+
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              {/* Logo Preview Box */}
+              <div className="relative group w-36 h-36 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-center p-3 shadow-inner shrink-0 overflow-hidden">
+                {settings.systemLogo ? (
+                  <img
+                    src={settings.systemLogo}
+                    alt="System Logo"
+                    className="max-w-full max-h-full object-contain drop-shadow"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-slate-400 text-center">
+                    <i className="fa-solid fa-image text-4xl mb-1 opacity-40"></i>
+                    <span className="text-[11px] font-medium">ยังไม่มีโลโก้</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Controls */}
+              <div className="space-y-3 flex-1">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                  onChange={handleLogoUpload}
+                  className="hidden"
+                />
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold shadow-sm transition-all flex items-center gap-2"
+                  >
+                    <i className="fa-solid fa-cloud-arrow-up"></i>
+                    <span>{settings.systemLogo ? 'เปลี่ยนรูปโลโก้' : 'อัปโหลดโลโก้ใหม่'}</span>
+                  </button>
+                  {settings.systemLogo && (
+                    <button
+                      type="button"
+                      onClick={() => setSettings({ ...settings, systemLogo: '' })}
+                      className="px-3.5 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 text-rose-600 dark:text-rose-400 text-xs font-bold transition-all border border-rose-200 dark:border-rose-900/50 flex items-center gap-1.5"
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                      <span>ลบโลโก้</span>
+                    </button>
+                  )}
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium">
+                    คำแนะนำ: ใช้ไฟล์ภาพ PNG โปร่งใส (Transparent) หรือ SVG เพื่อให้กลมกลืนกับทั้งโหมดมืดและสว่าง
+                  </p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                    ขนาดไฟล์ไม่เกิน 2MB • ระบบจะบันทึกและแสดงผลที่ Sidebar มุมซ้ายบนและแถบ Navbar ทันที
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* System Name & Organization Titles */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="ชื่อระบบเว็บไซต์ (System Name)"
+              name="systemName"
+              value={settings.systemName || ''}
+              onChange={handleChange}
+              placeholder="ระบบทำเนียบบุคลากรและโปรไฟล์อิเล็กทรอนิกส์ (eProfile)"
+            />
+            <Input
+              label="ชื่อหน่วยงานต้นสังกัด (Organization Name)"
+              name="organizationName"
+              value={settings.organizationName || ''}
+              onChange={handleChange}
+              placeholder="ศูนย์ฝึกทางยุทธวิธีกองทัพบก"
+            />
+            <Input
+              label="คำโปรยย่อยใต้ชื่อระบบ (Site Subtitle / Department)"
+              name="siteTitle"
+              value={settings.siteTitle || ''}
+              onChange={handleChange}
+              placeholder="ระบบฐานข้อมูลกำลังพลและบัตรประจำตัว"
+            />
+            <Input
+              label="เบอร์โทรศัพท์กลางหน่วยงาน (Phone)"
+              name="organizationPhone"
+              value={settings.organizationPhone || ''}
+              onChange={handleChange}
+              placeholder="เช่น 036-791-444"
+            />
+            <div className="sm:col-span-2">
+              <Input
+                label="ที่อยู่หน่วยงาน (Organization Address)"
+                name="organizationAddress"
+                value={settings.organizationAddress || ''}
+                onChange={handleChange}
+                placeholder="ที่อยู่หน่วยงานสำหรับการติดต่อและพิมพ์หลังบัตร"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ─── THEME & PRIMARY COLOR ────────────────────────────────────────── */}
       {subTab === 'theme' && (

@@ -1,5 +1,14 @@
 export type ModuleCategory = 'core' | 'hr' | 'operations' | 'tools' | 'system';
 
+export interface ModuleWidget {
+  id: string;
+  title: string;
+  description?: string;
+  defaultSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  requiredRoles?: string[];
+  requiredPermission?: string;
+}
+
 export interface ModuleMenu {
   id: string;
   title: string;
@@ -40,6 +49,7 @@ export interface ModuleManifest {
     uninstall?: string;
     update?: string;
   };
+  widgets?: ModuleWidget[];
 }
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
@@ -58,4 +68,5 @@ export interface ModuleDefinition {
   manifest: ModuleManifest;
   views: Record<string, React.ComponentType<any>>;
   api?: ModuleApiRouteMap;
+  widgets?: Record<string, React.ComponentType<any>>;
 }

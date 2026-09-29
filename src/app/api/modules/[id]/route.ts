@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { GET as slugGET, POST as slugPOST, PUT as slugPUT, PATCH as slugPATCH, DELETE as slugDELETE, HEAD as slugHEAD, OPTIONS as slugOPTIONS } from '../[...slug]/route';
-import { handleUninstallModule } from '@/modules/module-manager/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,12 +20,7 @@ export async function PATCH(request: Request, context: { params: { id: string } 
 }
 
 export async function DELETE(request: Request, context: { params: { id: string } }) {
-  // If module has its own DELETE endpoint at root, use slug dispatcher; otherwise fallback to uninstall handler
-  const res = await slugDELETE(request, { params: { slug: [context.params.id] } });
-  if (res.status === 404) {
-    return handleUninstallModule(request, context);
-  }
-  return res;
+  return slugDELETE(request, { params: { slug: [context.params.id] } });
 }
 
 export async function HEAD(request: Request, context: { params: { id: string } }) {

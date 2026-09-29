@@ -11,7 +11,18 @@ export const SettingsManifest: ModuleManifest = {
   category: 'core',
   isCore: true,
   defaultEnabled: true,
-  menus: [],
+  menus: [
+    {
+      id: 'core-system-settings',
+      title: 'ตั้งค่าระบบ',
+      icon: 'fa-solid fa-gear',
+      path: '/modules/settings',
+      requiredRoles: ['SUPER_ADMIN', 'ADMIN'],
+      requiredPermission: 'MANAGE_SETTINGS',
+      order: 99,
+      group: 'system',
+    },
+  ],
   permissions: [
     {
       key: 'MANAGE_SETTINGS',

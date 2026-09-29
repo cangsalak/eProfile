@@ -53,7 +53,9 @@ export default function Sidebar({
       }`}>
         <Link href="/" className="flex items-center gap-3 group">
           {systemSettings?.systemLogo ? (
-            <img src={systemSettings.systemLogo} alt="Logo" className="h-9 object-contain drop-shadow-md" />
+            <div className="h-9 w-9 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <img src={systemSettings.systemLogo} alt="Logo" className="max-h-9 max-w-9 w-auto h-auto object-contain drop-shadow-xs" />
+            </div>
           ) : (
             <div className="h-9 w-9 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md shadow-primary-600/20 group-hover:scale-105 transition-transform shrink-0">
               <i className="fa-solid fa-shield-halved"></i>

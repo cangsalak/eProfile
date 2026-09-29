@@ -2,12 +2,12 @@ import { ModuleManifest } from '@/modules/core/types';
 
 export const themeManifest: ModuleManifest = {
   id: 'theme',
-  name: 'ดีไซน์และธีม',
-  nameEn: 'Theme & Branding',
-  description: 'ตั้งค่ารูปแบบการแสดงผล สีสัน โลโก้ และธีมของระบบ',
+  name: 'โลโก้ อัตลักษณ์ และธีมระบบ',
+  nameEn: 'Logo, Branding & Theme',
+  description: 'อัปโหลดโลโก้เว็บไซต์ กำหนดชื่อระบบ ชื่อหน่วยงาน ธีมสี และแบบอักษร',
   version: '1.0.0',
   author: 'eProfile System',
-  icon: 'fa-palette',
+  icon: 'fa-solid fa-paintbrush',
   category: 'system',
   isCore: true,
   defaultEnabled: true,

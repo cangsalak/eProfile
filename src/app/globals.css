@@ -7,9 +7,80 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Niramit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Sans:wght@400;500;700&family=Nunito:wght@400;600;700;800;900&display=swap');
 
+/* ── TH Sarabun New Standard National Font Definitions (Local .ttf) ── */
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New'), local('THSarabunNew'), local('THSarabunNew-Regular'),
+    url('/fonts/thsarabunnew-webfont.ttf') format('truetype'),
+    url('/fonts/THSarabunNew.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'THSarabunNew';
+  src: local('THSarabunNew'), local('TH Sarabun New'), local('THSarabunNew-Regular'),
+    url('/fonts/thsarabunnew-webfont.ttf') format('truetype'),
+    url('/fonts/THSarabunNew.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New Bold'), local('THSarabunNew-Bold'),
+    url('/fonts/thsarabunnew_bold-webfont.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'THSarabunNew';
+  src: local('THSarabunNew-Bold'), local('TH Sarabun New Bold'),
+    url('/fonts/thsarabunnew_bold-webfont.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New Italic'), local('THSarabunNew-Italic'),
+    url('/fonts/thsarabunnew_italic-webfont.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'THSarabunNew';
+  src: local('THSarabunNew-Italic'), local('TH Sarabun New Italic'),
+    url('/fonts/thsarabunnew_italic-webfont.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: local('TH Sarabun New BoldItalic'), local('THSarabunNew-BoldItalic'),
+    url('/fonts/thsarabunnew_bolditalic-webfont.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'THSarabunNew';
+  src: local('THSarabunNew-BoldItalic'), local('TH Sarabun New BoldItalic'),
+    url('/fonts/thsarabunnew_bolditalic-webfont.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
 /* ─── Global Design Tokens (NextAdmin HQ Unified Theme System & Claymorphic Engine) ─── */
 :root,
 [data-theme="nextadmin"] {

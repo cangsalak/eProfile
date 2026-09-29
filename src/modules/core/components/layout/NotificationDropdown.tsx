@@ -109,7 +109,7 @@ export default function NotificationDropdown({ currentUser }: NotificationDropdo
 
             <Link
               className="p-1 text-icon-secondary transition-colors hover:text-icon-primary"
-              href="/settings"
+              href="/modules/settings"
               onClick={() => setIsOpen(false)}
             >
               <SettingIcon />

@@ -21,9 +21,31 @@
     "baseUrl": ".",
     "paths": {
       "@/components/*": ["./src/modules/core/components/*"],
+      "@/modules/e-form": ["./extensions/e-form/index.ts"],
+      "@/modules/e-form/*": ["./extensions/e-form/*"],
+      "@/modules/calendar": ["./extensions/calendar/index.ts"],
+      "@/modules/calendar/*": ["./extensions/calendar/*"],
+      "@/modules/news": ["./extensions/news/index.ts"],
+      "@/modules/news/*": ["./extensions/news/*"],
+      "@/modules/badges": ["./extensions/badges/index.ts"],
+      "@/modules/badges/*": ["./extensions/badges/*"],
+      "@/modules/backup": ["./extensions/backup/index.ts"],
+      "@/modules/backup/*": ["./extensions/backup/*"],
+      "@/modules/contacts": ["./extensions/contacts/index.ts"],
+      "@/modules/contacts/*": ["./extensions/contacts/*"],
+      "@/modules/document-templates": ["./extensions/document-templates/index.ts"],
+      "@/modules/document-templates/*": ["./extensions/document-templates/*"],
+      "@/modules/inspector": ["./extensions/inspector/index.ts"],
+      "@/modules/inspector/*": ["./extensions/inspector/*"],
+      "@/modules/upload": ["./extensions/upload/index.ts"],
+      "@/modules/upload/*": ["./extensions/upload/*"],
+      "@/modules/api-docs": ["./extensions/api-docs/index.ts"],
+      "@/modules/api-docs/*": ["./extensions/api-docs/*"],
+      "@/modules/print": ["./extensions/print/index.ts"],
+      "@/modules/print/*": ["./extensions/print/*"],
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts", "extensions/**/*.ts", "extensions/**/*.tsx"],
   "exclude": ["node_modules", "prisma", "scripts", "tests", "**/@eaDir", "@eaDir"]
 }

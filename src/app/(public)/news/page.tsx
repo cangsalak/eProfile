@@ -31,6 +31,9 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       author: {
         select: { firstName: true, lastName: true },
       },
+      _count: {
+        select: { comments: true },
+      },
     },
   });
 
@@ -63,10 +66,16 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                     )}
                   </div>
                   <div className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center justify-between gap-2 mb-2">
                       <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-50 dark:bg-primary-950 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-900">
                         {post.category || 'ข่าวทั่วไป'}
                       </span>
+                      {post._count?.comments ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                          <i className="fa-regular fa-comment text-primary-500"></i>
+                          <span>{post._count.comments} ความเห็น</span>
+                        </span>
+                      ) : null}
                     </div>
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                       {post.title}

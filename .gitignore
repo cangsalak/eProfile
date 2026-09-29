@@ -63,5 +63,8 @@ public/uploads/*
 *.zip
 *.tar.gz
 
+# scratch / temp scripts
+scratch/
+
 
 

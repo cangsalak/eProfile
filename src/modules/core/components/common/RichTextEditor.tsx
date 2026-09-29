@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Button, Input } from '@/components/ui';
+import { Modal, Button, Input, ImageUpload } from '@/components/ui';
+import toast from 'react-hot-toast';
+import { uploadFileToServer } from '@/modules/upload/lib/client-upload';
 
 interface RichTextEditorProps {
   value: string;
@@ -23,6 +25,7 @@ export default function RichTextEditor({
   const [linkUrl, setLinkUrl] = useState('');
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const savedRangeRef = useRef<Range | null>(null);
 
   // Sync value to contentEditable when not focused or on initial load
   useEffect(() => {
@@ -42,6 +45,28 @@ export default function RichTextEditor({
     }
   };
 
+  const saveCurrentSelection = () => {
+    if (typeof window === 'undefined') return;
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedRangeRef.current = sel.getRangeAt(0);
+    }
+  };
+
+  const restoreCurrentSelection = () => {
+    if (typeof window === 'undefined') return;
+    if (editorRef.current) {
+      editorRef.current.focus();
+      if (savedRangeRef.current) {
+        const sel = window.getSelection();
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(savedRangeRef.current);
+        }
+      }
+    }
+  };
+
   const executeCommand = (command: string, value: string | undefined = undefined) => {
     if (viewMode !== 'editor') return;
     if (editorRef.current) {
@@ -51,8 +76,21 @@ export default function RichTextEditor({
     handleInput();
   };
 
+  const handleOpenLinkModal = () => {
+    saveCurrentSelection();
+    setLinkUrl('');
+    setShowLinkModal(true);
+  };
+
+  const handleOpenImageModal = () => {
+    saveCurrentSelection();
+    setImageUrl('');
+    setShowImageModal(true);
+  };
+
   const handleInsertLink = () => {
     if (linkUrl.trim()) {
+      restoreCurrentSelection();
       executeCommand('createLink', linkUrl.trim());
       setLinkUrl('');
       setShowLinkModal(false);
@@ -61,23 +99,66 @@ export default function RichTextEditor({
 
   const handleInsertImage = () => {
     if (imageUrl.trim()) {
+      restoreCurrentSelection();
       executeCommand('insertImage', imageUrl.trim());
       setImageUrl('');
       setShowImageModal(false);
+      toast.success('แทรกรูปภาพในบทความเรียบร้อย');
+    } else {
+      toast.error('กรุณาเลือกหรืออัปโหลดรูปภาพก่อน');
     }
   };
 
-  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        executeCommand('insertImage', base64);
-        setShowImageModal(false);
-      };
-      reader.readAsDataURL(file);
+  const handlePaste = async (e: React.ClipboardEvent<HTMLDivElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.startsWith('image/')) {
+        const file = items[i].getAsFile();
+        if (file) {
+          e.preventDefault();
+          const toastId = toast.loading('กำลังอัปโหลดรูปภาพที่วาง...');
+          try {
+            const res = await uploadFileToServer(file, { module: 'news', folder: 'posts' });
+            if (res.success && res.data?.url) {
+              executeCommand('insertImage', res.data.url);
+              toast.success('แทรกรูปภาพเรียบร้อย', { id: toastId });
+            } else {
+              toast.error('อัปโหลดภาพไม่สำเร็จ', { id: toastId });
+            }
+          } catch {
+            toast.error('เกิดข้อผิดพลาดในการอัปโหลดภาพ', { id: toastId });
+          }
+          return;
+        }
+      }
     }
+  };
+
+  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const res = await uploadFileToServer(file, { module: 'news', folder: 'posts' });
+      if (res.success && res.data?.url) {
+        executeCommand('insertImage', res.data.url);
+        toast.success('อัปโหลดและแทรกรูปภาพเรียบร้อย');
+        setShowImageModal(false);
+        return;
+      }
+    } catch {
+      // Fallback to FileReader base64
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      executeCommand('insertImage', base64);
+      setShowImageModal(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSourceCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -249,7 +330,7 @@ export default function RichTextEditor({
         <div className="flex items-center gap-0.5 border-r border-slate-200 dark:border-slate-700 pr-1.5 mr-1">
           <button
             type="button"
-            onClick={() => setShowLinkModal(true)}
+            onClick={handleOpenLinkModal}
             className="w-8 h-8 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs transition-colors"
             title="แทรกลิงก์ (Link)"
           >
@@ -257,7 +338,7 @@ export default function RichTextEditor({
           </button>
           <button
             type="button"
-            onClick={() => setShowImageModal(true)}
+            onClick={handleOpenImageModal}
             className="w-8 h-8 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs transition-colors"
             title="แทรกรูปภาพ (Image)"
           >
@@ -321,6 +402,7 @@ export default function RichTextEditor({
             ref={editorRef}
             contentEditable
             onInput={handleInput}
+            onPaste={handlePaste}
             style={{ minHeight }}
             data-placeholder={placeholder}
             className="p-4 text-xs sm:text-sm text-slate-900 dark:text-slate-100 outline-none overflow-y-auto leading-relaxed prose prose-sm dark:prose-invert max-w-none empty:before:content-[attr(data-placeholder)] empty:before:text-slate-400 empty:before:pointer-events-none"
@@ -403,7 +485,7 @@ export default function RichTextEditor({
         onClose={() => setShowImageModal(false)}
         title="แทรกรูปภาพในบทความ"
         icon="fa-regular fa-image"
-        size="md"
+        size="lg"
         footer={
           <div className="flex justify-end gap-2 w-full">
             <Button
@@ -418,7 +500,9 @@ export default function RichTextEditor({
               type="button"
               variant="primary"
               size="sm"
+              disabled={!imageUrl.trim()}
               onClick={handleInsertImage}
+              icon="fa-solid fa-plus"
             >
               แทรกรูปภาพ
             </Button>
@@ -426,31 +510,29 @@ export default function RichTextEditor({
         }
       >
         <div className="space-y-4">
-          {/* URL Input */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              ระบุ URL ของรูปภาพ
-            </label>
-            <Input
-              type="url"
-              value={imageUrl}
+          <ImageUpload
+            label="อัปโหลดหรือเลือกรูปภาพ"
+            value={imageUrl || ''}
+            onChange={(url) => setImageUrl(url)}
+            onRemove={() => setImageUrl('')}
+            variant="landscape"
+            module="news"
+            folder="posts"
+            allowMediaPicker={true}
+            allowWebcam={false}
+            helperText="คลิกเพื่อเลือกไฟล์ หรือลากและวางภาพ (JPG, PNG, WebP) หรือกดเลือกจากคลังสื่อ"
+          />
+
+          <div className="flex items-center gap-2 pt-1">
+            <span className="text-[11px] text-slate-400 whitespace-nowrap">
+              <i className="fa-solid fa-link mr-1"></i> หรือระบุ URL รูปภาพ:
+            </span>
+            <input
+              type="text"
+              value={imageUrl || ''}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://... หรือ /uploads/..."
-            />
-          </div>
-
-          <div className="text-center text-xs text-slate-400 font-bold">หรือ</div>
-
-          {/* File Upload */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              อัปโหลดรูปภาพจากอุปกรณ์
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageFileUpload}
-              className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-50 file:text-primary-600 dark:file:bg-primary-950 dark:file:text-primary-400 hover:file:bg-primary-100 cursor-pointer"
+              className="flex-1 px-3 py-1.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all shadow-2xs"
             />
           </div>
         </div>

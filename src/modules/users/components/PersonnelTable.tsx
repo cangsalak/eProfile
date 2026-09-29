@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Personnel } from '@/modules/users';
+import { Personnel, getPersonnelAvatarUrl } from '@/modules/users';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface PersonnelTableProps {
@@ -127,16 +127,21 @@ export default function PersonnelTable({
                 </td>
                 <td className="px-6 py-3.5">
                   <div className="flex items-center space-x-3">
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-slate-900 dark:text-white font-bold text-xs overflow-hidden shrink-0"
-                      style={{ backgroundColor: person.avatarColor && !person.avatarColor.startsWith('data:image') ? person.avatarColor : '#e2e8f0' }}
-                    >
-                      {person.avatarColor && person.avatarColor.startsWith('data:image') ? (
-                        <img src={person.avatarColor} alt="Avatar" className="w-full h-full object-cover" />
-                      ) : (
-                        person.firstName[0]
-                      )}
-                    </div>
+                    {(() => {
+                      const avatarUrl = getPersonnelAvatarUrl(person);
+                      return (
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-slate-900 dark:text-white font-bold text-xs overflow-hidden shrink-0"
+                          style={{ backgroundColor: !avatarUrl && person.avatarColor ? person.avatarColor : '#e2e8f0' }}
+                        >
+                          {avatarUrl ? (
+                            <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            person.firstName[0] || 'U'
+                          )}
+                        </div>
+                      );
+                    })()}
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-semibold text-slate-900 dark:text-white">

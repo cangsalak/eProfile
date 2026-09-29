@@ -11,6 +11,7 @@ const ROOT = path.resolve(process.cwd());
 const BASE_SCHEMA_PATH = path.join(ROOT, 'prisma', '_base.prisma');
 const OUTPUT_SCHEMA_PATH = path.join(ROOT, 'prisma', 'schema.prisma');
 const MODULES_DIR = path.join(ROOT, 'src', 'modules');
+const EXTENSIONS_DIR = path.join(ROOT, 'extensions');
 
 export interface MergeResult {
   mergedCount: number;
@@ -20,6 +21,7 @@ export interface MergeResult {
 
 /**
  * Merge all module schemas into prisma/schema.prisma
+ * Scans both src/modules/ (core) and extensions/ (extension packages)
  * @param extraSchemaPaths - Optional additional schema file paths to include
  */
 export function mergeSchemas(extraSchemaPaths: string[] = []): MergeResult {
@@ -33,29 +35,34 @@ export function mergeSchemas(extraSchemaPaths: string[] = []): MergeResult {
   const moduleSchemas: string[] = [];
   const parts: string[] = [];
 
-  if (fs.existsSync(MODULES_DIR)) {
-    const moduleDirs = fs.readdirSync(MODULES_DIR, { withFileTypes: true })
+  function scanDir(dir: string, label: string) {
+    if (!fs.existsSync(dir)) return;
+    const moduleDirs = fs.readdirSync(dir, { withFileTypes: true })
       .filter(d => d.isDirectory())
       .map(d => d.name)
       .sort(); // deterministic merge order
 
     for (const moduleId of moduleDirs) {
-      const schemaPath = path.join(MODULES_DIR, moduleId, 'schema.prisma');
+      const schemaPath = path.join(dir, moduleId, 'schema.prisma');
       if (fs.existsSync(schemaPath)) {
         const content = fs.readFileSync(schemaPath, 'utf-8').trim();
         if (content) {
+          const relPath = path.relative(ROOT, schemaPath).replace(/\\/g, '/');
           parts.push(
             `// ══════════════════════════════════════════════\n` +
-            `// Module: ${moduleId}\n` +
-            `// Source: src/modules/${moduleId}/schema.prisma\n` +
+            `// Module: ${moduleId} (${label})\n` +
+            `// Source: ${relPath}\n` +
             `// ══════════════════════════════════════════════\n` +
             content
           );
-          moduleSchemas.push(`src/modules/${moduleId}/schema.prisma`);
+          moduleSchemas.push(relPath);
         }
       }
     }
   }
+
+  scanDir(MODULES_DIR, 'core');
+  scanDir(EXTENSIONS_DIR, 'extension');
 
   // Include extra schema paths (for newly extracted modules)
   for (const extraPath of extraSchemaPaths) {

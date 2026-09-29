@@ -659,8 +659,15 @@ export async function handleGetDepartments() {
  */
 export async function handleCreateDepartment(request: Request) {
   try {
-    const { error: authError } = await requirePermission(request, 'MANAGE_SYSTEM');
+    const { user, error: authError } = await requireAuth(request);
     if (authError) return authError;
+
+    // Check MANAGE_PERSONNEL or MANAGE_SYSTEM
+    const permResult = await requirePermission(request, 'MANAGE_PERSONNEL');
+    if (permResult.error) {
+      const sysPermResult = await requirePermission(request, 'MANAGE_SYSTEM');
+      if (sysPermResult.error) return permResult.error;
+    }
 
     const body = await request.json();
     if (!body.name || typeof body.name !== 'string' || !body.name.trim()) {
@@ -705,12 +712,26 @@ export async function handleUpdateDepartment(
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-    const { error: authError } = await requirePermission(request, 'MANAGE_SYSTEM');
+    const { user, error: authError } = await requireAuth(request);
     if (authError) return authError;
+
+    // Check MANAGE_PERSONNEL or MANAGE_SYSTEM
+    const permResult = await requirePermission(request, 'MANAGE_PERSONNEL');
+    if (permResult.error) {
+      const sysPermResult = await requirePermission(request, 'MANAGE_SYSTEM');
+      if (sysPermResult.error) return permResult.error;
+    }
 
     const body = await request.json();
     if (!body.name || typeof body.name !== 'string' || !body.name.trim()) {
       return NextResponse.json({ error: 'กรุณาระบุชื่อหน่วยงาน' }, { status: 400 });
+    }
+
+    const currentDept = await prisma.department.findUnique({
+      where: { id },
+    });
+    if (!currentDept) {
+      return NextResponse.json({ error: 'ไม่พบข้อมูลหน่วยงาน' }, { status: 404 });
     }
 
     let subDepartmentsJson = undefined;
@@ -720,10 +741,41 @@ export async function handleUpdateDepartment(
       subDepartmentsJson = body.subDepartments;
     }
 
+    const newName = body.name.trim();
+
+    // If department name changed, sync personnel records if requested
+    if (currentDept.name !== newName && body.syncPersonnel !== false) {
+      try {
+        await prisma.personnel.updateMany({
+          where: { department: currentDept.name },
+          data: { department: newName },
+        });
+      } catch (syncErr) {
+        console.warn('Could not sync personnel department name:', syncErr);
+      }
+    }
+
+    // If a subdepartment was renamed, sync personnel records
+    if (body.renameSubDepartment?.from && body.renameSubDepartment?.to) {
+      try {
+        await prisma.personnel.updateMany({
+          where: {
+            department: newName,
+            subDepartment: body.renameSubDepartment.from.trim(),
+          },
+          data: {
+            subDepartment: body.renameSubDepartment.to.trim(),
+          },
+        });
+      } catch (syncErr) {
+        console.warn('Could not sync personnel subDepartment name:', syncErr);
+      }
+    }
+
     const department = await prisma.department.update({
       where: { id },
       data: {
-        name: body.name.trim(),
+        name: newName,
         ...(body.shortName !== undefined && { shortName: body.shortName ? body.shortName.trim() : '' }),
         ...(subDepartmentsJson !== undefined && { subDepartments: subDepartmentsJson }),
         ...(typeof body.sortOrder === 'number' && { sortOrder: body.sortOrder }),
@@ -752,8 +804,15 @@ export async function handleDeleteDepartment(
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-    const { error: authError } = await requirePermission(request, 'MANAGE_SYSTEM');
+    const { user, error: authError } = await requireAuth(request);
     if (authError) return authError;
+
+    // Check MANAGE_PERSONNEL or MANAGE_SYSTEM
+    const permResult = await requirePermission(request, 'MANAGE_PERSONNEL');
+    if (permResult.error) {
+      const sysPermResult = await requirePermission(request, 'MANAGE_SYSTEM');
+      if (sysPermResult.error) return permResult.error;
+    }
 
     await prisma.department.delete({
       where: { id },

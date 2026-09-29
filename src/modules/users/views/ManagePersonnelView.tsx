@@ -5,7 +5,7 @@ import { Personnel, PersonnelTypeSelect, PersonnelStatusSelect } from '@/modules
 import { useRouter, useSearchParams } from 'next/navigation';
 import AddPersonnelModal from '../components/AddPersonnelModal';
 import JSZip from 'jszip';
-import LeaveList from '@/modules/leaves/components/LeaveList';
+import LeaveList from '@/modules/e-form/components/LeaveList';
 import PersonnelTable from '../components/PersonnelTable';
 import PersonnelPagination from '../components/PersonnelPagination';
 import PersonnelImportModal from '../components/PersonnelImportModal';
@@ -271,19 +271,30 @@ export default function ManagePersonnelView() {
   const getSubDeptsForDept = (deptName: string): SubDepartmentItem[] => {
     const dept = departments.find(d => d.name === deptName);
     if (!dept?.subDepartments) return [];
+
+    const parseRecursive = (items: any[]): SubDepartmentItem[] => {
+      let list: SubDepartmentItem[] = [];
+      for (const item of items) {
+        if (typeof item === 'string') {
+          list.push({ name: item, shortName: '' });
+        } else if (item && typeof item === 'object') {
+          list.push({ name: item.name || '', shortName: item.shortName || '' });
+          const children = item.children || item.subDepartments;
+          if (Array.isArray(children) && children.length > 0) {
+            list = list.concat(parseRecursive(children));
+          }
+        }
+      }
+      return list;
+    };
+
     if (Array.isArray(dept.subDepartments)) {
-      return dept.subDepartments.map(item => {
-        if (typeof item === 'string') return { name: item, shortName: '' };
-        return item;
-      });
+      return parseRecursive(dept.subDepartments);
     }
     try {
       const parsed = JSON.parse(dept.subDepartments);
       if (Array.isArray(parsed)) {
-        return parsed.map(item => {
-          if (typeof item === 'string') return { name: item, shortName: '' };
-          return item;
-        });
+        return parseRecursive(parsed);
       }
     } catch (_) {}
     return [];

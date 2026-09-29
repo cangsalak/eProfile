@@ -90,7 +90,7 @@ export default function DashboardOverviewPage() {
         const [resStats, resSettings, resLeaves, resPosts, resNotifs] = await Promise.all([
           fetch('/api/personnel/stats').catch(() => null),
           fetch('/api/settings').catch(() => null),
-          fetch('/api/modules/leaves').catch(() => null),
+          fetch('/api/modules/e-form').catch(() => null),
           fetch('/api/modules/news/posts?published=true').catch(() => null),
           fetch('/api/modules/news/notifications').catch(() => null),
         ]);
@@ -381,7 +381,7 @@ export default function DashboardOverviewPage() {
           {/* Settings */}
           {isAdmin && (
             <Link
-            href="/settings"
+            href="/modules/settings"
             className="group p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 hover:border-rose-500/50 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/80 transition-all flex items-start gap-4 shadow-2xs"
           >
             <div className="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform">

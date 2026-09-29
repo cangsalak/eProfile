@@ -35,6 +35,14 @@ export const UsersManifest: ModuleManifest = {
       ]
     }
   ],
+  widgets: [
+    {
+      id: 'personnel-stats-widget',
+      title: 'ทำเนียบกำลังพล',
+      description: 'ภาพรวมกำลังพล',
+      defaultSize: 'md'
+    }
+  ],
   permissions: [
     {
       key: 'MANAGE_PERSONNEL',

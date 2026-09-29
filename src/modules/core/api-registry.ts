@@ -1,5 +1,5 @@
 import { ModuleApiRouteMap } from './types';
-import * as LeavesApi from '@/modules/leaves/api';
+import * as EFormApi from '@/modules/e-form/api';
 import * as BadgesApi from '@/modules/badges/api';
 import * as CalendarApi from '@/modules/calendar/api';
 import * as NewsApi from '@/modules/news/api';
@@ -7,7 +7,6 @@ import * as UploadApi from '@/modules/upload/api';
 import * as DashboardApi from '@/modules/dashboard/api';
 import * as ApiDocsApi from '@/modules/api-docs/api';
 import * as BackupApi from '@/modules/backup/api';
-import * as ModuleManagerApi from '@/modules/module-manager/api';
 import * as InspectorApi from '@/modules/inspector/api';
 import * as SiteApi from '@/modules/site/api';
 import * as RolesApi from '@/modules/roles/api';
@@ -226,29 +225,29 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
     'check-headers': { GET: InspectorApi.handleCheckHeaders as any },
     'checklist': { GET: InspectorApi.handleGetChecklist as any },
   },
-  'leaves': {
+  'e-form': {
     '': {
-      GET: LeavesApi.handleGetLeaves as any,
-      POST: LeavesApi.handleCreateLeave as any,
+      GET: EFormApi.handleGetLeaves as any,
+      POST: EFormApi.handleCreateLeave as any,
     },
     '[id]': {
-      PUT: LeavesApi.handleUpdateLeave as any,
-      DELETE: LeavesApi.handleDeleteLeave as any,
+      PUT: EFormApi.handleUpdateLeave as any,
+      DELETE: EFormApi.handleDeleteLeave as any,
     },
     '[id]/approve': {
-      POST: LeavesApi.handleApproveLeave as any,
+      POST: EFormApi.handleApproveLeave as any,
     },
     '[id]/reject': {
-      POST: LeavesApi.handleRejectLeave as any,
+      POST: EFormApi.handleRejectLeave as any,
     },
     '[id]/pdf': {
-      GET: LeavesApi.handleGeneratePDF as any,
+      GET: EFormApi.handleGeneratePDF as any,
     },
     '[id]/docx': {
-      GET: LeavesApi.handleGenerateDocx as any,
+      GET: EFormApi.handleGenerateDocx as any,
     },
     'approvals': {
-      GET: LeavesApi.handleGetLeaveApprovals as any,
+      GET: EFormApi.handleGetLeaveApprovals as any,
     },
   },
   'badges': {
@@ -275,8 +274,16 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
       POST: NewsApi.handleCreatePost as any,
     },
     'posts/[id]': {
+      GET: NewsApi.handleGetPostById as any,
       PUT: NewsApi.handleUpdatePost as any,
       DELETE: NewsApi.handleDeletePost as any,
+    },
+    'posts/[id]/comments': {
+      GET: NewsApi.handleGetComments as any,
+      POST: NewsApi.handleCreateComment as any,
+    },
+    'posts/[id]/comments/[commentId]': {
+      DELETE: NewsApi.handleDeleteComment as any,
     },
     'notifications': {
       GET: NewsApi.handleGetNotifications as any,
@@ -349,23 +356,6 @@ export const BUILTIN_MODULE_APIS: Record<string, ModuleApiRouteMap> = {
       POST: BackupApi.handleRestoreDatabase as any,
     },
   },
-  'module-manager': {
-    '': {
-      GET: ModuleManagerApi.handleGetModules as any,
-    },
-    'install': {
-      POST: ModuleManagerApi.handleInstallModule as any,
-    },
-    'update': {
-      POST: ModuleManagerApi.handleUpdateModule as any,
-    },
-    '[id]': {
-      DELETE: ModuleManagerApi.handleUninstallModule as any,
-    },
-    'template': {
-      GET: ModuleManagerApi.handleGetModuleTemplate as any,
-    },
-  },
 };
 
 export class ModuleApiRegistry {
@@ -376,6 +366,18 @@ export class ModuleApiRegistry {
   }
 
   static get(moduleId: string): ModuleApiRouteMap | undefined {
+    // 1. Dynamic lookup: Check if module definition self-declares its own API route map (100% self-reliant extension)
+    try {
+      const { ModuleViewRegistry } = require('./view-registry');
+      const modDef = ModuleViewRegistry.get(moduleId);
+      if (modDef?.api && Object.keys(modDef.api).length > 0) {
+        return modDef.api;
+      }
+    } catch {
+      // fallback
+    }
+
+    // 2. Builtin / Custom registered APIs fallback
     return BUILTIN_MODULE_APIS[moduleId] || this.customApis.get(moduleId);
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Personnel } from '@/modules/users';
 import LoginModal from '@/modules/auth/components/LoginModal';
@@ -296,9 +297,9 @@ export default function DashboardShell({ children }: DashboardShellProps) {
                 <i className="fa-solid fa-triangle-exclamation text-amber-200"></i>
                 <span>⚠️ คำเตือน: ระบบกำลังเปิดใช้งาน <strong>"โหมดปิดปรับปรุงเว็บไซต์"</strong> — ผู้ใช้ทั่วไปจะไม่สามารถเข้าใช้งานหรือดูข้อมูลได้</span>
               </div>
-              <a href="/settings" className="underline hover:text-amber-100 font-bold ml-4">
+              <Link href="/modules/settings" className="underline hover:text-amber-100 font-bold ml-4">
                 ไปที่หน้าตั้งค่าเพื่อปิดโหมดปรับปรุง &rarr;
-              </a>
+              </Link>
             </div>
           )}
 

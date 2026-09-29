@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Personnel } from '@/modules/users';
+import { Personnel, getPersonnelAvatarUrl, isImageSrc } from '@/modules/users';
 
 import PersonalInfoForm from '../components/forms/PersonalInfoForm';
 import MilitaryInfoForm from '../components/forms/MilitaryInfoForm';
@@ -85,7 +85,7 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (file) {
       toast.loading('กำลังอัปโหลดรูปโปรไฟล์...', { id: 'avatar-upload' });
-      const res = await uploadFileToServer(file);
+      const res = await uploadFileToServer(file, { module: 'users', folder: 'avatars' });
       if (res.success && res.data) {
         setFormData((prev) => ({ ...prev, avatarColor: res.data!.url }));
         toast.success('อัปโหลดรูปโปรไฟล์สำเร็จ', { id: 'avatar-upload' });
@@ -99,7 +99,7 @@ export default function ProfilePage() {
     toast.loading('กำลังบันทึกรูปโปรไฟล์...', { id: 'avatar-upload' });
     const filename = `avatar-${currentUser?.id || Date.now()}.jpg`;
     const file = base64ToFile(imageSrc, filename);
-    const res = await uploadFileToServer(file);
+    const res = await uploadFileToServer(file, { module: 'users', folder: 'avatars' });
     if (res.success && res.data) {
       setFormData((prev) => ({ ...prev, avatarColor: res.data!.url }));
       toast.success('อัปโหลดรูปโปรไฟล์สำเร็จ', { id: 'avatar-upload' });
@@ -132,7 +132,7 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (file) {
       toast.loading('กำลังอัปโหลดรูปหน้าปก...', { id: 'cover-upload' });
-      const res = await uploadFileToServer(file);
+      const res = await uploadFileToServer(file, { module: 'users', folder: 'covers' });
       if (res.success && res.data) {
         setFormData((prev) => ({ ...prev, coverPhoto: res.data!.url }));
         toast.success('อัปโหลดรูปหน้าปกสำเร็จ', { id: 'cover-upload' });
@@ -185,9 +185,9 @@ export default function ProfilePage() {
   };
 
   const renderAvatar = (person: Partial<Personnel>) => {
-    const isImage = person.avatarColor?.startsWith('data:image') || person.avatarColor?.startsWith('http');
-    if (isImage) {
-      return <img src={person.avatarColor} alt="Profile Avatar" className="w-full h-full object-cover" />;
+    const avatarUrl = getPersonnelAvatarUrl(person);
+    if (avatarUrl) {
+      return <img src={avatarUrl} alt="Profile Avatar" className="w-full h-full object-cover" />;
     }
     return (
       <div

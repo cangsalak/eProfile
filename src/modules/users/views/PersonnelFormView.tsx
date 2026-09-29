@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Personnel } from '@/modules/users';
+import { Personnel, isImageSrc } from '@/modules/users';
 import { Card, Button, Badge } from '@/components/ui';
 import ImageUploadBox from '@/components/common/ImageUploadBox';
 import PersonalInfoForm from '../components/forms/PersonalInfoForm';
@@ -238,9 +238,11 @@ export default function PersonnelFormView() {
             <div className="w-36 shrink-0">
               <ImageUploadBox
                 label="รูปถ่ายหน้าตรง"
-                imageUrl={formData.avatarColor && formData.avatarColor.startsWith('data:image') ? formData.avatarColor : null}
-                onChange={(base64: string | null) => setFormData({ ...formData, avatarColor: base64 || '' })}
+                imageUrl={formData.avatarColor && isImageSrc(formData.avatarColor) ? formData.avatarColor : null}
+                onChange={(url: string) => setFormData({ ...formData, avatarColor: url || '' })}
                 onRemove={() => setFormData({ ...formData, avatarColor: ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6'][Math.floor(Math.random() * 5)] })}
+                module="users"
+                folder="avatars"
               />
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1 text-center sm:text-left">

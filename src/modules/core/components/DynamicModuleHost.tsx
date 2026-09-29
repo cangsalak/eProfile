@@ -95,15 +95,9 @@ export default function DynamicModuleHost({ moduleId, slug = [] }: DynamicModule
         <div className="flex justify-center gap-3">
           <Link
             href="/dashboard"
-            className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-medium transition-colors"
-          >
-            กลับหน้าหลัก
-          </Link>
-          <Link
-            href="/modules/module-manager"
             className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-medium transition-colors"
           >
-            ติดตั้งโมดูลใหม่
+            กลับหน้าหลัก
           </Link>
         </div>
       </div>
@@ -127,15 +121,9 @@ export default function DynamicModuleHost({ moduleId, slug = [] }: DynamicModule
         <div className="flex justify-center gap-3">
           <Link
             href="/dashboard"
-            className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-medium transition-colors"
-          >
-            กลับหน้าหลัก
-          </Link>
-          <Link
-            href="/modules/module-manager"
             className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-medium transition-colors"
           >
-            ไปที่การจัดการโมดูล
+            กลับหน้าหลัก
           </Link>
         </div>
       </div>

@@ -55,6 +55,7 @@ model Personnel {
   notifications          Notification[]
   notificationReads      NotificationRead[]
   posts                  Post[]
+  postComments           Comment[]
   auditLogs              AuditLog[]
   mediaFiles             MediaFile[]
   passwordResetTokens    PasswordResetToken[]

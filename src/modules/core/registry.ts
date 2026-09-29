@@ -228,6 +228,8 @@ export class ModuleRegistry {
 
     // Common legacy aliases
     const legacyAliases: Record<string, string> = {
+      logo: '/modules/theme',
+      brand: '/modules/theme',
       system: '/modules/theme',
       theme: '/modules/theme',
       badge: '/modules/badges/settings',
@@ -242,10 +244,8 @@ export class ModuleRegistry {
       notification: '/modules/news/settings',
       line: '/modules/news/settings',
       mail: '/modules/news/settings',
-      modules: '/modules/module-manager',
-      module: '/modules/module-manager',
-      menus: '/modules/module-manager/menus',
-      menu: '/modules/module-manager/menus',
+      modules: '/dashboard',
+      module: '/dashboard',
       maintenance: '/modules/backup',
       backup: '/modules/backup',
       content: '/modules/site',

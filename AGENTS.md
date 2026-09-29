@@ -46,6 +46,7 @@ src/
   2. `operations`: "ปฏิบัติการและอนุมัติ" (แสดงเฉพาะหัวหน้างาน, HR_MANAGER, ADMIN เช่น อนุมัติใบลา, พิมพ์บัตร, ศูนย์บัญชาการ)
   3. `system`: "การตั้งค่าระบบ" (แสดงเฉพาะ SUPER_ADMIN, ADMIN เช่น สิทธิ์ผู้ใช้งาน, ตั้งค่าเว็บไซต์, สำรองข้อมูล, API)
 - ห้ามดึงเมนูทุกอย่างไปกองรวมกัน การเพิ่มโมดูลใหม่ต้องระบุ `group` และกำหนด `requiredRoles` หรือ `requiredPermission` ให้ชัดเจนเสมอ
+- **กฎการซ่อนเมนูตั้งค่า:** หากเมนูนั้นเป็นหน้าสำหรับตั้งค่าหรือจัดการระบบของโมดูล (เช่น จัดการแม่แบบเอกสารส่วนกลาง) **ให้กำหนดค่า `isSetting: true` ใน `manifest.ts` เสมอ** เพื่อซ่อนเมนูจาก Sidebar (ป้องกัน Sidebar ยาวเกินไปเมื่อมีโมดูลเยอะขึ้น) โดยผู้ดูแลระบบจะสามารถเข้าถึงการตั้งค่าเหล่านี้ได้รวมกันที่หน้า **Module & Menu Manager** แทน
 
 ---
 
@@ -112,6 +113,16 @@ src/
   - `<BloodTypeSelect />` (ดึงหมู่โลหิตอัตโนมัติ)
   - `<RoleSelect />` (ดึงบทบาทผู้ใช้ระบบอัตโนมัติ)
 - **ป้ายสถานะ:** ใช้ `<Badge variant="primary" | "candy" | "success" | "warning" | "danger" | "info" | "neutral">`
+- **หัวกระดาษและ Breadcrumb (PageHeader/PageBreadcrumb):** 
+  - ระบบจะแสดง `<PageBreadcrumb />` อัตโนมัติจาก `DashboardShell` อยู่แล้ว **ห้าม** สร้าง `<h1>` หรือ `<h2>` เป็นหัวหน้าเว็บขึ้นมาเองซ้ำซ้อนในระดับ View
+  - หากต้องการเพิ่มปุ่ม Action (เช่น ปุ่มเพิ่มข้อมูล, ปุ่มดาวน์โหลด) ในแถบหัวกระดาษ ให้ครอบด้วย `<PageHeaderExtra>` เสมอ เช่น:
+    ```tsx
+    import { PageHeaderExtra } from '@/modules/core/components/layout/PageHeaderContext';
+    // ... ใน JSX ...
+    <PageHeaderExtra>
+      <Button variant="primary">เพิ่มข้อมูล</Button>
+    </PageHeaderExtra>
+    ```
 
 ### 4.2 กฎการใช้สีและ CSS
 - ใช้คลาสสี `primary-*` สำหรับสีหลักของระบบ ห้ามใช้ `indigo-*` หรือรหัส Hex ตายตัว
@@ -156,5 +167,32 @@ src/
 
 ---
 
+## 📦 7. กฎการใช้งานระบบคลังไฟล์และจัดเก็บข้อมูล (Upload & Storage Guidelines)
+
+1. **การแยกโฟลเดอร์ตาม Extension เสมอ (Mandatory Module & Folder Isolation):**
+   - ทุกครั้งที่มีการอัปโหลดไฟล์ (ไม่ว่าจะผ่าน `<ImageUpload />`, `<FileUpload />`, `uploadFileToServer()`, หรือ API `/api/modules/upload/upload`) **ต้องระบุ `module` และ `folder` เสมอ**
+   - ห้ามอัปโหลดไฟล์ไปไว้ที่ Root Directory (`/uploads/`) เด็ดขาด โครงสร้างจัดเก็บต้องเป็น:
+     ```text
+     uploads/<module>/<folder>/<YYYY>/<MM>/<filename>
+     ```
+   - **ตัวอย่างการจับคู่มาตรฐาน:**
+     - ข้อมูลกำลังพล (`users`): `folder="avatars"` (รูปโปรไฟล์), `folder="rpb1"` (เอกสาร รปภ.๑), `folder="signatures"` (ลายมือชื่อ)
+     - ข่าวสารและประกาศ (`news`): `folder="posts"` (ภาพข่าว), `folder="banners"` (ป้ายประกาศ)
+     - บัตรประจำตัว (`badges`): `folder="templates"`, `folder="backgrounds"`, `folder="exports"`
+     - แบบฟอร์มและใบลา (`e-form`): `folder="templates"`, `folder="attachments"`
+     - เอกสารสั่งพิมพ์ (`print`): `folder="exports"`
+     - หน้าแรก/เว็บไซต์ (`site`): `folder="branding"`, `folder="logos"`
+     - คลังสื่อทั่วไป (`upload`): `folder="general"`, `folder="documents"`
+2. **การเรียงลำดับตามวันที่อัปโหลดล่าสุด (Default Sort Order):**
+   - ทุก Endpoint และ View ที่แสดงรายการไฟล์ ต้องตั้งค่าเริ่มต้นเรียงลำดับเป็น `createdAt: 'desc'` (ใหม่สุดก่อนเสมอ)
+3. **การแสดงผลและข้อมูล Metadata:**
+   - การ์ดและตารางแสดงผลในคลังสื่อ ต้องแสดง Badge บอก Extension ที่มา, พาธโฟลเดอร์, และวันที่อัปโหลดในรูปแบบภาษาไทยอย่างถูกต้อง
+4. **ความปลอดภัยในการจัดการไฟล์:**
+   - การอัปโหลดและลบไฟล์ต้องใช้สิทธิ์ `MANAGE_MEDIA`
+   - ชื่อไฟล์ต้องผ่าน `sanitizeFilename()` (รองรับภาษาไทย `\u0E00-\u0E7F` อัตโนมัติ) และเติม Random Suffix เสมอ ป้องกันการทับซ้อนข้อมูล
+
+---
+
 > **🔴 STOP CONDITION:**
 > หยุดการทำงานและถามผู้ใช้ทันทีก่อนดำเนินการ หากงานนั้นต้องมีการลบข้อมูลถาวร, การกระทำที่ย้อนกลับไม่ได้, การเปลี่ยนแปลงขอบเขตสิทธิ์ระดับโครงสร้าง หรือการกระทำที่ขัดแย้งกับข้อบังคับในคู่มือนี้
+

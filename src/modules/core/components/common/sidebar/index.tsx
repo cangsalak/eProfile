@@ -124,14 +124,13 @@ export default function Sidebar({
           className="flex items-center gap-3 group min-w-0"
         >
           {systemSettings?.systemLogo ? (
-            <img 
-              src={systemSettings.systemLogo} 
-              alt={systemSettings?.systemName || 'System Logo'} 
-              className={cn(
-                'object-contain transition-transform group-hover:scale-105 shrink-0',
-                isExpanded ? 'h-8.5 max-w-[160px]' : 'h-8.5 w-8.5'
-              )} 
-            />
+            <div className="h-9 w-9 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <img 
+                src={systemSettings.systemLogo} 
+                alt={systemSettings?.systemName || 'System Logo'} 
+                className="max-h-9 max-w-9 w-auto h-auto object-contain drop-shadow-xs" 
+              />
+            </div>
           ) : (
             <div className="h-9 w-9 rounded-xl bg-primary-600 flex items-center justify-center text-white shadow-md shadow-primary-600/25 group-hover:scale-105 transition-transform shrink-0">
               <svg

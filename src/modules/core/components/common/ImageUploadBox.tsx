@@ -9,6 +9,8 @@ interface ImageUploadBoxProps {
   onChange: (url: string) => void;
   onRemove?: () => void;
   variant?: 'avatar' | 'square' | 'id-photo' | 'map' | 'landscape' | 'auto';
+  module?: string;
+  folder?: string;
 }
 
 /**
@@ -20,6 +22,8 @@ export default function ImageUploadBox({
   onChange,
   onRemove,
   variant = 'square',
+  module = 'users',
+  folder = 'avatars',
 }: ImageUploadBoxProps) {
   return (
     <ImageUpload
@@ -28,6 +32,8 @@ export default function ImageUploadBox({
       onChange={(url) => onChange(url)}
       onRemove={onRemove}
       variant={variant}
+      module={module}
+      folder={folder}
     />
   );
 }

@@ -15,6 +15,20 @@ const buildTime = new Date().toISOString();
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  transpilePackages: [
+    '@eprofile/extension-eform',
+    '@eprofile/extension-calendar',
+    '@eprofile/extension-news',
+    '@eprofile/extension-badges',
+    '@eprofile/extension-backup',
+    '@eprofile/extension-contacts',
+    '@eprofile/extension-document-templates',
+    '@eprofile/extension-inspector',
+    '@eprofile/extension-upload',
+    '@eprofile/extension-api-docs',
+    '@eprofile/extension-print',
+    '@eprofile/extension-module-manager',
+  ],
   typescript: {
     ignoreBuildErrors: false,
   },
